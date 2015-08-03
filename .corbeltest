@@ -1,0 +1,24 @@
+{
+  "ENV": "int",
+  "DOMAIN": "domain-name",
+  "DEFAULT_CLIENT": {
+    "clientId": "clientId",
+    "clientSecret": "clientSecret",
+    "scopes": "scope:1 scope:2"
+  },
+  "ADMIN_CLIENT": {
+    "clientId": "adminClientId",
+    "clientSecret": "clientSecret",
+    "scopes": "scope:admin"
+  },
+  "DEFAULT_USER": {
+    "clientId": "clientId",
+    "clientSecret": "clientSecret",
+    "scopes": "scope:1 scope:2",
+    "username": "email",
+    "password": "password"
+  },
+  "COMMON": {
+    "urlBase": "https://{{module}}-{{ENV}}.corbel.io/"
+  }
+}

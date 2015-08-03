@@ -1,0 +1,28 @@
+{
+  "name": "corbel-test",
+  "version": "0.0.1",
+  "description": "corbel-platform test suite",
+  "authors": [
+    "bq"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:corbel-platform/corbel-test.git"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "corbel-js": "master",
+    "mocha": "~2.2.5",
+    "chai": "~3.0.0",
+    "sinon": "~1.15.4",
+    "underscore": "~1.8.3",
+    "q": "~2.0.2"
+  },
+  "devDependencies": {}
+}
