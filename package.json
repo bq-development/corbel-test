@@ -1,0 +1,38 @@
+{
+  "name": "corbel-test",
+  "version": "0.0.1",
+  "description": "corbel-platform test suite",
+  "authors": [
+    "bq"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:corbel-platform/corbel-test.git"
+  },
+  "scripts": {
+    "test": "grunt test",
+    "start": "grunt serve:test"
+  },
+  "devDependencies": {
+    "babel-core": "^5.8.3",
+    "chai": "^3.0.0",
+    "corbel-js": "0.0.11",
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-karma": "^0.8.3",
+    "jshint-stylish": "^2.0.1",
+    "karma": "^0.12.37",
+    "karma-chai-plugins": "^0.6.0",
+    "karma-chrome-launcher": "^0.1.4",
+    "karma-mocha": "^0.2.0",
+    "karma-mocha-debug": "^0.1.2",
+    "karma-mocha-reporter": "^1.0.2",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-sinon": "^1.0.4",
+    "load-grunt-tasks": "^0.6.0",
+    "mocha": "^2.2.5",
+    "sinon": "^1.15.4",
+    "time-grunt": "^1.2.1"
+  }
+}
