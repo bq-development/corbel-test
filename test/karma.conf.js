@@ -59,8 +59,11 @@ module.exports = function(config) {
       'karma-chai-plugins',
       'karma-sinon'
     ],
+    phantomjsLauncher: {
+      flags: ['--web-security=no']
+    },
 
-    // Continuous Integration mode
+        // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
     singleRun: false,
 
