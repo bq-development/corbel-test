@@ -1,24 +1,33 @@
 {
   "ENV": "int",
-  "DOMAIN": "domain-name",
+  "DOMAIN": "silkroad-qa",
   "DEFAULT_CLIENT": {
-    "clientId": "clientId",
-    "clientSecret": "clientSecret",
-    "scopes": "scope:1 scope:2"
+    "clientId": "a9fb0e79",
+    "clientSecret": "90f6ed907ce7e2426e51aa52a18470195f4eb04725beb41569db3f796a018dbd",
+    "scopes": "silkroad-qa:client silkroad-qa:user"
   },
   "ADMIN_CLIENT": {
-    "clientId": "adminClientId",
-    "clientSecret": "clientSecret",
-    "scopes": "scope:admin"
+    "clientId": "5ead369e",
+    "clientSecret": "90f6ed907ce7e2426e51aa52a18470195f4eb04725beb41569db3f796a018dbd",
+    "scopes": "silkroad-qa:admin"
   },
   "DEFAULT_USER": {
-    "clientId": "clientId",
-    "clientSecret": "clientSecret",
-    "scopes": "scope:1 scope:2",
-    "username": "email",
-    "password": "password"
+    "clientId": "a9fb0e79",
+    "clientSecret": "90f6ed907ce7e2426e51aa52a18470195f4eb04725beb41569db3f796a018dbd",
+    "scopes": "silkroad-qa:client silkroad-qa:user",
+    "username": "dev.silkroad@gmail.com",
+    "password": "dev2014silkroad"
+  },
+  "ADMIN_SKIP": {
+    "clientId": "5ead369e",
+    "clientSecret": "90f6ed907ce7e2426e51aa52a18470195f4eb04725beb41569db3f796a018dbd",
+    "scopes": "silkroad-qa:client silkroad-qa:admin",
+    "username": "admin@foo.com",
+    "password": "foopass",
+    "oauthService": "silkroad"
   },
   "COMMON": {
-    "urlBase": "https://{{module}}-{{ENV}}.corbel.io/"
+    "urlBase": "https://{{module}}-{{ENV}}.bqws.io/v1.0/"
   }
 }
+
