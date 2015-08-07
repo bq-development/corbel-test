@@ -39,7 +39,7 @@ describe('In RESOURCES module', function() {
                 .should.eventually.be.fulfilled;
               })
               .then(function(resultObject){
-                var testObject = _.clone(resultObject.data);
+                var testObject = _.cloneDeep(resultObject.data);
                 delete testObject.links;
                 testObject.newField = 'newField';
                 testObject.test2 = null;
@@ -60,7 +60,7 @@ describe('In RESOURCES module', function() {
                 var resultObject = response.data;
                 delete resultObject.links;
                 //delete resultObject.id;
-                var testObject = _.clone(TEST_OBJECT);
+                var testObject = _.cloneDeep(TEST_OBJECT);
                 delete testObject.test2;
                 testObject.newField = 'newField';
                 testObject.id = resourceId;
@@ -81,6 +81,7 @@ describe('In RESOURCES module', function() {
                 .should.eventually.be.rejected;
               })
               .then(function(e) {
+                // After solve the bug there will be unnecesary parse 'e'
                 var error = JSON.parse(e.data.responseText);
 
                 expect(e).to.have.property('status', 404);
@@ -94,7 +95,7 @@ describe('In RESOURCES module', function() {
 
       });
 
-      describe('you create object skipping put method', function() {
+      describe('ID is never changed in an update request', function() {
         var idRandom = 'id' + Date.now();
 
         var TEST_OBJECT = {
@@ -240,6 +241,7 @@ describe('In RESOURCES module', function() {
                     corbelDriver.resources.collection(COLLECTION_NAME_CRUD).add(malformedObject)
                     .should.eventually.be.rejected
                     .then(function(e) {
+                        // After solve the bug there will be unnecesary parse 'e'
                         var error = JSON.parse(e.data.responseText);
 
                         expect(e).to.have.property('status', 422);
@@ -254,6 +256,7 @@ describe('In RESOURCES module', function() {
                         .should.eventually.be.rejected;
                     })
                     .then(function(e) {
+                        // After solve the bug there will be unnecesary parse 'e'
                         var error = JSON.parse(e.data.responseText);
 
                         expect(e).to.have.property('status', 422);
@@ -266,7 +269,7 @@ describe('In RESOURCES module', function() {
             }
         }
       });
-      describe('you create an object wit.skiph not allowed attributes starting with an underscore', function() {
+      describe('you create an object with skip not allowed attributes starting with an underscore', function() {
 
         it('fails returning INVALID ENTITY (422)', function(done) {
             var resourceId;
@@ -278,6 +281,7 @@ describe('In RESOURCES module', function() {
             corbelDriver.resources.collection(COLLECTION_NAME_CRUD).add(underscoreObject)
             .should.eventually.be.rejected
             .then(function(e) {
+                // After solve the bug there will be unnecesary parse 'e'
                 var error = JSON.parse(e.data.responseText);
 
                 expect(e).to.have.property('status', 422);
@@ -294,6 +298,7 @@ describe('In RESOURCES module', function() {
                 .should.eventually.be.rejected;
             })
             .then(function(e) {
+                // After solve the bug there will be unnecesary parse 'e'
                 var error = JSON.parse(e.data.responseText);
 
                 expect(e).to.have.property('status', 422);
