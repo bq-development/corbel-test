@@ -23,7 +23,7 @@ module.exports = function(config) {
       'node_modules/babel-core/browser-polyfill.js',
       'node_modules/q/q.js',
       'bower_components/corbel-js/dist/corbel.js',
-      'bower_components/underscore/underscore.js',
+      'bower_components/lodash/lodash.js',
       'src/corbel-test.module.js',
       'src/**/*.js',
       //'src/**/*.css',
