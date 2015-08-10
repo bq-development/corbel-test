@@ -26,7 +26,6 @@ module.exports = function(config) {
       'bower_components/lodash/lodash.js',
       'src/corbel-test.module.js',
       'src/**/*.js',
-      //'src/**/*.css',
       '.tmp/**/*.js',
       'test/**/*.js'
     ],
