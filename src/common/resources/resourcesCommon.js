@@ -64,4 +64,45 @@
         createdQueryObject = [];
         return Promise.all(promises);
     };
+
+    corbelTest.resources.checkSortingAsc = function(resourceList, field) {
+        return checkSorting(resourceList, field, function(previous, next) {
+            return previous <= next;
+        });
+    };
+
+    corbelTest.resources.checkSortingDesc = function(resourceList, field) {
+        return checkSorting(resourceList, field, function(previous, next) {
+            return previous >= next;
+        });
+    };
+
+    function checkSorting(resourceList, field, compareFunction) {
+        var lastValue = getProperty(resourceList[0], field);
+        return resourceList.every(function(resource) {
+            return compareFunction(lastValue, getProperty(resource, field)) ? 
+                (lastValue = getProperty(resource, field)) === lastValue : false;
+        });
+    }
+
+    function getProperty(obj, prop) {
+        var parts = prop.split('.'),
+            last = parts.pop(),
+            length = parts.length,
+            count = 1,
+            current = parts[0];
+
+        if (length === 0) {
+            return obj[prop];
+        }
+
+        while ((obj = obj[current]) && count < length) {
+            current = parts[count];
+            count++;
+        }
+
+        if (obj) {
+            return obj[last];
+        }
+    }
 })();
