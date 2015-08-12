@@ -12,7 +12,7 @@
    * @return {object} a corbel config object
    */
   function getConfig(clientName) {
-    var commonConfig =_.clone(corbelTest.CONFIG['COMMON']);
+    var commonConfig =_.cloneDeep(corbelTest.CONFIG['COMMON']);
     if (corbelTest.CONFIG.ENV) {
       commonConfig.urlBase = commonConfig.urlBase.replace('{{ENV}}', corbelTest.CONFIG.ENV);
     }
@@ -37,7 +37,7 @@
       }
 
       // Generate a driver config between descriptor and user saved config
-      driverConfig = _.extend(_.clone(driverConfig), savedConfig);
+      driverConfig = _.extend(_.cloneDeep(driverConfig), savedConfig);
       corbelTest.drivers[clientName] = corbel.getDriver(driverConfig);
       var params = null;
       if (driverConfig.username && driverConfig.password) {
