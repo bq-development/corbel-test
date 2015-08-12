@@ -1,6 +1,15 @@
 {
   "ENV": "int",
   "DOMAIN": "silkroad-qa",
+  "VERSION":"1.0.0",
+  "jwtAlgorithm": "HS256",
+  "testPrn": "silkroad-qa@bqreaders.com",
+  "clientIdrequestDomainClient": "be246f55",
+  "claimExp": "3500",
+  "requestDomain": "silkroad-qa",
+  "clientIdSilkroad": "f6a28cc7",
+  "requestDomainClient": "bitbloq",
+  "aud":"http://iam.bqws.io",
   "DEFAULT_CLIENT": {
     "clientId": "a9fb0e79",
     "clientSecret": "90f6ed907ce7e2426e51aa52a18470195f4eb04725beb41569db3f796a018dbd",
