@@ -1,6 +1,8 @@
+
   var drivers = {};
   var tokens = {};
   var logins = {};
+
 
   /**
    * Create a new driver with the clientName creadentials.
@@ -20,8 +22,9 @@
       }
 
       // Generate a driver config between descriptor and user saved config
-      driverConfig = _.extend(_.clone(driverConfig), savedConfig);
+        driverConfig = _.extend(_.clone(driverConfig), savedConfig);
       drivers[clientName] = corbel.getDriver(driverConfig);
+
       var params = null;
       if (driverConfig.username && driverConfig.password) {
         params = {
@@ -57,7 +60,7 @@
 
 
 module.exports = {
-  login : login, 
+  login : login,
   loginAll : loginAll,
   drivers : drivers,
   logins : logins,
