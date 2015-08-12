@@ -1,32 +1,39 @@
 {
-  "ENV": "int",
-  "DOMAIN": "test-domain",
-  "DEFAULT_CLIENT": {
-    "clientId": "CLIENT_ID",
-    "clientSecret": "CLIENT_SECRET",
-    "scopes": "SCOPES"
-  },
-  "ADMIN_CLIENT": {
-    "clientId": "CLIENT_ID",
-    "clientSecret": "CLIENT_SECRET",
-    "scopes": "SCOPES"
-  },
-  "DEFAULT_USER": {
-    "clientId": "CLIENT_ID",
-    "clientSecret": "CLIENT_SECRET",
-    "scopes": "SCOPES",
-    "username": "username@test.com",
-    "password": "testpassword"
-  },
-  "ADMIN_SKIP": {
-    "clientId": "CLIENT_ID",
-    "clientSecret": "CLIENT_SECRET",
-    "scopes": "SCOPES",
-    "username": "user@test.com",
-    "password": "testpassword",
-    "oauthService": "oauthService"
-  },
-  "COMMON": {
-    "urlBase": "https://{{module}}-{{ENV}}.mydomain.com/v1.0/"
-  }
+    "ENV": "int",
+    "VERSION": "1.0.0",
+    "claimExp": "3500",
+    "DOMAIN": "test-domain",
+    "DEFAULT_CLIENT": {
+        "clientId": "CLIENT_ID",
+        "clientSecret": "CLIENT_SECRET",
+        "scopes": "SCOPES"
+    },
+    "ADMIN_CLIENT": {
+        "clientId": "CLIENT_ID",
+        "clientSecret": "CLIENT_SECRET",
+        "scopes": "SCOPES"
+    },
+    "DEFAULT_USER": {
+        "clientId": "CLIENT_ID",
+        "clientSecret": "CLIENT_SECRET",
+        "scopes": "SCOPES",
+        "username": "username@test.com",
+        "password": "testpassword"
+    },
+    "ADMIN_SKIP": {
+        "clientId": "CLIENT_ID",
+        "clientSecret": "CLIENT_SECRET",
+        "scopes": "SCOPES",
+        "username": "user@test.com",
+        "password": "testpassword",
+        "oauthService": "oauthService"
+    },
+    "ROOT_CLIENT": {
+        "clientId": "CLIENT_ID",
+        "clientSecret": "CLIENT_SECRET",
+        "scopes": "SCOPES"
+    },
+    "COMMON": {
+        "urlBase": "https://{{module}}-{{ENV}}.mydomain.com/v1.0/"
+    }
 }
