@@ -1,6 +1,8 @@
 {
   "ENV": "int",
   "DOMAIN": "silkroad-qa",
+  "VERSION":"1.0.0",
+  "claimExp": "3500",
   "DEFAULT_CLIENT": {
     "clientId": "a9fb0e79",
     "clientSecret": "90f6ed907ce7e2426e51aa52a18470195f4eb04725beb41569db3f796a018dbd",
@@ -26,8 +28,15 @@
     "password": "foopass",
     "oauthService": "silkroad"
   },
+  "ROOT_CLIENT": {
+    "clientId": "a9d11222",
+    "clientSecret":"90f6ed907ce7e2426e51aa52a18470195f4eb04725beb41569db3f796a018dbd",
+    "scopes":"silkroad-qa:root"
+  },
   "COMMON": {
     "urlBase": "https://{{module}}-{{ENV}}.bqws.io/v1.0/"
   }
 }
+
+
 
