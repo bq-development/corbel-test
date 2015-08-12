@@ -6,7 +6,7 @@ describe('In RESOURCES module', function() {
     });
 
     describe('In RESMI module, with a collection with some elements,', function() {
-        var COLLECTION = 'test:CoreJSObjectAggregation' + Date.now();
+        var COLLECTION = 'test:CorbelJSObjectAggregation' + Date.now();
         var amount = 50;
         // sum = (n/2) * (a1 + an)
         // n = 50; a1 = 4/3; an = 151/3
@@ -14,14 +14,14 @@ describe('In RESOURCES module', function() {
 
         before(function(done) {
 
-            corbelTest.resources.createdObjectsToQuery(corbelDriver, COLLECTION, amount).
-            should.eventually.be.fulfilled.notify(done);
+            corbelTest.resources.createdObjectsToQuery(corbelDriver, COLLECTION, amount)
+            .should.eventually.be.fulfilled.notify(done);
         });
 
         after(function(done) {
-            corbelTest.resources.cleanResourcesQuery(corbelDriver).
-            should.eventually.be.fulfilled.
-            should.eventually.be.fulfilled.notify(done);
+            corbelTest.resources.cleanResourcesQuery(corbelDriver)
+            .should.eventually.be.fulfilled
+            .should.eventually.be.fulfilled.notify(done);
         });
 
 
@@ -33,12 +33,13 @@ describe('In RESOURCES module', function() {
                         '$count': '*'
                     }
                 };
-                corbelDriver.resources.collection(COLLECTION).get(params).
-                should.eventually.be.fulfilled.
+                corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.eventually.be.fulfilled.
                 then(function(result) {
                     expect(result.data).to.have.property('count').to.be.equal(amount);
-                }).
-                should.eventually.be.fulfilled.notify(done);
+                })
+                .should.eventually.be.fulfilled.notify(done);
             });
         });
 
@@ -55,12 +56,13 @@ describe('In RESOURCES module', function() {
                         }
                     }]
                 };
-                corbelDriver.resources.collection(COLLECTION).get(params).
-                should.eventually.be.fulfilled.
-                then(function(result) {
+                corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.eventually.be.fulfilled
+                .then(function(result) {
                     expect(result.data).to.have.property('count').to.be.equal(1);
-                }).
-                should.eventually.be.fulfilled.notify(done);
+                })
+                .should.eventually.be.fulfilled.notify(done);
             });
         });
 
@@ -72,12 +74,13 @@ describe('In RESOURCES module', function() {
                         '$sum': 'computableField'
                     }
                 };
-                corbelDriver.resources.collection(COLLECTION).get(params).
-                should.eventually.be.fulfilled.
-                then(function(result) {
+                corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.eventually.be.fulfilled
+                .then(function(result) {
                     expect(result.data).to.have.property('sum').to.be.closeTo(sum, 0.000000000001);
-                }).
-                should.eventually.be.fulfilled.notify(done);
+                })
+                .should.eventually.be.fulfilled.notify(done);
             });
 
             it('returns 0 when applied on a non numeric field', function(done) {
@@ -86,12 +89,13 @@ describe('In RESOURCES module', function() {
                         '$sum': 'stringSortCut'
                     }
                 };
-                corbelDriver.resources.collection(COLLECTION).get(params).
-                should.eventually.be.fulfilled.
-                then(function(result) {
+                corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.eventually.be.fulfilled
+                .then(function(result) {
                     expect(result.data).to.have.property('sum').to.be.equal(0);
-                }).
-                should.eventually.be.fulfilled.notify(done);
+                })
+                .should.eventually.be.fulfilled.notify(done);
             });
         });
 
@@ -103,12 +107,13 @@ describe('In RESOURCES module', function() {
                         '$avg': 'computableField'
                     }
                 };
-                corbelDriver.resources.collection(COLLECTION).get(params).
-                should.eventually.be.fulfilled.
-                then(function(result) {
+                corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.eventually.be.fulfilled
+                .then(function(result) {
                     expect(result.data).to.have.property('average').to.be.closeTo(sum / amount, 0.000000000001);
-                }).
-                should.eventually.be.fulfilled.notify(done);
+                })
+                .should.eventually.be.fulfilled.notify(done);
             });
 
             it('returns 0 when applied on a non numeric field', function(done) {
@@ -117,12 +122,13 @@ describe('In RESOURCES module', function() {
                         '$avg': 'stringSortCut'
                     }
                 };
-                corbelDriver.resources.collection(COLLECTION).get(params).
-                should.eventually.be.fulfilled.
-                then(function(result) {
+                corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.eventually.be.fulfilled
+                .then(function(result) {
                     expect(result.data).to.have.property('average').to.be.equal(0);
-                }).
-                should.eventually.be.fulfilled.notify(done);
+                })
+                .should.eventually.be.fulfilled.notify(done);
             });
         });
 
@@ -132,12 +138,13 @@ describe('In RESOURCES module', function() {
                 var params = {
                     aggregation: {}
                 };
-                corbelDriver.resources.collection(COLLECTION).get(params).
-                should.eventually.be.rejected.
-                then(function(e) {
+                corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.eventually.be.rejected
+                .then(function(e) {
                     expect(e).to.have.property('status', 400);
-                }).
-                should.eventually.be.fulfilled.notify(done);
+                })
+                .should.eventually.be.fulfilled.notify(done);
             });
 
             it('returns an error when there are more than one operator', function(done) {
@@ -147,12 +154,13 @@ describe('In RESOURCES module', function() {
                         '$sum': 'xxxxx'
                     }
                 };
-                corbelDriver.resources.collection(COLLECTION).get(params).
-                should.eventually.be.rejected.
-                then(function(e) {
+                corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.eventually.be.rejected
+                .then(function(e) {
                     expect(e).to.have.property('status', 400);
-                }).
-                should.eventually.be.fulfilled.notify(done);
+                })
+                .should.eventually.be.fulfilled.notify(done);
             });
         });
 
@@ -172,12 +180,13 @@ describe('In RESOURCES module', function() {
                         }
                     }]
                 };
-                corbelDriver.resources.collection(COLLECTION).get(params).
-                should.eventually.be.fulfilled.
-                then(function(result) {
+                corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.eventually.be.fulfilled
+                .then(function(result) {
                     expect(result.data).to.have.property('count').to.be.equal(1);
-                }).
-                should.eventually.be.fulfilled.notify(done);
+                })
+                .should.eventually.be.fulfilled.notify(done);
             });
         });
     });
