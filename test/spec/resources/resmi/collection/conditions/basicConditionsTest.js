@@ -33,7 +33,7 @@ describe('In RESOURCES module', function() {
                     .should.eventually.be.rejected;
                 })
                 .then(function(e) {
-                    // After solve the bug there will be unnecesary parse 'e'
+                    //TODO send an object instead of string to avoid parse
                     var error = JSON.parse(e.data.responseText);
 
                     expect(e).to.have.property('status', 412);
@@ -59,7 +59,7 @@ describe('In RESOURCES module', function() {
                     .should.eventually.be.rejected;
                 })
                 .then(function(e) {
-                    // After solve the bug there will be unnecesary parse 'e'
+                    //TODO send an object instead of string to avoid parse
                     var error = JSON.parse(e.data.responseText);
 
                     expect(e).to.have.property('status', 412);
@@ -129,7 +129,7 @@ describe('In RESOURCES module', function() {
                 .update(TEST_OBJECT, params)
                 .should.eventually.be.rejected
                 .then(function(e) {
-                    // After solve the bug there will be unnecesary parse 'e'
+                    //TODO send an object instead of string to avoid parse
                     var error = JSON.parse(e.data.responseText);
 
                     expect(e).to.have.property('status', 412);
@@ -138,7 +138,7 @@ describe('In RESOURCES module', function() {
                     .should.eventually.be.rejected;
                 })
                 .then(function(e) {
-                    // After solve the bug there will be unnecesary parse 'e'
+                    //TODO send an object instead of string to avoid parse
                     var error = JSON.parse(e.data.responseText);
 
                     expect(e).to.have.property('status', 404);
