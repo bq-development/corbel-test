@@ -19,7 +19,7 @@ describe('In RESOURCES module', function() {
 
         describe('Collection has queries and when', function() {
 
-            describe('Get collection using the query language equals', function() {
+            describe('get collection using the query language equals', function() {
 
                 it('successes returning elements satisfying the numeric equality', function(done) {
                     var params = {
@@ -93,15 +93,9 @@ describe('In RESOURCES module', function() {
                         response.data.forEach(function(element) {
                             expect(element.stringSortCut).to.be.equal('Test Short Cut');
                         });
-                    }).catch(function(e){
-                        debugger; // jshint ignore:line
-                        
                     })
                     .should.eventually.be.fulfilled.notify(done);
                 });
-            });
-
-            describe('Get collection using the queries language equals', function() {
 
                 it('successes returning elements satisfying the numeric equality', function(done) {
                     var params = {
@@ -132,9 +126,29 @@ describe('In RESOURCES module', function() {
                     })
                     .should.eventually.be.fulfilled.notify(done);
                 });
+
+                it.only('success returning elements satisfying date equality', function(done) {
+                    var testDate = 1436889600;
+
+                    var params = {
+                        query: [{
+                            '$eq': {
+                                objectDate: testDate
+                            }
+                        }]
+                    };
+                    corbelDriver.resources.collection(COLLECTION)
+                    .get(params)
+                    .should.eventually.be.fulfilled
+                    .then(function(response) {
+                        expect(response.data.length).to.be.equal(1);
+                        expect(response.data[0].objectDate).to.be.equal(1436889600);
+                    })
+                    .should.eventually.be.fulfilled.notify(done);
+                });
             });
 
-            describe('Get collection using the query language greater than', function() {
+            describe('get collection using the query language greater than', function() {
 
                 it('successes returning elements satisfying intField greater than 700', function(done) {
                     var params = {
@@ -178,7 +192,7 @@ describe('In RESOURCES module', function() {
                 });
             });
 
-            describe('Get collection using the query language less than', function() {
+            describe('get collection using the query language less than', function() {
 
                 it('successes returning elements satisfying the request intField' +
                        ' less than 300', function(done) {
@@ -223,7 +237,7 @@ describe('In RESOURCES module', function() {
                 });
             });
 
-            describe('Get collection using the query language greater and less than equals', function() {
+            describe('get collection using the query language greater and less than equals', function() {
 
                 it('successes returning elements satisfying the request', function(done) {
                     var params = {
@@ -237,6 +251,7 @@ describe('In RESOURCES module', function() {
                             }
                         }]
                     };
+
                     corbelDriver.resources.collection(COLLECTION)
                     .get(params)
                     .should.eventually.be.fulfilled
@@ -250,7 +265,7 @@ describe('In RESOURCES module', function() {
                 });
             });
 
-            describe('Get collection using the query language equals and query in', function() {
+            describe('get collection using the query language equals and query in', function() {
 
                 it('successes returning elements satisfying the request', function(done) {
                     var params = {
@@ -277,7 +292,7 @@ describe('In RESOURCES module', function() {
                 });
             });
 
-            describe('Get collection using the query language contains element', function() {
+            describe('get collection using the query language contains element', function() {
 
                 it('successes returning elements satisfying the request', function(done) {
                     var params = {
@@ -300,7 +315,7 @@ describe('In RESOURCES module', function() {
                 });
             });
 
-            describe('Get collection using the query language not contains element', function() {
+            describe('get collection using the query language not contains element', function() {
 
                 it('successes returning elements satisfying the request', function(done) {
                     var params = {
@@ -323,7 +338,7 @@ describe('In RESOURCES module', function() {
                 });
             });
 
-            describe('Get collection using the query language not equal', function() {
+            describe('get collection using the query language not equal', function() {
 
                 it('successes returning elements satisfying the request with intField' +
                        ' different of 500', function(done) {
@@ -347,7 +362,7 @@ describe('In RESOURCES module', function() {
                 });
             });
 
-            describe('Get collection using the query language like with a regular expression', function() {
+            describe('get collection using the query language like with a regular expression', function() {
 
                 it('successes returning elements satisfying the request pattern of StringField' +
                        ' equals [A-Za-z]*1[0-9]*', function(done) {
@@ -371,7 +386,7 @@ describe('In RESOURCES module', function() {
                 });
             });
 
-            describe('Get collection using the query language like', function() {
+            describe('get collection using the query language like', function() {
 
                 it('successes returning elements satisfying the request ', function(done) {
                     var params = {
@@ -393,7 +408,7 @@ describe('In RESOURCES module', function() {
                 });
             });
 
-            describe('Get collection matching element in array using like ', function() {
+            describe('get collection matching element in array using like ', function() {
 
                 it('successes returning elements satisfying the request', function(done) {
                     var params = {
@@ -422,7 +437,7 @@ describe('In RESOURCES module', function() {
                 });
             });
 
-            describe('Get collection using sorting,pagination and query', function() {
+            describe('get collection using sorting,pagination and query', function() {
 
                 it('successes returning the list with the number of resources', function(done) {
                     var params = {
@@ -453,7 +468,7 @@ describe('In RESOURCES module', function() {
                 });
             });
 
-            describe('Get collection using invalid format query', function() {
+            describe('get collection using invalid format query', function() {
 
                 it('fails returning BAD request (400) invalid query ', function(done) {
                     var params = {
