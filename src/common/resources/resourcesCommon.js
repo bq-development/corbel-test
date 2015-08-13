@@ -24,6 +24,8 @@
 
     corbelTest.resources.createdObjectsToQuery = function(driver, collectionName, amount, extraField) {
         var promises = [];
+        var year = 2015;
+        var month = 6;
 
         for (var count = 1; count <= amount; count++) {
             var json = {
@@ -42,7 +44,7 @@
                     identifier: 'id' + count,
                     type: 'premium'
                 }],
-                objectDate: 1436803200 + (3600 * 24 * count)
+                //objectDate: ISODate( + new Date(year, month, count).toISOString() + ')'
             };
 
             if(extraField) {
