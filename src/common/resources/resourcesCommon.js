@@ -41,11 +41,12 @@
                     name: 'premium',
                     identifier: 'id' + count,
                     type: 'premium'
-                }]
+                }],
+                objectDate: 1436803200 + (3600 * 24 * count)
             };
 
             if(extraField) {
-                json.extra = extraField; 
+                json.extra = extraField;
             }
 
             var promise = driver.resources.collection(collectionName).add(json);
@@ -80,7 +81,7 @@
     function checkSorting(resourceList, field, compareFunction) {
         var lastValue = getProperty(resourceList[0], field);
         return resourceList.every(function(resource) {
-            return compareFunction(lastValue, getProperty(resource, field)) ? 
+            return compareFunction(lastValue, getProperty(resource, field)) ?
                 (lastValue = getProperty(resource, field)) === lastValue : false;
         });
     }
