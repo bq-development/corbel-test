@@ -16,7 +16,7 @@
   "devDependencies": {
     "babel-core": "^5.8.3",
     "chai": "^3.0.0",
-    "corbel-js": "0.0.11",
+    "corbel-js": "^0.1.0",
     "grunt": "^0.4.5",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-jshint": "^0.11.2",
@@ -35,5 +35,8 @@
     "q": "^1.4.1",
     "sinon": "^1.15.4",
     "time-grunt": "^1.2.1"
+  },
+  "dependencies": {
+    "lodash": "^3.10.1"
   }
 }

@@ -6,6 +6,8 @@ describe('In RESOURCES module', function() {
     });
 
     describe('In RESMI module, with a collection with some elements,', function() {
+        this.timeout(10000);
+        
         var COLLECTION = 'test:CoreJSObjectAggregation' + Date.now();
         var amount = 50;
         // sum = (n/2) * (a1 + an)
