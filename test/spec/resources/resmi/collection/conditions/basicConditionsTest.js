@@ -9,11 +9,14 @@ describe('In RESOURCES module', function() {
         var COLLECTION_NAME_CRUD = 'test:ConditionalPUT' + Date.now();
 
         describe('when does conditional update', function() {
+            var valueFirst = 'first' + Date.now(),
+                valueSecond = 'second' + Date.now(),
+                valueThird = 'third' + Date.now();
 
             it('the condition must be satisfied to update', function(done) {
                 var resourceId;
                 var TEST_OBJECT = {
-                    test: 1
+                    test: valueFirst
                 };
 
                 corbelDriver.resources.collection(COLLECTION_NAME_CRUD).add(TEST_OBJECT)
@@ -23,18 +26,18 @@ describe('In RESOURCES module', function() {
                     var params = {
                         condition: [{
                             '$eq': {
-                                test: 2
+                                test: valueSecond
                             }
                         }]
                     };
-                    TEST_OBJECT.test = 2;
+                    TEST_OBJECT.test = valueSecond;
                     return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId)
-                    .update(TEST_OBJECT, params)
-                    .should.eventually.be.rejected;
+                    .update(TEST_OBJECT, params);
                 })
+                .should.eventually.be.rejected
                 .then(function(e) {
-                    //TODO send an object instead of string to avoid parse
-                    var error = JSON.parse(e.data.responseText);
+
+                    var error = e.data;
 
                     expect(e).to.have.property('status', 412);
                     expect(error).to.have.property('error', 'precondition_failed');
@@ -42,36 +45,36 @@ describe('In RESOURCES module', function() {
                         conditions: [{
                             condition: [{
                                 '$eq': {
-                                    test: 2
+                                    test: valueSecond
                                 }
                             }]
                         }, {
                             condition: [{
                                 '$eq': {
-                                    test: 3
+                                    test: valueThird
                                 }
                             }]
                         }]
                     };
-                    TEST_OBJECT.test = 3;
+                    TEST_OBJECT.test = valueThird;
                     return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId)
                     .update(TEST_OBJECT,params)
                     .should.eventually.be.rejected;
                 })
                 .then(function(e) {
-                    //TODO send an object instead of string to avoid parse
-                    var error = JSON.parse(e.data.responseText);
+
+                    var error = e.data;
 
                     expect(e).to.have.property('status', 412);
                     expect(error).to.have.property('error', 'precondition_failed');
                     var params = {
                         condition: [{
                             '$eq': {
-                                test: 1
+                                test: valueFirst
                             }
                         }]
                     };
-                    TEST_OBJECT.test = 2;
+                    TEST_OBJECT.test = valueSecond;
 
                     return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId)
                     .update(TEST_OBJECT, params)
@@ -82,18 +85,18 @@ describe('In RESOURCES module', function() {
                         conditions: [{
                             condition: [{
                                 '$eq': {
-                                    test: 1
+                                    test: valueFirst
                                 }
                             }]
                         }, {
                             condition: [{
                                 '$eq': {
-                                    test: 2
+                                    test: valueSecond
                                 }
                             }]
                         }]
                     };
-                    TEST_OBJECT.test = 3;
+                    TEST_OBJECT.test = valueThird;
 
                     return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId)
                     .update(TEST_OBJECT, params)
@@ -104,7 +107,7 @@ describe('In RESOURCES module', function() {
                     .should.eventually.be.fulfilled;
                 })
                 .then(function(resultObject) {
-                    expect(resultObject.data.test).to.be.equal(3);
+                    expect(resultObject.data.test).to.be.equal(valueThird);
                     return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId).delete()
                     .should.eventually.be.fulfilled;
                 })
@@ -129,8 +132,8 @@ describe('In RESOURCES module', function() {
                 .update(TEST_OBJECT, params)
                 .should.eventually.be.rejected
                 .then(function(e) {
-                    //TODO send an object instead of string to avoid parse
-                    var error = JSON.parse(e.data.responseText);
+
+                    var error = e.data;
 
                     expect(e).to.have.property('status', 412);
                     expect(error).to.have.property('error', 'precondition_failed');
@@ -138,8 +141,8 @@ describe('In RESOURCES module', function() {
                     .should.eventually.be.rejected;
                 })
                 .then(function(e) {
-                    //TODO send an object instead of string to avoid parse
-                    var error = JSON.parse(e.data.responseText);
+
+                    var error = e.data;
 
                     expect(e).to.have.property('status', 404);
                     expect(error).to.have.property('error', 'not_found');

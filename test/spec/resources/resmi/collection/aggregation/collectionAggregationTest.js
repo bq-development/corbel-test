@@ -6,7 +6,11 @@ describe('In RESOURCES module', function() {
     });
 
     describe('In RESMI module, with a collection with some elements,', function() {
+
+        this.timeout(10000);
+        
         var COLLECTION = 'test:CorbelJSObjectAggregation' + Date.now();
+
         var amount = 50;
         var sum = 25 * 155 / 3;
 
