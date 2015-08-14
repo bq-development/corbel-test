@@ -467,8 +467,7 @@ describe('In RESOURCES module', function() {
                     .get(params)
                     .should.eventually.be.rejected
                     .then(function(e) {
-                        // After solve the bug there will be unnecesary parse 'e'
-                        var error = JSON.parse(e.data.responseText);
+                        var error = e.data;
                         
                         expect(e).to.have.property('status', 400);
                         expect(error).to.have.property('error', 'invalid_query');
@@ -494,8 +493,7 @@ describe('In RESOURCES module', function() {
                     .get(params)
                     .should.eventually.be.rejected
                     .then(function(e) {
-                        // After solve the bug there will be unnecesary parse 'e'
-                        var error = JSON.parse(e.data.responseText);
+                        var error = e.data;
 
                         expect(e).to.have.property('status', 400);
                         expect(error).to.have.property('error', 'invalid_query');

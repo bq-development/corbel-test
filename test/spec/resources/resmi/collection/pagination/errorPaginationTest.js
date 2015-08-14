@@ -26,8 +26,7 @@ describe('In RESOURCES module', function() {
                     .get(params)
                     .should.to.eventually.be.rejected
                     .then(function(e) {
-                        //TODO send an object instead of string to avoid parse
-                        var error = JSON.parse(e.data.responseText);
+                        var error = e.data;
 
                         expect(e).to.have.property('status', 400);
                         expect(error).to.have.property('error', 'invalid_page_size');
@@ -48,8 +47,7 @@ describe('In RESOURCES module', function() {
                     .get(params)
                     .should.to.eventually.be.rejected
                     .then(function(e) {
-                        //TODO send an object instead of string to avoid parse
-                        var error = JSON.parse(e.data.responseText);
+                        var error = e.data;
 
                         expect(e).to.have.property('status', 400);
                         expect(error).to.have.property('error', 'invalid_page_size');
@@ -70,8 +68,7 @@ describe('In RESOURCES module', function() {
                     .get(params)
                     .should.to.eventually.be.rejected
                     .then(function(e) {
-                        //TODO send an object instead of string to avoid parse
-                        var error = JSON.parse(e.data.responseText);
+                        var error = e.data;
 
                         expect(e).to.have.property('status', 400);
                         expect(error).to.have.property('error', 'bad_request');
@@ -92,8 +89,7 @@ describe('In RESOURCES module', function() {
                     .get(params)
                     .should.to.eventually.be.rejected
                     .then(function(e) {
-                        //TODO send an object instead of string to avoid parse
-                        var error = JSON.parse(e.data.responseText);
+                        var error = e.data;
 
                         expect(e).to.have.property('status', 400);
                         expect(error).to.have.property('error', 'bad_request');
@@ -114,8 +110,7 @@ describe('In RESOURCES module', function() {
                     .get(params)
                     .should.to.eventually.be.rejected
                     .then(function(e) {
-                        //TODO send an object instead of string to avoid parse
-                        var error = JSON.parse(e.data.responseText);
+                        var error = e.data;
 
                         expect(e).to.have.property('status', 400);
                         expect(error).to.have.property('error', 'invalid_page');
@@ -144,8 +139,7 @@ describe('In RESOURCES module', function() {
                     .get(params)
                     .should.to.eventually.be.rejected
                     .then(function(e) {
-                        //TODO send an object instead of string to avoid parse
-                        var error = JSON.parse(e.data.responseText);
+                        var error = e.data;
 
                         expect(e).to.have.property('status', 400);
                         expect(error).to.have.property('error', 'invalid_query');
