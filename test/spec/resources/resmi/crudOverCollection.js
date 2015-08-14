@@ -81,8 +81,7 @@ describe('In RESOURCES module', function() {
                 .should.eventually.be.rejected;
               })
               .then(function(e) {
-                // After solve the bug there will be unnecesary parse 'e'
-                var error = JSON.parse(e.data.responseText);
+                var error = e.data;
 
                 expect(e).to.have.property('status', 404);
                 expect(error).to.have.property('error', 'not_found');
@@ -241,8 +240,7 @@ describe('In RESOURCES module', function() {
                     corbelDriver.resources.collection(COLLECTION_NAME_CRUD).add(malformedObject)
                     .should.eventually.be.rejected
                     .then(function(e) {
-                        // After solve the bug there will be unnecesary parse 'e'
-                        var error = JSON.parse(e.data.responseText);
+                        var error = e.data;
 
                         expect(e).to.have.property('status', 422);
                         expect(error).to.have.property('error', 'invalid_entity');
@@ -256,8 +254,7 @@ describe('In RESOURCES module', function() {
                         .should.eventually.be.rejected;
                     })
                     .then(function(e) {
-                        // After solve the bug there will be unnecesary parse 'e'
-                        var error = JSON.parse(e.data.responseText);
+                        var error = e.data;
 
                         expect(e).to.have.property('status', 422);
                         expect(error).to.have.property('error', 'invalid_entity');
@@ -281,8 +278,7 @@ describe('In RESOURCES module', function() {
             corbelDriver.resources.collection(COLLECTION_NAME_CRUD).add(underscoreObject)
             .should.eventually.be.rejected
             .then(function(e) {
-                // After solve the bug there will be unnecesary parse 'e'
-                var error = JSON.parse(e.data.responseText);
+                var error = e.data;
 
                 expect(e).to.have.property('status', 422);
                 expect(error).to.have.property('error', 'invalid_entity');
@@ -298,8 +294,7 @@ describe('In RESOURCES module', function() {
                 .should.eventually.be.rejected;
             })
             .then(function(e) {
-                // After solve the bug there will be unnecesary parse 'e'
-                var error = JSON.parse(e.data.responseText);
+                var error = e.data;
 
                 expect(e).to.have.property('status', 422);
                 expect(error).to.have.property('error', 'invalid_entity');
