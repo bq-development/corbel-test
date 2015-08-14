@@ -62,6 +62,8 @@
     "corbelTest": true,
     "Promise": true,
     "expect": true,
-    "sinon": true
+    "sinon": true,
+    "q": true,
+    "Q": true
   }
 }

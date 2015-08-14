@@ -465,7 +465,7 @@ describe('In RESOURCES module', function() {
                         },
                         pagination: {
                             page: 0,
-                            size: 3
+                            pageSize: 3
                         },
                         query: [{
                             '$lt': {
