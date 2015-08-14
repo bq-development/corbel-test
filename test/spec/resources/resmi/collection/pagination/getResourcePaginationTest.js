@@ -58,7 +58,7 @@ describe('In RESOURCES module', function() {
                 it('successes returning the default page with an specific page size', function(done) {
                     var params = {
                         pagination: {
-                            size: 3
+                            pageSize: 3
                         }
                     };
 
@@ -78,7 +78,7 @@ describe('In RESOURCES module', function() {
                     var params = {
                         pagination: {
                             page: 1,
-                            size: 2
+                            pageSize: 2
                         }
                     };
 
@@ -97,7 +97,7 @@ describe('In RESOURCES module', function() {
                 it('successes returning maximum page size', function(done) {
                     var params = {
                         pagination: {
-                            size: RESOURCES_MAX_PAGE_SIZE
+                            pageSize: RESOURCES_MAX_PAGE_SIZE
                         }
                     };
 
@@ -116,7 +116,7 @@ describe('In RESOURCES module', function() {
                 it('successes returning invalid page size', function(done) {
                     var params = {
                         pagination: {
-                            size: RESOURCES_MIN_PAGE_SIZE
+                            pageSize: RESOURCES_MIN_PAGE_SIZE
                         }
                     };
 
@@ -140,7 +140,7 @@ describe('In RESOURCES module', function() {
                             }
                         }],
                         pagination: {
-                            size: 3
+                            pageSize: 3
                         }
                     };
 
@@ -170,7 +170,7 @@ describe('In RESOURCES module', function() {
                         }],
                         pagination: {
                             page: 1,
-                            size: 3
+                            pageSize: 3
                         }
                     };
 
