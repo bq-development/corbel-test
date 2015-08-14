@@ -63,6 +63,7 @@
     "Promise": true,
     "expect": true,
     "sinon": true,
-    "q": true
+    "q": true,
+    "Q": true
   }
 }
