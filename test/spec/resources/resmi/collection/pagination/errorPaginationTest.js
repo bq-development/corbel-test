@@ -4,7 +4,7 @@ describe('In RESOURCES module', function() {
     var RESOURCES_MAX_PAGE_SIZE = 50;
     var RESOURCES_MIN_PAGE_SIZE = 1;
     
-    describe('In RESMI module', function() {
+    describe('In RESMI module, testing pagination', function() {
 
         before(function() {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
@@ -16,7 +16,7 @@ describe('In RESOURCES module', function() {
 
             describe('get collection with page size greater than maximum number of elements for page', function() {
 
-                it('fails returning BAD REQUEST (400) invalid page size', function(done) {
+                it('fails returning BAD REQUEST (400) invalid pageSize', function(done) {
                     var params = {
                         pagination: {
                             pageSize: RESOURCES_MAX_PAGE_SIZE + 1
@@ -26,10 +26,8 @@ describe('In RESOURCES module', function() {
                     .get(params)
                     .should.to.eventually.be.rejected
                     .then(function(e) {
-                        var error = e.data;
-
                         expect(e).to.have.property('status', 400);
-                        expect(error).to.have.property('error', 'invalid_page_size');
+                        expect(e.data).to.have.property('error', 'invalid_page_size');
                     })
                     .should.eventually.be.fulfilled.notify(done);
                 });
@@ -37,7 +35,7 @@ describe('In RESOURCES module', function() {
 
             describe('get collection with page size less than minimum number of elements for page', function() {
 
-                it('fails returning BAD REQUEST (400) invalid page size', function(done) {
+                it('fails returning BAD REQUEST (400) invalid pageSize', function(done) {
                     var params = {
                         pagination: {
                             pageSize: -1
@@ -47,10 +45,8 @@ describe('In RESOURCES module', function() {
                     .get(params)
                     .should.to.eventually.be.rejected
                     .then(function(e) {
-                        var error = e.data;
-
                         expect(e).to.have.property('status', 400);
-                        expect(error).to.have.property('error', 'invalid_page_size');
+                        expect(e.data).to.have.property('error', 'invalid_page_size');
                     })
                     .should.eventually.be.fulfilled.notify(done);
                 });
@@ -68,10 +64,8 @@ describe('In RESOURCES module', function() {
                     .get(params)
                     .should.to.eventually.be.rejected
                     .then(function(e) {
-                        var error = e.data;
-
                         expect(e).to.have.property('status', 400);
-                        expect(error).to.have.property('error', 'bad_request');
+                        expect(e.data).to.have.property('error', 'bad_request');
                     })
                     .should.eventually.be.fulfilled.notify(done);
                 });
@@ -89,10 +83,8 @@ describe('In RESOURCES module', function() {
                     .get(params)
                     .should.to.eventually.be.rejected
                     .then(function(e) {
-                        var error = e.data;
-
                         expect(e).to.have.property('status', 400);
-                        expect(error).to.have.property('error', 'bad_request');
+                        expect(e.data).to.have.property('error', 'bad_request');
                     })
                     .should.eventually.be.fulfilled.notify(done);
                 });
@@ -100,7 +92,7 @@ describe('In RESOURCES module', function() {
 
             describe('get collection with invalid page value', function() {
                 
-                it('fails returning BAD REQUEST (400) invalid page size', function(done) {
+                it('fails returning BAD REQUEST (400) invalid pageSize', function(done) {
                     var params = {
                         pagination: {
                             page: -1
@@ -110,10 +102,8 @@ describe('In RESOURCES module', function() {
                     .get(params)
                     .should.to.eventually.be.rejected
                     .then(function(e) {
-                        var error = e.data;
-
                         expect(e).to.have.property('status', 400);
-                        expect(error).to.have.property('error', 'invalid_page');
+                        expect(e.data).to.have.property('error', 'invalid_page');
                     })
                     .should.eventually.be.fulfilled.notify(done);
                 });
@@ -139,10 +129,8 @@ describe('In RESOURCES module', function() {
                     .get(params)
                     .should.to.eventually.be.rejected
                     .then(function(e) {
-                        var error = e.data;
-
                         expect(e).to.have.property('status', 400);
-                        expect(error).to.have.property('error', 'invalid_query');
+                        expect(e.data).to.have.property('error', 'invalid_query');
                     })
                     .should.eventually.be.fulfilled.notify(done);
                 });
