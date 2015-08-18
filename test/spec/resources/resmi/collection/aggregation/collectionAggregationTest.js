@@ -5,19 +5,19 @@ describe('In RESOURCES module', function() {
       corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
     });
 
-    describe('In RESMI module, with a collection with some elements,', function() {
+    describe('In RESMI module, testing aggregation,', function() {
         var COLLECTION = 'test:CorbelJSObjectAggregation' + Date.now();
         var amount = 50;
         var sum = 25 * 155 / 3;
 
         before(function(done) {
 
-            corbelTest.resources.createdObjectsToQuery(corbelDriver, COLLECTION, amount)
+            corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION, amount)
             .should.eventually.be.fulfilled.notify(done);
         });
 
         after(function(done) {
-            corbelTest.resources.cleanResourcesQuery(corbelDriver)
+            corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
             .should.eventually.be.fulfilled
             .should.eventually.be.fulfilled.notify(done);
         });

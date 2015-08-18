@@ -22,11 +22,10 @@ module.exports = function(config) {
       // http://stackoverflow.com/questions/29391111/karma-phantomjs-and-es6-promises
       'node_modules/babel-core/browser-polyfill.js',
       'node_modules/q/q.js',
-      'bower_components/corbel-js/dist/corbel.js',
-      'bower_components/lodash/lodash.js',
-      'src/corbel-test.module.js',
-      'src/**/*.js',
+      'node_modules/corbel-js/dist/corbel.js',
+      'node_modules/lodash/index.js',
       '.tmp/**/*.js',
+      'test/beforeAll.js',
       'test/**/*.js'
     ],
 

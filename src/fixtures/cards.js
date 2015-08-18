@@ -1,6 +1,6 @@
-(function() {
+'use strict';
 
-  corbelTest.ec = {
+var cards = {
     cards: [{
       name: 'test1',
       number: '5555444433331111',
@@ -32,4 +32,4 @@
     }]
   };
 
-})();
+module.exports = cards;

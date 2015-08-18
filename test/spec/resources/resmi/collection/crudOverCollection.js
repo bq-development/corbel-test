@@ -6,9 +6,11 @@ var unsetDates = function(object) {
 
 describe('In RESOURCES module', function() {
   var corbelDriver;
+
   before(function() {
     corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
   });
+
   var COLLECTION_NAME_CRUD = 'test:corbelTest' + Date.now();
 
   var TEST_OBJECT = {
@@ -22,19 +24,21 @@ describe('In RESOURCES module', function() {
         }
   };
 
-  describe('In RESMI module', function() {
+  describe('In RESMI module, testing Crud ', function() {
 
-    describe('Collection has CRUD operations and when', function() {
+    describe('collection has CRUD operations and when', function() {
 
       describe('you can follow complete life flow', function() {
 
         it('and successes', function(done) {
           var resourceId;
+
           corbelDriver.resources.collection(COLLECTION_NAME_CRUD)
               .add(TEST_OBJECT)
               .should.eventually.be.fulfilled
               .then(function(id) {
                 resourceId = id;
+
                 return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId).get()
                 .should.eventually.be.fulfilled;
               })
@@ -43,56 +47,46 @@ describe('In RESOURCES module', function() {
                 delete testObject.links;
                 testObject.newField = 'newField';
                 testObject.test2 = null;
-                //Test Update
-                return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId).update(testObject)
+
+                return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId)
+                .update(testObject)
                 .should.eventually.be.fulfilled;
               })
               .then(function() {
-                // Test Get
-                return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId).get()
+                return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId)
+                .get()
                 .should.eventually.be.fulfilled;
               })
               .then(function(response){
-                //// @todo: fix this in PhantomJS
-                //if (response.data.length) {
-                  //response.data = response.data[0];
-                //}
                 var resultObject = response.data;
                 delete resultObject.links;
-                //delete resultObject.id;
                 var testObject = _.cloneDeep(TEST_OBJECT);
                 delete testObject.test2;
                 testObject.newField = 'newField';
                 testObject.id = resourceId;
                 resultObject = unsetDates(resultObject);
                 expect(resultObject).to.be.deep.equal(testObject);
-                //Delete
-                return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId).delete()
+
+                return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId)
+                .delete()
                .should.eventually.be.fulfilled; 
               })
               .then(function(){
-                //Delete is idempotent
-                return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId).delete()
+                return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId)
+                .delete()
                 .should.eventually.be.fulfilled;
               })
               .then(function() {
-                // Get after delete
-                return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId).get()
+                return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId)
+                .get()
                 .should.eventually.be.rejected;
               })
               .then(function(e) {
-                // After solve the bug there will be unnecesary parse 'e'
-                var error = JSON.parse(e.data.responseText);
-
                 expect(e).to.have.property('status', 404);
-                expect(error).to.have.property('error', 'not_found');
+                expect(e.data).to.have.property('error', 'not_found');
               })
               .should.eventually.be.fulfilled.notify(done);
         });
-
-        // @todo There is another it for backbone. Maybe it's necessary another
-        // implementation
-
       });
 
       describe('ID is never changed in an update request', function() {
@@ -131,7 +125,8 @@ describe('In RESOURCES module', function() {
                   .update(TEST_OBJECT)
                   .should.eventually.be.fulfilled
                   .then(function(data) {
-                      return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, idRandom).get()
+                      return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, idRandom)
+                      .get()
                       .should.eventually.be.fulfilled;
                   })
                   .then(function(response) {
@@ -159,7 +154,9 @@ describe('In RESOURCES module', function() {
             .update(TEST_OBJECT)
             .should.eventually.be.fulfilled
             .then(function() {
-              return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, idRandom).get()
+
+              return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, idRandom)
+              .get()
               .should.eventually.be.fulfilled;
             })
             .then(function(response) {
@@ -201,7 +198,8 @@ describe('In RESOURCES module', function() {
             .update(TEST_OBJECT)
             .should.eventually.be.fulfilled
             .then(function() {
-                return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, idRandom).get()
+                return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, idRandom)
+                .get()
                 .should.eventually.be.fulfilled;
             })
             .then(function(response) {
@@ -213,7 +211,8 @@ describe('In RESOURCES module', function() {
                 .should.eventually.be.fulfilled;
             })
             .then(function() {
-                return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, idRandom).get()
+                return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, idRandom)
+                .get()
                 .should.eventually.be.fulfilled;
             })
             .then(function(response) {
@@ -241,27 +240,25 @@ describe('In RESOURCES module', function() {
                     corbelDriver.resources.collection(COLLECTION_NAME_CRUD).add(malformedObject)
                     .should.eventually.be.rejected
                     .then(function(e) {
-                        // After solve the bug there will be unnecesary parse 'e'
-                        var error = JSON.parse(e.data.responseText);
-
                         expect(e).to.have.property('status', 422);
-                        expect(error).to.have.property('error', 'invalid_entity');
+                        expect(e.data).to.have.property('error', 'invalid_entity');
                         
-                        return corbelDriver.resources.collection(COLLECTION_NAME_CRUD).add(TEST_OBJECT)
+                        return corbelDriver.resources.collection(COLLECTION_NAME_CRUD)
+                        .add(TEST_OBJECT)
                         .should.eventually.be.fulfilled;
                     })
                     .then(function(id) {
                         resourceId = id;
-                        return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId).update(malformedObject)
+                        return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId)
+                        .update(malformedObject)
                         .should.eventually.be.rejected;
                     })
                     .then(function(e) {
-                        // After solve the bug there will be unnecesary parse 'e'
-                        var error = JSON.parse(e.data.responseText);
-
                         expect(e).to.have.property('status', 422);
-                        expect(error).to.have.property('error', 'invalid_entity');
-                        return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId).delete()
+                        expect(e.data).to.have.property('error', 'invalid_entity');
+
+                        return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId)
+                        .delete()
                         .should.eventually.be.fulfilled;
                     })
                     .should.eventually.be.fulfilled.notify(done);
@@ -281,13 +278,11 @@ describe('In RESOURCES module', function() {
             corbelDriver.resources.collection(COLLECTION_NAME_CRUD).add(underscoreObject)
             .should.eventually.be.rejected
             .then(function(e) {
-                // After solve the bug there will be unnecesary parse 'e'
-                var error = JSON.parse(e.data.responseText);
-
                 expect(e).to.have.property('status', 422);
-                expect(error).to.have.property('error', 'invalid_entity');
+                expect(e.data).to.have.property('error', 'invalid_entity');
 
-                return corbelDriver.resources.collection(COLLECTION_NAME_CRUD).add(TEST_OBJECT)
+                return corbelDriver.resources.collection(COLLECTION_NAME_CRUD)
+                .add(TEST_OBJECT)
                 .should.eventually.be.fulfilled;
             })
             .then(function(id) {
@@ -298,13 +293,11 @@ describe('In RESOURCES module', function() {
                 .should.eventually.be.rejected;
             })
             .then(function(e) {
-                // After solve the bug there will be unnecesary parse 'e'
-                var error = JSON.parse(e.data.responseText);
-
                 expect(e).to.have.property('status', 422);
-                expect(error).to.have.property('error', 'invalid_entity');
+                expect(e.data).to.have.property('error', 'invalid_entity');
 
-                return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId).delete()
+                return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId)
+                .delete()
                 .should.eventually.be.fulfilled;
             })
             .should.eventually.be.fulfilled.notify(done);

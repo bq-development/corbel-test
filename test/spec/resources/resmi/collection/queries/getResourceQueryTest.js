@@ -1,18 +1,18 @@
 describe('In RESOURCES module', function() {
 
-    describe('In RESMI module', function() {
+    describe('In RESMI module, testing queries', function() {
         var corbelDriver;
         var COLLECTION = 'test:CorbelJSObjectQuery' + Date.now();
         var amount = 10;
 
         before(function(done) {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
-            corbelTest.resources.createdObjectsToQuery(corbelDriver, COLLECTION, amount)
+            corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION, amount)
             .should.eventually.be.fulfilled.notify(done);
         });
 
         after(function(done) {
-            corbelTest.resources.cleanResourcesQuery(corbelDriver)
+            corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
             .should.eventually.be.fulfilled
             .should.eventually.be.fulfilled.notify(done);
         });
@@ -80,7 +80,6 @@ describe('In RESOURCES module', function() {
                     var params = {
                         query: [{
                             '$eq': {
-                                //@todo Check if it is possible 'Test+Short+Cut'
                                 stringSortCut: 'Test Short Cut'
                             }
                         }]
@@ -478,7 +477,8 @@ describe('In RESOURCES module', function() {
                     .should.eventually.be.fulfilled
                     .then(function(response) {
                         expect(response.data.length).to.be.equal(3);
-                        expect(corbelTest.resources.checkSortingAsc(response.data, 'intField')).to.be.equal(true);
+                        expect(corbelTest.common.resources.checkSortingAsc(response.data, 'intField'))
+                            .to.be.equal(true);
                         response.data.forEach(function(element) {
                             expect(element.intField).to.be.below(500);
                         });
@@ -501,11 +501,8 @@ describe('In RESOURCES module', function() {
                     .get(params)
                     .should.eventually.be.rejected
                     .then(function(e) {
-                        // After solve the bug there will be unnecesary parse 'e'
-                        var error = JSON.parse(e.data.responseText);
-                        
                         expect(e).to.have.property('status', 400);
-                        expect(error).to.have.property('error', 'invalid_query');
+                        expect(e.data).to.have.property('error', 'invalid_query');
                     }).
                     should.eventually.be.fulfilled.notify(done);
                 });
@@ -528,11 +525,8 @@ describe('In RESOURCES module', function() {
                     .get(params)
                     .should.eventually.be.rejected
                     .then(function(e) {
-                        // After solve the bug there will be unnecesary parse 'e'
-                        var error = JSON.parse(e.data.responseText);
-
                         expect(e).to.have.property('status', 400);
-                        expect(error).to.have.property('error', 'invalid_query');
+                        expect(e.data).to.have.property('error', 'invalid_query');
                     }).
                     should.eventually.be.fulfilled.notify(done);
                 });
