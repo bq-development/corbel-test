@@ -1,12 +1,12 @@
 describe('In RESOURCES module', function() {
     var corbelDriver;
 
-    describe('In RESMI module', function() {
+    describe('In RESMI module, testing conditions', function() {
 
         before(function() {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
         });
-        var COLLECTION_NAME_CRUD = 'test:ConditionalPUT' + Date.now();
+        var COLLECTION = 'test:ConditionalPUT' + Date.now();
 
         describe('when does conditional update', function() {
             var valueFirst = 'first' + Date.now(),
@@ -19,7 +19,8 @@ describe('In RESOURCES module', function() {
                     test: valueFirst
                 };
 
-                corbelDriver.resources.collection(COLLECTION_NAME_CRUD).add(TEST_OBJECT)
+                corbelDriver.resources.collection(COLLECTION)
+                .add(TEST_OBJECT)
                 .should.eventually.be.fulfilled
                 .then(function(id) {
                     resourceId = id;
@@ -30,17 +31,16 @@ describe('In RESOURCES module', function() {
                             }
                         }]
                     };
+
                     TEST_OBJECT.test = valueSecond;
-                    return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId)
+                    return corbelDriver.resources.resource(COLLECTION, resourceId)
                     .update(TEST_OBJECT, params);
+
                 })
                 .should.eventually.be.rejected
                 .then(function(e) {
-
-                    var error = e.data;
-
                     expect(e).to.have.property('status', 412);
-                    expect(error).to.have.property('error', 'precondition_failed');
+                    expect(e.data).to.have.property('error', 'precondition_failed');
                     var params = {
                         conditions: [{
                             condition: [{
@@ -56,17 +56,15 @@ describe('In RESOURCES module', function() {
                             }]
                         }]
                     };
+
                     TEST_OBJECT.test = valueThird;
-                    return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId)
+                    return corbelDriver.resources.resource(COLLECTION, resourceId)
                     .update(TEST_OBJECT,params)
                     .should.eventually.be.rejected;
                 })
                 .then(function(e) {
-
-                    var error = e.data;
-
                     expect(e).to.have.property('status', 412);
-                    expect(error).to.have.property('error', 'precondition_failed');
+                    expect(e.data).to.have.property('error', 'precondition_failed');
                     var params = {
                         condition: [{
                             '$eq': {
@@ -76,7 +74,7 @@ describe('In RESOURCES module', function() {
                     };
                     TEST_OBJECT.test = valueSecond;
 
-                    return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId)
+                    return corbelDriver.resources.resource(COLLECTION, resourceId)
                     .update(TEST_OBJECT, params)
                     .should.eventually.be.fulfilled;
                 })
@@ -98,17 +96,18 @@ describe('In RESOURCES module', function() {
                     };
                     TEST_OBJECT.test = valueThird;
 
-                    return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId)
+                    return corbelDriver.resources.resource(COLLECTION, resourceId)
                     .update(TEST_OBJECT, params)
                     .should.eventually.be.fulfilled;
                 })
                 .then(function() {
-                    return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId).get()
+                    return corbelDriver.resources.resource(COLLECTION, resourceId).get()
                     .should.eventually.be.fulfilled;
                 })
                 .then(function(resultObject) {
                     expect(resultObject.data.test).to.be.equal(valueThird);
-                    return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId).delete()
+                    return corbelDriver.resources.resource(COLLECTION, resourceId)
+                    .delete()
                     .should.eventually.be.fulfilled;
                 })
                 .should.eventually.be.fulfilled.notify(done);
@@ -118,34 +117,29 @@ describe('In RESOURCES module', function() {
                 var resourceId = Date.now();
 
                 var TEST_OBJECT = {
-                    test: 1
+                    test: valueFirst
                 };
 
                 var params = {
                     condition: [{
                         '$eq': {
-                            test: 2
+                            test: valueSecond
                         }
                     }]
                 };
-                corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId)
+                corbelDriver.resources.resource(COLLECTION, resourceId)
                 .update(TEST_OBJECT, params)
                 .should.eventually.be.rejected
                 .then(function(e) {
-
-                    var error = e.data;
-
                     expect(e).to.have.property('status', 412);
-                    expect(error).to.have.property('error', 'precondition_failed');
-                    return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId).get()
+                    expect(e.data).to.have.property('error', 'precondition_failed');
+
+                    return corbelDriver.resources.resource(COLLECTION, resourceId).get()
                     .should.eventually.be.rejected;
                 })
                 .then(function(e) {
-
-                    var error = e.data;
-
                     expect(e).to.have.property('status', 404);
-                    expect(error).to.have.property('error', 'not_found');
+                    expect(e.data).to.have.property('error', 'not_found');
                 }).
                 should.eventually.be.fulfilled.notify(done);
             });
