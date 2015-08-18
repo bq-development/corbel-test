@@ -5,8 +5,7 @@ describe('In RESOURCES module', function() {
       corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
     });
 
-    describe('In RESMI module, with a collection with some elements,', function() {
-
+    describe('In RESMI module, testing aggregation,', function() {
         this.timeout(10000);
         
         var COLLECTION = 'test:CorbelJSObjectAggregation' + Date.now();
@@ -16,12 +15,12 @@ describe('In RESOURCES module', function() {
 
         before(function(done) {
 
-            corbelTest.resources.createdObjectsToQuery(corbelDriver, COLLECTION, amount)
+            corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION, amount)
             .should.eventually.be.fulfilled.notify(done);
         });
 
         after(function(done) {
-            corbelTest.resources.cleanResourcesQuery(corbelDriver)
+            corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
             .should.eventually.be.fulfilled
             .should.eventually.be.fulfilled.notify(done);
         });

@@ -1,109 +1,147 @@
-(function() {
-    //@exclude
-    'use strict';
-    /*globals corbel */
-    //@endexclude
+//@exclude
+'use strict';
+/*globals corbel */
+//@endexclude
 
-    corbelTest.resources = {};
-    var createdQueryObject = [];
+var superagent = require('superagent');
 
-    var successHandler = function(list, collection, id) {
-        list.push({
-            collection: collection,
-            id: id
-        });
-    };
+var createdQueryObject = [];
 
-    var createIntegerSecuence = function(length) {
-        var list = [];
-        for (var i = 1; i <= length; i++) {
-            list.push(i);
+var successHandler = function(list, collection, id) {
+    list.push({
+        collection: collection,
+        id: id
+    });
+};
+
+var createIntegerSecuence = function(length) {
+    var list = [];
+    for (var i = 1; i <= length; i++) {
+        list.push(i);
+    }
+    return list;
+};
+
+function createdObjectsToQuery(driver, collectionName, amount, extraField) {
+    var promises = [];
+    var year = 2015;
+    var month = 6;
+
+    for (var count = 1; count <= amount; count++) {
+        var json = {
+            stringField: 'stringFieldContent' + count,
+            intField: 100 * count,
+            computableField: count + (1/3),
+            stringSortCut: 'Test Short Cut',
+            codingTest: 'ñÑçáéíóúàèìòùâêîôû\'',
+            ObjectNumber: createIntegerSecuence(count),
+            ObjectMatch: [{
+                name: 'basic',
+                identifier: 'id' + count,
+                type: 'basic'
+            }, {
+                name: 'premium',
+                identifier: 'id' + count,
+                type: 'premium'
+            }],
+            //objectDate: ISODate( + new Date(year, month, count).toISOString() + ')'
+        };
+
+        if(extraField) {
+            json.extra = extraField;
         }
-        return list;
-    };
 
-    corbelTest.resources.createdObjectsToQuery = function(driver, collectionName, amount, extraField) {
-        var promises = [];
+        var promise = driver.resources.collection(collectionName).add(json);
+        promises.push(promise);
+        promise.then(successHandler.bind(this, createdQueryObject, collectionName)); //jshint ignore: line
+    }
+    return Promise.all(promises);
+}
 
-        for (var count = 1; count <= amount; count++) {
-            var json = {
-                stringField: 'stringFieldContent' + count,
-                intField: 100 * count,
-                computableField: count + (1/3),
-                stringSortCut: 'Test Short Cut',
-                codingTest: 'ñÑçáéíóúàèìòùâêîôû\'',
-                ObjectNumber: createIntegerSecuence(count),
-                ObjectMatch: [{
-                    name: 'basic',
-                    identifier: 'id' + count,
-                    type: 'basic'
-                }, {
-                    name: 'premium',
-                    identifier: 'id' + count,
-                    type: 'premium'
-                }],
-                objectDate: 1436803200 + (3600 * 24 * count)
-            };
+function cleanResourcesQuery(driver) {
+    var promises = [];
+    createdQueryObject.forEach(function(entry) {
+        var promise = driver.resources.resource(entry.collection, entry.id).delete();
+        promises.push(promise);
+    });
+    createdQueryObject = [];
+    return Promise.all(promises);
+}
 
-            if(extraField) {
-                json.extra = extraField;
-            }
+function checkSortingAsc(resourceList, field) {
+    return checkSorting(resourceList, field, function(previous, next) {
+        return previous <= next;
+    });
+}
 
-            var promise = driver.resources.collection(collectionName).add(json);
-            promises.push(promise);
-            promise.then(successHandler.bind(this, createdQueryObject, collectionName));
-        }
-        return Promise.all(promises);
-    };
+function checkSortingDesc(resourceList, field) {
+    return checkSorting(resourceList, field, function(previous, next) {
+        return previous >= next;
+    });
+}
 
-    corbelTest.resources.cleanResourcesQuery = function(driver) {
-        var promises = [];
-        createdQueryObject.forEach(function(entry) {
-            var promise = driver.resources.resource(entry.collection, entry.id).delete();
-            promises.push(promise);
-        });
-        createdQueryObject = [];
-        return Promise.all(promises);
-    };
+function checkSorting(resourceList, field, compareFunction) {
+    var lastValue = getProperty(resourceList[0], field);
+    return resourceList.every(function(resource) {
+        return compareFunction(lastValue, getProperty(resource, field)) ?
+            (lastValue = getProperty(resource, field)) === lastValue : false;
+    });
+}
 
-    corbelTest.resources.checkSortingAsc = function(resourceList, field) {
-        return checkSorting(resourceList, field, function(previous, next) {
-            return previous <= next;
-        });
-    };
+function getProperty(obj, prop) {
+    var parts = prop.split('.'),
+        last = parts.pop(),
+        length = parts.length,
+        count = 1,
+        current = parts[0];
 
-    corbelTest.resources.checkSortingDesc = function(resourceList, field) {
-        return checkSorting(resourceList, field, function(previous, next) {
-            return previous >= next;
-        });
-    };
-
-    function checkSorting(resourceList, field, compareFunction) {
-        var lastValue = getProperty(resourceList[0], field);
-        return resourceList.every(function(resource) {
-            return compareFunction(lastValue, getProperty(resource, field)) ?
-                (lastValue = getProperty(resource, field)) === lastValue : false;
-        });
+    if (length === 0) {
+        return obj[prop];
     }
 
-    function getProperty(obj, prop) {
-        var parts = prop.split('.'),
-            last = parts.pop(),
-            length = parts.length,
-            count = 1,
-            current = parts[0];
-
-        if (length === 0) {
-            return obj[prop];
-        }
-
-        while ((obj = obj[current]) && count < length) {
-            current = parts[count];
-            count++;
-        }
-
-        if (obj) {
-            return obj[last];
-        }
+    while ((obj = obj[current]) && count < length) {
+        current = parts[count];
+        count++;
     }
-})();
+
+    if (obj) {
+        return obj[last];
+    }
+}
+
+function getResource(token, collection, query) {
+    
+    var promise = new Promise(function(resolve, reject){
+        var url = corbelTest.CONFIG.COMMON.urlBase.replace('{{module}}', 'resources') + 'resource/' + collection;
+    
+        if(query){
+            url += '?' + query;
+        }
+        
+        superagent
+            .get(url)
+            .set('Authorization', 'Bearer ' + token)
+            .set('Accept', 'application/json')
+            .end(function(err, response){
+                if(!err){
+                    resolve(response);
+                }else{
+                    reject(err);
+                }
+            });
+    });
+
+    return promise;
+    
+    
+}
+
+module.exports = {
+    getResource : getResource,
+    getProperty : getProperty,
+    checkSorting : checkSorting,
+    checkSortingDesc : checkSortingDesc,
+    createdObjectsToQuery : createdObjectsToQuery,
+    cleanResourcesQuery: cleanResourcesQuery,
+    checkSortingAsc: checkSortingAsc
+};

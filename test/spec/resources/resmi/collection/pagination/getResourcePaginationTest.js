@@ -4,18 +4,18 @@ describe('In RESOURCES module', function() {
     var RESOURCES_MAX_PAGE_SIZE = 50;
     var RESOURCES_MIN_PAGE_SIZE = 1;
 
-    describe('In RESMI module', function() {
+    describe('In RESMI module, testing pagination', function() {
         var COLLECTION = 'test:CorbelJSObjectPagination' + Date.now();
         var amount = 52;
 
         before(function(done) {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
-            corbelTest.resources.createdObjectsToQuery(corbelDriver, COLLECTION, amount)
+            corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION, amount)
             .should.eventually.be.fulfilled.notify(done);
         });
 
         after(function(done) {
-            corbelTest.resources.cleanResourcesQuery(corbelDriver)
+            corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
             .should.eventually.be.fulfilled.notify(done);
         });
 
