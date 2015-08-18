@@ -28,7 +28,7 @@ module.exports = function(grunt) {
           '<%= yeoman.test %>/**/*.js',
           'Gruntfile.js'
         ],
-        tasks: ['jshint']
+        tasks: ['jshint', 'browserify']
       }
     },
 
@@ -52,6 +52,15 @@ module.exports = function(grunt) {
       all: '<%= yeoman.tmp %>'
     },
 
+    //Bundles for browser
+    browserify: {
+      dist: {
+        files: {
+          '.tmp/bundle.js': ['src/main.js'],
+        }
+      }
+    },
+
     // Test settings
     karma: {
       options: {
@@ -72,7 +81,7 @@ module.exports = function(grunt) {
   grunt.registerTask('common', '', [
     'clean',
     'jshint',
-    'config'
+    'browserify'
   ]);
 
   grunt.registerTask('serve:test', '', [
@@ -84,16 +93,6 @@ module.exports = function(grunt) {
     'common',
     'karma:unit'
   ]);
-
-  grunt.registerTask('config', '', function() {
-
-    var config = grunt.file.readJSON('.corbeltest');
-    grunt.file.write(CONFIG.tmp +
-      '/config.js', '\ncorbelTest.CONFIG = ' +
-      JSON.stringify(config, null, '  ') +
-      '\n');
-
-  });
 
   grunt.registerTask('default', ['test']);
 };

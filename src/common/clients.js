@@ -1,23 +1,6 @@
-(function() {
-
-  corbelTest.getConfig = getConfig;
-  corbelTest.login = login;
-  corbelTest.loginAll = loginAll;
-  corbelTest.drivers = [];
-  corbelTest.logins = [];
-
-  /**
-   *
-   * @param  {string} clientName
-   * @return {object} a corbel config object
-   */
-  function getConfig(clientName) {
-    var commonConfig =_.clone(corbelTest.CONFIG['COMMON']);
-    if (corbelTest.CONFIG.ENV) {
-      commonConfig.urlBase = commonConfig.urlBase.replace('{{ENV}}', corbelTest.CONFIG.ENV);
-    }
-    return _.extend(commonConfig, corbelTest.CONFIG[clientName]);
-  }
+  var drivers = {};
+  var tokens = {};
+  var logins = {};
 
   /**
    * Create a new driver with the clientName creadentials.
@@ -26,7 +9,7 @@
    * @return {corbelDriver} corbelDriver already autenticated
    */
   function login(clientName) {
-    if (!corbelTest.drivers[clientName]) {
+    if (!drivers[clientName]) {
       var driverConfig = corbelTest.getConfig(clientName);
       var savedConfig;
       try {
@@ -38,7 +21,7 @@
 
       // Generate a driver config between descriptor and user saved config
       driverConfig = _.extend(_.clone(driverConfig), savedConfig);
-      corbelTest.drivers[clientName] = corbel.getDriver(driverConfig);
+      drivers[clientName] = corbel.getDriver(driverConfig);
       var params = null;
       if (driverConfig.username && driverConfig.password) {
         params = {
@@ -49,9 +32,11 @@
           }
         };
       }
-      corbelTest.logins[clientName] = corbelTest.drivers[clientName].iam.token().create(params);
+      logins[clientName] = drivers[clientName].iam.token().create(params);
     }
-    return corbelTest.logins[clientName];
+    return logins[clientName].then(function(response){
+      tokens[clientName] = response.data;
+    });
   }
 
   /**
@@ -63,11 +48,18 @@
 
     Object.keys(corbelTest.CONFIG).forEach(function(clientName) {
       if (clientName.indexOf('_CLIENT') !== -1 || clientName.indexOf('_USER') !== -1) {
-        promises.push(corbelTest.login(clientName));
+        promises.push(login(clientName));
       }
     });
 
     return Promise.all(promises);
   }
 
-})();
+
+module.exports = {
+  login : login, 
+  loginAll : loginAll,
+  drivers : drivers,
+  logins : logins,
+  tokens : tokens
+};

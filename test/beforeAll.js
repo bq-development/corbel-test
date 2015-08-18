@@ -4,7 +4,7 @@ before(function(done) {
 
   this.timeout(10000);
 
-  corbelTest.loginAll().then(function() {
+  corbelTest.common.clients.loginAll().then(function() {
     done();
   }).catch(function(err) {
     done(err);
