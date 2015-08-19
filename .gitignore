@@ -1,6 +1,6 @@
 node_modules
 bower_components
 .tmp
-.corbeltest.json
 *.swp
 .DS_Store
+.corbeltest

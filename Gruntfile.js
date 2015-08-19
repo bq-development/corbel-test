@@ -78,9 +78,17 @@ module.exports = function(grunt) {
     }
   });
 
+  grunt.registerTask('config', '', function() {
+
+    var config = grunt.file.readJSON('.corbeltest');
+    grunt.file.write(CONFIG.tmp +
+      '/config.js', 'module.exports = ' + JSON.stringify(config, null, 2));
+  });
+
   grunt.registerTask('common', '', [
     'clean',
     'jshint',
+    'config',
     'browserify'
   ]);
 
