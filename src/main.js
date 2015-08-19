@@ -1,8 +1,7 @@
 var _ = require('lodash');
 var common = require('./common');
 var fixtures = require('./fixtures');
-var config = require('../.corbeltest.json');
-
+var config = require('../.tmp/config.js');
 var corbelTest = {};
 
 corbelTest.CONFIG = _.cloneDeep(config);

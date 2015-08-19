@@ -24,7 +24,7 @@ module.exports = function(config) {
       'node_modules/q/q.js',
       'node_modules/corbel-js/dist/corbel.js',
       'node_modules/lodash/index.js',
-      '.tmp/**/*.js',
+      '.tmp/bundle.js',
       'test/beforeAll.js',
       'test/**/*.js'
     ],
