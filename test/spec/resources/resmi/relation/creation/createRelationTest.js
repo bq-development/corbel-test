@@ -1,12 +1,7 @@
 describe('In RESOURCES module', function() {
-    var corbelDriver;
 
-    before(function() {
-      corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
-    });
-
-    describe('In RESMI module, relations', function() {
-
+    describe.only('In RESMI module, testing create relation', function() {
+        var corbelDriver;
         var COLLECTION_A = 'test:CorbelJSTestRelation' + Date.now();
         var COLLECTION_B = 'test:CorbelJSTestRelation-dest' + Date.now();
 
@@ -18,18 +13,21 @@ describe('In RESOURCES module', function() {
         };
 
         before(function(done) {
-            //Create resources
-            corbelDriver.resources.collection(COLLECTION_A).add(TEST_OBJECT).
+            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+            corbelDriver.resources.collection(COLLECTION_A)
+            .add(TEST_OBJECT).
             should.eventually.be.fulfilled.
             then(function(id) {
                 idResourceA = id;
-                return corbelDriver.resources.collection(COLLECTION_B).add(TEST_OBJECT).
+
+                return corbelDriver.resources.collection(COLLECTION_B)
+                    .add(TEST_OBJECT).
                 should.eventually.be.fulfilled;
-            }).
-            then(function(id) {
+            })
+            .then(function(id) {
                 idResourceB = id;
-            }).
-            should.notify(done);
+            })
+            .should.eventually.be.fulfilled.notify(done);
         });
 
 
@@ -45,15 +43,10 @@ describe('In RESOURCES module', function() {
             })
             .should.be.fulfilled
             .then(function(response){
-                expect(response.data).to.include.keys('myextrafield');
-                expect(response.data.myextrafield).to.equals('test');
+                expect(response.data).to.have.property('myextrafield').to.be.equals('test');
                 done();
             })
-            .catch(function(err){
-                console.log(err);
-            })
-            .should.notify(done);
-
+            .should.eventually.be.fulfilled.notify(done);
         });
 
         it('Updates an existing registry in the relation', function(done){
@@ -68,19 +61,10 @@ describe('In RESOURCES module', function() {
             })
             .should.be.fulfilled
             .then(function(response){
-                expect(response.data).to.include.keys('myextrafield', 'newfield');
-                expect(response.data.myextrafield).to.equals('test');
-                expect(response.data.newfield).to.equals('testnewField');
-                done();
+                expect(response.data).to.have.property('myextrafield').to.be.equals('test');
+                expect(response.data).to.have.property('newfield').to.be.equals('testnewField');
             })
-            .catch(function(err){
-                console.log(err);
-            })
-            .should.notify(done);
-
-
+            .should.eventually.be.fulfilled.notify(done);
         });
-        
-
     });
 });

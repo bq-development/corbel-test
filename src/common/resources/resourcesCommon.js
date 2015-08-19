@@ -6,6 +6,7 @@
 var superagent = require('superagent');
 
 var createdQueryObject = [];
+var createdRelationObject = [];
 
 var successHandler = function(list, collection, id) {
     list.push({
@@ -20,6 +21,15 @@ var createIntegerSecuence = function(length) {
         list.push(i);
     }
     return list;
+};
+
+var relationSuccessHandler = function(list, collectionA, idA, collectionB, idB) {
+    list.push({
+        collectionA: collectionA,
+        idA: idA,
+        collectionB: collectionB,
+        idB: idB
+    });
 };
 
 function createdObjectsToQuery(driver, collectionName, amount, extraField) {
@@ -136,6 +146,27 @@ function getResource(token, collection, query) {
     
 }
 
+function createRelationFromSingleObjetToMultipleObject(driver, collectionA, idResourceInA, collectionB, idResourceInB) {
+        var promises = [];
+
+        idResourceInB.forEach(function(idB, count) {
+            var jsonRelationData = {
+                intField: Date.now(),
+                intCount: 100 * count,
+                stringField: 'stringContent' + count,
+                stringSortCut: 'Test Short Cut',
+                ObjectNumber: createIntegerSecuence(count)
+            };
+
+            var promise = driver.resources.relation(collectionA, idResourceInA, collectionB).add(idB, jsonRelationData);
+            promises.push(promise);
+            promise.then(relationSuccessHandler.bind
+                    (this, createdRelationObject, collectionA, idResourceInA, collectionB, idB));
+        });
+
+        return Promise.all(promises);
+}
+
 module.exports = {
     getResource : getResource,
     getProperty : getProperty,
@@ -143,5 +174,6 @@ module.exports = {
     checkSortingDesc : checkSortingDesc,
     createdObjectsToQuery : createdObjectsToQuery,
     cleanResourcesQuery: cleanResourcesQuery,
-    checkSortingAsc: checkSortingAsc
+    checkSortingAsc: checkSortingAsc,
+    createRelationFromSingleObjetToMultipleObject : createRelationFromSingleObjetToMultipleObject
 };
