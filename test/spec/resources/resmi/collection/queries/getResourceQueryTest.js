@@ -92,9 +92,6 @@ describe('In RESOURCES module', function() {
                         response.data.forEach(function(element) {
                             expect(element.stringSortCut).to.be.equal('Test Short Cut');
                         });
-                    }).catch(function(e){
-                        debugger; // jshint ignore:line
-                        
                     })
                     .should.eventually.be.fulfilled.notify(done);
                 });

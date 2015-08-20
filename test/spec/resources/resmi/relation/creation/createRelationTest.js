@@ -1,11 +1,12 @@
 describe('In RESOURCES module', function() {
 
-    describe.only('In RESMI module, testing create relation', function() {
+    describe('In RESMI module, testing create relation', function() {
         var corbelDriver;
         var COLLECTION_A = 'test:CorbelJSTestRelation' + Date.now();
         var COLLECTION_B = 'test:CorbelJSTestRelation-dest' + Date.now();
 
-        var idResourceA, idResourceB;
+        var idResourceA;
+        var idResourceB;
 
         var TEST_OBJECT = {
             name : 'testObject',
@@ -30,6 +31,15 @@ describe('In RESOURCES module', function() {
             .should.eventually.be.fulfilled.notify(done);
         });
 
+        after(function(done) {
+            corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
+            .should.eventually.be.fulfilled
+            .then(function() {
+                return corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
+                    .delete();
+            }).
+            should.eventually.be.fulfilled.notify(done);
+        });
 
         it('Creates a new registry in the relation', function(done){
             corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
