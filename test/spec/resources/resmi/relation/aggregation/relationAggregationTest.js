@@ -1,10 +1,10 @@
 describe('In RESOURCES module', function() {
-    var TIMESTAMP = Date.now();
-    var COLLECTION_A = 'test:CorbelJSObjectLinkA' + TIMESTAMP;
-    var COLLECTION_B = 'test:CorbelJSObjectLinkB' + TIMESTAMP;
 
     describe('In RESMI module, testing relation aggregation', function() {
         var corbelDriver;
+        var TIMESTAMP = Date.now();
+        var COLLECTION_A = 'test:CorbelJSObjectLinkA' + TIMESTAMP;
+        var COLLECTION_B = 'test:CorbelJSObjectLinkB' + TIMESTAMP;
 
         before(function() {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];

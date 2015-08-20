@@ -1,11 +1,12 @@
 describe('In RESOURCES module', function() {
 
-    describe.only('In RESMI module, testing create relation', function() {
+    describe('In RESMI module, testing create relation', function() {
         var corbelDriver;
         var COLLECTION_A = 'test:CorbelJSTestRelation' + Date.now();
         var COLLECTION_B = 'test:CorbelJSTestRelation-dest' + Date.now();
 
-        var idResourceA, idResourceB;
+        var idResourceA;
+        var idResourceB;
 
         var TEST_OBJECT = {
             name : 'testObject',
