@@ -39,7 +39,8 @@ describe('In RESOURCES module', function() {
               .then(function(id) {
                 resourceId = id;
 
-                return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId).get()
+                return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId)
+                .get()
                 .should.eventually.be.fulfilled;
               })
               .then(function(resultObject){

@@ -54,7 +54,7 @@ function createdObjectsToQuery(driver, collectionName, amount, extraField) {
                 identifier: 'id' + count,
                 type: 'premium'
             }],
-            //objectDate: ISODate( + new Date(year, month, count).toISOString() + ')'
+            randomField: 'asdf'
         };
 
         if(extraField) {

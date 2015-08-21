@@ -172,6 +172,62 @@ describe('In RESOURCES module', function() {
                     })
                     .should.eventually.be.fulfilled.notify(done);
                 });
+
+                it.skip('success returning elements satisfying _updatedAt query', function(done) {
+                    // waiting for Jira issue SILKROAD-1752
+                    var id;
+                    var updateParams = { randomField : 'qwer' };
+                    var queryParams1 = { intField : 100};
+                    var queryParams2 = {
+                              query: [{
+                                  '$gt': {
+                                      _updatedAt : Date.now()
+                                  }
+                              }]
+                    };
+
+                    corbelDriver.resources.collection(COLLECTION)
+                    .get()
+                    .should.eventually.be.fulfilled
+                    .then(function(response){
+                        id = response.data[0].id;
+                    })
+                    .should.eventually.be.fulfilled
+                    .then(function(){
+                        return corbelDriver.resources.resource(COLLECTION, id)
+                        .update(updateParams)
+                        .should.eventually.be.fulfilled;
+                    })
+                    .then(function(){
+                        return corbelDriver.resources.collection(COLLECTION)
+                        .get(queryParams2)
+                        .should.eventually.be.fulfilled;
+                    })
+                    .then(function(response){
+                        expect(response.data.length).to.be.equal(1);
+                    })
+                    .should.eventually.be.fulfilled.notify(done);
+                });
+
+                it.skip('success returning elements satisfying _createdAt query', function(done) {
+                    // waiting for Jira issue SILKROAD-1752
+                    var id;
+                    var queryParams = {
+                              query: [{
+                                  '$lt': {
+                                      _createdAt : Date.now()
+                                  }
+                              }]
+                    };
+
+                    corbelDriver.resources.collection(COLLECTION)
+                    .get(queryParams)
+                    .should.eventually.be.fulfilled
+                    .then(function(response){
+                        expect(response.data.length).to.be.equal(0);
+                    })
+                    .should.eventually.be.fulfilled.notify(done);
+                });
             });
 
             describe('Get collection using the query language less than', function() {
@@ -216,6 +272,62 @@ describe('In RESOURCES module', function() {
                         });
                     }).
                     should.eventually.be.fulfilled.notify(done);
+                });
+
+                it.skip('success returning elements satisfying _updatedAt query', function(done) {
+                    // waiting for Jira issue SILKROAD-1752
+                    var id;
+                    var updateParams = { randomField : 'qwer' };
+                    var queryParams1 = { intField : 100};
+                    var queryParams2 = {
+                              query: [{
+                                  '$lt': {
+                                      _updatedAt : Date.now()
+                                  }
+                              }]
+                    };
+
+                    corbelDriver.resources.collection(COLLECTION)
+                    .get()
+                    .should.eventually.be.fulfilled
+                    .then(function(response){
+                        id = response.data[0].id;
+                    })
+                    .should.eventually.be.fulfilled
+                    .then(function(){
+                        return corbelDriver.resources.resource(COLLECTION, id)
+                        .update(updateParams)
+                        .should.eventually.be.fulfilled;
+                    })
+                    .then(function(){
+                        return corbelDriver.resources.collection(COLLECTION)
+                        .get(queryParams2)
+                        .should.eventually.be.fulfilled;
+                    })
+                    .then(function(response){
+                        expect(response.data.length).to.be.equal(amount - 1);
+                    })
+                    .should.eventually.be.fulfilled.notify(done);
+                });
+
+                it.skip('success returning elements satisfying _createdAt query', function(done) {
+                    // waiting for Jira issue SILKROAD-1752
+                    var id;
+                    var queryParams = {
+                              query: [{
+                                  '$lt': {
+                                      _createdAt : Date.now()
+                                  }
+                              }]
+                    };
+
+                    corbelDriver.resources.collection(COLLECTION)
+                    .get(queryParams)
+                    .should.eventually.be.fulfilled
+                    .then(function(response){
+                        expect(response.data.length).to.be.equal(amount);
+                    })
+                    .should.eventually.be.fulfilled.notify(done);
                 });
             });
 
