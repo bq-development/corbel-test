@@ -120,14 +120,14 @@ function getProperty(obj, prop) {
 }
 
 function getResource(token, collection, query) {
-    
+
     var promise = new Promise(function(resolve, reject){
         var url = corbelTest.CONFIG.COMMON.urlBase.replace('{{module}}', 'resources') + 'resource/' + collection;
-    
+
         if(query){
             url += '?' + query;
         }
-        
+
         superagent
             .get(url)
             .set('Authorization', 'Bearer ' + token)
@@ -142,8 +142,8 @@ function getResource(token, collection, query) {
     });
 
     return promise;
-    
-    
+
+
 }
 
 function createRelationFromSingleObjetToMultipleObject(driver, collectionA, idResourceInA, collectionB, idResourceInB) {
@@ -167,6 +167,38 @@ function createRelationFromSingleObjetToMultipleObject(driver, collectionA, idRe
         return Promise.all(promises);
 }
 
+function fastMove(idResource1, idResource2, repeatTimes, driver, COLLECTION_A, idResourceInA, COLLECTION_B) {
+    return driver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+    .move(idResource1, 2)
+    .should.eventually.be.fulfilled
+    .then(function() {
+        if (repeatTimes) {
+            return fastMove(idResource2, idResource1, repeatTimes - 1,
+              driver, COLLECTION_A, idResourceInA, COLLECTION_B);
+        } else {
+            return idResource2;
+        }
+    });
+}
+
+function repeatMove(idResource, repeatTimes, driver, COLLECTION_A, idResourceInA, COLLECTION_B, params, amount) {
+    return driver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+    .move(idResource, 2)
+    .should.eventually.be.fulfilled
+    .then(function() {
+        return driver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+        .get(null, params)
+        .should.eventually.be.fulfilled;
+    }).then(function(response) {
+        expect(response.data[1].id).to.be.equal(idResource);
+        if (repeatTimes) {
+            idResource = response.data[amount - 1].id;
+            return repeatMove(idResource, repeatTimes - 1,
+              driver, COLLECTION_A, idResourceInA, COLLECTION_B, params, amount);
+        }
+    });
+}
+
 module.exports = {
     getResource : getResource,
     getProperty : getProperty,
@@ -175,5 +207,7 @@ module.exports = {
     createdObjectsToQuery : createdObjectsToQuery,
     cleanResourcesQuery: cleanResourcesQuery,
     checkSortingAsc: checkSortingAsc,
-    createRelationFromSingleObjetToMultipleObject : createRelationFromSingleObjetToMultipleObject
+    createRelationFromSingleObjetToMultipleObject : createRelationFromSingleObjetToMultipleObject,
+    fastMove : fastMove,
+    repeatMove : repeatMove
 };
