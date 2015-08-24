@@ -60,7 +60,7 @@ describe('In RESOURCES module', function() {
             it('get relation with specific page and default page size,' +
                     ' successes returning default elements in a especific page', function(done) {
                 var params = {
-                    page: {
+                    pagination: {
                         page: 1
                     }
                 };

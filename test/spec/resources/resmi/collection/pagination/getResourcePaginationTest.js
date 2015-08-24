@@ -4,7 +4,7 @@ describe('In RESOURCES module', function() {
     var RESOURCES_MAX_PAGE_SIZE = 50;
     var RESOURCES_MIN_PAGE_SIZE = 1;
 
-    describe('In RESMI module, testing pagination', function() {
+    describe.only('In RESMI module, testing pagination', function() {
         var COLLECTION = 'test:CorbelJSObjectPagination' + Date.now();
         var amount = 52;
 
@@ -36,10 +36,12 @@ describe('In RESOURCES module', function() {
 
             describe('get collection with pagination', function() {
 
-                it('successes returning default elements in a especific page', function(done) {
+                it('successes returning default elements in a especific page,' +
+                       ' ignoring bad parameter (size)', function(done) {
                     var params = {
                         pagination: {
-                            page: 5
+                            page: 4,
+                            size : 7
                         }
                     };
 
@@ -47,7 +49,7 @@ describe('In RESOURCES module', function() {
                     .get(params)
                     .should.eventually.be.fulfilled
                     .then(function(response){
-                      expect(response.data.length).to.be.equal(2);
+                      expect(response.data.length).to.be.equal(10);
                     })
                     .should.eventually.be.fulfilled.notify(done);
                 });
