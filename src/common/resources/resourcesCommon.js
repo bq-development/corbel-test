@@ -167,6 +167,17 @@ function createRelationFromSingleObjetToMultipleObject(driver, collectionA, idRe
         return Promise.all(promises);
 }
 
+function deleteCreatedRelationObjects(driver) {
+    var promises = [];
+    createdRelationObject.forEach(function(createdRelation) {
+        var promise = driver.resources.relation
+            (createdRelation.collectionA, createdRelation.idA, createdRelation.collectionB)
+        .delete(createdRelation.idB);
+        promises.push(promise);
+    });
+    return Promise.all(promises);
+}
+
 module.exports = {
     getResource : getResource,
     getProperty : getProperty,
@@ -175,5 +186,6 @@ module.exports = {
     createdObjectsToQuery : createdObjectsToQuery,
     cleanResourcesQuery: cleanResourcesQuery,
     checkSortingAsc: checkSortingAsc,
-    createRelationFromSingleObjetToMultipleObject : createRelationFromSingleObjetToMultipleObject
+    createRelationFromSingleObjetToMultipleObject : createRelationFromSingleObjetToMultipleObject,
+    deleteCreatedRelationObjects : deleteCreatedRelationObjects
 };
