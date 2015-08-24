@@ -128,7 +128,7 @@ describe('In RESOURCES module', function() {
                 .should.eventually.be.fulfilled.notify(done);
             });
 
-            it('when request to delete element of all relation,' + 
+            it('when request to delete element of all relation,' +
                     'successes returning NO CONTENT (204)', function(done) {
                 var amount = 7;
                 var idsResourecesInB;
