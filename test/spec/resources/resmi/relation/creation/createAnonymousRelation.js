@@ -3,7 +3,7 @@ describe('In RESOURCES module', function() {
     describe('In RESMI module, in createAnonymusRelation ', function() {
         var corbelDriver;
         var TIMESTAMP = Date.now();
-        var COLLECTION_A = 'test:CoreJSRELATION_ANONYMOUS' + TIMESTAMP;
+        var COLLECTION_A = 'test:CorbelJSRELATION_ANONYMOUS' + TIMESTAMP;
         var RELATION_NAME = 'RELATION_NAME' + TIMESTAMP;
         var TEST_OBJECT = {
             test: 'test'
