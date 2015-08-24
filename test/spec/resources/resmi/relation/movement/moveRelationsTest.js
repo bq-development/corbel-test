@@ -1,6 +1,6 @@
 describe('In RESOURCES module', function() {
 
-    describe.only('In RESMI module, testing moveRelation, ', function() {
+    describe('In RESMI module, testing moveRelation, ', function() {
         this.timeout(50000);
         var corbelDriver;
         var TIMESTAMP = Date.now();
