@@ -1,8 +1,6 @@
 describe('In RESOURCES module', function() {
 
     describe('In RESMI module, testing relation pagination', function() {
-        this.timeout(20000);
-
         var corbelDriver;
         var RESOURCES_DEFAULT_PAGE_SIZE = 10;
         var RESOURCES_MAX_PAGE_SIZE = 50;
