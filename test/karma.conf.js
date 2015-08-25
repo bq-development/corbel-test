@@ -69,7 +69,8 @@ module.exports = function(config) {
 
     client: {
       mocha: {
-        reporter: 'html' // change Karma's debug.html to the mocha web reporter
+        reporter: 'html', // change Karma's debug.html to the mocha web reporter
+        timeout: 90000
       }
     },
 
