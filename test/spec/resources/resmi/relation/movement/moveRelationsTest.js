@@ -1,7 +1,6 @@
 describe('In RESOURCES module', function() {
 
     describe('In RESMI module, testing moveRelation, ', function() {
-        this.timeout(50000);
         var corbelDriver;
         var TIMESTAMP = Date.now();
         var COLLECTION_A = 'test:CorbelJSOrderRelationA' + TIMESTAMP;
