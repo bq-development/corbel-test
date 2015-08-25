@@ -1,6 +1,5 @@
-describe('In RESOURCES module', function() {
-
-    describe('In RESMI module, testing relation aggregation', function() {
+describe('In RESOURCES module ', function() {
+    describe('In RESMI module ', function() {
         var corbelDriver;
         var TIMESTAMP = Date.now();
         var COLLECTION_A = 'test:CorbelJSObjectLinkA' + TIMESTAMP;
@@ -10,12 +9,12 @@ describe('In RESOURCES module', function() {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
         });
 
-        describe('Relation has aggregation and when', function() {
+        describe('When testing relations aggregation ', function() {
             var amount = 10;
             var idResourceInA;
             var idsResourecesInB;
 
-            before(function(done) {
+            beforeEach(function(done) {
                 corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION_A, 1)
                 .should.eventually.be.fulfilled
                 .then(function(id) {
@@ -32,7 +31,7 @@ describe('In RESOURCES module', function() {
                 .should.eventually.be.fulfilled.notify(done);
             });
 
-            after(function(done) {
+            afterEach(function(done) {
                 corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
                 .should.eventually.be.fulfilled
                 .then(function() {
@@ -42,9 +41,8 @@ describe('In RESOURCES module', function() {
                 should.eventually.be.fulfilled.notify(done);
             });
 
-            describe('Get relation with aggregation count', function() {
-
-                it('successes returning the count of elements', function(done) {
+            describe('When performing a GET operation over a relation with aggregation parameters', function() {
+                it('All resources are returned.', function(done) {
                     var params = {
                         aggregation: {
                             '$count': '*'
@@ -61,9 +59,8 @@ describe('In RESOURCES module', function() {
                 });
             });
 
-            describe('Get relation with aggregation count and query', function() {
-
-                it('successes returning the count of elements', function(done) {
+            describe('When performing a GET operation over a relation with aggregation & query parameters', function() {
+                it('Expected amount of resources are returned', function(done) {
                     var params = {
                         aggregation: {
                             '$count': '*'
