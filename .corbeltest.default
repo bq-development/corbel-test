@@ -35,5 +35,10 @@
    },
    "COMMON": {
        "urlBase": "https://{{module}}-{{ENV}}.mydomain.com/v1.0/"
+   },
+   "GLOBALS": {
+     "defaultPageSize": 10,
+     "maxPageSize": 50,
+     "minPageSize": 1
    }
 }
