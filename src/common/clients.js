@@ -1,3 +1,5 @@
+'use strict';
+
   var drivers = {};
   var tokens = {};
   var logins = {};

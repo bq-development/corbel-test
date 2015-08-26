@@ -8,21 +8,19 @@ var retry = function retry(retryFunction, maxRetries, retryPeriod, deferred, cat
     if (maxRetries < 1) {
         deferred.reject(catches);
     } else {
-        retryFunction().then(
-            function(response) {
-                deferred.resolve(response);
-            })
-            .catch(function(err) {
-                catches.push(err);
-                setTimeout(function() {
-                    retry(retryFunction, maxRetries - 1, retryPeriod, deferred, catches);
-                }, retryPeriod * 1000);
-            });
+        retryFunction().then(function(response) {
+            deferred.resolve(response);
+        }).catch(function(err) {
+            catches.push(err);
+            setTimeout(function() {
+                retry(retryFunction, maxRetries - 1, retryPeriod, deferred, catches);
+            }, retryPeriod * 1000);
+        });
     }
 
     return deferred.promise;
 };
 
 module.exports = {
-	retry : retry
+    retry: retry
 };

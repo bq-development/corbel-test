@@ -1,5 +1,5 @@
 'use strict';
 
 module.exports = {
-	cards : require('./cards')
+    cards: require('./cards')
 };
