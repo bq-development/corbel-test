@@ -1,6 +1,6 @@
 describe('In RESOURCES module', function() {
 
-    describe.only('In RESMI module, testing collection conditions', function() {
+    describe('In RESMI module, testing collection conditions', function() {
         var corbelDriver;
         var COLLECTION = 'test:collectionConditions' + Date.now();
         var valueFirst = 'first' + Date.now();
@@ -39,7 +39,7 @@ describe('In RESOURCES module', function() {
                 }]
             };
             TEST_OBJECT.test = valueSecond;
-            
+
             corbelDriver.resources.resource(COLLECTION, resourceId)
             .update(TEST_OBJECT, params)
             .should.be.eventually.rejected

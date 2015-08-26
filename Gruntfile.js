@@ -95,7 +95,7 @@ module.exports = function(grunt) {
     'browserify'
   ]);
 
-  grunt.registerTask('serve:test', '', [
+  grunt.registerTask('server:test', '', [
     'common',
     'karma:serve'
   ]);
