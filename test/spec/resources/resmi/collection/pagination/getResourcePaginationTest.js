@@ -4,7 +4,7 @@ describe('In RESOURCES module', function() {
     var RESOURCES_MAX_PAGE_SIZE = 50;
     var RESOURCES_MIN_PAGE_SIZE = 1;
 
-    describe('In RESMI module, testing pagination', function() {
+    describe('In RESMI module', function() {
         var COLLECTION = 'test:CorbelJSObjectPagination' + Date.now();
         var amount = 52;
 
@@ -19,10 +19,9 @@ describe('In RESOURCES module', function() {
             .should.eventually.be.fulfilled.notify(done);
         });
 
-        describe('Collection has pagination and when', function() {
+        describe('When testing collections pagination', function() {
 
-            it('get collection without pagination defined, ' +
-                    'successes returning elements in a default page', function(done) {
+            it('Collection without pagination parameters returns default number of elements per page', function(done) {
                 corbelDriver.resources.collection(COLLECTION)
                 .get()
                 .should.eventually.be.fulfilled
@@ -32,8 +31,7 @@ describe('In RESOURCES module', function() {
                 .should.eventually.be.fulfilled.notify(done);
             });
 
-            it('get collection with pagination' + 
-                    ' successes returning default elements in a especific page', function(done) {
+            it('Collection with pagination parameter returns elements of expected page', function(done) {
                 var params = {
                     pagination: {
                         page: 5
@@ -49,8 +47,7 @@ describe('In RESOURCES module', function() {
                 .should.eventually.be.fulfilled.notify(done);
             });
 
-            it('get collection with pagination size' +
-                    ' successes returning the default page with an specific page size', function(done) {
+            it('Collection with pageSize parameter returns defined number of elements per page', function(done) {
                 var params = {
                     pagination: {
                         pageSize: 3
@@ -61,13 +58,12 @@ describe('In RESOURCES module', function() {
                 .get(params)
                 .should.eventually.be.fulfilled
                 .then(function(response){
-                  expect(response.data.length).to.be.equal(3);
+                  expect(response.data).to.have.property('length', 3);
                 })
                 .should.eventually.be.fulfilled.notify(done);
             });
 
-            it('get collection with specific page and page size' +
-                    ' successes returning specific number of in a specific page', function(done) {
+            it('Collection with page & pageSize parameter returns defined #elems from expected page', function(done) {
                 var params = {
                     pagination: {
                         page: 1,
@@ -79,13 +75,12 @@ describe('In RESOURCES module', function() {
                 .get(params)
                 .should.eventually.be.fulfilled
                 .then(function(response){
-                  expect(response.data.length).to.be.equal(2);
+                  expect(response.data).to.have.property('length', 2);
                 })
                 .should.eventually.be.fulfilled.notify(done);
             });
 
-            it('get collection with maximum number of elements for page and default page' +
-                    ' successes returning maximum page size', function(done) {
+            it('Collection with maximum value allowed for pageSize returns maximum elements per page', function(done) {
                 var params = {
                     pagination: {
                         pageSize: RESOURCES_MAX_PAGE_SIZE
@@ -101,8 +96,7 @@ describe('In RESOURCES module', function() {
                 .should.eventually.be.fulfilled.notify(done);
             });
 
-            it('get collection with minimum number of elements for page and default page' +
-                    ' successes returning invalid page size', function(done) {
+            it('Collection with minimum value allowed for pageSize returns minimum elements per page', function(done) {
                 var params = {
                     pagination: {
                         pageSize: RESOURCES_MIN_PAGE_SIZE
@@ -118,8 +112,7 @@ describe('In RESOURCES module', function() {
                 .should.eventually.be.fulfilled.notify(done);
             });
 
-            it('get collection with specific query and specific number of element in a page' +
-                    ' successes returning all resources satisfaying the condition in the request', function(done) {
+            it('Collection with query & pageSize params returns elements satisfactorily', function(done) {
                 var params = {
                     query: [{
                         '$gt': {
@@ -136,18 +129,15 @@ describe('In RESOURCES module', function() {
                 .should.eventually.be.fulfilled
                 .then(function(response) {
                     var data = response.data;
-                    expect(data.length).to.be.equal(3);
-                    expect(data[0].intField).to.be.above(700);
-                    expect(data[1].intField).to.be.above(700);
-                    expect(data[2].intField).to.be.above(700);
+                    expect(data).to.have.property('length', 3);
+                    response.data.forEach(function(resource) {
+                        expect(resource).to.have.property('intField').and.be.above(700);
+                    });
                 }).
                 should.eventually.be.fulfilled.notify(done);
             });
 
-
-            it('get collection with specific query and' +
-                    ' specific number of element in an specific page' +
-                    'successes returning all resources satisfaying the condition in the request', function(done) {
+            it('Collection with query & pagination params returns elements satisfactorily', function(done) {
                 var params = {
                     query: [{
                         '$gt': {
@@ -164,16 +154,15 @@ describe('In RESOURCES module', function() {
                 .get(params)
                 .should.eventually.be.fulfilled
                 .then(function(response) {
-                    expect(response.data.length).to.be.equal(3);
+                    expect(response.data).to.have.property('length', 3);
                     response.data.forEach(function(resource) {
-                        expect(resource.intField).to.be.above(700);
+                        expect(resource).to.have.property('intField').and.be.above(700);
                     });
                 })
                 .should.eventually.be.fulfilled.notify(done);
             });
 
-            it('get collection with invalid options in page JSON' + 
-                    ' successes returning resources ingnoring invalid options', function(done) {
+            it('Collection with invalid pagination parameter ignores such parameters', function(done) {
                 var params = {
                     pagination: {
                         badOption: 'bad'
