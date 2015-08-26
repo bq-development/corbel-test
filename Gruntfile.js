@@ -100,6 +100,11 @@ module.exports = function(grunt) {
     'karma:serve'
   ]);
 
+  grunt.registerTask('server:test', '', [
+    'common',
+    'karma:serve'
+  ]);
+
   grunt.registerTask('test', [
     'common',
     'karma:unit'
