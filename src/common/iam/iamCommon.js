@@ -34,6 +34,29 @@ function createClientDomain(driver, domain, client) {
     return promise;
 }
 
+function createUsers(driver, amount) {
+    var promises = [];
+
+    for(var count = 1; count <= amount; count++) {
+        var random = Date.now() + '-' + count;
+        var emailAccount = 'registerUser' + random + '@funkifake.com';
+
+        var userData = {
+            'firstName': 'registerUser',
+            'lastName': 'registerUser',
+            'email': 'registerUser' + random + '@funkifake.com',
+            'username': 'registerUser' + random + '@funkifake.com',
+            'password': 'passRegisterUser',
+            'oauthService': 'silkroad'
+        };
+
+        var promise = driver.iam.user().create(userData);
+        promises.push(promise);
+    }
+
+    return Promise.all(promises);
+}
+
 
 module.exports = {
     createDomain: createDomain,
