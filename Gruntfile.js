@@ -100,10 +100,12 @@ module.exports = function(grunt) {
     'browserify'
   ]);
 
-  grunt.registerTask('server:test', '', [
+  grunt.registerTask('serve:test', '', [
     'common',
     'karma:serve'
   ]);
+  // deprecated
+  grunt.registerTask('server:test', '', ['serve:test']);
 
   grunt.registerTask('test', [
     'common',
