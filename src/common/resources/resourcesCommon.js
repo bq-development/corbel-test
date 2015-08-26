@@ -210,6 +210,21 @@ function repeatMove(driver, idResource, repeatTimes, COLLECTION_A, idResourceInA
     });
 }
 
+function getExpire() {
+    return Math.round((new Date().getTime() / 1000)) + 7203500;
+}
+
+function getAsset(scopes) {
+    return {
+        userId: '1',
+        name: 'createAssetTest',
+        productId: String(Date.now()),
+        expire: getExpire(),
+        active: true,
+        scopes: scopes || ['assets:asset', 'resources:music:edit_playlist']
+    };
+}
+
 module.exports = {
     getResource : getResource,
     getProperty : getProperty,
@@ -221,5 +236,8 @@ module.exports = {
     createRelationFromSingleObjetToMultipleObject : createRelationFromSingleObjetToMultipleObject,
     deleteCreatedRelationObjects : deleteCreatedRelationObjects,
     fastMove : fastMove,
-    repeatMove : repeatMove
+    repeatMove : repeatMove,
+    getExpire : getExpire,
+    getAsset : getAsset
+
 };
