@@ -374,6 +374,43 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled.and.notify(done);
             });
 
+            it('successes returning elements satisfying the request pattern of StringField' +
+                   ' containing an escaped regexs special character', function(done) {
+
+                var id;
+                var updateParams = { stringField : 'qwer$qwer' };
+                var params = {
+                    query: [{
+                        '$like': {
+                            stringField: '\\\\$'
+                        }
+                    }]
+                };
+
+                corbelDriver.resources.collection(COLLECTION)
+                .get()
+                .should.eventually.be.fulfilled
+                .then(function(response){
+                    id = response.data[0].id;
+                })
+                .should.eventually.be.fulfilled
+                .then(function(){
+                    return corbelDriver.resources.resource(COLLECTION, id)
+                    .update(updateParams)
+                    .should.eventually.be.fulfilled;
+                })
+                .then(function(){
+                    return corbelDriver.resources.collection(COLLECTION)
+                    .get(params)
+                    .should.eventually.be.fulfilled;
+                })
+                .then(function(response) {
+                    expect(response.data).to.have.length(1);
+                    expect(response.data[0].stringField.match('\\$').length).to.be.above(0);
+                })
+                .should.eventually.be.fulfilled.notify(done);
+            });
+
             it('returns elements satisfying the request ', function(done) {
                 var params = {
                     query: [{
