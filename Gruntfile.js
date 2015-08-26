@@ -100,10 +100,15 @@ module.exports = function(grunt) {
     'browserify'
   ]);
 
-  grunt.registerTask('server:test', '', [
+  grunt.registerTask('serve:test', '', [
     'common',
     'karma:serve'
   ]);
+  // deprecated
+  grunt.registerTask('server:test', function(){
+    grunt.log.error('>>> ATENTION: grunt server:test is deprecated, please use grunt serve:test');
+    grunt.task.run(['serve:test']);
+  });
 
   grunt.registerTask('test', [
     'common',
