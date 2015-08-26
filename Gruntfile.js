@@ -127,5 +127,19 @@ module.exports = function(grunt) {
   }
 
   grunt.registerTask('init-env-links',
-    'Links local corejs components to bower directory (development)', createCorbelJsLink);
+      'Links local corbel-js components to node_modules directory (development).',
+      createCorbelJsLink);
+
+  function deleteCorbelJsLink() {
+    var fs = require('fs');
+    var dependencyCorbelJsDir = process.cwd() + '/node_modules/corbel-js';
+
+    if (grunt.file.isLink(dependencyCorbelJsDir)) {
+        console.log('  Deleting link : ' + dependencyCorbelJsDir);
+        fs.unlinkSync(dependencyCorbelJsDir);
+    }
+  }
+
+  grunt.registerTask('delete-env-links', 'Deletes local corbel-js link.',
+    deleteCorbelJsLink);
 };

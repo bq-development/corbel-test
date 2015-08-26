@@ -10,6 +10,7 @@
     "url": "git@github.com:corbel-platform/corbel-test.git"
   },
   "scripts": {
+    "preinstall": "grunt delete-env-links",
     "test": "grunt test",
     "start": "grunt server:test"
   },
