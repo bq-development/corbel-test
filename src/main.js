@@ -11,10 +11,10 @@ var environment = process.env.NODE_ENV ? process.env.NODE_ENV : config.ENV;
 corbelTest.CONFIG.COMMON.urlBase = config.COMMON.urlBase.replace('{{ENV}}', environment);
 
 corbelTest.getConfig = function(clientName) {
-	var data = {
-		urlBase : corbelTest.CONFIG.COMMON.urlBase
-	};
-	return _.extend(data, corbelTest.CONFIG[clientName]);
+    var data = {
+        urlBase: corbelTest.CONFIG.COMMON.urlBase
+    };
+    return _.extend(data, corbelTest.CONFIG[clientName]);
 };
 
 corbelTest.common = common;

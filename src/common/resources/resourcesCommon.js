@@ -1,9 +1,7 @@
-//@exclude
 'use strict';
-/*globals corbel */
-//@endexclude
 
 var superagent = require('superagent');
+var _ = require('lodash');
 
 var createdQueryObject = [];
 var createdRelationObject = [];
@@ -13,14 +11,6 @@ var successHandler = function(list, collection, id) {
         collection: collection,
         id: id
     });
-};
-
-var createIntegerSecuence = function(length) {
-    var list = [];
-    for (var i = 1; i <= length; i++) {
-        list.push(i);
-    }
-    return list;
 };
 
 var relationSuccessHandler = function(list, collectionA, idA, collectionB, idB) {
@@ -41,10 +31,10 @@ function createdObjectsToQuery(driver, collectionName, amount, extraField) {
         var json = {
             stringField: 'stringFieldContent' + count,
             intField: 100 * count,
-            computableField: count + (1/3),
+            computableField: count + (1 / 3),
             stringSortCut: 'Test Short Cut',
             codingTest: 'ñÑçáéíóúàèìòùâêîôû\'',
-            ObjectNumber: createIntegerSecuence(count),
+            ObjectNumber: _.range(count),
             ObjectMatch: [{
                 name: 'basic',
                 identifier: 'id' + count,
@@ -57,7 +47,7 @@ function createdObjectsToQuery(driver, collectionName, amount, extraField) {
             randomField: 'asdf'
         };
 
-        if(extraField) {
+        if (extraField) {
             json.extra = extraField;
         }
 
@@ -120,32 +110,39 @@ function getProperty(obj, prop) {
 }
 
 function createRelationFromSingleObjetToMultipleObject(driver, collectionA, idResourceInA, collectionB, idResourceInB) {
-        var promises = [];
+    var promises = [];
 
-        idResourceInB.forEach(function(idB, count) {
-            var jsonRelationData = {
-                intField: Date.now(),
-                intCount: 100 * count,
-                stringField: 'stringContent' + count,
-                stringSortCut: 'Test Short Cut',
-                ObjectNumber: createIntegerSecuence(count)
-            };
+    idResourceInB.forEach(function(idB, count) {
+        var jsonRelationData = {
+            intField: Date.now(),
+            intCount: 100 * count,
+            stringField: 'stringContent' + count,
+            stringSortCut: 'Test Short Cut',
+            ObjectNumber: _.range(count)
+        };
 
-            var promise = driver.resources.relation(collectionA, idResourceInA, collectionB).add(idB, jsonRelationData);
-            promises.push(promise);
-            promise.then(relationSuccessHandler.bind
-                    (this, createdRelationObject, collectionA, idResourceInA, collectionB, idB));
-        });
+        var promise = driver.resources.relation(collectionA, idResourceInA, collectionB).add(idB, jsonRelationData);
+        promises.push(promise);
+        promise
+            .then(relationSuccessHandler.bind(
+                this,
+                createdRelationObject,
+                collectionA,
+                idResourceInA,
+                collectionB,
+                idB
+            ));
+    });
 
-        return Promise.all(promises);
+    return Promise.all(promises);
 }
 
 function deleteCreatedRelationObjects(driver) {
     var promises = [];
     createdRelationObject.forEach(function(createdRelation) {
-        var promise = driver.resources.relation
-            (createdRelation.collectionA, createdRelation.idA, createdRelation.collectionB)
-        .delete(createdRelation.idB);
+        var promise = driver.resources
+            .relation(createdRelation.collectionA, createdRelation.idA, createdRelation.collectionB)
+            .delete(createdRelation.idB);
         promises.push(promise);
     });
     return Promise.all(promises);
@@ -153,45 +150,45 @@ function deleteCreatedRelationObjects(driver) {
 
 function fastMove(driver, idResource1, idResource2, repeatTimes, COLLECTION_A, idResourceInA, COLLECTION_B) {
     return driver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-    .move(idResource1, 2)
-    .should.eventually.be.fulfilled
-    .then(function() {
-        if (repeatTimes) {
-            return fastMove(driver, idResource2, idResource1, repeatTimes - 1,
-              COLLECTION_A, idResourceInA, COLLECTION_B);
-        } else {
-            return idResource2;
-        }
-    });
+        .move(idResource1, 2)
+        .should.eventually.be.fulfilled
+        .then(function() {
+            if (repeatTimes) {
+                return fastMove(driver, idResource2, idResource1, repeatTimes - 1,
+                    COLLECTION_A, idResourceInA, COLLECTION_B);
+            } else {
+                return idResource2;
+            }
+        });
 }
 
 function repeatMove(driver, idResource, repeatTimes, COLLECTION_A, idResourceInA, COLLECTION_B, params, amount) {
     return driver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-    .move(idResource, 2)
-    .should.eventually.be.fulfilled
-    .then(function() {
-        return driver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-        .get(null, params)
-        .should.eventually.be.fulfilled;
-    }).then(function(response) {
-        expect(response.data[1].id).to.be.equal(idResource);
-        if (repeatTimes) {
-            idResource = response.data[amount - 1].id;
-            return repeatMove(driver, idResource, repeatTimes - 1,
-              COLLECTION_A, idResourceInA, COLLECTION_B, params, amount);
-        }
-    });
+        .move(idResource, 2)
+        .should.eventually.be.fulfilled
+        .then(function() {
+            return driver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null, params)
+                .should.eventually.be.fulfilled;
+        }).then(function(response) {
+            expect(response.data[1].id).to.be.equal(idResource);
+            if (repeatTimes) {
+                idResource = response.data[amount - 1].id;
+                return repeatMove(driver, idResource, repeatTimes - 1,
+                    COLLECTION_A, idResourceInA, COLLECTION_B, params, amount);
+            }
+        });
 }
 
 module.exports = {
-    getProperty : getProperty,
-    checkSorting : checkSorting,
-    checkSortingDesc : checkSortingDesc,
-    createdObjectsToQuery : createdObjectsToQuery,
+    getProperty: getProperty,
+    checkSorting: checkSorting,
+    checkSortingDesc: checkSortingDesc,
+    createdObjectsToQuery: createdObjectsToQuery,
     cleanResourcesQuery: cleanResourcesQuery,
     checkSortingAsc: checkSortingAsc,
-    createRelationFromSingleObjetToMultipleObject : createRelationFromSingleObjetToMultipleObject,
-    deleteCreatedRelationObjects : deleteCreatedRelationObjects,
-    fastMove : fastMove,
-    repeatMove : repeatMove
+    createRelationFromSingleObjetToMultipleObject: createRelationFromSingleObjetToMultipleObject,
+    deleteCreatedRelationObjects: deleteCreatedRelationObjects,
+    fastMove: fastMove,
+    repeatMove: repeatMove
 };
