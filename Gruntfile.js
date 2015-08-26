@@ -65,8 +65,12 @@ module.exports = function(grunt) {
     // Test settings
     karma: {
       options: {
-        configFile: 'test/karma.conf.js'
-      },
+        configFile: 'test/karma.conf.js',
+        client: {
+          mocha : {
+            timeout : 90000
+          }
+        }      },
       unit: {
         singleRun: true
       },
