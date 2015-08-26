@@ -137,9 +137,9 @@ describe('In RESOURCES module', function() {
                 .then(function(response) {
                     var data = response.data;
                     expect(data.length).to.be.equal(3);
-                    expect(data[0].intField).to.be.above(700);
-                    expect(data[1].intField).to.be.above(700);
-                    expect(data[2].intField).to.be.above(700);
+                    response.data.forEach(function(resource) {
+                        expect(resource.intField).to.be.above(700);
+                    });
                 }).
                 should.eventually.be.fulfilled.notify(done);
             });
