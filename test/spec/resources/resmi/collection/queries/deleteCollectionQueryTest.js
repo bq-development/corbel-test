@@ -1,8 +1,8 @@
 describe('In RESOURCES module', function() {
 
-    describe('In RESMI module, testing queries,', function() {
+    describe('In RESMI module, testing collection queries,', function() {
         var corbelDriver;
-        var COLLECTION = 'test:CorbelJSObjectDeleteQuery' + Date.now(); 
+        var COLLECTION = 'test:CorbelJSObjectDeleteCollectionQuery' + Date.now(); 
         var amount = 10;
 
         beforeEach(function(done) {
@@ -11,93 +11,87 @@ describe('In RESOURCES module', function() {
             should.eventually.be.fulfilled.notify(done);
         });
 
-        describe('if we use delete collection without query all elements are deleted,', function() {
+        it('if we use delete collection without query all elements are deleted', function(done) {
+            var params = {
+                query: [{
+                    '$eq': {
+                        stringSortCut: 'Test Short Cut'
+                    }
+                }]
+            };
 
-            it('successes returning', function(done) {
-                var params = {
-                    query: [{
-                        '$eq': {
-                            stringSortCut: 'Test Short Cut'
-                        }
-                    }]
-                };
+            corbelDriver.resources.collection(COLLECTION)
+            .get(params)
+            .should.be.eventually.fulfilled
+            .then(function(response) {
+                response.data.forEach(function(element) {
+                    expect(element.stringSortCut).to.be.equal('Test Short Cut');
+                });
 
-                corbelDriver.resources.collection(COLLECTION)
+                return corbelDriver.resources.collection(COLLECTION)
+                .delete()
+                .should.be.eventually.fulfilled;
+            })
+            .then(function() {
+                return corbelDriver.resources.collection(COLLECTION)
                 .get(params)
-                .should.eventually.be.fulfilled
-                .then(function(response) {
-                    response.data.forEach(function(element) {
-                        expect(element.stringSortCut).to.be.equal('Test Short Cut');
-                    });
-
-                    return corbelDriver.resources.collection(COLLECTION)
-                    .delete()
-                    .should.eventually.be.fulfilled;
-                })
-                .then(function() {
-                    return corbelDriver.resources.collection(COLLECTION)
-                    .get(params)
-                    .should.eventually.be.fulfilled;
-                })
-                .then(function(response) {
-                    expect(response.data.length).to.be.equal(0);
-                })
-                .should.eventually.be.fulfilled.notify(done);
-            });
+                .should.be.eventually.fulfilled;
+            })
+            .then(function(response) {
+                expect(response.data.length).to.be.equal(0);
+            })
+            .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        describe('if we use delete collection with query' +
-               ' all elements corresponding to query are deleted,', function() {
+        it('if we use delete collection with query params' +
+               ' all elements corresponding to query params are deleted', function(done) {
+            var paramsToDelete = {
+                query: [{
+                    '$gt': {
+                        intField: 500
+                    },
+                }]
+            };
 
-            it('successes returning', function(done) {
-                var paramsToDelete = {
-                    query: [{
-                        '$gt': {
-                            intField: 500
-                        },
-                    }]
-                };
+            var paramsToCheck = {
+                query: [{
+                    '$lt': {
+                        intField: 600
+                    },
+                }]
+            };
 
-                var paramsToCheck = {
-                    query: [{
-                        '$lt': {
-                            intField: 600
-                        },
-                    }]
-                };
+            corbelDriver.resources.collection(COLLECTION)
+            .get(paramsToDelete)
+            .should.be.eventually.fulfilled
+            .then(function(response) {
+                response.data.forEach(function(element) {
+                    expect(element.intField).to.be.above(500);
+                });
 
-                corbelDriver.resources.collection(COLLECTION)
+                return corbelDriver.resources.collection(COLLECTION)
+                .delete(paramsToDelete)
+                .should.be.eventually.fulfilled;
+            })
+            .then(function() {
+                return corbelDriver.resources.collection(COLLECTION)
                 .get(paramsToDelete)
-                .should.eventually.be.fulfilled
-                .then(function(response) {
-                    response.data.forEach(function(element) {
-                        expect(element.intField).to.be.above(500);
-                    });
+                .should.be.eventually.fulfilled;
+            })
+            .then(function(response) {
+                expect(response.data.length).to.be.equal(0);
 
-                    return corbelDriver.resources.collection(COLLECTION)
-                    .delete(paramsToDelete)
-                    .should.eventually.be.fulfilled;
-                })
-                .then(function() {
-                    return corbelDriver.resources.collection(COLLECTION)
-                    .get(paramsToDelete)
-                    .should.eventually.be.fulfilled;
-                })
-                .then(function(response) {
-                    expect(response.data.length).to.be.equal(0);
-
-                    return corbelDriver.resources.collection(COLLECTION)
-                    .get(paramsToCheck)
-                    .should.eventually.be.fulfilled;
-                })
-                .then(function(response) {
-                    expect(response.data.length).to.be.equal(5);
-                    response.data.forEach(function(element) {
-                        expect(element.intField).to.be.below(600);
-                    });
-                })
-                .should.eventually.be.fulfilled.notify(done);
-            });
+                return corbelDriver.resources.collection(COLLECTION)
+                .get(paramsToCheck)
+                .should.be.eventually.fulfilled;
+            })
+            .then(function(response) {
+                expect(response.data.length).to.be.equal(5);
+                response.data.forEach(function(element) {
+                    expect(element.intField).to.be.below(600);
+                });
+            })
+            .should.be.eventually.fulfilled.and.notify(done);
         });
     });
 });
