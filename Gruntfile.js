@@ -1,3 +1,4 @@
+
 'use strict';
 
 module.exports = function(grunt) {
@@ -106,4 +107,25 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('default', ['test']);
+
+  function createCorbelJsLink() {
+    var fs = require('fs');
+
+    var localCorbelJsDir = process.cwd() + '/../corbel-js';
+    var dependencyCorbelJsDir = process.cwd() + '/node_modules/corbel-js';
+
+    if (grunt.file.isLink(dependencyCorbelJsDir)) {
+        console.log('  Deleting link : ' + dependencyCorbelJsDir);
+        fs.unlinkSync(dependencyCorbelJsDir);
+    } else if (grunt.file.isDir(dependencyCorbelJsDir)) {
+        console.log('  Deleting dir: ' + dependencyCorbelJsDir);
+        grunt.file.delete(dependencyCorbelJsDir);
+    }
+
+    console.log('  Creating link from ' + localCorbelJsDir + ' to ' + dependencyCorbelJsDir);
+    fs.symlinkSync(localCorbelJsDir, dependencyCorbelJsDir);
+  }
+
+  grunt.registerTask('init-env-links',
+    'Links local corejs components to bower directory (development)', createCorbelJsLink);
 };
