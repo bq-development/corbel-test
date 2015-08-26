@@ -79,11 +79,12 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('config', '', function() {
-    var file = grunt.file.exists('.corbeltest') ? '.corbeltest' : '.corbeltest.default';
-
-    var config = grunt.file.readJSON(file);
+    var defaultConfig = grunt.file.readJSON('.corbeltest.default');
+    var config = grunt.file.exists('.corbeltest') ? grunt.file.readJSON('.corbeltest') : {};
+    var finalConfig = {};
+    _.extend(finalConfig, defaultConfig, config);
     grunt.file.write(CONFIG.tmp +
-      '/config.js', 'module.exports = ' + JSON.stringify(config, null, 2));
+      '/config.js', 'module.exports = ' + JSON.stringify(finalConfig, null, 2));
   });
 
   grunt.registerTask('common', '', [
