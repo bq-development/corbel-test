@@ -119,33 +119,6 @@ function getProperty(obj, prop) {
     }
 }
 
-function getResource(token, collection, query) {
-
-    var promise = new Promise(function(resolve, reject){
-        var url = corbelTest.CONFIG.COMMON.urlBase.replace('{{module}}', 'resources') + 'resource/' + collection;
-
-        if(query){
-            url += '?' + query;
-        }
-
-        superagent
-            .get(url)
-            .set('Authorization', 'Bearer ' + token)
-            .set('Accept', 'application/json')
-            .end(function(err, response){
-                if(!err){
-                    resolve(response);
-                }else{
-                    reject(err);
-                }
-            });
-    });
-
-    return promise;
-
-
-}
-
 function createRelationFromSingleObjetToMultipleObject(driver, collectionA, idResourceInA, collectionB, idResourceInB) {
         var promises = [];
 
@@ -211,7 +184,6 @@ function repeatMove(driver, idResource, repeatTimes, COLLECTION_A, idResourceInA
 }
 
 module.exports = {
-    getResource : getResource,
     getProperty : getProperty,
     checkSorting : checkSorting,
     checkSortingDesc : checkSortingDesc,
