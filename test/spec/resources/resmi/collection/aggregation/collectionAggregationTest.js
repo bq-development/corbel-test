@@ -6,6 +6,7 @@ describe('In RESOURCES module', function() {
     });
 
     describe('In RESMI module, while testing collection aggregation,', function() {
+
         var COLLECTION = 'test:CorbelJSObjectCollectionAggregation' + Date.now();
         var amount = 50;
         var sum = 25 * 155 / 3;
