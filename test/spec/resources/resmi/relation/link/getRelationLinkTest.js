@@ -1,6 +1,6 @@
 describe('In RESOURCES module', function() {
 
-    describe('In RESMI module, testing getRelationLink ', function() {
+    describe('In RESMI module, while testing relation\'s links', function() {
 
         var corbelDriver;
         var TIMESTAMP = Date.now();
@@ -43,7 +43,7 @@ describe('In RESOURCES module', function() {
         });
 
 
-        it(' when requests to create a relation, the system creates automatic links', function(done) {
+        it('relation links are automatically set up when a relation is created', function(done) {
             corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
             .add(idResourceB)
             .should.eventually.be.fulfilled
@@ -56,9 +56,10 @@ describe('In RESOURCES module', function() {
                 var relation = response.data[0];
                 var link = relation.links[0];
                 var urlBase = corbelDriver.config.get('urlBase').replace('{{module}}', 'resources');
+                var expectedUrl = urlBase +corbelTest.CONFIG.DOMAIN+'/resource/' + COLLECTION_B + '/' + idResourceB;
 
-                expect(link.href).to.be.equal(urlBase + 'resource/' + COLLECTION_B + '/' + idResourceB);
-                expect(link.rel).to.be.equal('self');
+                expect(link.href).to.be.equal(expectedUrl);
+                expect(link).to.have.deep.property('rel', 'self');
 
                 return corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
                 .delete()
