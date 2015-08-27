@@ -1,6 +1,6 @@
 describe('In RESOURCES module', function() {
 
-    describe('In RESMI module, testing collection queries', function() {
+    describe('In RESMI module, while testing collection queries', function() {
         var corbelDriver;
         var COLLECTION = 'test:CorbelJSObjectQuery' + Date.now();
         var amount = 10;
@@ -8,15 +8,15 @@ describe('In RESOURCES module', function() {
         beforeEach(function(done) {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
             corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION, amount)
-            .should.be.eventually.fulfilled.and.and.notify(done);
+            .should.be.eventually.fulfilled.and.notify(done);
         });
 
         afterEach(function(done) {
             corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
-            .should.be.eventually.fulfilled.and.and.notify(done);
+            .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        describe('when get collection using the query language equals', function() {
+        describe('when get collection using the equals query language', function() {
 
             it('returns elements satisfying the numeric equality', function(done) {
                 var params = {
@@ -129,7 +129,7 @@ describe('In RESOURCES module', function() {
             });
         });
 
-        describe('when get collection using the query language "greater than" or "equal or greater than"', function() {
+        describe('when get collection using the "greater than" or "equal or "greater than" query language', function() {
 
             it('returns elements satisfying intField greater than 700', function(done) {
                 var params = {
@@ -175,7 +175,7 @@ describe('In RESOURCES module', function() {
             });
         });
 
-        describe('when get collection using the query language "less than" or "equal or less than"', function() {
+        describe('when get collection using the "less than" or "equal or less than" query language', function() {
 
             it('returns elements satisfying the request intField' +
                    ' less than 300', function(done) {
@@ -222,7 +222,7 @@ describe('In RESOURCES module', function() {
             });
         });
 
-        describe('when get collection using the query language "greater and less than equals"', function() {
+        describe('when get collection using the "greater and less than equals" query language', function() {
 
             it('successes returning elements satisfying the request', function(done) {
                 var params = {
@@ -250,7 +250,7 @@ describe('In RESOURCES module', function() {
             });
         });
 
-        describe('when get collection using the query language "equals" and "in"', function() {
+        describe('when get collection using the "equals" and "in" query language', function() {
 
             it('returns elements satisfying the request', function(done) {
                 var params = {
@@ -278,7 +278,7 @@ describe('In RESOURCES module', function() {
             });
         });
 
-        describe('when get collection using the query language "in"', function() {
+        describe('when get collection using the "in" query language', function() {
 
             it('returns elements satisfying the request', function(done) {
                 var params = {
@@ -302,7 +302,7 @@ describe('In RESOURCES module', function() {
             });
         });
 
-        describe('when get collection using the query language "not in"', function() {
+        describe('when get collection using the "not in" query language', function() {
 
             it('returns elements satisfying the request', function(done) {
                 var params = {
@@ -326,7 +326,7 @@ describe('In RESOURCES module', function() {
             });
         });
 
-        describe('when get collection using the query language "not equal"', function() {
+        describe('when get collection using the "not equal" query language', function() {
 
             it('returns elements satisfying the request with intField' +
                    ' different of 500', function(done) {
@@ -351,7 +351,7 @@ describe('In RESOURCES module', function() {
             });
         });
 
-        describe('when get collection using the query language "like"', function() {
+        describe('when get collection using the "like" query language', function() {
 
             it('returns elements satisfying the request with regular expression', function(done) {
                 var params = {
