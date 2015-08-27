@@ -5,11 +5,10 @@ describe('In ASSETS module', function() {
         corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
     });
 
-    it('when a client asks for assets/access without authorization,' +
-        ' fails returning unauthorized(401)',
+    it('when a client asks for assets without authorization, server replies with an unauthorized code (401)', 
         function(done) {
             corbelDriver.assets().access()
-                .should.eventually.be.rejected
+                .should.be.eventually.rejected
                 .then(function(e) {
                     expect(e).to.have.property('status', 401);
                 })
