@@ -34,7 +34,9 @@
     "mocha": "^2.2.5",
     "q": "^1.4.1",
     "sinon": "^1.15.4",
-    "time-grunt": "^1.2.1"
+    "time-grunt": "^1.2.1",
+    "jquery": "^2.1.4"
+
   },
   "dependencies": {
     "lodash": "^3.10.1",
