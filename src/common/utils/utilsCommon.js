@@ -46,7 +46,51 @@ function consultPlugins(currentUrl) {
     return deferred.promise;
 }
 
+function createNewTestUser(driver, username) {
+    var userData = {
+        'firstName': username,
+        'lastName': 'registeredUserLastName',
+        'email': username + '@funkyfake.com',
+        'username': username,
+        'password': 'password'
+    };
+
+    return driver.iam.user().create(userData);
+}
+
+function loginTestUser(username) {
+    var driverDefaultConfig = corbelTest.CONFIG['DEFAULT_CLIENT'];
+    var savedConfig;
+
+    try {
+        savedConfig = JSON.parse(window.localStorage.getItem('driverconfig'));
+    } catch (e) {
+        console.warn('warn:parse:savedconfig');
+        savedConfig = {};
+    }
+
+    var driverConfig = _.extend(_.clone(driverDefaultConfig), savedConfig);
+    var driver = corbel.getDriver(driverConfig);
+
+    var claims = {
+        'basic_auth.username': username,
+        'basic_auth.password': 'password',
+        'scope': driverConfig.scopes
+    };
+
+    return driver.iam.token().create({
+        claims: claims
+    }).then(function(response) {
+        return {
+            driver: driver,
+            response: response
+        };
+    });
+}
+
 module.exports = {
     retry : retry,
-    consultPlugins : consultPlugins 
+    consultPlugins : consultPlugins,
+    createNewTestUser: createNewTestUser,
+    loginTestUser: loginTestUser
 };
