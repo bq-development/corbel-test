@@ -5,5 +5,6 @@ module.exports = {
     iam : require('./iam'),
     utils : require('./utils'),
     clients : require('./clients'),
-    assets : require('./assets')
+    assets : require('./assets'),
+    oauth : require('./oauth')
 };
