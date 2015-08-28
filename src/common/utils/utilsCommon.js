@@ -46,7 +46,43 @@ function consultPlugins(currentUrl) {
     return deferred.promise;
 }
 
+function createNewUser(driver, username, password) {
+    var userData = {
+        'firstName': username,
+        'lastName': 'registeredUserLastName',
+        'email': username + '@funkyfake.com',
+        'username': username,
+        'password': password
+    };
+
+    return driver.iam.user().create(userData);
+}
+
+function loginUser(driver, username, password) {
+    var driverToReturn;
+    var claimDefault = _.cloneDeep(corbelTest.CONFIG['DEFAULT_CLIENT']);
+    var version = _.cloneDeep(corbelTest.CONFIG['VERSION']);
+    var jwtAlgorithm = 'HS256';
+
+    var claims = {
+        'basic_auth.username': username,
+        'basic_auth.password': password,
+        'scope': claimDefault.scopes
+    };
+
+    driver.iam.token().create({
+        // jwt: corbel.jwt.generate(claims, claimDefault.clientSecret, jwtAlgorithm)
+        claims: claims
+    }).then(function(response) {
+        driverToReturn = response;
+    });
+
+    return driverToReturn;
+}
+
 module.exports = {
     retry : retry,
-    consultPlugins : consultPlugins 
+    consultPlugins : consultPlugins,
+    createNewUser: createNewUser,
+    loginUser: loginUser
 };
