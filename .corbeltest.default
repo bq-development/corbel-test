@@ -4,41 +4,47 @@
    "claimExp": "3500",
    "DOMAIN": "test-domain",
    "DEFAULT_CLIENT": {
-       "clientId": "CLIENT_ID",
-       "clientSecret": "CLIENT_SECRET",
-       "scopes": "SCOPES"
+        "clientId": "CLIENT_ID",
+        "clientSecret": "CLIENT_SECRET",
+        "scopes": "SCOPES"
    },
    "ADMIN_CLIENT": {
-       "clientId": "CLIENT_ID",
-       "clientSecret": "CLIENT_SECRET",
-       "scopes": "SCOPES"
+        "clientId": "CLIENT_ID",
+        "clientSecret": "CLIENT_SECRET",
+        "scopes": "SCOPES"
    },
    "DEFAULT_USER": {
-       "clientId": "CLIENT_ID",
-       "clientSecret": "CLIENT_SECRET",
-       "scopes": "SCOPES",
-       "username": "username@test.com",
-       "password": "testpassword"
+        "clientId": "CLIENT_ID",
+        "clientSecret": "CLIENT_SECRET",
+        "scopes": "SCOPES",
+        "username": "username@test.com",
+        "password": "testpassword"
    },
    "ADMIN_SKIP": {
-       "clientId": "CLIENT_ID",
-       "clientSecret": "CLIENT_SECRET",
-       "scopes": "SCOPES",
-       "username": "user@test.com",
-       "password": "testpassword",
-       "oauthService": "oauthService"
+        "clientId": "CLIENT_ID",
+        "clientSecret": "CLIENT_SECRET",
+        "scopes": "SCOPES",
+        "username": "user@test.com",
+        "password": "testpassword",
+        "oauthService": "oauthService"
    },
    "ROOT_CLIENT": {
-       "clientId": "CLIENT_ID",
-       "clientSecret": "CLIENT_SECRET",
-       "scopes": "SCOPES"
+        "clientId": "CLIENT_ID",
+        "clientSecret": "CLIENT_SECRET",
+        "scopes": "SCOPES"
    },
    "COMMON": {
-       "urlBase": "https://{{module}}-{{ENV}}.mydomain.com/v1.0/"
+        "urlBase": "https://{{module}}-{{ENV}}.mydomain.com/v1.0/"
    },
    "GLOBALS": {
-     "defaultPageSize": 10,
-     "maxPageSize": 50,
-     "minPageSize": 1
+        "defaultPageSize": 10,
+        "maxPageSize": 50,
+        "minPageSize": 1,
+        "requestInfoEndpoint": "'http://' + window.location.host.split(':')[0] + ':' + (parseInt(window.location.host.split(':')[1]) + 1) + '/requestinfo'",
+        "tokenValidation": "/^.+..+..+$/" 
+   },
+   "OAUTH": {
+        "clientId": "CLIENT_ID",
+        "secret": "SECRET"
    }
 }
