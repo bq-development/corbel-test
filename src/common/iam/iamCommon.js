@@ -46,8 +46,8 @@ function createUsers(driver, amount) {
         var userData = {
             'firstName': 'registerUser',
             'lastName': 'registerUser',
-            'email': 'registerUser' + random + '@funkifake.com',
-            'username': 'registerUser' + random + '@funkifake.com',
+            'email': emailAccount,
+            'username': emailAccount,
             'password': 'passRegisterUser',
             'oauthService': 'silkroad'
         };
