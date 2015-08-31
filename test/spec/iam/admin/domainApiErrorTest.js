@@ -1,4 +1,4 @@
-describe('In IAM module, when testing domainAPIError', function() {
+describe.only('In IAM module, when testing domainAPIError', function() {
     var corbelRootDriver;
 
     before(function() {
@@ -32,9 +32,9 @@ describe('In IAM module, when testing domainAPIError', function() {
             .create(expectedDomain)
             .should.be.eventually.fulfilled
             .then(function(id) {
-                expect(id).to.have.property('data', corbelTest.CONFIG.DOMAIN  + ':' + expectedDomain.id);
+                expect(id).to.be.equal(corbelTest.CONFIG.DOMAIN  + ':' + expectedDomain.id);
 
-                return corbelRootDriver.iam.domain(id.data)
+                return corbelRootDriver.iam.domain(id)
                 .get()
                 .should.be.eventually.fulfilled;
             })
@@ -79,7 +79,7 @@ describe('In IAM module, when testing domainAPIError', function() {
             .create(expectedDomain)
             .should.be.eventually.fulfilled
             .then(function(id) {
-                domainId = id.data;
+                domainId = id;
                 expect(domainId).to.be.equals(corbelTest.CONFIG.DOMAIN  + ':' + expectedDomain.id);
 
                 return corbelRootDriver.iam.domain(domainId)
@@ -142,14 +142,14 @@ describe('In IAM module, when testing domainAPIError', function() {
             .create(getScope('TestScope1_' + timeStamp))
             .should.be.eventually.fulfilled
             .then(function(id) {
-                scope1 = id.data;
+                scope1 = id;
 
                 return corbelRootDriver.iam.scope()
                 .create(getScope('TestScope2_' + timeStamp))
                 .should.be.eventually.fulfilled;
             })
             .then(function(id) {
-                scope2 = id.data;
+                scope2 = id;
 
                 return corbelRootDriver.iam.domain()
                 .create({
@@ -159,7 +159,7 @@ describe('In IAM module, when testing domainAPIError', function() {
                 .should.be.eventually.fulfilled;
             })
             .then(function(id) {
-                domainId = id.data;
+                domainId = id;
             })
             .should.be.eventually.fulfilled.and.notify(done);
         });

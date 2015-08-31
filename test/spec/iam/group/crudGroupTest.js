@@ -19,20 +19,20 @@ describe('In IAM module', function() {
             corbelDriver.iam.group()
             .create(group)
             .then(function(id) {
-                return corbelDriver.iam.group(id.data)
+                return corbelDriver.iam.group(id)
                 .get()
                 .should.be.eventually.fulfilled;
             })
             .then(function(obtainedGroup) {
-                expect(obtainedGroup).to.have.deep.property('data.id');
-                expect(obtainedGroup).to.have.deep.property('data.name', group.name);
-                expect(obtainedGroup).to.have.deep.property('data.scopes');
+                expect(obtainedGroup).to.have.property('id');
+                expect(obtainedGroup).to.have.property('name', group.name);
+                expect(obtainedGroup).to.have.property('scopes');
 
-                obtainedGroup.data.scopes.forEach(function(scope) {
-                    expect(obtainedGroup.data.scopes).to.contain(scope);
+                obtainedGroup.scopes.forEach(function(scope) {
+                    expect(obtainedGroup.scopes).to.contain(scope);
                 });
 
-                return corbelDriver.iam.group(obtainedGroup.data.id)
+                return corbelDriver.iam.group(obtainedGroup.id)
                 .delete()
                 .should.be.eventually.fulfilled;
             })
@@ -46,7 +46,7 @@ describe('In IAM module', function() {
             corbelDriver.iam.group()
             .create(group)
             .then(function(createdId) {
-                id = createdId.data;
+                id = createdId;
 
                 return corbelDriver.iam.group(id)
                 .delete().
@@ -74,7 +74,7 @@ describe('In IAM module', function() {
             corbelDriver.iam.group()
             .create(group)
             .then(function(obtainedId) {
-                id = obtainedId.data;
+                id = obtainedId;
 
                 return corbelDriver.iam.group(id)
                 .addScopes(['newScope'])
@@ -91,10 +91,10 @@ describe('In IAM module', function() {
                 .should.be.eventually.fulfilled;
             })
             .then(function(obtainedGroup) {
-                expect(obtainedGroup).to.have.deep.property('data.scopes');
-                expect(obtainedGroup).to.have.deep.property('data.scopes.length', 2);
-                expect(obtainedGroup.data.scopes).to.contain('scope2');
-                expect(obtainedGroup.data.scopes).to.contain('newScope');
+                expect(obtainedGroup).to.property('scopes');
+                expect(obtainedGroup).to.have.deep.property('scopes.length', 2);
+                expect(obtainedGroup.scopes).to.contain('scope2');
+                expect(obtainedGroup.scopes).to.contain('newScope');
 
                 return corbelDriver.iam.group(id)
                 .delete()
@@ -114,14 +114,14 @@ describe('In IAM module', function() {
             .create(group1)
             .should.be.eventually.fulfilled
             .then(function(id) {
-                group1id = id.data;
+                group1id = id;
 
                 return corbelDriver.iam.group()
                 .create(group2)
                 .should.be.eventually.fulfilled;
             })
             .then(function(id) {
-                group2id = id.data;
+                group2id = id;
 
                 return corbelDriver.iam.group()
                 .getAll({
@@ -134,8 +134,8 @@ describe('In IAM module', function() {
                 .should.be.eventually.fulfilled;
             })
             .then(function(obtainedGroups) {
-                expect(obtainedGroups).to.have.deep.property('data.length', 1);
-                expect(obtainedGroups).to.have.deep.property('data[0].id', group1id);
+                expect(obtainedGroups).to.have.property('length', 1);
+                expect(obtainedGroups[0]).to.have.property('id', group1id);
 
                 return corbelDriver.iam.group(group1id)
                 .delete()
