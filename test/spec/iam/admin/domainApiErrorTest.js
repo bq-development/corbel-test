@@ -102,8 +102,7 @@ describe('In IAM module, when testing domainAPIError', function() {
             .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        // pendiente de implementacion de la funcionalidad iam.domain().getAll()
-        it.skip('should fail and return 400 when is requested to get all domains using a query params are not valid',
+        it('should fail and return 400 when is requested to get all domains using a query params are not valid',
         function(done) {
             var params = {
                 query: [{
