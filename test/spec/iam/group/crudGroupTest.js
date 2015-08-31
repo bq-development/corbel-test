@@ -1,6 +1,6 @@
 describe('In IAM module', function() {
 
-    describe('for group api testing', function() {
+    describe.only('for group api testing', function() {
         var corbelDriver;
         var getGroup = function(suffix) {
             return {
@@ -21,6 +21,7 @@ describe('In IAM module', function() {
             .create(group)
             .then(function(createdId) {
                 id = createdId;
+
                 return corbelDriver.iam.group(id)
                 .get()
                 .should.be.eventually.fulfilled;
