@@ -15,11 +15,13 @@ describe('In IAM module', function() {
 
         it('it is possible create and get a group', function(done) {
             var group = getGroup(Date.now());
+            var id;
 
             corbelDriver.iam.group()
             .create(group)
-            .then(function(id) {
-                return corbelDriver.iam.group(id.data)
+            .then(function(createdId) {
+                id = createdId;
+                return corbelDriver.iam.group(id)
                 .get()
                 .should.be.eventually.fulfilled;
             })
@@ -32,7 +34,7 @@ describe('In IAM module', function() {
                     expect(obtainedGroup.data.scopes).to.contain(scope);
                 });
 
-                return corbelDriver.iam.group(obtainedGroup.data.id)
+                return corbelDriver.iam.group(id)
                 .delete()
                 .should.be.eventually.fulfilled;
             })
@@ -46,7 +48,7 @@ describe('In IAM module', function() {
             corbelDriver.iam.group()
             .create(group)
             .then(function(createdId) {
-                id = createdId.data;
+                id = createdId;
 
                 return corbelDriver.iam.group(id)
                 .delete().
@@ -74,7 +76,7 @@ describe('In IAM module', function() {
             corbelDriver.iam.group()
             .create(group)
             .then(function(obtainedId) {
-                id = obtainedId.data;
+                id = obtainedId;
 
                 return corbelDriver.iam.group(id)
                 .addScopes(['newScope'])
@@ -114,14 +116,14 @@ describe('In IAM module', function() {
             .create(group1)
             .should.be.eventually.fulfilled
             .then(function(id) {
-                group1id = id.data;
+                group1id = id;
 
                 return corbelDriver.iam.group()
                 .create(group2)
                 .should.be.eventually.fulfilled;
             })
             .then(function(id) {
-                group2id = id.data;
+                group2id = id;
 
                 return corbelDriver.iam.group()
                 .getAll({
