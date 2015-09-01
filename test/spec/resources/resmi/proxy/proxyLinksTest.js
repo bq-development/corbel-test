@@ -20,8 +20,9 @@ describe('In RESOURCES module ', function() {
             corbelDriver.config.config.urlBase = urlBaseBackup;
         });
 
-        it.skip(' when creates a resource, location includes full path', function(done) {
+        it(' when creates a resource, location includes full path', function(done) {
             var objectId;
+            var requestDomain = 'silkroad-qa/'
 
             corbelDriver.resources.collection(COLLECTION_NAME)
             .add(TEST_OBJECT)
@@ -36,7 +37,7 @@ describe('In RESOURCES module ', function() {
             .then(function(content) {
                 expect(content.data.links[0].href)
                     .to.be.equal(corbelDriver.config.config.urlBase +
-                        'resource/' + COLLECTION_NAME + '/' + objectId);
+                        requestDomain + 'resource/' + COLLECTION_NAME + '/' + objectId);
             })
             .should.eventually.be.fulfilled.notify(done);
         });
