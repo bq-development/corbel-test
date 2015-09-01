@@ -21,6 +21,7 @@ describe('In IAM module', function() {
             .create(group)
             .then(function(createdId) {
                 id = createdId;
+
                 return corbelDriver.iam.group(id)
                 .get()
                 .should.be.eventually.fulfilled;
