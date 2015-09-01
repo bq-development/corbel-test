@@ -34,7 +34,7 @@ function createdObjectsToQuery(driver, collectionName, amount, extraField) {
             computableField: count + (1 / 3),
             stringSortCut: 'Test Short Cut',
             codingTest: 'ñÑçáéíóúàèìòùâêîôû\'',
-            ObjectNumber: _.range(count),
+            ObjectNumber: _.range(count + 1),
             ObjectMatch: [{
                 name: 'basic',
                 identifier: 'id' + count,
@@ -118,7 +118,7 @@ function createRelationFromSingleObjetToMultipleObject(driver, collectionA, idRe
             intCount: 100 * count,
             stringField: 'stringContent' + count,
             stringSortCut: 'Test Short Cut',
-            ObjectNumber: _.range(count)
+            ObjectNumber: _.range(count + 1)
         };
 
         var promise = driver.resources.relation(collectionA, idResourceInA, collectionB).add(idB, jsonRelationData);
