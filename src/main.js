@@ -1,4 +1,6 @@
 var _ = require('lodash');
+var $ = require('jquery');
+var q = require('q');
 var common = require('./common');
 var fixtures = require('./fixtures');
 var config = require('../.tmp/config.js');
