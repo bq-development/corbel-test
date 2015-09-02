@@ -2,6 +2,10 @@
 var q = require('q');
 var $ = require('jquery');
 
+function createPromise() {
+    return q.defer();
+}
+
 function retry(retryFunction, maxRetries, retryPeriod, deferred, catches) {
     deferred = deferred || q.defer();
     catches = catches || [];
@@ -48,5 +52,6 @@ function consultPlugins(currentUrl) {
 
 module.exports = {
     retry : retry,
+    createPromise: createPromise,
     consultPlugins : consultPlugins 
 };

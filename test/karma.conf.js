@@ -26,7 +26,9 @@ module.exports = function(config) {
             'node_modules/lodash/index.js',
             '.tmp/bundle.js',
             'test/beforeAll.js',
-            'test/**/*.js'
+            'test/**/*.js',
+            /*Rem-image's test required*/
+            {pattern:'src/common/utils/img/logo.png', watched: false, included: false, served: true}
         ],
 
         // list of files / patterns to exclude
