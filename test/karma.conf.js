@@ -24,9 +24,12 @@ module.exports = function(config) {
             'node_modules/q/q.js',
             'node_modules/corbel-js/dist/corbel.js',
             'node_modules/lodash/index.js',
+            'node_modules/jquery/dist/jquery.js',
             '.tmp/bundle.js',
             'test/beforeAll.js',
-            'test/**/*.js'
+            'test/**/*.js',
+            /*Rem-image's test required*/
+            {pattern:'src/common/utils/img/logo.png', watched: false, included: false, served: true}
         ],
 
         // list of files / patterns to exclude
