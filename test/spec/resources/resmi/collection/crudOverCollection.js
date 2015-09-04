@@ -202,6 +202,189 @@ describe('In RESOURCES module', function() {
             .should.be.eventually.fulfilled.and.notify(done);
         });
 
+        describe('when a whole collection is updated through collection.update', function() {
+            var amount = 10;
+            var collectionName = 'test:CorbelJSObjectCrudUpdate' + Date.now();
+
+            before(function(done) {
+                corbelTest.common.resources.createdObjectsToQuery(corbelDriver, collectionName, amount)
+                .should.be.eventually.fulfilled.and.notify(done);
+            });
+
+            after(function(done) {
+                corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
+                .should.be.eventually.fulfilled.and.notify(done);
+            });
+        
+            it('all alements are updated while using the method without params', function(done){
+                var updateObject = {
+                    globalUpdate: 'OK'
+                };
+
+                corbelDriver.resources.collection(collectionName)
+                .get()
+                .should.eventually.be.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', 10);
+                })
+                .then(function(){
+                    return corbelDriver.resources.collection(collectionName)
+                    .update(updateObject)
+                    .should.be.eventually.be.fulfilled;
+                })
+                .then(function() {
+                    return corbelDriver.resources.collection(collectionName)
+                    .get()
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', 10);
+                    response.data.forEach(function(element){
+                        expect(element).to.have.property('globalUpdate', 'OK');
+                    });
+                })
+                .should.be.eventually.fulfilled.and.notify(done);
+            });
+
+            it('only matching elements are updated while using the method with correct params', function(done){
+                var updateObject = {
+                    globalUpdate: 'OK'
+                };
+
+                var condition = {
+                    condition: [{
+                        '$eq': {
+                            intField: 700
+                        }
+                    }]
+                };
+
+                var query = {
+                    query: [{
+                        '$eq': {
+                            intField: 700
+                        }
+                    }]
+                };
+
+                corbelDriver.resources.collection(collectionName)
+                .get()
+                .should.eventually.be.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', 10);
+                })
+                .then(function(){
+                    return corbelDriver.resources.collection(collectionName)
+                    .update(updateObject, condition)
+                    .should.be.eventually.be.fulfilled;
+                })
+                .then(function() {
+                    return corbelDriver.resources.collection(collectionName)
+                    .get(query)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', 1);
+                    expect(response).to.have.deep.property('data.globalUpdate', 'OK');
+                })
+                .should.be.eventually.fulfilled.and.notify(done);
+            });
+
+            it('all elements are updated while using the method with malformed condition params', function(done){
+                var updateObject = {
+                    globalUpdate: 'OK'
+                };
+
+                var condition = {
+                    query: [{
+                        '$eq': {
+                            intField: 700
+                        }
+                    }]
+                };
+
+                corbelDriver.resources.collection(collectionName)
+                .get()
+                .should.eventually.be.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', 10);
+                })
+                .then(function(){
+                    return corbelDriver.resources.collection(collectionName)
+                    .update(updateObject, condition)
+                    .should.be.eventually.be.fulfilled;
+                })
+                .then(function() {
+                    return corbelDriver.resources.collection(collectionName)
+                    .get()
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', 10);
+                    response.data.forEach(function(element){
+                        expect(element).to.have.property('globalUpdate', 'OK');
+                    });
+                })
+                .should.be.eventually.fulfilled.and.notify(done);
+            });
+
+            it.skip('any element is updated while using the method with a non-existent field condition', function(done){
+                var updateObject = {
+                    globalUpdate: 'OK'
+                };
+
+                var condition = {
+                    condition: [{
+                        '$eq': {
+                            unexistent: 'asdf'
+                        }
+                    }]
+                };
+
+                corbelDriver.resources.collection(collectionName)
+                .get()
+                .should.eventually.be.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', 10);
+                })
+                .then(function(){
+                    return corbelDriver.resources.collection(collectionName)
+                    .update(updateObject, condition)
+                    .should.be.eventually.be.fulfilled;
+                })
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', 10);
+                    response.data.forEach(function(element){
+                        expect(element).to.not.have.property('globalUpdate', 'OK');
+                    });
+                })
+                .should.be.eventually.fulfilled.and.notify(done);
+            });
+
+            it.skip('an error is thrown while using the method trying to update _field', function(done){
+                var updateObject = {
+                    _createdAt: 1000000
+                };
+
+                corbelDriver.resources.collection(collectionName)
+                .get()
+                .should.eventually.be.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', 10);
+                })
+                .then(function(){
+                    return corbelDriver.resources.collection(collectionName)
+                    .update(updateObject)
+                    .should.be.eventually.be.rejected;
+                })
+                .then(function(e) {
+                    expect(e).to.have.deep.property('status', 422);
+                    expect(e).to.have.deep.property('data.error', 'invalid_entity');
+                })
+                .should.be.eventually.fulfilled.and.notify(done);
+            });
+        });
+
         it('if you create an object with skip not allowed attributes which starts with an underscore' +
                ' fails returning INVALID ENTITY (422)', function(done) {
             var resourceId;
