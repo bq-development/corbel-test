@@ -57,8 +57,41 @@ function createUsers(driver, amount) {
     return Promise.all(promises);
 }
 
+function getDomain(timeStamp, desc, sufix) {
+    return {
+        id: 'TestDomain_' + (timeStamp ? timeStamp : Date.now()) +
+            (sufix ? ('_' + sufix) : ''),
+        description: desc ? desc : 'anyDescription',
+        scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete',
+            'iam:user:me']
+    };
+}
+
+function getClient(timeStamp, domainId, sufix) {
+    return {
+        name: 'testClient_' + (timeStamp ? timeStamp : Date.now()) +
+            (sufix ? ('_' + sufix) : ''),
+        signatureAlgorithm: 'HS256',
+        domain: domainId ? domainId : 'TestDomain',
+        scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete',
+            'iam:user:me']
+    };
+}
+
+function getScope(id) {
+    return {
+        id: id,
+        audience: 'testAudience',
+        rules: [{ testRule: 'this is a rule' }],
+        parameters: { a: 1 }
+    };
+}
+
 
 module.exports = {
     createDomain: createDomain,
-    createClientDomain: createClientDomain
+    createClientDomain: createClientDomain,
+    getDomain: getDomain,
+    getClient: getClient,
+    getScope: getScope
 };

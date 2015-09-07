@@ -46,7 +46,14 @@ function consultPlugins(currentUrl) {
     return deferred.promise;
 }
 
+function contains(array, expectedArray) {
+    array.forEach(function(element) {
+        expect(expectedArray).to.contain(element);
+    });
+}
+
 module.exports = {
-    retry : retry,
-    consultPlugins : consultPlugins 
+    retry: retry,
+    consultPlugins: consultPlugins,
+    contains: contains
 };
