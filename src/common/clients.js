@@ -57,10 +57,25 @@ function loginAll() {
     return Promise.all(promises);
 }
 
+function loginAsRandomUser(driver) {
+    var iamUtils = require('./iam');
+    return iamUtils.createUsers(driver, 1).then(function(users) {
+        // default client scopes
+        var params = {
+            claims: {
+                'basic_auth.username': users[0].username,
+                'basic_auth.password': users[0].password
+            }
+        };
+        return driver.iam.token().create(params);
+    });
+}
+
 
 module.exports = {
     login: login,
     loginAll: loginAll,
+    loginAsRandomUser: loginAsRandomUser,
     drivers: drivers,
     logins: logins,
     tokens: tokens

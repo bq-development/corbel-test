@@ -6,7 +6,7 @@ describe('In RESOURCES module', function() {
         var corbelDriver;
         var FOLDER_NAME = 'test:Restor';
         var canvasContainer;
-        
+
         function dataURItoBlob(dataURI) {
             // convert base64 to raw binary data held in a string
             var byteString = atob(dataURI.split(',')[1]);
@@ -41,10 +41,10 @@ describe('In RESOURCES module', function() {
 
             before(function(done) {
 
-                canvasContainer = document.getElementById('mocha'); 
-                canvasContainer.insertAdjacentHTML( 
-                    'beforeend', 
-                    '<canvas id="myCanvas" width="626" height="626"></canvas>' ); 
+                canvasContainer = document.getElementById('mocha');
+                canvasContainer.insertAdjacentHTML(
+                    'beforeend',
+                    '<canvas id="myCanvas" width="626" height="626"></canvas>');
                 var canvas = document.getElementById('myCanvas');
                 var context = canvas.getContext('2d');
                 var imageObj = new Image();
@@ -97,7 +97,7 @@ describe('In RESOURCES module', function() {
             });
 
             it('Image does not surpasses original image size when resize operation is required', function(done) {
-                var operationQuery = '{}&image:operations=resizeWidth='+ (originalImageWidth + 1);
+                var operationQuery = '{}&image:operations=resizeWidth=' + (originalImageWidth + 1);
 
                 corbelDriver.resources.resource(FOLDER_NAME, FILENAME).get({
                     dataType: 'image/png',
@@ -107,18 +107,18 @@ describe('In RESOURCES module', function() {
                 should.be.eventually.fulfilled.
                 then(function(resource) {
                     var reader = new FileReader();
-                    var promise = corbelTest.common.utils.createPromise();
+                    var dfd = corbelTest.common.utils.createDeferred();
                     reader.onloadend = function() {
-                        var container = document.getElementById('mocha'); 
-                        container.insertAdjacentHTML( 
-                            'beforeend', 
-                            '<img id="test-image" src="' + reader.result + '" />' ); 
-                        var image = document.getElementById('test-image'); 
-                        expect(image.clientWidth).to.be.equal(originalImageWidth);                        
-                        promise.resolve();
+                        var container = document.getElementById('mocha');
+                        container.insertAdjacentHTML(
+                            'beforeend',
+                            '<img id="test-image" src="' + reader.result + '" />');
+                        var image = document.getElementById('test-image');
+                        expect(image.clientWidth).to.be.equal(originalImageWidth);
+                        dfd.resolve();
                     };
                     reader.readAsDataURL(resource.data);
-                    return promise.promise;
+                    return dfd.promise;
                 }).
                 should.notify(done);
             });
@@ -126,7 +126,7 @@ describe('In RESOURCES module', function() {
 
             it('Image is returned with one image:operation correctly applied', function(done) {
                 var operationHeight = 100;
-                var operationQuery = '{}&image:operations=resizeHeight='+operationHeight;
+                var operationQuery = '{}&image:operations=resizeHeight=' + operationHeight;
 
                 corbelDriver.resources.resource(FOLDER_NAME, FILENAME).get({
                     dataType: 'image/png',
@@ -135,21 +135,21 @@ describe('In RESOURCES module', function() {
                 }).
                 should.be.eventually.fulfilled.
                 then(function(resource) {
-                    var expectedWidth = ((originalImageWidth*operationHeight)/originalImageHeigth);
+                    var expectedWidth = ((originalImageWidth * operationHeight) / originalImageHeigth);
                     var reader = new FileReader();
-                    var promise = corbelTest.common.utils.createPromise();
+                    var dfd = corbelTest.common.utils.createDeferred();
                     reader.onloadend = function() {
-                        var container = document.getElementById('mocha'); 
-                        container.insertAdjacentHTML( 
-                            'beforeend', 
-                            '<img id="test-image" src="' + reader.result + '" />' ); 
-                        var image = document.getElementById('test-image'); 
-                        expect(image.clientHeight).to.be.equal(operationHeight);                        
-                        expect(image.clientWidth).to.be.equal(expectedWidth);                        
-                        promise.resolve();
+                        var container = document.getElementById('mocha');
+                        container.insertAdjacentHTML(
+                            'beforeend',
+                            '<img id="test-image" src="' + reader.result + '" />');
+                        var image = document.getElementById('test-image');
+                        expect(image.clientHeight).to.be.equal(operationHeight);
+                        expect(image.clientWidth).to.be.equal(expectedWidth);
+                        dfd.resolve();
                     };
                     reader.readAsDataURL(resource.data);
-                    return promise.promise;
+                    return dfd.promise;
                 }).
                 should.notify(done);
             });
@@ -157,9 +157,9 @@ describe('In RESOURCES module', function() {
             it('Image is returned with several image:operation correctly applied', function(done) {
                 var resizeWidthValue = 240;
                 var resizeHeightValue = 190;
-                var operationQuery = 
-                    '{}&image:operations=resizeAndFill=(240,FF00FF);+cropFromCenter=('+
-                    resizeWidthValue+','+resizeHeightValue+')';
+                var operationQuery =
+                    '{}&image:operations=resizeAndFill=(240,FF00FF);+cropFromCenter=(' +
+                    resizeWidthValue + ',' + resizeHeightValue + ')';
 
                 corbelDriver.resources.resource(FOLDER_NAME, FILENAME).get({
                     dataType: 'image/png',
@@ -169,19 +169,19 @@ describe('In RESOURCES module', function() {
                 should.be.eventually.fulfilled.
                 then(function(resource) {
                     var reader = new FileReader();
-                    var promise = corbelTest.common.utils.createPromise();
+                    var dfd = corbelTest.common.utils.createDeferred();
                     reader.onloadend = function() {
-                        var container = document.getElementById('mocha'); 
-                        container.insertAdjacentHTML( 
-                            'beforeend', 
-                            '<img id="test-image" src="' + reader.result + '" />' ); 
-                        var image = document.getElementById('test-image'); 
-                        expect(image.clientHeight).to.be.equal(resizeHeightValue);                        
-                        expect(image.clientWidth).to.be.equal(resizeWidthValue);                        
-                        promise.resolve();
+                        var container = document.getElementById('mocha');
+                        container.insertAdjacentHTML(
+                            'beforeend',
+                            '<img id="test-image" src="' + reader.result + '" />');
+                        var image = document.getElementById('test-image');
+                        expect(image.clientHeight).to.be.equal(resizeHeightValue);
+                        expect(image.clientWidth).to.be.equal(resizeWidthValue);
+                        dfd.resolve();
                     };
                     reader.readAsDataURL(resource.data);
-                    return promise.promise;
+                    return dfd.promise;
                 }).
                 should.notify(done);
             });

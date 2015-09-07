@@ -1,57 +1,40 @@
 'use strict';
 var q = require('q');
-var $ = require('jquery');
 
-function createPromise() {
+function createDeferred() {
     return q.defer();
 }
 
 function retry(retryFunction, maxRetries, retryPeriod, deferred, catches) {
-    deferred = deferred || q.defer();
+    deferred = deferred || createDeferred();
     catches = catches || [];
 
     if (maxRetries < 1) {
         deferred.reject(catches);
     } else {
-        retryFunction().then(
-            function(response) {
-                deferred.resolve(response);
-            })
-            .catch(function(err) {
-                catches.push(err);
-                setTimeout(function() {
-                    retry(retryFunction, maxRetries - 1, retryPeriod, deferred, catches);
-                }, retryPeriod * 1000);
-            });
+        retryFunction().then(function(response) {
+            deferred.resolve(response);
+        }).catch(function(err) {
+            catches.push(err);
+            setTimeout(function() {
+                retry(retryFunction, maxRetries - 1, retryPeriod, deferred, catches);
+            }, retryPeriod * 1000);
+        });
     }
 
     return deferred.promise;
 }
 
-var getPluginsUrl = function(url) {
-    return url.split('/v1.0')[0] + '/plugins';
-};
-
-function consultPlugins(currentUrl) {
-    var deferred = q.defer();
-
-    $.ajax({
-        url: getPluginsUrl(currentUrl),
-        type: 'GET',
-        contentType: false,
-        processData: false,
-        cache: false
-    }).done(function() {
-        deferred.resolve();
-    }).fail(function() {
-        deferred.reject();
+function consultPlugins(url) {
+    return corbel.request.send({
+        url: url.split('/v1.0')[0] + '/plugins?' + Math.random(),
+        // inavalidate cache with random query string
+        method: corbel.request.method.GET
     });
-
-    return deferred.promise;
 }
 
 module.exports = {
-    retry : retry,
-    createPromise: createPromise,
-    consultPlugins : consultPlugins 
+    retry: retry,
+    createDeferred: createDeferred,
+    consultPlugins: consultPlugins
 };
