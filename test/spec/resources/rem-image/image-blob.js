@@ -107,7 +107,7 @@ describe('In RESOURCES module', function() {
                 should.be.eventually.fulfilled.
                 then(function(resource) {
                     var reader = new FileReader();
-                    var promise = corbelTest.common.utils.createPromise();
+                    var dfd = corbelTest.common.utils.createDeferred();
                     reader.onloadend = function() {
                         var container = document.getElementById('mocha'); 
                         container.insertAdjacentHTML( 
@@ -115,10 +115,10 @@ describe('In RESOURCES module', function() {
                             '<img id="test-image" src="' + reader.result + '" />' ); 
                         var image = document.getElementById('test-image'); 
                         expect(image.clientWidth).to.be.equal(originalImageWidth);                        
-                        promise.resolve();
+                        dfd.resolve();
                     };
                     reader.readAsDataURL(resource.data);
-                    return promise.promise;
+                    return dfd.promise;
                 }).
                 should.notify(done);
             });
@@ -137,7 +137,7 @@ describe('In RESOURCES module', function() {
                 then(function(resource) {
                     var expectedWidth = ((originalImageWidth*operationHeight)/originalImageHeigth);
                     var reader = new FileReader();
-                    var promise = corbelTest.common.utils.createPromise();
+                    var dfd = corbelTest.common.utils.createDeferred();
                     reader.onloadend = function() {
                         var container = document.getElementById('mocha'); 
                         container.insertAdjacentHTML( 
@@ -146,10 +146,10 @@ describe('In RESOURCES module', function() {
                         var image = document.getElementById('test-image'); 
                         expect(image.clientHeight).to.be.equal(operationHeight);                        
                         expect(image.clientWidth).to.be.equal(expectedWidth);                        
-                        promise.resolve();
+                        dfd.resolve();
                     };
                     reader.readAsDataURL(resource.data);
-                    return promise.promise;
+                    return dfd.promise;
                 }).
                 should.notify(done);
             });
@@ -169,7 +169,7 @@ describe('In RESOURCES module', function() {
                 should.be.eventually.fulfilled.
                 then(function(resource) {
                     var reader = new FileReader();
-                    var promise = corbelTest.common.utils.createPromise();
+                    var dfd = corbelTest.common.utils.createDeferred();
                     reader.onloadend = function() {
                         var container = document.getElementById('mocha'); 
                         container.insertAdjacentHTML( 
@@ -178,10 +178,10 @@ describe('In RESOURCES module', function() {
                         var image = document.getElementById('test-image'); 
                         expect(image.clientHeight).to.be.equal(resizeHeightValue);                        
                         expect(image.clientWidth).to.be.equal(resizeWidthValue);                        
-                        promise.resolve();
+                        dfd.resolve();
                     };
                     reader.readAsDataURL(resource.data);
-                    return promise.promise;
+                    return dfd.promise;
                 }).
                 should.notify(done);
             });

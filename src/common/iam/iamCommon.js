@@ -2,9 +2,6 @@
 'use strict';
 /*globals corbel */
 //@endexclude
-//
-var superagent = require('superagent');
-
 
 function createDomain(driver, domain) {
 
@@ -18,7 +15,6 @@ function createDomain(driver, domain) {
         });
     return promise;
 }
-
 
 function createClientDomain(driver, domain, client) {
 
@@ -34,10 +30,16 @@ function createClientDomain(driver, domain, client) {
     return promise;
 }
 
+/**
+ * Creates random users
+ * @param  {CorbelDriver} driver
+ * @param  {number} amount Number of random users to create
+ * @return {Promise}       A promise that resolves when users are created
+ */
 function createUsers(driver, amount) {
     var promises = [];
 
-    for(var count = 1; count <= amount; count++) {
+    for (var count = 1; count <= amount; count++) {
         var random = Date.now() + '-' + count;
         var emailAccount = 'registerUser' + random + '@funkifake.com';
 
@@ -50,15 +52,18 @@ function createUsers(driver, amount) {
             'oauthService': 'silkroad'
         };
 
-        var promise = driver.iam.user().create(userData);
+        var promise = driver.iam.user().create(userData).then(function(userId) {
+            userData.id = userId;
+            return userData;
+        });
         promises.push(promise);
     }
 
     return Promise.all(promises);
 }
 
-
 module.exports = {
     createDomain: createDomain,
+    createUsers: createUsers,
     createClientDomain: createClientDomain
 };
