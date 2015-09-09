@@ -74,7 +74,7 @@ describe('In IAM module', function() {
             should.be.eventually.fulfilled.and.notify(done);
         });
 
-        it('two clients are created and have differents keys', function(done) {
+        it('two clients are created and both have differents keys', function(done) {
             var client1 = corbelTest.common.iam.getClient(undefined, testDomainId, 1);
             var client2 = corbelTest.common.iam.getClient(undefined, testDomainId, 2);
             var clientKey1;

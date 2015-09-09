@@ -20,7 +20,7 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('an error 409 is returned when try to create an existent domain', function(done) {
+        it('an error 409 is returned while trying to create an existent domain', function(done) {
             var expectedDomain = corbelTest.common.iam.getDomain();
 
             corbelDriver.iam.domain()
@@ -47,7 +47,7 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('an error 422 is returned when try to create a domain with : inside the id', function(done) {
+        it('an error 422 is returned while trying to create a domain with : inside the id', function(done) {
             var expectedDomain = corbelTest.common.iam.getDomain();
             expectedDomain.id = 'silkroad-qa:test';
 
@@ -61,7 +61,7 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('an error 401 is returned when try to create a domain without authorization', function(done) {
+        it('an error 401 is returned while trying to create a domain without authorization', function(done) {
             var expectedDomain = corbelTest.common.iam.getDomain();
             expectedDomain.id = 'silkroad-qa:test';
 
@@ -75,7 +75,7 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('an error 404 is returned when try to modify the domain id', function(done) {
+        it('an error 404 is returned while trying to modify the domain id', function(done) {
             var expectedDomain = corbelTest.common.iam.getDomain();
             var updateDomainId = 'anyDomain:test';
             var domainId;
@@ -107,7 +107,7 @@ describe('In IAM module', function() {
             .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        it('an error 401 is returned when try to get a domain which does not exist', function(done) {
+        it('an error 401 is returned while trying to get a domain which does not exist', function(done) {
             var id = Date.now();
 
             corbelDriver.iam.domain(id)
@@ -120,7 +120,7 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('an error 401 is returned when try to create a domain without authorization', function(done) {
+        it('an error 401 is returned while trying to create a domain without authorization', function(done) {
             var id = Date.now();
 
             corbelDefaultDriver.iam.domain(id)
@@ -133,7 +133,7 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('an error 400 is returned when try to get all domains using invalid query params',
+        it('an error 400 is returned while trying to get all domains using invalid query params',
         function(done) {
             var params = {
                 query: [{
@@ -153,7 +153,7 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('an error 401 is returned when try to update a domain without authorization', function(done) {
+        it('an error 401 is returned while trying to update a domain without authorization', function(done) {
             var id = Date.now();
 
             corbelDefaultDriver.iam.domain(id)
@@ -166,7 +166,7 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('an error 422 is returned when try to update a domain with malformed entity', function(done) {
+        it('an error 422 is returned while trying to update a domain with malformed entity', function(done) {
             var id = Date.now();
 
             corbelDriver.iam.domain('Pepe')
@@ -179,7 +179,7 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('an error 401 is returned when try to delete a domain without authorization', function(done) {
+        it('an error 401 is returned while trying to delete a domain without authorization', function(done) {
             var id = Date.now();
 
             corbelDefaultDriver.iam.domain(id)

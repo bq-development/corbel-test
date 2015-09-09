@@ -7,10 +7,11 @@ describe('In IAM module', function() {
         corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'];
     });
     
-    describe.only('when testing group API', function() {
+    describe('when testing group API', function() {
         var scope1 = corbelTest.common.iam.getScope('scope1');
         var scope2 = corbelTest.common.iam.getScope('scope2');
         var scope3 = corbelTest.common.iam.getScope('scope3');
+        var promise = Promise.resolve();
 
         var getGroup = function(suffix) {
             return {
@@ -19,20 +20,24 @@ describe('In IAM module', function() {
             };
         };
 
-        beforeEach(function(done){
+        beforeEach(function(){
             [scope1, scope2, scope3].forEach(function(scope) {
-                    corbelRootDriver.iam.scope()
-                    .create(scope);
-            })
-            .should.be.eventually.fulfilled.and.notify(done);
+                    promise = promise.then(function() {
+                        return corbelRootDriver.iam.scope()
+                        .create(scope)
+                        .should.be.eventually.fulfilled;
+                    });
+            });
         });
 
-        afterEach(function(done){
+        afterEach(function(){
             [scope1, scope2, scope3].forEach(function(scope) {
-                    corbelRootDriver.iam.scope()
-                    .remove(scope);
-            })
-            .should.be.eventually.fulfilled.and.notify(done);
+                    promise = promise.then(function() {
+                        return corbelRootDriver.iam.scope()
+                        .remove(scope)
+                        .should.be.eventually.fulfilled;
+                    });
+            });
         });
 
         it('it is possible create and get a group', function(done) {
@@ -142,52 +147,38 @@ describe('In IAM module', function() {
             .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        //it('an scope is deleted an it dissapear from the group', function(done) {
-            //var group = getGroup(Date.now());
-            //var id;
-            //var scopeId;
+        // This must be fixed in corbel API
+        it.skip('an scope is deleted an it dissapear from the group', function(done) {
+            var group = getGroup(Date.now());
+            var id;
+            var scopeId;
 
-            //var scope1 = {
-                //id: 'TestScope_' + Date.now(),
-                //audience: 'testAudience',
-                //rules: [{
-                    //testRule: 'this is a rule'
-                //}]
-            //};
+            corbelDriver.iam.group()
+            .create(group)
+            .should.be.eventually.fulfilled
+            .then(function(obtainedId) {
+                id = obtainedId;
 
-            //corbelRootDriver.iam.scope()
-            //.create(scope1)
-            //.should.eventually.be.fulfilled
-            //.then(function(id) {
-                //scopeId = id;
+                return corbelRootDriver.iam.scope()
+                .remove(scope1.id)
+                .should.be.eventually.fulfilled;
+            })
+            .then(function() {
+                return corbelDriver.iam.group(id)
+                .get()
+                .should.be.eventually.fulfilled;
+            })
+            .then(function(obtainedGroup) {
+                expect(obtainedGroup).to.have.deep.property('data.scopes');
+                expect(obtainedGroup).to.have.deep.property('data.scopes.length', 1);
+                expect(obtainedGroup.data.scopes).to.contain('scope2');
 
-                //return corbelDriver.iam.group()
-                //.create(group)
-                //.should.be.eventually.rejected;
-            //})
-            //.then(function(obtainedId) {
-                //id = obtainedId;
-
-                //return corbelRootDriver.iam.scope()
-                //.remove(scope1)
-                //.should.be.eventually.fulfilled;
-            //})
-            //.then(function() {
-                //return corbelDriver.iam.group(id)
-                //.get()
-                //.should.be.eventually.fulfilled;
-            //})
-            //.then(function(obtainedGroup) {
-                //expect(obtainedGroup).to.have.deep.property('data.scopes');
-                //expect(obtainedGroup.data.scopes).to.have.property('length', 1);
-                //expect(obtainedGroup.data.scopes).to.contain('scope2');
-
-                //return corbelDriver.iam.group(id)
-                //.delete()
-                //.should.be.eventually.fulfilled;
-            //})
-            //.should.notify(done);
-        //});
+                return corbelDriver.iam.group(id)
+                .delete()
+                .should.be.eventually.fulfilled;
+            })
+            .should.notify(done);
+        });
 
         it('it is possible invoke getAll operation with params', function(done) {
             var timeStamp = Date.now();

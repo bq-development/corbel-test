@@ -10,6 +10,7 @@ describe('In IAM module', function() {
     describe('when testing group API', function() {
         var scope1 = corbelTest.common.iam.getScope('scope1');
         var scope2 = corbelTest.common.iam.getScope('scope2');
+        var promise = Promise.resolve();
 
         var getGroup = function(suffix) {
             suffix = suffix || Date.now();
@@ -19,20 +20,24 @@ describe('In IAM module', function() {
             };
         };
 
-        beforeEach(function(done){
+        beforeEach(function(){
             [scope1, scope2].forEach(function(scope) {
-                    corbelAdminDriver.iam.scope()
-                    .create(scope);
-            })
-            .should.be.eventually.fulfilled.and.notify(done);
+                    promise = promise.then(function() {
+                        return corbelAdminDriver.iam.scope()
+                        .create(scope)
+                        .should.be.eventually.fulfilled;
+                    });
+            });
         });
 
-        afterEach(function(done){
+        afterEach(function(){
             [scope1, scope2].forEach(function(scope) {
-                    corbelAdminDriver.iam.scope()
-                    .remove(scope);
-            })
-            .should.be.eventually.fulfilled.and.notify(done);
+                    promise = promise.then(function() {
+                        return corbelAdminDriver.iam.scope()
+                        .remove(scope)
+                        .should.be.eventually.fulfilled;
+                    });
+            });
         });
 
         it('an error [401] is returned when tryinging to create a group without propper permissions', function(done) {
@@ -64,7 +69,7 @@ describe('In IAM module', function() {
             .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 409);
-                expect(e).to.have.deep.property('data.error', 'conflict');
+                expect(e).to.have.deep.property('data.error', 'group_already_exists');
             })
             .should.be.eventually.fulfilled
             .then(function() {
@@ -90,34 +95,6 @@ describe('In IAM module', function() {
                 expect(e).to.have.deep.property('data.error', 'not_existent_scope');
             })
             .should.notify(done);
-        });
-
-        it('an error [400] is returned when trying to update a group with unexistent scopes', function(done) {
-            var group = getGroup();
-            var id;
-
-            corbelAdminDriver.iam.group()
-            .create(group)
-            .then(function(createdId) {
-                id = createdId;
-
-                return corbelAdminDriver.iam.group(id)
-                .update({
-                    scopes: ['unexistentScope']
-                });
-            })
-            .should.be.eventually.rejected
-            .then(function(e) {
-                expect(e).to.have.property('status', 400);
-                expect(e).to.have.deep.property('data.error', 'not_existent_scope');
-            })
-            .should.be.eventually.fulfilled
-            .then(function() {
-                return corbelAdminDriver.iam.group(id)
-                .delete()
-                .should.be.eventually.fulfilled;
-            })
-            .should.be.eventually.fulfilled.and.notify(done);
         });
 
         it('an error [401] is returned when trying to remove a group without propper permissions', function(done) {
@@ -265,32 +242,6 @@ describe('In IAM module', function() {
             .then(function(e) {
                 expect(e).to.have.property('status', 401);
                 expect(e).to.have.deep.property('data.error', 'unauthorized');
-            })
-            .should.be.eventually.fulfilled
-            .then(function() {
-                return corbelAdminDriver.iam.group(id)
-                .delete()
-                .should.be.eventually.fulfilled;
-            })
-            .should.be.eventually.fulfilled.and.notify(done);
-        });
-
-        it('an error [400] is returned when trying to remove unexistent scopes in a group', function(done) {
-            var group = getGroup();
-            var id;
-
-            corbelAdminDriver.iam.group()
-            .create(group)
-            .then(function(createdId) {
-                id = createdId;
-
-                return corbelDriver.iam.group(id)
-                .removeScope('unexistentScope');
-            })
-            .should.be.eventually.rejected
-            .then(function(e) {
-                expect(e).to.have.property('status', 400);
-                expect(e).to.have.deep.property('data.error', 'not_existent_scope');
             })
             .should.be.eventually.fulfilled
             .then(function() {
