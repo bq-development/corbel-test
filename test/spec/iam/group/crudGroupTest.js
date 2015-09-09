@@ -7,7 +7,7 @@ describe('In IAM module', function() {
         corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'];
     });
     
-    describe.only('when testing group API', function() {
+    describe('when testing group API', function() {
         var scope1 = corbelTest.common.iam.getScope('scope1');
         var scope2 = corbelTest.common.iam.getScope('scope2');
         var scope3 = corbelTest.common.iam.getScope('scope3');
