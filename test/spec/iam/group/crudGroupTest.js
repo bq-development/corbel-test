@@ -152,8 +152,7 @@ describe('In IAM module', function() {
             .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        // This must be fixed in corbel API
-        it.skip('an scope is deleted an it dissapear from the group', function(done) {
+        it('an scope is deleted an it dissapear from the group', function(done) {
             var group = getGroup(Date.now());
             var id;
             var scopeId;
@@ -164,8 +163,8 @@ describe('In IAM module', function() {
             .then(function(obtainedId) {
                 id = obtainedId;
 
-                return corbelRootDriver.iam.scope()
-                .remove(scope1.id)
+                return corbelRootDriver.iam.scope(scope1.id)
+                .remove()
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
@@ -176,7 +175,7 @@ describe('In IAM module', function() {
             .then(function(obtainedGroup) {
                 expect(obtainedGroup).to.have.deep.property('data.scopes');
                 expect(obtainedGroup).to.have.deep.property('data.scopes.length', 1);
-                expect(obtainedGroup.data.scopes).to.contain('scope2');
+                expect(obtainedGroup.data.scopes).to.contain(scope2.id);
 
                 return corbelDriver.iam.group(id)
                 .delete()
