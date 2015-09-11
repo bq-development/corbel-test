@@ -52,14 +52,21 @@ function createUsers(driver, amount) {
             'oauthService': 'silkroad'
         };
 
-        var promise = driver.iam.user().create(userData).then(function(userId) {
-            userData.id = userId;
-            return userData;
-        });
-        promises.push(promise);
+        promises.push(createUser(userData, driver));
     }
 
     return Promise.all(promises);
+}
+
+function createUser(userData, driver){
+    return driver.iam.user().create(userData).then(function(userId) {
+        userData.id = userId;
+        return userData;
+    });
+}
+
+function deleteUser(userId, driver){
+    return driver.iam.user(userId).delete();
 }
 
 function getDomain(timeStamp, desc, sufix) {
@@ -97,6 +104,8 @@ module.exports = {
     createDomain: createDomain,
     createClientDomain: createClientDomain,
     createUsers: createUsers,
+    createUser: createUser,
+    deleteUser : deleteUser,
     getDomain: getDomain,
     getClient: getClient,
     getScope: getScope
