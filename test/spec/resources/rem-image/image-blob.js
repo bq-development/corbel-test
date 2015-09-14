@@ -97,11 +97,13 @@ describe('In RESOURCES module', function() {
             });
 
             it('Image does not surpasses original image size when resize operation is required', function(done) {
-                var operationQuery = '{}&image:operations=resizeWidth=' + (originalImageWidth + 1);
+                var operationQuery = 'resizeWidth=' + (originalImageWidth + 1);
 
                 corbelDriver.resources.resource(FOLDER_NAME, FILENAME).get({
                     dataType: 'image/png',
-                    query: operationQuery,
+                    customQueryParams: {
+                            'image:operations': operationQuery
+                    },
                     responseType: 'blob'
                 }).
                 should.be.eventually.fulfilled.
@@ -126,11 +128,13 @@ describe('In RESOURCES module', function() {
 
             it('Image is returned with one image:operation correctly applied', function(done) {
                 var operationHeight = 100;
-                var operationQuery = '{}&image:operations=resizeHeight=' + operationHeight;
+                var operationQuery = 'resizeHeight=' + operationHeight;
 
                 corbelDriver.resources.resource(FOLDER_NAME, FILENAME).get({
                     dataType: 'image/png',
-                    query: operationQuery,
+                    customQueryParams: {
+                            'image:operations': operationQuery
+                    },
                     responseType: 'blob'
                 }).
                 should.be.eventually.fulfilled.
@@ -158,12 +162,14 @@ describe('In RESOURCES module', function() {
                 var resizeWidthValue = 240;
                 var resizeHeightValue = 190;
                 var operationQuery =
-                    '{}&image:operations=resizeAndFill=(240,FF00FF);+cropFromCenter=(' +
+                    'resizeAndFill=(240,FF00FF);+cropFromCenter=(' +
                     resizeWidthValue + ',' + resizeHeightValue + ')';
 
                 corbelDriver.resources.resource(FOLDER_NAME, FILENAME).get({
                     dataType: 'image/png',
-                    query: operationQuery,
+                    customQueryParams: {
+                            'image:operations': operationQuery
+                    },
                     responseType: 'blob'
                 }).
                 should.be.eventually.fulfilled.

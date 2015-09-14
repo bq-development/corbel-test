@@ -17,15 +17,9 @@ describe('In RESOURCES module', function() {
                     'AAAAAABmZmYA/wAAAH8AAAAAAP9/AAAA//8AAAA=';
                 var TEST_IMAGE_SIZE = 158;
                 var FILENAME;
-                var queryValueFile;
-                var queryValueMethod;
 
                 beforeEach(function(done) {
                     FILENAME = 'TestImage_1_' + Date.now();
-
-                    queryValueMethod = '{}&resource:encoding=base64&resource:length=';
-                    queryValueFile = 
-                        queryValueMethod + ((TEST_IMAGE.length * 3 / 4) - TEST_IMAGE.split('=').length + 1);
 
                     corbelDriver.resources.resource(FOLDER_NAME, FILENAME).get({dataType:'image/png'}).
                     should.be.eventually.rejected.

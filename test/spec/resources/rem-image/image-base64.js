@@ -16,8 +16,6 @@ describe('In RESOURCES module', function() {
                     'AAAAAABmZmYA/wAAAH8AAAAAAP9/AAAA//8AAAA=';
                 var TEST_IMAGE_SIZE = 158;
                 var FILENAME;
-                var queryValueFile;
-                var queryValueMethod;
 
                 var compareImages = function(image, expectedImageInBase64) {
                     var array = new Uint8Array(image);
@@ -34,7 +32,9 @@ describe('In RESOURCES module', function() {
                         {
                             dataType:'image/bmp',
                             responseType: 'arraybuffer',
-                            query: '{}&'+operationQuery
+                            customQueryParams: {
+                                    'image:operations': operationQuery
+                            },
                         }
                     ).
                     should.be.eventually.fulfilled;
@@ -43,15 +43,14 @@ describe('In RESOURCES module', function() {
                 beforeEach(function(done) {
                     FILENAME = 'TestImage_1_' + Date.now();
 
-                    queryValueMethod = '{}&resource:encoding=base64&resource:length=';
-                    queryValueFile = 
-                        queryValueMethod + ((TEST_IMAGE.length * 3 / 4) - TEST_IMAGE.split('=').length + 1);
-
                     corbelDriver.resources.resource(FOLDER_NAME, FILENAME).update(
                         TEST_IMAGE, 
                         {
                             dataType:'image/bmp',
-                            query: queryValueFile
+                            customQueryParams: {
+                                'resource:encoding': 'base64',
+                                'resource:length': ((TEST_IMAGE.length * 3 / 4) - TEST_IMAGE.split('=').length + 1)
+                            }
                         }
                     ).
                     should.notify(done);
@@ -76,7 +75,16 @@ describe('In RESOURCES module', function() {
                         'R0lGODlhAwADAPMAAP8AAAAAf///AGZmZgD/AH8AAAD///8A/wAA/wAAAAAAAAAAAAAAAAAAAAAAAAAAA'+
                         'CH5BAAAAAAAIf8LSW1hZ2VNYWdpY2sHZ2FtbWE9MAAsAAAAAAMAAwAABAcQBDFIMQdFADs=';
 
-                    getImageModified('image:format=gif').
+                    return corbelDriver.resources.resource(FOLDER_NAME, FILENAME).get(
+                        {
+                            dataType:'image/bmp',
+                            responseType: 'arraybuffer',
+                            customQueryParams: {
+                                    'image:format': 'gif'
+                            },
+                        }
+                    ).
+                    should.be.eventually.fulfilled.
                     then(function(img) {
                         compareImages(img.data, TEST_FORMAT);
                     }).
@@ -89,7 +97,7 @@ describe('In RESOURCES module', function() {
                         'AD/AAAAAAAA/0JHUnMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0M7Mvr0fhQz8KV4UAAAAAAAAAAAAAAA'+
                         'AEAAAAAAAAAAAAAAAAAAAAZmZmAP8AAAAAAP9/AAAAAA==';
 
-                    getImageModified('image:operations=crop=(0,0,2,2)').
+                    getImageModified('crop=(0,0,2,2)').
                     then(function(img) {
                         compareImages(img.data, TEST_CROP);
                     }).
@@ -102,7 +110,7 @@ describe('In RESOURCES module', function() {
                         'AD/AAAAAAAA/0JHUnMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0M7Mvr0fhQz8KV4UAAAAAAAAAAAAAAA'+
                         'AEAAAAAAAAAAAAAAAAAAAAv7ZTox5bAAAsPHEQl3kAAA==';
 
-                    getImageModified('image:operations=resizeWidth=2').
+                    getImageModified('resizeWidth=2').
                     then(function(img) {
                         compareImages(img.data, TEST_RESIZE_WIDTH);
                     }).
@@ -115,7 +123,7 @@ describe('In RESOURCES module', function() {
                         'AD/AAAAAAAA/0JHUnMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0M7Mvr0fhQz8KV4UAAAAAAAAAAAAAAA'+
                         'AEAAAAAAAAAAAAAAAAAAAAv7ZTox5bAAAsPHEQl3kAAA==';
 
-                    getImageModified('image:operations=resizeHeight=2').
+                    getImageModified('resizeHeight=2').
                     then(function(img) {
                         compareImages(img.data, TEST_RESIZE_HEIGHT);
                     }).
@@ -128,7 +136,7 @@ describe('In RESOURCES module', function() {
                         'AD/AAAAAAAA/0JHUnMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0M7Mvr0fhQz8KV4UAAAAAAAAAAAAAAA'+
                         'AEAAAAAAAAAAAAAAAAAAAA//8A/wD//wAAAAAAZmZmAP8AAAB/AAAAAAD/fwAAAP//AAAA';
 
-                    getImageModified('image:operations=resizeAndFill=(3, 0000FF)').
+                    getImageModified('resizeAndFill=(3, 0000FF)').
                     then(function(img) {
                         compareImages(img.data, TEST_RESIZE_AND_FILL);
                     }).
@@ -141,7 +149,7 @@ describe('In RESOURCES module', function() {
                         'AD/AAAAAAAA/0JHUnMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0M7Mvr0fhQz8KV4UAAAAAAAAAAAAAAA'+
                         'AEAAAAAAAAAAAAAAAAAAAAAP8AAA==';
 
-                    getImageModified('image:operations=cropFromCenter=(1, 1)').
+                    getImageModified('cropFromCenter=(1, 1)').
                     then(function(img) {
                         compareImages(img.data, TEST_CROP_FROM_CENTER);
                     }).

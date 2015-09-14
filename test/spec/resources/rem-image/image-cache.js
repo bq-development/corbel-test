@@ -4,10 +4,8 @@ describe('In RESOURCES module', function() {
             var IMAGE_OPS = 'resizeHeight=100';
             var CACHE_FOLDER = 'image:ImageCache';
             var FILENAME;
-            var queryValue;
-            var queryValueMethod;
             var cacheResourceName;
-	        
+	        var customQueryParamsResourceObj;
             var base64Image = 'iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAABE0lEQVRI'+
 	        'ie3UvUoDQRTF8R9W2vkaVmIUoxZJ/Oh8Aj9A8akttBARISSaYAIWES0yi2EzOztZWw9Ms3Pu/9ydywz/aqAL3KO1Qk0H'+
 	        'T7irM15hhm+8YS8TPgk1X7hOmV+CsVjv2M+EF+s5FXCEcalgipOI9xyfJe8Qu6kAwTCMhJxmwLPn1sIgEnJWAR9gJxde'+
@@ -24,15 +22,17 @@ describe('In RESOURCES module', function() {
             beforeEach(function() {
                 FILENAME = 'RestorFileName' + Date.now();
 
-                queryValueMethod = '{}&resource:encoding=base64&resource:length=';
-                queryValue = queryValueMethod + ((base64Image.length * 3 / 4) - base64Image.split('=').length + 1);
                 cacheResourceName = FILENAME + '.' + FOLDER_NAME + '.' + IMAGE_OPS;
+                customQueryParamsResourceObj = {
+                    'resource:encoding': 'base64',
+                    'resource:length': ((base64Image.length * 3 / 4) - base64Image.split('=').length + 1)
+                };
 
                 return corbelDriver.resources.resource(FOLDER_NAME, FILENAME).update(
                     base64Image, 
                     {
                         dataType:'image/png',
-                        query: queryValue
+                        customQueryParams: customQueryParamsResourceObj
                     }
                 ).
                 should.be.eventually.fulfilled.
@@ -41,7 +41,9 @@ describe('In RESOURCES module', function() {
                         {
                             dataType:'image/png',
                             responseType: 'blob',
-                            query: '{}&image:operations=' + IMAGE_OPS
+                            customQueryParams: {
+                                    'image:operations': IMAGE_OPS
+                            },
                         }
                     ).
                     should.be.eventually.fulfilled;
@@ -66,7 +68,7 @@ describe('In RESOURCES module', function() {
                         base64Image, 
                         {
                             dataType:'image/png',
-                            query: queryValue
+                            customQueryParams: customQueryParamsResourceObj
                         }
                     ).
                     should.be.eventually.fulfilled.
