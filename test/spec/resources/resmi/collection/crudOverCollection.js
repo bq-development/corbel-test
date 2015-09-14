@@ -202,7 +202,7 @@ describe('In RESOURCES module', function() {
             .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        describe('when a whole collection is updated through collection.update', function() {
+        describe.only('when a whole collection is updated through collection.update', function() {
             var amount = 10;
             var collectionName = 'test:CorbelJSObjectCrudUpdate' + Date.now();
 
@@ -285,7 +285,7 @@ describe('In RESOURCES module', function() {
                 })
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 1);
-                    expect(response).to.have.deep.property('data.globalUpdate', 'OK');
+                    expect(response).to.have.deep.property('data[0].globalUpdate', 'OK');
                 })
                 .should.be.eventually.fulfilled.and.notify(done);
             });
@@ -330,7 +330,7 @@ describe('In RESOURCES module', function() {
 
             it('no element is updated while using the method with a non-existent field condition', function(done){
                 var updateObject = {
-                    globalUpdate: 'OK'
+                    updatedField: 'OK'
                 };
 
                 var condition = {
@@ -360,7 +360,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 10);
                     response.data.forEach(function(element){
-                        expect(element).to.not.have.property('globalUpdate');
+                        expect(element).to.not.have.property('updatedField');
                     });
                 })
                 .should.be.eventually.fulfilled.and.notify(done);
@@ -380,7 +380,7 @@ describe('In RESOURCES module', function() {
                 .then(function(){
                     return corbelDriver.resources.collection(collectionName)
                     .update(updateObject)
-                    .should.be.eventually.be.rejected;
+                    .should.be.eventually.be.fulfilled;
                 })
                 .then(function() {
                     return corbelDriver.resources.collection(collectionName)
@@ -388,8 +388,8 @@ describe('In RESOURCES module', function() {
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(response) {
-                    response.forEach(function(element){
-                        expect(element.data._createdAt).to.not.be.equal('1000000');
+                    response.data.forEach(function(element){
+                        expect(element._createdAt).to.not.be.equal('1000000');
                     });
                 })
                 .should.be.eventually.fulfilled.and.notify(done);

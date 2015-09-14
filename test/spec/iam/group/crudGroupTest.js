@@ -152,8 +152,7 @@ describe('In IAM module', function() {
             .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        // This must be fixed in corbel API
-        it.skip('an scope is deleted an it dissapear from the group', function(done) {
+        it('an scope is deleted and it dissapear from the group', function(done) {
             var group = getGroup(Date.now());
             var id;
             var scopeId;
@@ -177,6 +176,42 @@ describe('In IAM module', function() {
                 expect(obtainedGroup).to.have.deep.property('data.scopes');
                 expect(obtainedGroup).to.have.deep.property('data.scopes.length', 1);
                 expect(obtainedGroup.data.scopes).to.contain('scope2');
+
+                return corbelDriver.iam.group(id)
+                .delete()
+                .should.be.eventually.fulfilled;
+            })
+            .should.notify(done);
+        });
+
+        it('two scopes are deleted and both dissapear from the group', function(done) {
+            var group = getGroup(Date.now());
+            var id;
+            var scopeId;
+
+            corbelDriver.iam.group()
+            .create(group)
+            .should.be.eventually.fulfilled
+            .then(function(obtainedId) {
+                id = obtainedId;
+
+                return corbelRootDriver.iam.scope()
+                .remove(scope1.id)
+                .should.be.eventually.fulfilled;
+            })
+            .then(function() {
+                return corbelRootDriver.iam.scope()
+                .remove(scope2.id)
+                .should.be.eventually.fulfilled;
+            })
+            .then(function() {
+                return corbelDriver.iam.group(id)
+                .get()
+                .should.be.eventually.fulfilled;
+            })
+            .then(function(obtainedGroup) {
+                expect(obtainedGroup).to.have.deep.property('data.scopes');
+                expect(obtainedGroup).to.have.deep.property('data.scopes.length', 0);
 
                 return corbelDriver.iam.group(id)
                 .delete()
