@@ -1,5 +1,4 @@
 /*jshint multistr: true */
-/* global $, q*/
 describe('In RESOURCES module', function() {
     describe('In RESTOR module, while using REM-IMAGEs plugin', function() {
 
@@ -30,10 +29,10 @@ describe('In RESOURCES module', function() {
         }
 
         before(function() {
-            corbelDriver = corbelTest.drivers['ADMIN_CLIENT'];
+            corbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
         });
 
-        describe('When using blob type images', function() {
+        describe('when using blob type images', function() {
 
             var dataImage;
             var originalImageWidth, originalImageHeigth;
@@ -68,8 +67,8 @@ describe('In RESOURCES module', function() {
                     dataImage, {
                         dataType: 'image/png',
                     }
-                ).
-                should.be.eventually.fulfilled;
+                )
+                .should.be.eventually.fulfilled;
             });
 
             afterEach(function(done) {
@@ -77,19 +76,19 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.resource(FOLDER_NAME, FILENAME).delete({
                     dataType: 'image/png'
-                }).
-                should.be.eventually.fulfilled.
-                then(function() {
+                })
+                .should.be.eventually.fulfilled
+                .then(function() {
                     return corbelDriver.resources.resource(FOLDER_NAME, FILENAME).get({
                         dataType: 'image/png'
-                    }).
-                    should.be.eventually.rejected;
-                }).
-                then(function(e) {
+                    })
+                    .should.be.eventually.rejected;
+                })
+                .then(function(e) {
                     expect(e).to.have.property('status', 404);
                     expect(e).to.have.deep.property('data.error', 'not_found');
-                }).
-                should.notify(done);
+                })
+                .should.notify(done);
             });
 
             after(function() {
@@ -105,9 +104,9 @@ describe('In RESOURCES module', function() {
                             'image:operations': operationQuery
                     },
                     responseType: 'blob'
-                }).
-                should.be.eventually.fulfilled.
-                then(function(resource) {
+                })
+                .should.be.eventually.fulfilled
+                .then(function(resource) {
                     var reader = new FileReader();
                     var dfd = corbelTest.common.utils.createDeferred();
                     reader.onloadend = function() {
@@ -121,8 +120,8 @@ describe('In RESOURCES module', function() {
                     };
                     reader.readAsDataURL(resource.data);
                     return dfd.promise;
-                }).
-                should.notify(done);
+                })
+                .should.notify(done);
             });
 
 
@@ -136,9 +135,9 @@ describe('In RESOURCES module', function() {
                             'image:operations': operationQuery
                     },
                     responseType: 'blob'
-                }).
-                should.be.eventually.fulfilled.
-                then(function(resource) {
+                })
+                .should.be.eventually.fulfilled
+                .then(function(resource) {
                     var expectedWidth = ((originalImageWidth * operationHeight) / originalImageHeigth);
                     var reader = new FileReader();
                     var dfd = corbelTest.common.utils.createDeferred();
@@ -148,14 +147,14 @@ describe('In RESOURCES module', function() {
                             'beforeend',
                             '<img id="test-image" src="' + reader.result + '" />');
                         var image = document.getElementById('test-image');
-                        expect(image.clientHeight).to.be.equal(operationHeight);
-                        expect(image.clientWidth).to.be.equal(expectedWidth);
+                        expect(image).to.have.property('clientHeight', operationHeight);
+                        expect(image).to.have.property('clientWidth', expectedWidth);
                         dfd.resolve();
                     };
                     reader.readAsDataURL(resource.data);
                     return dfd.promise;
-                }).
-                should.notify(done);
+                })
+                .should.notify(done);
             });
 
             it('Image is returned with several image:operation correctly applied', function(done) {
@@ -171,9 +170,9 @@ describe('In RESOURCES module', function() {
                             'image:operations': operationQuery
                     },
                     responseType: 'blob'
-                }).
-                should.be.eventually.fulfilled.
-                then(function(resource) {
+                })
+                .should.be.eventually.fulfilled
+                .then(function(resource) {
                     var reader = new FileReader();
                     var dfd = corbelTest.common.utils.createDeferred();
                     reader.onloadend = function() {
@@ -188,8 +187,8 @@ describe('In RESOURCES module', function() {
                     };
                     reader.readAsDataURL(resource.data);
                     return dfd.promise;
-                }).
-                should.notify(done);
+                })
+                .should.notify(done);
             });
         });
     });
