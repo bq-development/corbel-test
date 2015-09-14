@@ -152,8 +152,7 @@ describe('In IAM module', function() {
             .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        // This must be fixed in corbel API
-        it.skip('an scope is deleted an it dissapear from the group', function(done) {
+        it('an scope is deleted and it dissapear from the group', function(done) {
             var group = getGroup(Date.now());
             var id;
             var scopeId;
