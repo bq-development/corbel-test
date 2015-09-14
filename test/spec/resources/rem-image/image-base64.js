@@ -5,7 +5,7 @@ describe('In RESOURCES module', function() {
         var FOLDER_NAME = 'test:Restor';
 
         before(function() {
-            corbelDriver = corbelTest.drivers['ADMIN_CLIENT'];
+            corbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
         });
 
         describe('When performing image:operations to base64 type images', function() {
@@ -23,8 +23,7 @@ describe('In RESOURCES module', function() {
                     for (var i = 0; i < array.length; i++) {
                         strImg += String.fromCharCode(array[i]);
                     }
-                    expect(strImg).
-                    to.be.equals(atob(expectedImageInBase64));
+                    expect(strImg).to.be.equals(atob(expectedImageInBase64));
                 };
 
                 var getImageModified = function(operationQuery) {
@@ -36,8 +35,8 @@ describe('In RESOURCES module', function() {
                                     'image:operations': operationQuery
                             },
                         }
-                    ).
-                    should.be.eventually.fulfilled;
+                    )
+                    .should.be.eventually.fulfilled;
                 };
 
                 beforeEach(function(done) {
@@ -52,22 +51,22 @@ describe('In RESOURCES module', function() {
                                 'resource:length': ((TEST_IMAGE.length * 3 / 4) - TEST_IMAGE.split('=').length + 1)
                             }
                         }
-                    ).
-                    should.notify(done);
+                    )
+                    .should.notify(done);
                 });
 
                 afterEach(function(done) {
-                    corbelDriver.resources.resource(FOLDER_NAME, FILENAME).delete({ dataType: 'image/png' }).
-                    should.be.eventually.fulfilled.
-                    then(function() {
+                    corbelDriver.resources.resource(FOLDER_NAME, FILENAME).delete({ dataType: 'image/png' })
+                    .should.be.eventually.fulfilled
+                    .then(function() {
                         return corbelDriver.resources.resource(FOLDER_NAME, FILENAME).get({dataType:'image/png'}).
                         should.be.eventually.rejected;
-                    }).
-                    then(function(e) {
+                    })
+                    .then(function(e) {
                         expect(e).to.have.property('status', 404);
                         expect(e).to.have.deep.property('data.error', 'not_found');
-                    }).
-                    should.notify(done);
+                    })
+                    .should.notify(done);
                 });
 
                 it('Success changing image\'s format (bmp to gif)', function(done) {
@@ -83,12 +82,12 @@ describe('In RESOURCES module', function() {
                                     'image:format': 'gif'
                             },
                         }
-                    ).
-                    should.be.eventually.fulfilled.
-                    then(function(img) {
+                    )
+                    .should.be.eventually.fulfilled
+                    .then(function(img) {
                         compareImages(img.data, TEST_FORMAT);
-                    }).
-                    should.notify(done);
+                    })
+                    .should.notify(done);
                 });
 
                 it('crop', function(done) {
@@ -97,11 +96,11 @@ describe('In RESOURCES module', function() {
                         'AD/AAAAAAAA/0JHUnMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0M7Mvr0fhQz8KV4UAAAAAAAAAAAAAAA'+
                         'AEAAAAAAAAAAAAAAAAAAAAZmZmAP8AAAAAAP9/AAAAAA==';
 
-                    getImageModified('crop=(0,0,2,2)').
-                    then(function(img) {
+                    getImageModified('crop=(0,0,2,2)')
+                    .then(function(img) {
                         compareImages(img.data, TEST_CROP);
-                    }).
-                    should.notify(done);
+                    })
+                    .should.notify(done);
                 });
 
                 it('resizeWidth', function(done) {
@@ -110,11 +109,11 @@ describe('In RESOURCES module', function() {
                         'AD/AAAAAAAA/0JHUnMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0M7Mvr0fhQz8KV4UAAAAAAAAAAAAAAA'+
                         'AEAAAAAAAAAAAAAAAAAAAAv7ZTox5bAAAsPHEQl3kAAA==';
 
-                    getImageModified('resizeWidth=2').
-                    then(function(img) {
+                    getImageModified('resizeWidth=2')
+                    .then(function(img) {
                         compareImages(img.data, TEST_RESIZE_WIDTH);
-                    }).
-                    should.notify(done);
+                    })
+                    .should.notify(done);
                 });
 
                 it('resizeHeight', function(done) {
@@ -123,11 +122,11 @@ describe('In RESOURCES module', function() {
                         'AD/AAAAAAAA/0JHUnMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0M7Mvr0fhQz8KV4UAAAAAAAAAAAAAAA'+
                         'AEAAAAAAAAAAAAAAAAAAAAv7ZTox5bAAAsPHEQl3kAAA==';
 
-                    getImageModified('resizeHeight=2').
-                    then(function(img) {
+                    getImageModified('resizeHeight=2')
+                    .then(function(img) {
                         compareImages(img.data, TEST_RESIZE_HEIGHT);
-                    }).
-                    should.notify(done);
+                    })
+                    .should.notify(done);
                 });
 
                 it('resizeAndFill', function(done) {
@@ -136,11 +135,11 @@ describe('In RESOURCES module', function() {
                         'AD/AAAAAAAA/0JHUnMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0M7Mvr0fhQz8KV4UAAAAAAAAAAAAAAA'+
                         'AEAAAAAAAAAAAAAAAAAAAA//8A/wD//wAAAAAAZmZmAP8AAAB/AAAAAAD/fwAAAP//AAAA';
 
-                    getImageModified('resizeAndFill=(3, 0000FF)').
-                    then(function(img) {
+                    getImageModified('resizeAndFill=(3, 0000FF)')
+                    .then(function(img) {
                         compareImages(img.data, TEST_RESIZE_AND_FILL);
-                    }).
-                    should.notify(done);
+                    })
+                    .should.notify(done);
                 });
 
                 it('cropFromCenter', function(done) {
@@ -149,11 +148,11 @@ describe('In RESOURCES module', function() {
                         'AD/AAAAAAAA/0JHUnMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0M7Mvr0fhQz8KV4UAAAAAAAAAAAAAAA'+
                         'AEAAAAAAAAAAAAAAAAAAAAAP8AAA==';
 
-                    getImageModified('cropFromCenter=(1, 1)').
-                    then(function(img) {
+                    getImageModified('cropFromCenter=(1, 1)')
+                    .then(function(img) {
                         compareImages(img.data, TEST_CROP_FROM_CENTER);
-                    }).
-                    should.notify(done);
+                    })
+                    .should.notify(done);
                 });
             } else {
                 it.skip('This (Chrome) browser is not supported!', function() {});

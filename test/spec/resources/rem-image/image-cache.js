@@ -34,9 +34,8 @@ describe('In RESOURCES module', function() {
                         dataType:'image/png',
                         customQueryParams: customQueryParamsResourceObj
                     }
-                ).
-                should.be.eventually.fulfilled.
-                then(function() {
+                )
+                .then(function() {
                     return corbelDriver.resources.resource(FOLDER_NAME, FILENAME).get(
                         {
                             dataType:'image/png',
@@ -45,20 +44,18 @@ describe('In RESOURCES module', function() {
                                     'image:operations': IMAGE_OPS
                             },
                         }
-                    ).
-                    should.be.eventually.fulfilled;
-                }).
-                should.be.eventually.fulfilled.
-                then(function () {
+                    )
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function () {
                     return corbelDriver.resources.resource(CACHE_FOLDER, cacheResourceName ).get(
                         {
                             dataType:'image/png',
                             responseType: 'blob',
                         }
-                    ).
-                    should.be.eventually.fulfilled;
-                }).
-                should.be.eventually.fulfilled;
+                    );
+                })
+                .should.be.eventually.fulfilled;
             });
 
             if (window.chrome) {
