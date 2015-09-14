@@ -1,6 +1,6 @@
 describe('In RESOURCES module', function() {
 
-    describe('In RESMI module, testing search', function() {
+    describe.skip('In RESMI module, testing search', function() {
         var corbelDriver;
         var COLLECTION = 'test:searchableCollection';
 
@@ -9,33 +9,39 @@ describe('In RESOURCES module', function() {
         });
 
         // This tests will work correctly when elastic search works fine
-        describe.skip('when get searchable collection', function() {
+        describe('when get searchable collection', function() {
             var random, object1, object2, object3;
 
-            before(function(done) {
+            beforeEach(function(done) {
                 random = Date.now();
                 object1 = {
                     id: random + ':1',
                     field1: 'Test' + random,
-                    description: 'And this is the first resource'
+                    description: 'And this is the first resource',
+                    searchableField: 'search',
+                    sortField: 'pêche'
                 };
                 object2 = {
                     id: random + ':2',
                     field1: 'PartialUpdate',
                     field2: 'tEst' + random,
-                    description: 'And this is the second resource'
+                    description: 'And this is the second resource',
+                    searchableField: 'search',
+                    sortField: 'péché'
                 };
                 object3 = {
                     id: random + ':3',
                     field3: 'teSt' + random,
-                    description: 'And this is the third resource'
+                    description: 'And this is the third resource',
+                    searchableField: 'search',
+                    sortField: 'peach'
                 };
 
                 corbelDriver.resources.resource(COLLECTION, random + ':1')
                 .update({
                     field1: 'Test' + random,
                     notIndexedField: true,
-                    description: 'And this is the first resource'
+                    description: 'And this is the first resource',
                 })
                 .should.be.eventually.fulfilled
                 .then(function() {
@@ -66,7 +72,12 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled.and.notify(done);
             });
 
-            it.skip('returns elements satisfying a simple search', function(done) {
+            afterEach(function(done) {
+                corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
+                .should.be.eventually.fulfilled.and.notify(done);
+            });
+
+            it('returns elements satisfying a simple search', function(done) {
                 var params = {
                     search: 'test' + random
                 };
@@ -102,7 +113,32 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled.and.notify(done);
             });
 
-            it.skip('returns elements satisfying a search in certain fields', function(done) {
+            it('returns elements satisfying a simple search ordered by collators', function(done) {
+                var params = {
+                    search: {
+                        searchableField: 'search'
+                    },
+                    sort: {
+                        sortField: 'asc'
+                    }
+                };
+
+                corbelTest.common.utils.retry(function() {
+                    return corbelDriver.resources.collection(COLLECTION)
+                    .get(params)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function(response) {
+
+                    expect(response).to.have.deep.property('data.length', 3);
+                    expect(response).to.have.deep.property('data[0].sortField','peach');
+                    expect(response).to.have.deep.property('data[1].sortField', 'péché');
+                    expect(response).to.have.deep.property('data[2].sortField', 'pêche');
+                })
+                .should.notify(done);
+            });
+
+            it('returns elements satisfying a search in certain fields', function(done) {
                 var params = {
                     search: {
                         text: 'test' + random,
@@ -136,7 +172,7 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled.and.notify(done);
             });
 
-            it.skip('returns autocomplete elements' +
+            it('returns autocomplete elements' +
                    ' satisfying the incomplete chain of search', function(done) {
                 //incomplete chain "resource"
                 var incompleteChain = 'reso';
