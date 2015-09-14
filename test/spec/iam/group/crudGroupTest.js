@@ -152,7 +152,7 @@ describe('In IAM module', function() {
             .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        it('an scope is deleted an it dissapear from the group', function(done) {
+        it('an scope is deleted and it dissapears from the group', function(done) {
             var group = getGroup(Date.now());
             var id;
             var scopeId;

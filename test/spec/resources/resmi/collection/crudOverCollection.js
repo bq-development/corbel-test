@@ -332,7 +332,7 @@ describe('In RESOURCES module', function() {
 
             it('no element is updated while using the method with a non-existent field condition', function(done){
                 var updateObject = {
-                    globalUpdate: 'OK'
+                    updatedField: 'OK'
                 };
 
                 var condition = {
@@ -362,7 +362,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 10);
                     response.data.forEach(function(element){
-                        expect(element).to.not.have.property('globalUpdate');
+                        expect(element).to.not.have.property('updatedField');
                     });
                 })
                 .should.notify(done);

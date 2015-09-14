@@ -3,33 +3,6 @@
 /*globals corbel */
 //@endexclude
 
-function createDomain(driver, domain) {
-
-    var promise = driver.iam.domain()
-        .create(domain)
-        .should.be.eventually.fulfilled
-        .then(function(id) {
-            return driver.iam.domain(id)
-                .get()
-                .should.be.eventually.fulfilled;
-        });
-    return promise;
-}
-
-function createClientDomain(driver, domain, client) {
-
-    var promise = driver.iam.client(domain)
-        .create(client)
-        .should.be.eventually.fulfilled
-        .then(function(id) {
-            client.id = id;
-            return driver.iam.client(domain, client.id)
-                .get()
-                .should.be.eventually.fulfilled;
-        });
-    return promise;
-}
-
 /**
  * Creates random users
  * @param  {CorbelDriver} driver
@@ -48,8 +21,7 @@ function createUsers(driver, amount) {
             'lastName': 'registerUser',
             'email': 'registerUser' + random + '@funkifake.com',
             'username': 'registerUser' + random + '@funkifake.com',
-            'password': 'passRegisterUser',
-            'oauthService': 'silkroad'
+            'password': 'passRegisterUser'
         };
 
         promises.push(createUser(userData, driver));
@@ -101,8 +73,6 @@ function getScope(id) {
 
 
 module.exports = {
-    createDomain: createDomain,
-    createClientDomain: createClientDomain,
     createUsers: createUsers,
     createUser: createUser,
     deleteUser : deleteUser,
