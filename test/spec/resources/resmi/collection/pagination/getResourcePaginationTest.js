@@ -1,8 +1,5 @@
 describe('In RESOURCES module', function() {
     var corbelDriver;
-    var RESOURCES_DEFAULT_PAGE_SIZE = 10;
-    var RESOURCES_MAX_PAGE_SIZE = 50;
-    var RESOURCES_MIN_PAGE_SIZE = 1;
 
     describe('In RESMI module', function() {
         var COLLECTION = 'test:CorbelJSObjectPagination' + Date.now();
@@ -26,7 +23,7 @@ describe('In RESOURCES module', function() {
                 .get()
                 .should.eventually.be.fulfilled
                 .then(function(response){
-                  expect(response.data.length).to.be.equal(RESOURCES_DEFAULT_PAGE_SIZE);
+                  expect(response.data.length).to.be.equal(corbelTest.CONFIG.GLOBALS.maxPageSize);
                 })
                 .should.eventually.be.fulfilled.notify(done);
             });
@@ -83,7 +80,7 @@ describe('In RESOURCES module', function() {
             it('collection with maximum value allowed for pageSize returns maximum elements per page', function(done) {
                 var params = {
                     pagination: {
-                        pageSize: RESOURCES_MAX_PAGE_SIZE
+                        pageSize: corbelTest.CONFIG.GLOBALS.maxPageSize
                     }
                 };
 
@@ -91,7 +88,7 @@ describe('In RESOURCES module', function() {
                 .get(params)
                 .should.eventually.be.fulfilled
                 .then(function(response){
-                  expect(response.data.length).to.be.equal(RESOURCES_MAX_PAGE_SIZE);
+                  expect(response.data.length).to.be.equal(corbelTest.CONFIG.GLOBALS.maxPageSize);
                 })
                 .should.eventually.be.fulfilled.notify(done);
             });
@@ -99,7 +96,7 @@ describe('In RESOURCES module', function() {
             it('collection with minimum value allowed for pageSize returns minimum elements per page', function(done) {
                 var params = {
                     pagination: {
-                        pageSize: RESOURCES_MIN_PAGE_SIZE
+                        pageSize: corbelTest.CONFIG.GLOBALS.minPageSize
                     }
                 };
 
@@ -107,7 +104,7 @@ describe('In RESOURCES module', function() {
                 .get(params)
                 .should.eventually.be.fulfilled
                 .then(function(response){
-                  expect(response.data.length).to.be.equal(RESOURCES_MIN_PAGE_SIZE);
+                  expect(response.data.length).to.be.equal(corbelTest.CONFIG.GLOBALS.minPageSize);
                 })
                 .should.eventually.be.fulfilled.notify(done);
             });
@@ -173,7 +170,7 @@ describe('In RESOURCES module', function() {
                 .get(params)
                 .should.eventually.be.fulfilled
                 .then(function(response){
-                  expect(response.data.length).to.be.equal(RESOURCES_DEFAULT_PAGE_SIZE);
+                  expect(response.data.length).to.be.equal(corbelTest.CONFIG.GLOBALS.defaultPageSize);
                 })
                 .should.eventually.be.fulfilled.notify(done);
             });
