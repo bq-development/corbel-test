@@ -204,19 +204,21 @@ describe('In RESOURCES module', function() {
 
         describe('when a whole collection is updated through collection.update', function() {
             var amount = 10;
-            var collectionName = 'test:CorbelJSObjectCrudUpdate' + Date.now();
+            var collectionName;
 
-            before(function(done) {
+            beforeEach(function(done) {
+                collectionName = 'test:CorbelJSObjectCrudUpdate' + Date.now();
+
                 corbelTest.common.resources.createdObjectsToQuery(corbelDriver, collectionName, amount)
                 .should.be.eventually.fulfilled.and.notify(done);
             });
 
-            after(function(done) {
+            afterEach(function(done) {
                 corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
                 .should.be.eventually.fulfilled.and.notify(done);
             });
         
-            it('all alements are updated while using the method without params', function(done){
+            it('all elements are updated while using the method without params', function(done){
                 var updateObject = {
                     globalUpdate: 'OK'
                 };
