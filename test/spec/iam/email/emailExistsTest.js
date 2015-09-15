@@ -6,7 +6,7 @@ describe('In IAM module', function() {
     describe('when working with email endpoints', function() {
 
         before(function(done) {
-            corbelDriver = corbelTest.drivers['ADMIN_USER'];
+            corbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
 
             email = 'registerUser' + Date.now() + '@funkifake.com';
 
@@ -30,8 +30,8 @@ describe('In IAM module', function() {
                 .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        describe('in getting user\'s id by email', function () {
-            it('should return user\'s id if the email is in use', function(done) {
+        describe('in getting users id by email', function () {
+            it('should return users id if the email is in use', function(done) {
                 corbelDriver.iam.email().getUserId(email)
                 .should.be.eventually.fulfilled
                 .then(function(response) {
@@ -50,7 +50,7 @@ describe('In IAM module', function() {
             });
         });
 
-        describe('in checking email\'s availability', function () {
+        describe('in checking emails availability', function () {
             it('should return false if the email is in use', function(done) {
                 corbelDriver.iam.email().availability(email)
                 .should.be.eventually.fulfilled
