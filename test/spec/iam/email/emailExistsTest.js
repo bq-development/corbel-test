@@ -30,9 +30,10 @@ describe('In IAM module', function() {
                 .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        describe('in getting user\'s id by email', function () {
-            it('should return user\'s id if the email is in use', function(done) {
-                corbelDriver.iam.email().getUserId(email)
+        describe('in getting users id by email', function () {
+            it('should return users id if the email is in use', function(done) {
+                corbelDriver.iam.email()
+                .getUserId(email)
                 .should.be.eventually.fulfilled
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.id',userId);
@@ -41,7 +42,8 @@ describe('In IAM module', function() {
             });
 
             it('should respond with error 404 if the email is not in use', function(done) {
-                corbelDriver.iam.email().getUserId('test' + email)
+                corbelDriver.iam.email()
+                .getUserId('test' + email)
                 .should.eventually.be.rejected
                 .then(function(e) {
                     expect(e).to.have.property('status', 404);
@@ -50,9 +52,10 @@ describe('In IAM module', function() {
             });
         });
 
-        describe('in checking email\'s availability', function () {
+        describe('in checking emails availability', function () {
             it('should return false if the email is in use', function(done) {
-                corbelDriver.iam.email().availability(email)
+                corbelDriver.iam.email()
+                .availability(email)
                 .should.be.eventually.fulfilled
                 .then(function(availability) {
                     expect(availability).to.be.equals(false);
@@ -62,7 +65,8 @@ describe('In IAM module', function() {
 
             if (window.chrome) {
                 it('should return true if the email is not in use', function(done) {
-                    corbelDriver.iam.email().availability(Date.now()+email)
+                    corbelDriver.iam.email()
+                    .availability(Date.now()+email)
                     .then(function(availability) {
                         expect(availability).to.be.equals(true);
                     })
