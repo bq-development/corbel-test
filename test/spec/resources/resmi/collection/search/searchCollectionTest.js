@@ -1,15 +1,18 @@
 describe('In RESOURCES module', function() {
+    this.timeout(90000);
 
-    describe('In RESMI module, testing search', function() {
+    describe('in RESMI module', function() {
         var corbelDriver;
         var COLLECTION = 'test:searchableCollection';
+        var MAX_RETRY = 30;
+        var RETRY_PERIOD = 1;
 
         before(function() {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
         });
 
         // This tests will work correctly when elastic search works fine
-        describe.skip('when get searchable collection', function() {
+        describe('testing search on collection', function() {
             var random, object1, object2, object3;
 
             before(function(done) {
@@ -32,129 +35,100 @@ describe('In RESOURCES module', function() {
                 };
 
                 corbelDriver.resources.resource(COLLECTION, random + ':1')
-                .update({
-                    field1: 'Test' + random,
-                    notIndexedField: true,
-                    description: 'And this is the first resource'
-                })
-                .should.be.eventually.fulfilled
-                .then(function() {
-                    return corbelDriver.resources.resource(COLLECTION, random + ':2')
                     .update({
-                        field2: 'tEst' + random,
-                        notIndexedField: 'hi!',
-                        description: 'And this is the second resource'
+                        field1: 'Test' + random,
+                        notIndexedField: true,
+                        description: 'And this is the first resource'
                     })
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function() {
-                    return corbelDriver.resources.resource(COLLECTION, random + ':2')
-                    .update({
-                        field1: 'PartialUpdate'
+                    .should.be.eventually.fulfilled
+                    .then(function() {
+                        return corbelDriver.resources.resource(COLLECTION, random + ':2')
+                            .update({
+                                field2: 'tEst' + random,
+                                notIndexedField: 'hi!',
+                                description: 'And this is the second resource'
+                            })
+                            .should.be.eventually.fulfilled;
                     })
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function() {
-                    return corbelDriver.resources.resource(COLLECTION, random + ':3')
-                    .update({
-                        field3: 'teSt' + random,
-                        notIndexedField: 12345,
-                        description: 'And this is the third resource'
+                    .then(function() {
+                        return corbelDriver.resources.resource(COLLECTION, random + ':2')
+                            .update({
+                                field1: 'PartialUpdate'
+                            })
+                            .should.be.eventually.fulfilled;
                     })
-                    .should.be.eventually.fulfilled;
-                })
-                .should.be.eventually.fulfilled.and.notify(done);
+                    .then(function() {
+                        return corbelDriver.resources.resource(COLLECTION, random + ':3')
+                            .update({
+                                field3: 'teSt' + random,
+                                notIndexedField: 12345,
+                                description: 'And this is the third resource'
+                            })
+                            .should.be.eventually.fulfilled;
+                    })
+                    .should.be.eventually.fulfilled.and.notify(done);
             });
 
-            it.skip('returns elements satisfying a simple search', function(done) {
+            it('returns elements that satisfy a simple search', function(done) {
                 var params = {
                     search: 'test' + random
                 };
-
                 corbelTest.common.utils.retry(function() {
-                    return corbelDriver.resources.collection(COLLECTION)
-                    .get(params)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(response) {
-                    var data = response.data;
-                    params.aggregation = {
-                        '$count': '*'
-                    };
+                        return corbelDriver.resources.collection(COLLECTION)
+                            .get(params)
+                            .then(function(response) {
+                                if (response.data.length !== 3) {
+                                    return q.reject();
+                                } else {
+                                    return response;
+                                }
+                            });
+                    }, MAX_RETRY, RETRY_PERIOD)
+                    .should.eventually.be.fulfilled
+                    .then(function(response) {
+                        var data = response.data;
+                        params.aggregation = {
+                            '$count': '*'
+                        };
 
-                    expect(data.length).to.be.equal(3);
-                    data.forEach(function(entry) {
-                        delete entry.links;
-                    });
-                    expect(data).to.include(object1);
-                    expect(data).to.include(object2);
-                    expect(data).to.include(object3);
+                        expect(data.length).to.be.equal(3);
+                        data.forEach(function(entry) {
+                            delete entry.links;
+                        });
+                        expect(data).to.include(object1);
+                        expect(data).to.include(object2);
+                        expect(data).to.include(object3);
 
 
-                    return corbelDriver.resources.collection(COLLECTION)
-                    .get(params)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(result) {
-                    expect(result).to.have.deep.property('data.count', 3);
+                        return corbelDriver.resources.collection(COLLECTION)
+                            .get(params)
+                            .should.be.eventually.fulfilled;
+                    })
+                    .then(function(result) {
+                        expect(result).to.have.deep.property('data.count', 3);
 
-                })
-                .should.be.eventually.fulfilled.and.notify(done);
+                    })
+                    .should.be.eventually.fulfilled.and.notify(done);
             });
 
-            it.skip('returns elements satisfying a search in certain fields', function(done) {
-                var params = {
-                    search: {
-                        text: 'test' + random,
-                        fields: ['field1', 'field3']
-                    }
-                };
-
-                return corbelDriver.resources.collection(COLLECTION)
-                .get(params)
-                .should.be.eventually.fulfilled
-                .then(function(response) {
-                    var data = response.data;
-                    params.aggregation = {
-                        '$count': '*'
-                    };
-
-                    expect(data.length).to.be.equal(2);
-                    data.forEach(function(entry) {
-                        delete entry.links;
-                    });
-                    expect(data).to.include(object1);
-                    expect(data).to.include(object3);
-
-                    return corbelDriver.resources.collection(COLLECTION)
-                    .get(params)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(result) {
-                    expect(result).to.have.deep.property('data.count', 2);
-                })
-                .should.be.eventually.fulfilled.and.notify(done);
-            });
-
-            it.skip('returns autocomplete elements' +
-                   ' satisfying the incomplete chain of search', function(done) {
+            it('returns elements that satisfy an incomplete chain of search', function(done) {
                 //incomplete chain "resource"
                 var incompleteChain = 'reso';
                 var params = {
-                    search:  incompleteChain
+                    search: incompleteChain
                 };
 
                 return corbelDriver.resources.collection(COLLECTION)
-                .get(params)
-                .should.be.eventually.fulfilled
-                .then(function(response) {
-                    var data = response.data;
+                    .get(params)
+                    .should.be.eventually.fulfilled
+                    .then(function(response) {
+                        var data = response.data;
 
-                    data.forEach(function(entry) {
-                        expect(entry.description).to.contain(incompleteChain);
-                    });
-                })
-                .should.be.eventually.fulfilled.and.notify(done);
+                        data.forEach(function(entry) {
+                            expect(entry.description).to.contain(incompleteChain);
+                        });
+                    })
+                    .should.be.eventually.fulfilled.and.notify(done);
             });
         });
     });
