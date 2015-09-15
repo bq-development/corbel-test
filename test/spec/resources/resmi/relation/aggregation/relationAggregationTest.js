@@ -6,7 +6,7 @@ describe('In RESOURCES module ', function() {
         var COLLECTION_B = 'test:CorbelJSObjectLinkB' + TIMESTAMP;
 
         before(function() {
-            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
         });
 
         describe('When testing relations aggregation ', function() {

@@ -2,7 +2,7 @@ describe('In EVCI module', function() {
     var corbelDriver;
 
     before(function() {
-      corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+      corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
     });
 
     it('when send any valid event server replies with ACCEPTED (202)', function(done) {

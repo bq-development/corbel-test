@@ -20,7 +20,7 @@ describe('In RESOURCES module', function() {
             };
 
             before(function(done) {
-                corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+                corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
                 corbelDriver.resources.collection(COLLECTION_A)
                 .add(TEST_OBJECT)
                 .should.eventually.be.fulfilled

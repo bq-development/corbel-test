@@ -12,7 +12,7 @@ describe('In RESOURCES module', function() {
         };
 
         before(function() {
-            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
         });
 
         describe('relation can be delete', function() {

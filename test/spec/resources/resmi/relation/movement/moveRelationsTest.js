@@ -15,7 +15,7 @@ describe('In RESOURCES module', function() {
         var idsResourecesInB;
 
         before(function() {
-            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
         });
 
         beforeEach(function(done) {

@@ -5,7 +5,7 @@ describe('In RESOURCES module', function() {
         var I18N_COLLECTION = 'i18n:test' + Date.now();
 
         before(function() {
-            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
         });
 
         describe('when exists a key-value dictionary', function() {

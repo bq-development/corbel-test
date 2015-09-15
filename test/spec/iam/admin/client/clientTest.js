@@ -2,7 +2,7 @@ describe('In IAM module', function() {
     var CorbelDriver;
 
     before(function() {
-        CorbelDriver = corbelTest.drivers['ROOT_CLIENT'];
+        CorbelDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
     });
 
     describe('when performing client CRUD operations', function() {
@@ -64,7 +64,7 @@ describe('In IAM module', function() {
                 expect(client).to.have.deep.property('data.domain', expectedClient.domain);
                 expect(client).to.have.deep.property('data.scopes');
                 client.data.scopes.forEach(function(scope){
-                    expect(expectedClient.scopes).to.contain(scope); 
+                    expect(expectedClient.scopes).to.contain(scope);
                 });
 
                 return CorbelDriver.iam.client(expectedClient.domain, createdClientId)
@@ -98,7 +98,7 @@ describe('In IAM module', function() {
                 expect(client).to.have.deep.property('data.domain', client1.domain);
                 expect(client).to.have.deep.property('data.scopes');
                 client.data.scopes.forEach(function(scope){
-                    expect(client1.scopes).to.contain(scope); 
+                    expect(client1.scopes).to.contain(scope);
                 });
                 clientKey1 = client.key;
 
@@ -120,7 +120,7 @@ describe('In IAM module', function() {
                 expect(client).to.have.deep.property('data.domain', client2.domain);
                 expect(client).to.have.deep.property('data.scopes');
                 client.data.scopes.forEach(function(scope){
-                    expect(client2.scopes).to.contain(scope); 
+                    expect(client2.scopes).to.contain(scope);
                 });
                 expect(client.data.key).to.be.not.equals(clientKey1);
 

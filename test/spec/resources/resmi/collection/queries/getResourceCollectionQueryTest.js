@@ -6,7 +6,7 @@ describe('In RESOURCES module', function() {
         var amount = 10;
 
         beforeEach(function(done) {
-            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
             corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION, amount)
             .should.be.eventually.fulfilled.and.notify(done);
         });

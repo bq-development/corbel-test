@@ -4,7 +4,7 @@ describe('In RESOURCES module', function() {
         var FOLDER_NAME = 'test:Restor';
 
         before(function() {
-            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
         });
 
         var FILENAME = 'RestorFileName' + Date.now();

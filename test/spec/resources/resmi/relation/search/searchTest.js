@@ -7,7 +7,7 @@ describe('In RESOURCES module', function() {
             var random;
 
             before(function(done) {
-                corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+                corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
                 random = Date.now();
 
                 corbelDriver.resources.resource(COLLECTION_A, random + '1')

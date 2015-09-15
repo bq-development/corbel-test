@@ -8,7 +8,7 @@
               var COLLECTION_B = 'test:CorbelJSRelationSortB' + TIMESTAMP;
 
               before(function() {
-                  corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+                  corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
               });
 
                 describe('relation has sort and when', function() {

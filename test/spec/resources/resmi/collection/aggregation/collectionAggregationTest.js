@@ -2,7 +2,7 @@ describe('In RESOURCES module', function() {
     var corbelDriver;
 
     before(function() {
-      corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+      corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
     });
 
     describe('In RESMI module, while testing collection aggregation,', function() {

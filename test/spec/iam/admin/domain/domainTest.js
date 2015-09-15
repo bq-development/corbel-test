@@ -2,7 +2,7 @@ describe('In IAM module', function() {
     var CorbelDriver;
 
     before(function() {
-        CorbelDriver = corbelTest.drivers['ROOT_CLIENT'];
+        CorbelDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
     });
 
     describe('when performing domain CRUD operations', function() {

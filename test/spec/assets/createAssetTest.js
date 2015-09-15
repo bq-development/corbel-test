@@ -2,7 +2,7 @@ describe('In ASSETS module, testing createAsset', function() {
     var corbelDriver;
 
     before(function() {
-        corbelDriver = corbelTest.drivers['ADMIN_USER'];
+        corbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
     });
 
     it('should success returning CREATED(201) when an admin requests to create an asset', function(done) {

@@ -2,7 +2,7 @@ describe('In CORBELJS module', function() {
     var corbelDriver;
 
     before(function() {
-      corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+      corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
     });
 
     describe('Response request', function() {

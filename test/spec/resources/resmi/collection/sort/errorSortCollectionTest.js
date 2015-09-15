@@ -5,7 +5,7 @@ describe('In RESOURCES module', function() {
         var COLLECTION = 'test:CorbelJSObjectSortQuery' + Date.now();
 
         before(function() {
-            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
         });
 
         it('when the request uses an incorrect sorting (sort = BAD) returns BAD REQUEST (400)', function(done) {

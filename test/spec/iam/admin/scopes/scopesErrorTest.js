@@ -6,8 +6,8 @@ describe('In IAM module', function() {
         var scopeId = 'ScopeTest' + Date.now();
 
         before(function() {
-            corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'];
-            corbelDefaultDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+            corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
+            corbelDefaultDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
         });
 
         it('an error 401 is returned when try to create a scope without authorization', function(done) {

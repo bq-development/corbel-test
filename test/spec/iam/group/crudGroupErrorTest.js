@@ -4,7 +4,7 @@ describe('In IAM module', function() {
 
     before(function() {
         corbelDriver = corbelTest.drivers['DEFAULT_USER'];
-        corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'];
+        corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
     });
 
     describe('when testing group API', function() {

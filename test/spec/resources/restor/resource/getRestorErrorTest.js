@@ -5,7 +5,7 @@ describe('In RESOURCES module', function() {
         var FILENAME = 'RestorFileName' + Date.now();
 
         before(function() {
-            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
         });
 
         it('should fail returning error NOT FOUND(404) when you get file RESTOR that not exist',

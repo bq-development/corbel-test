@@ -9,7 +9,7 @@ describe('In RESOURCES module ', function() {
         };
 
         before(function() {
-            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
             urlBaseBackup = corbelDriver.config.config.urlBase.replace('{{module}}', 'resources');
             corbelDriver.config.config.urlBase =
                 corbelDriver.config.get('urlBase').replace('bqws.io/', 'bqws.io/resources/')

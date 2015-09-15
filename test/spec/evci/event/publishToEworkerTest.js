@@ -2,7 +2,7 @@ describe('In EVCI module', function() {
     var corbelDriver;
 
     before(function() {
-      corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+      corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
     });
 
     it('should create/put a resource after an event is sent to the proper worker', function(done) {

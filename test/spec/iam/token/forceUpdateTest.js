@@ -10,7 +10,7 @@
         };
 
         before(function() {
-            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
         });
 
         var UNSUPPORTED_VERSION = '0.0.0';

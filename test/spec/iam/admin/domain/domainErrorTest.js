@@ -3,8 +3,8 @@ describe('In IAM module', function() {
     var corbelDefaultDriver;
 
     before(function() {
-        corbelDriver = corbelTest.drivers['ROOT_CLIENT'];
-        corbelDefaultDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+        corbelDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
+        corbelDefaultDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
     });
 
     describe('when performing domain CRUD operations', function() {

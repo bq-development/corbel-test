@@ -11,7 +11,7 @@ describe('In RESOURCES module', function() {
 
 
         before(function() {
-            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
         });
 
         describe('an anonymous relation can be created ', function() {

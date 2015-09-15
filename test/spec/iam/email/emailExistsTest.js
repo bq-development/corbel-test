@@ -6,7 +6,7 @@ describe('In IAM module', function() {
     describe('when working with email endpoints', function() {
 
         before(function(done) {
-            corbelDriver = corbelTest.drivers['ADMIN_USER'];
+            corbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
 
             email = 'registerUser' + Date.now() + '@funkifake.com';
 

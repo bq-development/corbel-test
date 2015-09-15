@@ -5,7 +5,7 @@ describe('In RESOURCES module', function() {
         var COLLECTION = 'test:CorbelJSObjectCollectionPagination';
 
         before(function() {
-            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
         });
 
         it('when get collection with page size greater than maximum number of elements for page,' +

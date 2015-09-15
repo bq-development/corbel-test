@@ -3,7 +3,7 @@ describe('In RESOURCES module', function() {
     var COLLECTION = 'test:CorbelJSObjectSortQuery' + Date.now();
 
     before(function() {
-        corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+        corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
     });
 
     describe('In RESMI module, while testing sorting operation', function() {

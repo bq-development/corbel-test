@@ -12,7 +12,7 @@ describe('In IAM module, when get a token with/out client side authentication', 
     var claimExp = _.cloneDeep(corbelTest.CONFIG['claimExp']);
 
     before(function() {
-        corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+        corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
     });
 
 

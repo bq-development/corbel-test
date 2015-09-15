@@ -5,7 +5,7 @@ describe('In RESOURCES module', function() {
         var COLLECTION = 'test:searchableCollection';
 
         before(function() {
-            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
         });
 
         // This tests will work correctly when elastic search works fine

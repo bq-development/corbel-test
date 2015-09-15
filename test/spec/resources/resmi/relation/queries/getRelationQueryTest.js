@@ -7,7 +7,7 @@ describe('In RESOURCES module', function() {
         var COLLECTION_B = 'test:CorbelJSPaginationRelationB' + TIMESTAMP;
 
         before(function() {
-            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
         });
 
         describe('Relation has queries and when ', function() {

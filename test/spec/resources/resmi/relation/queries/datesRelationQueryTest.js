@@ -10,7 +10,7 @@ describe('In RESOURCES module', function() {
         var idsResourecesInB;
 
         beforeEach(function(done) {
-            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
 
             corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION_A, 1)
             .should.be.eventually.fulfilled

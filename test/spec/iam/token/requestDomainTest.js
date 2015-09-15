@@ -15,7 +15,7 @@ describe('In IAM module when requests an access token', function() {
     });
 
     before(function() {
-        driverRootClient = corbelTest.drivers['ROOT_CLIENT'];
+        driverRootClient = corbelTest.drivers['ROOT_CLIENT'].clone();
     });
 
 

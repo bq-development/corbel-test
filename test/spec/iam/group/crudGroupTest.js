@@ -3,8 +3,8 @@ describe('In IAM module', function() {
     var corbelRootDriver;
 
     before(function() {
-        corbelDriver = corbelTest.drivers['ADMIN_USER'];
-        corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'];
+        corbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
+        corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
     });
     
     describe('when testing group API', function() {

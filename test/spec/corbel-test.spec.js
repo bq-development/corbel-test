@@ -17,7 +17,7 @@ describe('In corbel-test project', function() {
     var resourceId;
 
     before(function() {
-        corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'];
+        corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
     });
 
     it('can use default corbelDriver', function(done) {

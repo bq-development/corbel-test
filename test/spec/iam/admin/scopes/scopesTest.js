@@ -5,7 +5,7 @@ describe('In IAM module', function() {
         var scopeId = 'TestScope' + Date.now(); 
 
         before(function() {
-            corbelDriver = corbelTest.drivers['ROOT_CLIENT'];
+            corbelDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
         });
 
         it('a scope is created', function(done) {
