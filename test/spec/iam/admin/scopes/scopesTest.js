@@ -2,7 +2,7 @@ describe('In IAM module', function() {
 
     describe('when performing scopes CRUD operations', function() {
         var corbelDriver;
-        var scopeId = 'TestScope' + Date.now(); 
+        var scopeId = 'TestScope' + Date.now();
 
         before(function() {
             corbelDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
@@ -42,6 +42,11 @@ describe('In IAM module', function() {
                 .should.eventually.be.fulfilled;
             })
             .then(function() {
+                var auxBefore = Date.now();
+                var auxAfter = auxBefore + 2000;
+                while (auxBefore < auxAfter){// it must wait to clean cache, this dirty solution should be revised
+                    auxBefore =  Date.now();
+                }
                 return corbelDriver.iam.scope(scope.id)
                 .get()
                 .should.eventually.be.rejected;
