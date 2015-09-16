@@ -44,7 +44,7 @@ describe('In IAM module', function() {
             it('should respond with error 404 if the email is not in use', function(done) {
                 corbelDriver.iam.email()
                 .getUserId('test' + email)
-                .should.eventually.be.rejected
+                .should.be.eventually.rejected
                 .then(function(e) {
                     expect(e).to.have.property('status', 404);
                 })

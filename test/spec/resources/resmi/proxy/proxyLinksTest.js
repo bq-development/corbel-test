@@ -26,20 +26,20 @@ describe('In RESOURCES module ', function() {
 
             corbelDriver.resources.collection(COLLECTION_NAME)
             .add(TEST_OBJECT)
-            .should.eventually.be.fulfilled
+            .should.be.eventually.fulfilled
             .then(function(id) {
                 objectId = id;
 
                 return corbelDriver.resources.resource(COLLECTION_NAME, objectId)
                 .get()
-                .should.eventually.be.fulfilled;
+                .should.be.eventually.fulfilled;
             })
             .then(function(content) {
                 expect(content.data.links[0].href)
                     .to.be.equal(corbelDriver.config.config.urlBase +
                         requestDomain + 'resource/' + COLLECTION_NAME + '/' + objectId);
             })
-            .should.eventually.be.fulfilled.notify(done);
+            .should.be.eventually.fulfilled.notify(done);
         });
     });
 });

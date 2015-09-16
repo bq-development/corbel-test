@@ -27,12 +27,12 @@ describe('In RESOURCES module', function() {
 
                     corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                     .get(null, params)
-                    .should.eventually.be.rejected
+                    .should.be.eventually.rejected
                     .then(function(e) {
                         expect(e).to.have.property('status', 400);
                         expect(e.data).to.have.property('error', 'invalid_page_size');
                     })
-                    .should.eventually.be.fulfilled.notify(done);
+                    .should.be.eventually.fulfilled.notify(done);
                 });
             });
 
@@ -46,12 +46,12 @@ describe('In RESOURCES module', function() {
 
                     corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                     .get(null, params)
-                    .should.eventually.be.rejected
+                    .should.be.eventually.rejected
                     .then(function(e) {
                         expect(e).to.have.property('status', 400);
                         expect(e.data).to.have.property('error', 'invalid_page_size');
                     })
-                    .should.eventually.be.fulfilled.notify(done);
+                    .should.be.eventually.fulfilled.notify(done);
                 });
             });
 
@@ -66,12 +66,12 @@ describe('In RESOURCES module', function() {
 
                     corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                     .get(null, params)
-                    .should.eventually.be.rejected
+                    .should.be.eventually.rejected
                     .then(function(e) {
                         expect(e).to.have.property('status', 400);
                         expect(e.data).to.have.property('error', 'invalid_page');
                     })
-                    .should.eventually.be.fulfilled.notify(done);
+                    .should.be.eventually.fulfilled.notify(done);
                 });
             });
 
@@ -93,12 +93,12 @@ describe('In RESOURCES module', function() {
 
                     corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                     .get(null, params)
-                    .should.eventually.be.rejected
+                    .should.be.eventually.rejected
                     .then(function(e) {
                         expect(e).to.have.property('status', 400);
                         expect(e.data).to.have.property('error', 'invalid_query');
                     })
-                    .should.eventually.be.fulfilled.notify(done);
+                    .should.be.eventually.fulfilled.notify(done);
                 });
             });
         });

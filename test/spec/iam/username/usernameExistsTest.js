@@ -32,7 +32,7 @@ describe('In IAM module, testing username endpoint ', function() {
         it('should return users id if the username is in use', function(done) {
             corbelDriver.iam.username()
             .getUserId(username)
-            .should.eventually.be.fulfilled
+            .should.be.eventually.fulfilled
             .then(function(response) {
                 expect(response).to.have.deep.property('data.id',userId);
             })
@@ -42,7 +42,7 @@ describe('In IAM module, testing username endpoint ', function() {
         it('should respond with error 404 if the username is not in use', function(done) {
             corbelDriver.iam.username()
             .getUserId('test' + username)
-            .should.eventually.be.rejected
+            .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 404);
             })
@@ -54,7 +54,7 @@ describe('In IAM module, testing username endpoint ', function() {
         it('should return false if the username is in use', function(done) {
             corbelDriver.iam.username()
             .availability(username)
-            .should.eventually.be.fulfilled
+            .should.be.eventually.fulfilled
             .then(function(availability) {
                 expect(availability).to.be.equals(false);
             })
@@ -66,7 +66,7 @@ describe('In IAM module, testing username endpoint ', function() {
             it('should return true if the username is not in use', function(done) {
                 corbelDriver.iam.username()
                 .availability('test' + username)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(availability) {
                     expect(availability).to.be.equals(true);
                 })

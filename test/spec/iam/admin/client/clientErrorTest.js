@@ -68,7 +68,7 @@ describe('In IAM module', function() {
 
                 return corbelRootDriver.iam.client(client.domain)
                 .create(client)
-                .should.eventually.be.rejected;
+                .should.be.eventually.rejected;
             })
             .then(function(e) {
                 expect(e).to.have.property('status', 409);

@@ -36,13 +36,13 @@ describe('In IAM module, When try to get token with', function() {
                         jwtAlgorithm
                     )
                 })
-                .should.eventually.be.rejected
+                .should.be.eventually.rejected
                 .then(function(response) {
                     var error = response.data;
                     expect(response).to.have.property('status', 401);
                     expect(error).to.have.property('error', 'unauthorized');
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
         });
 
         it('bad code in ' + socialOauth, function(done) {
@@ -67,13 +67,13 @@ describe('In IAM module, When try to get token with', function() {
                         jwtAlgorithm
                     )
                 })
-                .should.eventually.be.rejected
+                .should.be.eventually.rejected
                 .then(function(response) {
                     var error = response.data;
                     expect(response).to.have.property('status', 401);
                     expect(error).to.have.property('error', 'unauthorized');
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
         });
 
         it('missing oauth params in ' + socialOauth, function(done) {
@@ -96,13 +96,13 @@ describe('In IAM module, When try to get token with', function() {
                         jwtAlgorithm
                     )
                 })
-                .should.eventually.be.rejected
+                .should.be.eventually.rejected
                 .then(function(response) {
                     var error = response.data;
                     expect(response).to.have.property('status', 400);
                     expect(error).to.have.property('error', 'missing_oauth_params');
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
         });
     });
 });

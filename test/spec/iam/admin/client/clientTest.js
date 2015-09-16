@@ -193,7 +193,7 @@ describe('In IAM module', function() {
             .then(function() {
                 return CorbelDriver.iam.client(client.domain, clientId)
                 .get()
-                .should.eventually.be.rejected;
+                .should.be.eventually.rejected;
             })
             .then(function(e) {
                 expect(e).to.have.property('status', 404);

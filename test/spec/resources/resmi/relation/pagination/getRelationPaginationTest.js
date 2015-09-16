@@ -15,31 +15,31 @@ describe('In RESOURCES module', function() {
         before(function(done) {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
             corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION_A, 1)
-            .should.eventually.be.fulfilled
+            .should.be.eventually.fulfilled
             .then(function(id) {
                 idResourceInA = id[0];
 
                 return corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION_B, amount)
-                .should.eventually.be.fulfilled;
+                .should.be.eventually.fulfilled;
             })
             .then(function(ids) {
                 idsResourecesInB = ids;
                 return corbelTest.common.resources.createRelationFromSingleObjetToMultipleObject
                     (corbelDriver, COLLECTION_A, idResourceInA, COLLECTION_B, idsResourecesInB)
-                .should.eventually.be.fulfilled;
+                .should.be.eventually.fulfilled;
             })
-            .should.eventually.be.fulfilled.notify(done);
+            .should.be.eventually.fulfilled.notify(done);
         });
 
         after(function(done) {
             corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
-            .should.eventually.be.fulfilled
+            .should.be.eventually.fulfilled
             .then(function() {
                 return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                 .delete()
-                .should.eventually.be.fulfilled;
+                .should.be.eventually.fulfilled;
             })
-            .should.eventually.be.fulfilled.notify(done);
+            .should.be.eventually.fulfilled.notify(done);
         });
 
         describe('Relation has pagination and when', function() {
@@ -48,11 +48,11 @@ describe('In RESOURCES module', function() {
                    ' successes returning elements in a default page', function(done) {
                 corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                 .get(null)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response){
                   expect(response.data.length).to.be.equal(RESOURCES_DEFAULT_PAGE_SIZE);
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
 
             it('get relation with specific page and default page size,' +
@@ -65,11 +65,11 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                 .get(null, params)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response){
                   expect(response.data.length).to.be.equal(RESOURCES_DEFAULT_PAGE_SIZE);
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
 
             it('get relation with default page and specific number of elements,' +
@@ -82,11 +82,11 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                 .get(null, params)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response){
                   expect(response.data.length).to.be.equal(3);
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
 
             it('get relation with specific page and page size query parameter, ' +
@@ -100,11 +100,11 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                 .get(null, params)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response){
                   expect(response.data.length).to.be.equal(2);
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
 
             it('get relation with maximum number of elements for page and default page, ' +
@@ -117,11 +117,11 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                 .get(null, params)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response){
                   expect(response.data.length).to.be.equal(RESOURCES_MAX_PAGE_SIZE);
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
 
             it('get relation with minimum number of elements for page and default page, ' +
@@ -134,11 +134,11 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                 .get(null, params)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response){
                   expect(response.data.length).to.be.equal(RESOURCES_MIN_PAGE_SIZE);
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
 
             it('get relation with specific query and specific number of element in a page, ' +
@@ -156,14 +156,14 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                 .get(null, params)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response) {
                     expect(response.data.length).to.be.equal(3);
                     response.data.forEach(function(relation) {
                         expect(relation.intField).to.be.above(700);
                     });
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
 
             it('get relation with specific query and specific number of element in an specific page, ' +
@@ -183,14 +183,14 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                 .get(null, params)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response) {
                     expect(response.data.length).to.be.equal(3);
                     response.data.forEach(function(relation) {
                         expect(relation.intField).to.be.above(700);
                     });
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
 
             it('get relation with invalid page size successes returning relation resources', function(done) {
@@ -202,11 +202,11 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                 .get(null, params)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response){
                   expect(response.data.length).to.be.equal(RESOURCES_DEFAULT_PAGE_SIZE);
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
         });
     });
