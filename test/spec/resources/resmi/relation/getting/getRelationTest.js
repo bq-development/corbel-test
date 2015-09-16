@@ -23,32 +23,32 @@ describe('In RESOURCES module', function() {
                 corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
                 corbelDriver.resources.collection(COLLECTION_A)
                 .add(TEST_OBJECT)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(id) {
                     idResourceA = id;
 
                     return corbelDriver.resources.collection(COLLECTION_B)
                     .add(TEST_OBJECT)
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 })
                 .then(function(id) {
                     idResourceB = id;
 
                     return corbelDriver.resources.collection(COLLECTION_B)
                     .add(TEST_OBJECT)
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 })
                 .then(function(id) {
                     idResourceC = id;
 
                     return corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
                     .add(idResourceB, jsonRelationData)
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 })
                 .then(function() {
                     return corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
                     .add(idResourceC, jsonRelationData)
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 }).
                 should.eventually.be.fulfilled.notify(done);
             });
@@ -60,52 +60,52 @@ describe('In RESOURCES module', function() {
                 .then(function() {
                     return corbelDriver.resources.resource(COLLECTION_A, idResourceA)
                     .delete()
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 })
                 .then(function() {
                     return corbelDriver.resources.resource(COLLECTION_B, idResourceB)
                     .delete()
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 })
                 .then(function() {
                     return corbelDriver.resources.resource(COLLECTION_B, idResourceC)
                     .delete()
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
 
             it('if try to get all of them, successes returning the list of elements', function(done) {
                 corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
                 .get(null)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response) {
                     expect(response.data).to.have.length(2);
                     expect(response.data[0]).to.have.property('stringField', jsonRelationData.stringField);
                     expect(response.data[1]).to.have.property('stringField', jsonRelationData.stringField);
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
 
             it('if try to get one of them, successes returning the element', function(done) {
                 corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
                 .get(idResourceB)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response) {
                     expect(response.data.stringField).to.be.equal(jsonRelationData.stringField);
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
 
 
             it('if the relation not exist, successes returning the list of elements empty', function(done) {
                 corbelDriver.resources.relation(COLLECTION_A, 'notExistingId', COLLECTION_B)
                 .get(null)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response) {
                     expect(response.data).to.have.property('length').to.be.equal(0);
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
         });
     });

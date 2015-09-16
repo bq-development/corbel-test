@@ -25,7 +25,7 @@ describe('In RESOURCES module', function() {
         afterEach(function(done) {
             TEST_OBJECT.test = valueFirst;
             corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
-            .should.eventually.be.fulfilled
+            .should.be.eventually.fulfilled
             .should.be.eventually.fulfilled.and.notify(done);
         });
 
@@ -86,7 +86,7 @@ describe('In RESOURCES module', function() {
 
             corbelDriver.resources.resource(COLLECTION, resourceId)
             .update(TEST_OBJECT, params)
-            .should.eventually.be.fulfilled
+            .should.be.eventually.fulfilled
             .then(function() {
                 return corbelDriver.resources.resource(COLLECTION, resourceId)
                 .get()

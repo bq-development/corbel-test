@@ -11,12 +11,12 @@ describe('In RESOURCES module', function() {
         before(function(done) {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
             corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION, amount)
-            .should.eventually.be.fulfilled.notify(done);
+            .should.be.eventually.fulfilled.notify(done);
         });
 
         after(function(done) {
             corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
-            .should.eventually.be.fulfilled.notify(done);
+            .should.be.eventually.fulfilled.notify(done);
         });
 
         describe('when testing collections pagination', function() {
@@ -24,11 +24,11 @@ describe('In RESOURCES module', function() {
             it('collection without pagination parameters returns default number of elements per page', function(done) {
                 corbelDriver.resources.collection(COLLECTION)
                 .get()
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response){
                   expect(response.data.length).to.be.equal(RESOURCES_DEFAULT_PAGE_SIZE);
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
 
             it('collection with pagination parameter returns elements of expected page', function(done) {
@@ -40,11 +40,11 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.collection(COLLECTION)
                 .get(params)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response){
                   expect(response.data.length).to.be.equal(2);
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
 
             it('collection with pageSize parameter returns defined number of elements per page', function(done) {
@@ -56,11 +56,11 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.collection(COLLECTION)
                 .get(params)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response){
                   expect(response.data).to.have.property('length', 3);
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
 
             it('collection with page & pageSize parameter returns defined #elems from expected page', function(done) {
@@ -73,11 +73,11 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.collection(COLLECTION)
                 .get(params)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response){
                   expect(response.data).to.have.property('length', 2);
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
 
             it('collection with maximum value allowed for pageSize returns maximum elements per page', function(done) {
@@ -89,11 +89,11 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.collection(COLLECTION)
                 .get(params)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response){
                   expect(response.data.length).to.be.equal(RESOURCES_MAX_PAGE_SIZE);
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
 
             it('collection with minimum value allowed for pageSize returns minimum elements per page', function(done) {
@@ -105,11 +105,11 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.collection(COLLECTION)
                 .get(params)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response){
                   expect(response.data.length).to.be.equal(RESOURCES_MIN_PAGE_SIZE);
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
 
             it('collection with query & pageSize params returns elements satisfactorily', function(done) {
@@ -126,7 +126,7 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.collection(COLLECTION)
                 .get(params)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response) {
                     var data = response.data;
                     expect(data).to.have.property('length', 3);
@@ -152,14 +152,14 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.collection(COLLECTION)
                 .get(params)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response) {
                     expect(response.data).to.have.property('length', 3);
                     response.data.forEach(function(resource) {
                         expect(resource).to.have.property('intField').and.be.above(700);
                     });
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
 
             it('collection with invalid pagination parameter ignores such parameters', function(done) {
@@ -171,11 +171,11 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.collection(COLLECTION)
                 .get(params)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response){
                   expect(response.data.length).to.be.equal(RESOURCES_DEFAULT_PAGE_SIZE);
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
         });
     });

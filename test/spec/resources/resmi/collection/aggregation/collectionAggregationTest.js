@@ -17,7 +17,7 @@ describe('In RESOURCES module', function() {
 
         afterEach(function(done) {
             corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
-            .should.eventually.be.fulfilled
+            .should.be.eventually.fulfilled
             .should.be.eventually.fulfilled.and.notify(done);
         });
 
@@ -130,11 +130,11 @@ describe('In RESOURCES module', function() {
                 };
                 corbelDriver.resources.collection(COLLECTION)
                 .get(params)
-                .should.eventually.be.rejected
+                .should.be.eventually.rejected
                 .then(function(e) {
                     expect(e).to.have.property('status', 400);
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
 
             it('when there are more than one operator, an error is returned', function(done) {
@@ -146,11 +146,11 @@ describe('In RESOURCES module', function() {
                 };
                 corbelDriver.resources.collection(COLLECTION)
                 .get(params)
-                .should.eventually.be.rejected
+                .should.be.eventually.rejected
                 .then(function(e) {
                     expect(e).to.have.property('status', 400);
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
 
             it('with agreggation, query and sorts, sort param is ignored', function(done) {

@@ -15,7 +15,7 @@ describe('In RESOURCES module', function() {
 
             corbelDriver.resources.resource(COLLECTION_A, random + '1')
                 .update({})
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function() {
                     return corbelDriver.resources.relation(COLLECTION_A, random + '1', COLLECTION_B)
                         .add(random + '1', {
@@ -23,7 +23,7 @@ describe('In RESOURCES module', function() {
                             notIndexedField: true,
                             description: 'And this is the first resource'
                         })
-                        .should.eventually.be.fulfilled;
+                        .should.be.eventually.fulfilled;
                 })
                 .then(function() {
                     return corbelDriver.resources.relation(COLLECTION_A, random + '1', COLLECTION_B)
@@ -32,7 +32,7 @@ describe('In RESOURCES module', function() {
                             notIndexedField: 'hi!',
                             description: 'And this is the second resource'
                         })
-                        .should.eventually.be.fulfilled;
+                        .should.be.eventually.fulfilled;
                 })
                 .then(function() {
                     return corbelDriver.resources.relation(COLLECTION_A, random + '1', COLLECTION_B)
@@ -41,20 +41,20 @@ describe('In RESOURCES module', function() {
                             notIndexedField: 12345,
                             description: 'And this is the third resource'
                         })
-                        .should.eventually.be.fulfilled;
+                        .should.be.eventually.fulfilled;
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
         });
 
         after(function(done) {
             corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function() {
                     return corbelDriver.resources.relation(COLLECTION_A, random + '1', COLLECTION_B)
                         .delete()
-                        .should.eventually.be.fulfilled;
+                        .should.be.eventually.fulfilled;
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
         });
 
         describe('when get relation with search', function() {
@@ -75,7 +75,7 @@ describe('In RESOURCES module', function() {
                                 }
                             });
                     }, MAX_RETRY, RETRY_PERIOD)
-                    .should.eventually.be.fulfilled
+                    .should.be.eventually.fulfilled
                     .then(function(response) {
                         expect(response.data.length).to.be.equal(3);
                         response.data.forEach(function(entry) {
@@ -103,12 +103,12 @@ describe('In RESOURCES module', function() {
 
                         return corbelDriver.resources.relation(COLLECTION_A, random + '1', COLLECTION_B)
                             .get(null, params)
-                            .should.eventually.be.fulfilled;
+                            .should.be.eventually.fulfilled;
                     })
                     .then(function(result) {
                         expect(result.data).to.have.property('count').to.be.equal(3);
                     })
-                    .should.eventually.be.fulfilled.notify(done);
+                    .should.be.eventually.fulfilled.notify(done);
             });
 
             it('successes returning satisfying the incomplete chain of search',
@@ -129,13 +129,13 @@ describe('In RESOURCES module', function() {
                                     }
                                 });
                         }, MAX_RETRY, RETRY_PERIOD)
-                        .should.eventually.be.fulfilled
+                        .should.be.eventually.fulfilled
                         .then(function(response) {
                             response.data.forEach(function(entry) {
                                 expect(entry.description).to.contain(incompleteChain);
                             });
                         })
-                        .should.eventually.be.fulfilled.notify(done);
+                        .should.be.eventually.fulfilled.notify(done);
                 });
         });
     });

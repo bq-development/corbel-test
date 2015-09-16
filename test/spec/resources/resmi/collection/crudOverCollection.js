@@ -74,7 +74,7 @@ describe('In RESOURCES module', function() {
                 .then(function() {
                   return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId)
                   .get()
-                  .should.eventually.be.rejected;
+                  .should.be.eventually.rejected;
                 })
                 .then(function(e) {
                   expect(e).to.have.property('status', 404);
@@ -225,7 +225,7 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.collection(collectionName)
                 .get()
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 10);
                 })
@@ -271,7 +271,7 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.collection(collectionName)
                 .get()
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 10);
                 })
@@ -307,7 +307,7 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.collection(collectionName)
                 .get()
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 10);
                 })
@@ -345,7 +345,7 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.collection(collectionName)
                 .get()
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 10);
                 })
@@ -375,7 +375,7 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.collection(collectionName)
                 .get()
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 10);
                 })
@@ -407,7 +407,7 @@ describe('In RESOURCES module', function() {
 
             corbelDriver.resources.collection(COLLECTION_NAME_CRUD)
             .add(underscoreObject)
-            .should.eventually.be.rejected
+            .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 422);
                 expect(e).to.have.deep.property('data.error', 'invalid_entity');
@@ -421,7 +421,7 @@ describe('In RESOURCES module', function() {
 
                 return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId)
                 .update(underscoreObject)
-                .should.eventually.be.rejected;
+                .should.be.eventually.rejected;
             })
             .then(function(e) {
                 expect(e).to.have.property('status', 422);
@@ -450,7 +450,7 @@ describe('In RESOURCES module', function() {
                         var resourceId;
                         corbelDriver.resources.collection(COLLECTION_NAME_CRUD)
                         .add(malformedObject)
-                        .should.eventually.be.rejected
+                        .should.be.eventually.rejected
                         .then(function(e) {
                             expect(e).to.have.property('status', 422);
                             expect(e).to.have.deep.property('data.error', 'invalid_entity');
@@ -463,7 +463,7 @@ describe('In RESOURCES module', function() {
                             resourceId = id;
                             return corbelDriver.resources.resource(COLLECTION_NAME_CRUD, resourceId)
                             .update(malformedObject)
-                            .should.eventually.be.rejected;
+                            .should.be.eventually.rejected;
                         })
                         .then(function(e) {
                             expect(e).to.have.property('status', 422);

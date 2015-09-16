@@ -389,26 +389,26 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.collection(COLLECTION)
                 .get()
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response){
                     id = response.data[0].id;
                 })
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(){
                     return corbelDriver.resources.resource(COLLECTION, id)
                     .update(updateParams)
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 })
                 .then(function(){
                     return corbelDriver.resources.collection(COLLECTION)
                     .get(params)
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 })
                 .then(function(response) {
                     expect(response.data).to.have.length(1);
                     expect(response.data[0].stringField.match('\\$').length).to.be.above(0);
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
 
             it('returns elements satisfying the request ', function(done) {
@@ -505,7 +505,7 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.collection(COLLECTION)
                 .get(params)
-                .should.eventually.be.rejected
+                .should.be.eventually.rejected
                 .then(function(e) {
                     expect(e).to.have.property('status', 400);
                     expect(e.data).to.have.property('error', 'invalid_query');
@@ -530,7 +530,7 @@ describe('In RESOURCES module', function() {
 
                 corbelDriver.resources.collection(COLLECTION)
                 .get(params)
-                .should.eventually.be.rejected
+                .should.be.eventually.rejected
                 .then(function(e) {
                     expect(e).to.have.property('status', 400);
                     expect(e.data).to.have.property('error', 'invalid_query');

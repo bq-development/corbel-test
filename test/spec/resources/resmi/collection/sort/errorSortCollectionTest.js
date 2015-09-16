@@ -17,7 +17,7 @@ describe('In RESOURCES module', function() {
 
             corbelDriver.resources.collection(COLLECTION)
             .get(params)
-            .should.eventually.be.rejected
+            .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 400);
                 expect(e).to.have.deep.property('data.error', 'invalid_sort');
@@ -37,7 +37,7 @@ describe('In RESOURCES module', function() {
 
             corbelDriver.resources.collection(COLLECTION)
             .get(params)
-            .should.eventually.be.rejected
+            .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 400);
                 expect(e).to.have.deep.property('data.error', 'invalid_sort');
@@ -53,7 +53,7 @@ describe('In RESOURCES module', function() {
 
             corbelDriver.resources.collection(COLLECTION)
             .get(params)
-            .should.eventually.be.rejected
+            .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 400);
                 expect(e).to.have.deep.property('data.error', 'invalid_sort');
@@ -68,7 +68,7 @@ describe('In RESOURCES module', function() {
 
             corbelDriver.resources.collection(COLLECTION)
             .get(params)
-            .should.eventually.be.rejected
+            .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 400);
                 expect(e).to.have.deep.property('data.error', 'invalid_sort');

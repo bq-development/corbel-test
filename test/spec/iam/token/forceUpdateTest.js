@@ -25,7 +25,7 @@
                 .create({
                     jwt: corbel.jwt.generate(claims, claimDefault.clientSecret)
                 })
-                .should.eventually.be.fulfilled.and.notify(done);
+                .should.be.eventually.fulfilled.and.notify(done);
         });
 
         it('with unsupported version version, it fails with 403 - "unsupported_version"', function(done) {
@@ -37,13 +37,13 @@
                 .create({
                     jwt: corbel.jwt.generate(claims, claimDefault.clientSecret)
                 })
-                .should.eventually.be.rejected
+                .should.be.eventually.rejected
                 .then(function(e) {
                     var error = e.data;
                     expect(error.error).to.be.equal(FORCE_UPDATE_MESSAGE);
                     expect(e.status).to.be.equal(FORCE_UPDATE_CODE);
                 })
-                .should.eventually.be.fulfilled.and.notify(done);
+                .should.be.eventually.fulfilled.and.notify(done);
         });
 
         it('with compatible version, it works', function(done) {
@@ -55,6 +55,6 @@
                 .create({
                     jwt: corbel.jwt.generate(claims, claimDefault.clientSecret)
                 })
-                .should.eventually.be.fulfilled.and.notify(done);
+                .should.be.eventually.fulfilled.and.notify(done);
         });
     });

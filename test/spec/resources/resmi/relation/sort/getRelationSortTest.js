@@ -18,32 +18,32 @@
 
                     before(function(done) {
                         corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION_A, 1)
-                        .should.eventually.be.fulfilled
+                        .should.be.eventually.fulfilled
                         .then(function(id) {
                             idResourceInA = id[0];
 
                             return corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION_B, amount)
-                            .should.eventually.be.fulfilled;
+                            .should.be.eventually.fulfilled;
                         })
                         .then(function(ids) {
                             idsResourecesInB = ids;
 
                             return corbelTest.common.resources.createRelationFromSingleObjetToMultipleObject
                                 (corbelDriver, COLLECTION_A, idResourceInA, COLLECTION_B, idsResourecesInB)
-                            .should.eventually.be.fulfilled;
+                            .should.be.eventually.fulfilled;
                         })
-                        .should.eventually.be.fulfilled.notify(done);
+                        .should.be.eventually.fulfilled.notify(done);
                     });
 
                     after(function(done) {
                         corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
-                        .should.eventually.be.fulfilled
+                        .should.be.eventually.fulfilled
                         .then(function() {
                             return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                             .delete()
-                            .should.eventually.be.fulfilled;
+                            .should.be.eventually.fulfilled;
                         })
-                        .should.eventually.be.fulfilled.notify(done);
+                        .should.be.eventually.fulfilled.notify(done);
                     });
 
                     describe('get relation with ', function() {
@@ -59,12 +59,12 @@
 
                                 corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                                 .get(null ,params)
-                                .should.eventually.be.fulfilled
+                                .should.be.eventually.fulfilled
                                 .then(function(response) {
                                     expect(corbelTest.common.resources.checkSortingAsc(response.data, 'intField'))
                                     .to.be.equal(true);
                                 })
-                                .should.eventually.be.fulfilled.notify(done);
+                                .should.be.eventually.fulfilled.notify(done);
                             });
 
                             it('should success returning the elements in order descendent by intField', function(done) {
@@ -76,7 +76,7 @@
 
                                 corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                                 .get(null,params)
-                                .should.eventually.be.fulfilled
+                                .should.be.eventually.fulfilled
                                 .then(function(response) {
                                     expect(corbelTest.common.resources.checkSortingDesc(response.data, 'intField'))
                                     .to.be.equal(true);
@@ -96,12 +96,12 @@
 
                                 corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                                 .get(null, params)
-                                .should.eventually.be.rejected
+                                .should.be.eventually.rejected
                                 .then(function(e) {
                                     expect(e).to.have.property('status', 400);
                                     expect(e.data).to.have.property('error', 'invalid_sort');
                                 })
-                                .should.eventually.be.fulfilled.notify(done);
+                                .should.be.eventually.fulfilled.notify(done);
                             });
                         });
 
