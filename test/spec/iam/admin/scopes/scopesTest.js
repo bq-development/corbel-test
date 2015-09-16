@@ -42,8 +42,8 @@ describe('In IAM module', function() {
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                var MAX_RETRY = 3;
-                var RETRY_PERIOD = 1;
+                var MAX_RETRY = 5;
+                var RETRY_PERIOD = 2;
                 return corbelTest.common.utils.retry(function() {
                     return corbelDriver.iam.scope(scope.id)
                     .get()
