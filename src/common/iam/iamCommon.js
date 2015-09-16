@@ -9,7 +9,7 @@ function createDomain(driver, domain) {
         .create(domain)
         .should.eventually.be.fulfilled
         .then(function(response) {
-            return driver.iam.domain(response.data)
+            return driver.iam.domain(response)
                 .get()
                 .should.eventually.be.fulfilled;
         });
@@ -22,7 +22,7 @@ function createClientDomain(driver, domain, client) {
         .create(client)
         .should.eventually.be.fulfilled
         .then(function(response) {
-            client.id = response.data;
+            client.id = response;
             return driver.iam.client(domain, client.id)
                 .get()
                 .should.eventually.be.fulfilled;
