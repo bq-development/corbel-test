@@ -8,8 +8,8 @@ function createDomain(driver, domain) {
     var promise = driver.iam.domain()
         .create(domain)
         .should.eventually.be.fulfilled
-        .then(function(response) {
-            return driver.iam.domain(response.data)
+        .then(function(id) {
+            return driver.iam.domain(id)
                 .get()
                 .should.eventually.be.fulfilled;
         });
@@ -21,8 +21,8 @@ function createClientDomain(driver, domain, client) {
     var promise = driver.iam.client(domain)
         .create(client)
         .should.eventually.be.fulfilled
-        .then(function(response) {
-            client.id = response.data;
+        .then(function(id) {
+            client.id = id;
             return driver.iam.client(domain, client.id)
                 .get()
                 .should.eventually.be.fulfilled;
