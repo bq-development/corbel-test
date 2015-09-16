@@ -168,7 +168,7 @@ function repeatMove(driver, idResource, repeatTimes, COLLECTION_A, idResourceInA
         .then(function() {
             return driver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                 .get(null, params)
-                .should.eventually.be.fulfilled;
+                .should.be.eventually.fulfilled;
         }).then(function(response) {
             expect(response.data[1].id).to.be.equal(idResource);
             if (repeatTimes) {

@@ -20,7 +20,7 @@ describe('In RESOURCES module ', function() {
                 .then(function(id) {
                     idResourceInA = id[0];
                     return corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION_B, amount)
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 })
                 .then(function(ids) {
                     idsResourecesInB = ids;

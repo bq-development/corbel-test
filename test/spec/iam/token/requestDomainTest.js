@@ -153,7 +153,7 @@ describe('In IAM module when requests an access token', function() {
                     domainId = response.data.id;
                     return corbelTest.common.iam
                         .createClientDomain(driverRootClient, domainId, client)
-                        .should.eventually.be.fulfilled;
+                        .should.be.eventually.fulfilled;
                 })
                 .then(function(response) {
                     clientSecret = response.data.key;

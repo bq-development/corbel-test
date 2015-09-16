@@ -23,14 +23,14 @@
                             idResourceInA = id[0];
 
                             return corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION_B, amount)
-                            .should.eventually.be.fulfilled;
+                            .should.be.eventually.fulfilled;
                         })
                         .then(function(ids) {
                             idsResourecesInB = ids;
 
                             return corbelTest.common.resources.createRelationFromSingleObjetToMultipleObject
                                 (corbelDriver, COLLECTION_A, idResourceInA, COLLECTION_B, idsResourecesInB)
-                            .should.eventually.be.fulfilled;
+                            .should.be.eventually.fulfilled;
                         })
                         .should.eventually.be.fulfilled.notify(done);
                     });
@@ -41,7 +41,7 @@
                         .then(function() {
                             return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                             .delete()
-                            .should.eventually.be.fulfilled;
+                            .should.be.eventually.fulfilled;
                         })
                         .should.eventually.be.fulfilled.notify(done);
                     });

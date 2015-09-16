@@ -11,7 +11,7 @@ function createDomain(driver, domain) {
         .then(function(id) {
             return driver.iam.domain(id)
                 .get()
-                .should.eventually.be.fulfilled;
+                .should.be.eventually.fulfilled;
         });
     return promise;
 }
@@ -25,7 +25,7 @@ function createClientDomain(driver, domain, client) {
             client.id = id;
             return driver.iam.client(domain, client.id)
                 .get()
-                .should.eventually.be.fulfilled;
+                .should.be.eventually.fulfilled;
         });
     return promise;
 }

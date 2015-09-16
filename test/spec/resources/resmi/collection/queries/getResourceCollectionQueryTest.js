@@ -397,12 +397,12 @@ describe('In RESOURCES module', function() {
                 .then(function(){
                     return corbelDriver.resources.resource(COLLECTION, id)
                     .update(updateParams)
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 })
                 .then(function(){
                     return corbelDriver.resources.collection(COLLECTION)
                     .get(params)
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 })
                 .then(function(response) {
                     expect(response.data).to.have.length(1);

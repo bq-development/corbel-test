@@ -29,26 +29,26 @@ describe('In RESOURCES module', function() {
 
                     return corbelDriver.resources.collection(COLLECTION_B)
                     .add(TEST_OBJECT)
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 })
                 .then(function(id) {
                     idResourceB = id;
 
                     return corbelDriver.resources.collection(COLLECTION_B)
                     .add(TEST_OBJECT)
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 })
                 .then(function(id) {
                     idResourceC = id;
 
                     return corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
                     .add(idResourceB, jsonRelationData)
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 })
                 .then(function() {
                     return corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
                     .add(idResourceC, jsonRelationData)
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 }).
                 should.eventually.be.fulfilled.notify(done);
             });
@@ -60,17 +60,17 @@ describe('In RESOURCES module', function() {
                 .then(function() {
                     return corbelDriver.resources.resource(COLLECTION_A, idResourceA)
                     .delete()
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 })
                 .then(function() {
                     return corbelDriver.resources.resource(COLLECTION_B, idResourceB)
                     .delete()
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 })
                 .then(function() {
                     return corbelDriver.resources.resource(COLLECTION_B, idResourceC)
                     .delete()
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 })
                 .should.eventually.be.fulfilled.notify(done);
             });

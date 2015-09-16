@@ -46,12 +46,12 @@ describe('In RESOURCES module', function() {
                 .then(function() {
                     return corbelDriver.resources.relation(COLLECTION_A, idResourceA, RELATION_NAME)
                     .addAnonymous(jsonRelationData2)
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 })
                 .then(function() {
                     return corbelDriver.resources.relation(COLLECTION_A, idResourceA, RELATION_NAME)
                     .get()
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 })
                 .then(function(response) {
                     expect(response.data[0].stringField).to.be.equal('testCreateRelation');

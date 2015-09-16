@@ -19,7 +19,7 @@ describe('In IAM module', function() {
 
                 return corbelDriver.iam.scope(expectedScope.id)
                 .get()
-                .should.eventually.be.fulfilled;
+                .should.be.eventually.fulfilled;
             })
             .then(function(scope) {
                 expect(scope).to.have.deep.property('data.id', expectedScope.id);
@@ -39,7 +39,7 @@ describe('In IAM module', function() {
             .then(function(id) {
                 return corbelDriver.iam.scope(scope.id)
                 .remove(id)
-                .should.eventually.be.fulfilled;
+                .should.be.eventually.fulfilled;
             })
             .then(function() {
                 var MAX_RETRY = 3;

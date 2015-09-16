@@ -32,7 +32,7 @@ describe('In RESOURCES module ', function() {
 
                 return corbelDriver.resources.resource(COLLECTION_NAME, objectId)
                 .get()
-                .should.eventually.be.fulfilled;
+                .should.be.eventually.fulfilled;
             })
             .then(function(content) {
                 expect(content.data.links[0].href)

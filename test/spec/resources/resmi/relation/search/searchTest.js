@@ -23,7 +23,7 @@ describe('In RESOURCES module', function() {
                             notIndexedField: true,
                             description: 'And this is the first resource'
                         })
-                        .should.eventually.be.fulfilled;
+                        .should.be.eventually.fulfilled;
                 })
                 .then(function() {
                     return corbelDriver.resources.relation(COLLECTION_A, random + '1', COLLECTION_B)
@@ -32,7 +32,7 @@ describe('In RESOURCES module', function() {
                             notIndexedField: 'hi!',
                             description: 'And this is the second resource'
                         })
-                        .should.eventually.be.fulfilled;
+                        .should.be.eventually.fulfilled;
                 })
                 .then(function() {
                     return corbelDriver.resources.relation(COLLECTION_A, random + '1', COLLECTION_B)
@@ -41,7 +41,7 @@ describe('In RESOURCES module', function() {
                             notIndexedField: 12345,
                             description: 'And this is the third resource'
                         })
-                        .should.eventually.be.fulfilled;
+                        .should.be.eventually.fulfilled;
                 })
                 .should.eventually.be.fulfilled.notify(done);
         });
@@ -52,7 +52,7 @@ describe('In RESOURCES module', function() {
                 .then(function() {
                     return corbelDriver.resources.relation(COLLECTION_A, random + '1', COLLECTION_B)
                         .delete()
-                        .should.eventually.be.fulfilled;
+                        .should.be.eventually.fulfilled;
                 })
                 .should.eventually.be.fulfilled.notify(done);
         });
@@ -103,7 +103,7 @@ describe('In RESOURCES module', function() {
 
                         return corbelDriver.resources.relation(COLLECTION_A, random + '1', COLLECTION_B)
                             .get(null, params)
-                            .should.eventually.be.fulfilled;
+                            .should.be.eventually.fulfilled;
                     })
                     .then(function(result) {
                         expect(result.data).to.have.property('count').to.be.equal(3);
