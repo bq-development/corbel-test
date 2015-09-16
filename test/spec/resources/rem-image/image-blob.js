@@ -34,6 +34,8 @@ describe('In RESOURCES module', function() {
 
         describe('when using blob type images', function() {
 
+            if (window.chrome) { // will be fixed in phantom 2.0
+
             var dataImage;
             var originalImageWidth, originalImageHeigth;
             var FILENAME;
@@ -190,6 +192,10 @@ describe('In RESOURCES module', function() {
                 })
                 .should.notify(done);
             });
+        } else {
+            it.skip('there is a problem executing these test with phantom ' +
+            '< 2.0.0, please update this when 2.0.0 releases', function() {});
+        }
         });
     });
 });
