@@ -7,11 +7,11 @@ function createDomain(driver, domain) {
 
     var promise = driver.iam.domain()
         .create(domain)
-        .should.eventually.be.fulfilled
+        .should.be.eventually.fulfilled
         .then(function(id) {
             return driver.iam.domain(id)
                 .get()
-                .should.eventually.be.fulfilled;
+                .should.be.eventually.fulfilled;
         });
     return promise;
 }
@@ -20,12 +20,12 @@ function createClientDomain(driver, domain, client) {
 
     var promise = driver.iam.client(domain)
         .create(client)
-        .should.eventually.be.fulfilled
+        .should.be.eventually.fulfilled
         .then(function(id) {
             client.id = id;
             return driver.iam.client(domain, client.id)
                 .get()
-                .should.eventually.be.fulfilled;
+                .should.be.eventually.fulfilled;
         });
     return promise;
 }

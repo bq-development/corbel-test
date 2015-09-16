@@ -28,12 +28,12 @@ describe('In RESOURCES module', function() {
             .then(function(id) {
                 idResourceB = id;
             })
-            .should.eventually.be.fulfilled.notify(done);
+            .should.be.eventually.fulfilled.notify(done);
         });
 
         after(function(done) {
             corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
-            .should.eventually.be.fulfilled
+            .should.be.eventually.fulfilled
             .then(function() {
                 return corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
                     .delete();
@@ -56,7 +56,7 @@ describe('In RESOURCES module', function() {
                 expect(response.data).to.have.property('myextrafield').to.be.equals('test');
                 done();
             })
-            .should.eventually.be.fulfilled.notify(done);
+            .should.be.eventually.fulfilled.notify(done);
         });
 
         it('Updates an existing registry in the relation', function(done){
@@ -74,7 +74,7 @@ describe('In RESOURCES module', function() {
                 expect(response.data).to.have.property('myextrafield').to.be.equals('test');
                 expect(response.data).to.have.property('newfield').to.be.equals('testnewField');
             })
-            .should.eventually.be.fulfilled.notify(done);
+            .should.be.eventually.fulfilled.notify(done);
         });
     });
 });

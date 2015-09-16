@@ -84,7 +84,7 @@ describe('In RESOURCES module', function() {
                                 }
                             });
                     }, MAX_RETRY, RETRY_PERIOD)
-                    .should.eventually.be.fulfilled
+                    .should.be.eventually.fulfilled
                     .then(function(response) {
                         var data = response.data;
                         params.aggregation = {

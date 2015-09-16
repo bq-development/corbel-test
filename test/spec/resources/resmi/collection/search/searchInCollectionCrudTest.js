@@ -40,7 +40,7 @@ describe('In RESOURCES module', function() {
                                         }
                                     });
                             }, MAX_RETRY, RETRY_PERIOD)
-                            .should.eventually.be.fulfilled;
+                            .should.be.eventually.fulfilled;
                     })
                     .then(function(response) {
                         expect(response.data[0]).to.have.property('field1').to.be.equal('Test' + random);
@@ -68,7 +68,7 @@ describe('In RESOURCES module', function() {
                                         }
                                     });
                             }, MAX_RETRY, RETRY_PERIOD)
-                            .should.eventually.be.fulfilled;
+                            .should.be.eventually.fulfilled;
                     })
                     .then(function(response) {
                         expect(response.data[0]).to.have.property('field1').to.be.equal('Test' + random);

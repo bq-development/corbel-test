@@ -104,7 +104,7 @@ describe('In RESOURCES module', function() {
                             .then(function() {
                                 return corbelDriver.resources.resource(I18N_COLLECTION, key)
                                 .get(params)
-                                .should.eventually.be.rejected;
+                                .should.be.eventually.rejected;
                             });
                         };
                     });

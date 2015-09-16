@@ -150,7 +150,7 @@ function deleteCreatedRelationObjects(driver) {
 function fastMove(driver, idResource1, idResource2, repeatTimes, COLLECTION_A, idResourceInA, COLLECTION_B) {
     return driver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
         .move(idResource1, 2)
-        .should.eventually.be.fulfilled
+        .should.be.eventually.fulfilled
         .then(function() {
             if (repeatTimes) {
                 return fastMove(driver, idResource2, idResource1, repeatTimes - 1,
@@ -164,11 +164,11 @@ function fastMove(driver, idResource1, idResource2, repeatTimes, COLLECTION_A, i
 function repeatMove(driver, idResource, repeatTimes, COLLECTION_A, idResourceInA, COLLECTION_B, params, amount) {
     return driver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
         .move(idResource, 2)
-        .should.eventually.be.fulfilled
+        .should.be.eventually.fulfilled
         .then(function() {
             return driver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                 .get(null, params)
-                .should.eventually.be.fulfilled;
+                .should.be.eventually.fulfilled;
         }).then(function(response) {
             expect(response.data[1].id).to.be.equal(idResource);
             if (repeatTimes) {

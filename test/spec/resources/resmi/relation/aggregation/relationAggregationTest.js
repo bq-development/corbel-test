@@ -16,11 +16,11 @@ describe('In RESOURCES module ', function() {
 
             beforeEach(function(done) {
                 corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION_A, 1)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(id) {
                     idResourceInA = id[0];
                     return corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION_B, amount)
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 })
                 .then(function(ids) {
                     idsResourecesInB = ids;
@@ -28,12 +28,12 @@ describe('In RESOURCES module ', function() {
                     return corbelTest.common.resources.createRelationFromSingleObjetToMultipleObject
                         (corbelDriver, COLLECTION_A, idResourceInA, COLLECTION_B, idsResourecesInB);
                 })
-                .should.eventually.be.fulfilled.notify(done);
+                .should.be.eventually.fulfilled.notify(done);
             });
 
             afterEach(function(done) {
                 corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function() {
                     return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                         .delete();
@@ -51,11 +51,11 @@ describe('In RESOURCES module ', function() {
 
                     corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                     .get(null, params)
-                    .should.eventually.be.fulfilled
+                    .should.be.eventually.fulfilled
                     .then(function(response) {
                         expect(response.data.count).to.be.equal(amount);
                     })
-                    .should.eventually.be.fulfilled.notify(done);
+                    .should.be.eventually.fulfilled.notify(done);
                 });
             });
 
@@ -74,11 +74,11 @@ describe('In RESOURCES module ', function() {
 
                     corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                     .get(null, params)
-                    .should.eventually.be.fulfilled
+                    .should.be.eventually.fulfilled
                     .then(function(response) {
                         expect(response.data.count).to.be.equal(amount - 2);
                     })
-                    .should.eventually.be.fulfilled.notify(done);
+                    .should.be.eventually.fulfilled.notify(done);
                 });
             });
         });

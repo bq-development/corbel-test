@@ -13,13 +13,13 @@ describe('In IAM module', function() {
 
             corbelDriver.iam.scope()
             .create(expectedScope)
-            .should.eventually.be.fulfilled
+            .should.be.eventually.fulfilled
             .then(function(id) {
                 expect(id).to.be.equals(expectedScope.id);
 
                 return corbelDriver.iam.scope(expectedScope.id)
                 .get()
-                .should.eventually.be.fulfilled;
+                .should.be.eventually.fulfilled;
             })
             .then(function(scope) {
                 expect(scope).to.have.deep.property('data.id', expectedScope.id);
@@ -35,11 +35,11 @@ describe('In IAM module', function() {
 
             corbelDriver.iam.scope()
             .create(scope)
-            .should.eventually.be.fulfilled
+            .should.be.eventually.fulfilled
             .then(function(id) {
                 return corbelDriver.iam.scope(scope.id)
                 .remove(id)
-                .should.eventually.be.fulfilled;
+                .should.be.eventually.fulfilled;
             })
             .then(function() {
                 var MAX_RETRY = 3;
@@ -47,7 +47,7 @@ describe('In IAM module', function() {
                 return corbelTest.common.utils.retry(function() {
                     return corbelDriver.iam.scope(scope.id)
                     .get()
-                    .should.eventually.be.rejected;
+                    .should.be.eventually.rejected;
                 }, MAX_RETRY, RETRY_PERIOD).
                 should.be.eventually.fulfilled;
             })

@@ -15,7 +15,7 @@ describe('In IAM module', function() {
 
             corbelDefaultDriver.iam.scope()
             .create(expectedScope)
-            .should.eventually.be.rejected
+            .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 401);
                 expect(e).to.have.deep.property('data.error', 'unauthorized');
@@ -29,7 +29,7 @@ describe('In IAM module', function() {
 
             corbelRootDriver.iam.scope()
             .create(scope)
-            .should.eventually.be.rejected.
+            .should.be.eventually.rejected.
             then(function(e) {
                 expect(e).to.have.property('status', 400);
                 expect(e).to.have.deep.property('data.error', 'scope_id_not_allowed');
@@ -42,7 +42,7 @@ describe('In IAM module', function() {
 
             corbelRootDriver.iam.scope()
             .create('asdf')
-            .should.eventually.be.rejected
+            .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 422);
                 expect(e).to.have.deep.property('data.error', 'invalid_entity');
@@ -55,7 +55,7 @@ describe('In IAM module', function() {
 
             corbelDefaultDriver.iam.scope(id)
             .get()
-            .should.eventually.be.rejected
+            .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 401);
                 expect(e).to.have.deep.property('data.error', 'unauthorized');
@@ -68,7 +68,7 @@ describe('In IAM module', function() {
 
             corbelRootDriver.iam.scope(id)
             .get()
-            .should.eventually.be.rejected
+            .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 404);
                 expect(e).to.have.deep.property('data.error', 'not_found');
@@ -81,7 +81,7 @@ describe('In IAM module', function() {
 
             corbelDefaultDriver.iam.scope(id)
             .remove()
-            .should.eventually.be.rejected
+            .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 401);
                 expect(e).to.have.deep.property('data.error', 'unauthorized');

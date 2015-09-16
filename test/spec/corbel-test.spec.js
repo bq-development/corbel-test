@@ -59,7 +59,7 @@ describe('In corbel-test project', function() {
                         dataType: 'image/png'
                     });
             })
-            .should.eventually.be.fulfilled.notify(done);
+            .should.be.eventually.fulfilled.notify(done);
     });
 
     it('corbelTest exist and has expected members', function() {
@@ -75,7 +75,7 @@ describe('In corbel-test project', function() {
         // prevent modify default client
         var driver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
         corbelTest.common.clients.loginAsRandomUser(driver)
-            .should.eventually.be.fulfilled.and.notify(done);
+            .should.be.eventually.fulfilled.and.notify(done);
     });
 
 });
