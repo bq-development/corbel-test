@@ -18,15 +18,5 @@ describe('In RESOURCES module', function() {
             }).
             should.be.eventually.fulfilled.and.notify(done);
         });
-
-        it('should fail returning error UNAUTHORIZED(401) ' +
-        'when you get file RESTOR without file and folder', function(done) {
-            corbelDriver.resources.resource().get({dataType:'application/octet-stream'})
-            .should.be.eventually.rejected.
-            then(function(e) {
-                expect(e).to.have.property('status', 401);
-            }).
-            should.be.eventually.fulfilled.and.notify(done);
-        });
     });
 });
