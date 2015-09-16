@@ -2,7 +2,7 @@ describe('In IAM module', function() {
 
     describe('when performing scopes CRUD operations', function() {
         var corbelDriver;
-        var scopeId = 'TestScope' + Date.now(); 
+        var scopeId = 'TestScope' + Date.now();
 
         before(function() {
             corbelDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
@@ -42,9 +42,14 @@ describe('In IAM module', function() {
                 .should.eventually.be.fulfilled;
             })
             .then(function() {
-                return corbelDriver.iam.scope(scope.id)
-                .get()
-                .should.eventually.be.rejected;
+                var MAX_RETRY = 3;
+                var RETRY_PERIOD = 1;
+                return corbelTest.common.utils.retry(function() {
+                    return corbelDriver.iam.scope(scope.id)
+                    .get()
+                    .should.eventually.be.rejected;
+                }, MAX_RETRY, RETRY_PERIOD).
+                should.be.eventually.fulfilled;
             })
             .then(function(e) {
                 expect(e).to.have.property('status', 404);
