@@ -128,7 +128,7 @@ describe('In IAM module', function() {
         });
 
         it('basic user is created with differences between email and username', function(done) {
-            user.username = 'differentUsername';
+            user.username = 'differentUsername' +random;
 
             corbelDriver.iam.user()
             .create(user)
