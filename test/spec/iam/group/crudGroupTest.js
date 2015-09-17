@@ -8,14 +8,14 @@ describe('In IAM module', function() {
     });
     
     describe('when testing group API', function() {
-        var scope1 = corbelTest.common.iam.getScope('scope1');
-        var scope2 = corbelTest.common.iam.getScope('scope2');
-        var scope3 = corbelTest.common.iam.getScope('scope3');
+        var scope1 = corbelTest.common.iam.getScope('scope1' + Date.now());
+        var scope2 = corbelTest.common.iam.getScope('scope2' + Date.now());
+        var scope3 = corbelTest.common.iam.getScope('scope3' + Date.now());
 
         var getGroup = function(suffix) {
             return {
                 name: 'TestGroup_' + suffix,
-                scopes: ['scope1', 'scope2']
+                scopes: [scope1.id, scope2.id]
             };
         };
 
@@ -37,7 +37,7 @@ describe('In IAM module', function() {
             [scope1, scope2, scope3].forEach(function(scope) {
                     promise = promise.then(function() {
                         return corbelRootDriver.iam.scope()
-                        .remove(scope)
+                        .remove(scope.id)
                         .should.be.eventually.fulfilled;
                     });
             });
@@ -107,7 +107,7 @@ describe('In IAM module', function() {
         it('it is possible update a group', function(done) {
             var group = getGroup(Date.now());
             var id;
-            var scope3 = corbelTest.common.iam.getScope('scope3');
+            var scope3 = corbelTest.common.iam.getScope('scope3' + Date.now());
 
             corbelDriver.iam.group()
             .create(group)
@@ -121,12 +121,12 @@ describe('In IAM module', function() {
             })
             .then(function() {
                 return corbelDriver.iam.group(id)
-                .addScopes(['scope3'])
+                .addScopes([scope3.id])
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
                 return corbelDriver.iam.group(id)
-                .removeScope('scope1')
+                .removeScope(scope1.id)
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
@@ -137,8 +137,8 @@ describe('In IAM module', function() {
             .then(function(obtainedGroup) {
                 expect(obtainedGroup).to.have.deep.property('data.scopes');
                 expect(obtainedGroup).to.have.deep.property('data.scopes.length', 2);
-                expect(obtainedGroup.data.scopes).to.contain('scope2');
-                expect(obtainedGroup.data.scopes).to.contain('scope3');
+                expect(obtainedGroup.data.scopes).to.contain(scope2.id);
+                expect(obtainedGroup.data.scopes).to.contain(scope3.id);
 
                 return corbelDriver.iam.group(id)
                 .delete()

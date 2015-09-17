@@ -8,14 +8,14 @@ describe('In IAM module', function() {
     });
 
     describe('when testing group API', function() {
-        var scope1 = corbelTest.common.iam.getScope('scope1');
-        var scope2 = corbelTest.common.iam.getScope('scope2');
+        var scope1 = corbelTest.common.iam.getScope('scope1' + Date.now());
+        var scope2 = corbelTest.common.iam.getScope('scope2' + Date.now());
 
         var getGroup = function(suffix) {
             suffix = suffix || Date.now();
             return {
                 name: 'TestGroup_' + suffix,
-                scopes: ['scope1', 'scope2']
+                scopes: [scope1.id, scope2.id]
             };
         };
 
@@ -37,7 +37,7 @@ describe('In IAM module', function() {
             [scope1, scope2].forEach(function(scope) {
                     promise = promise.then(function() {
                         return corbelRootDriver.iam.scope()
-                        .remove(scope)
+                        .remove(scope.id)
                         .should.be.eventually.fulfilled;
                     });
             });
