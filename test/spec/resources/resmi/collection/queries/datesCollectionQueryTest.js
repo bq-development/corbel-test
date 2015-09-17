@@ -5,6 +5,7 @@ describe('In RESOURCES module', function() {
         var COLLECTION = 'test:CorbelJSObjectQuery' + Date.now();
         var amount = 10;
         var count;
+        var timeMargin = 10000;
 
         beforeEach(function(done) {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
@@ -18,7 +19,7 @@ describe('In RESOURCES module', function() {
         });
 
         describe('when get collection using "greater than" query language', function(){
-            
+
             it('used timestamp parameter in the query applying to _updateAt field', function(done){
                 var date;
                 var updateParams = { randomField : 'qwer' };
@@ -57,7 +58,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', count + 1);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('used ISODate parameter in the query applying to _updateAt field', function(done){
@@ -98,14 +99,14 @@ describe('In RESOURCES module', function() {
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', count + 1);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('used ISODate parameter in the query applying to _createAt field', function(done){
                 var queryParams = {
                               query: [{
                                   '$gt': {
-                                      _createdAt : 'ISODate(' + new Date(Date.now()).toISOString() + ')'
+                                      _createdAt : 'ISODate(' + new Date(Date.now() + timeMargin).toISOString() + ')'
                                   }
                               }]
                 };
@@ -116,14 +117,14 @@ describe('In RESOURCES module', function() {
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', 0);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('used timestamp parameter in the query applying to _createAt field', function(done){
                 var queryParams = {
                               query: [{
                                   '$gt': {
-                                      _createdAt : Date.now()
+                                      _createdAt : Date.now() + timeMargin
                                   }
                               }]
                 };
@@ -134,7 +135,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', 0);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
         });
@@ -179,7 +180,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', count);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('used ISODate parameter in the query applying to _updateAt field', function(done){
@@ -221,14 +222,14 @@ describe('In RESOURCES module', function() {
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', count);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('used ISODate parameter in the query applying to _createAt field', function(done){
                 var queryParams = {
                               query: [{
                                   '$lt': {
-                                      _createdAt : 'ISODate(' + new Date(Date.now()).toISOString() + ')'
+                                      _createdAt : 'ISODate(' + new Date(Date.now() + timeMargin).toISOString() + ')'
                                   }
                               }]
                 };
@@ -239,14 +240,14 @@ describe('In RESOURCES module', function() {
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', amount);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('used timestamp parameter in the query applying to _createAt field', function(done){
                 var queryParams = {
                               query: [{
                                   '$lt': {
-                                      _createdAt : Date.now()
+                                      _createdAt : Date.now() + timeMargin
                                   }
                               }]
                 };
@@ -257,7 +258,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', amount);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
         });
