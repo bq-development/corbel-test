@@ -1,6 +1,6 @@
 describe('In IAM module', function() {
 
-    describe.only('while testing create user', function() {
+    describe('while testing create user', function() {
         var corbelDriver;
         var userId;
         var random;
