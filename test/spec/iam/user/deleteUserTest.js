@@ -3,7 +3,7 @@ describe('In IAM module', function() {
     describe('while testing delete user', function() {
         var corbelDriver;
         var userId;
-        var domainEmail = '@funkifake.com';
+        var emailDomain = '@funkifake.com';
         var userDeleteTest = {
             'firstName': 'userDelete',
             'email': 'user.delete.',
@@ -20,8 +20,8 @@ describe('In IAM module', function() {
             corbelDriver.iam.user()
             .create({
                 'firstName': userDeleteTest.firstName,
-                'email': userDeleteTest.email + random + domainEmail,
-                'username': userDeleteTest.username + random + domainEmail
+                'email': userDeleteTest.email + random + emailDomain,
+                'username': userDeleteTest.username + random + emailDomain
             })
             .should.be.eventually.fulfilled
             .then(function(id) {
