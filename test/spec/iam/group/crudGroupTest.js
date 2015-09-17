@@ -72,7 +72,7 @@ describe('In IAM module', function() {
                 .delete()
                 .should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         it('it is possible remove a group', function(done) {
@@ -101,7 +101,7 @@ describe('In IAM module', function() {
                 .delete()
                 .should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         it('it is possible update a group', function(done) {
@@ -149,10 +149,10 @@ describe('In IAM module', function() {
                 .remove(scope3)
                 .should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
-        it('an scope is deleted an it dissapear from the group', function(done) {
+        it('an scope is deleted and it dissapear from the group', function(done) {
             var group = getGroup(Date.now());
             var id;
             var scopeId;
@@ -227,7 +227,7 @@ describe('In IAM module', function() {
                 .delete()
                 .should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         it('it is possible invoke getAll operation without params', function(done) {
@@ -266,7 +266,7 @@ describe('In IAM module', function() {
                 .delete()
                 .should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
     });
 });

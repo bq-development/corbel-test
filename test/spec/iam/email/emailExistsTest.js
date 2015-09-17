@@ -26,8 +26,9 @@ describe('In IAM module', function() {
         });
 
         after(function(done){
-            corbelTest.common.iam.deleteUser(userId, corbelDriver)
-                .should.be.eventually.fulfilled.and.notify(done);
+            corbelDriver.iam.user(userId)
+            .delete()
+            .should.be.eventually.fulfilled.and.notify(done);
         });
 
         describe('in getting users id by email', function () {

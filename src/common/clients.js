@@ -57,25 +57,45 @@ function loginAll() {
     return Promise.all(promises);
 }
 
-function loginAsRandomUser(driver) {
+function loginAsRandomUser() {
+    var createDriver = arguments[0];
+    var loginDriver = arguments[1] || createDriver;
     var iamUtils = require('./iam');
-    return iamUtils.createUsers(driver, 1).then(function(users) {
+    var user;
+    return iamUtils.createUsers(createDriver, 1).then(function(users) {
         // default client scopes
+        user = users[0];
         var params = {
             claims: {
-                'basic_auth.username': users[0].username,
-                'basic_auth.password': users[0].password
+                'basic_auth.username': user.username,
+                'basic_auth.password': user.password
             }
         };
-        return driver.iam.token().create(params);
+        return loginDriver.iam.token().create(params);
+    }).then(function(response) {
+        return {
+            token: response.data,
+            user: user
+        };
     });
+
 }
 
+function loginUser(driver, username, password) {
+    var params = {
+        claims: {
+            'basic_auth.username': username,
+            'basic_auth.password': password
+        }
+    };
+    return driver.iam.token().create(params);
+}
 
 module.exports = {
     login: login,
     loginAll: loginAll,
     loginAsRandomUser: loginAsRandomUser,
+    loginUser: loginUser,
     drivers: drivers,
     logins: logins,
     tokens: tokens
