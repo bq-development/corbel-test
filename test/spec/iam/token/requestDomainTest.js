@@ -112,9 +112,10 @@ describe('In IAM module when requests an access token', function() {
 
         before(function(done) {
 
-            corbelTest.common.iam.createDomain(driverRootClient, domain)
-                .then(function(response) {
-                    domainId = response.data.id;
+            driverRootClient.iam.domain()
+            .create(domain)
+                .then(function(id) {
+                    domainId = id;
                 })
                 .should.be.eventually.fulfilled
                 .should.notify(done);
@@ -176,18 +177,25 @@ describe('In IAM module when requests an access token', function() {
 
         before(function(done) {
 
-            corbelTest.common.iam.createDomain(driverRootClient, domain)
-                .then(function(response) {
-                    domainId = response.data.id;
-                    return corbelTest.common.iam
-                        .createClientDomain(driverRootClient, domainId, client)
+            driverRootClient.iam.domain()
+            .create(domain)
+                .then(function(id) {
+                    domainId = id;
+                    return driverRootClient.iam.client(domainId)
+                        .create(client)
+                        .should.be.eventually.fulfilled;
+                })
+                .then(function(id) {
+                    clientId = id;
+
+                    return driverRootClient.iam.client(domainId, clientId)
+                        .get()
                         .should.be.eventually.fulfilled;
                 })
                 .then(function(response) {
                     clientSecret = response.data.key;
-                    clientId = response.data.id;
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
         });
 
         after(function(done) {

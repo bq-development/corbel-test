@@ -24,7 +24,8 @@ describe('In IAM module, testing username endpoint ', function() {
     });
 
     after(function(done){
-        corbelTest.common.iam.deleteUser(userId, corbelDriver)
+        corbelDriver.iam.user(userId)
+        .delete()
         .should.be.eventually.fulfilled.and.notify(done);
     });
 
