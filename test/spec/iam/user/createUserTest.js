@@ -37,11 +37,15 @@ describe('In IAM module', function() {
             .should.eventually.be.fulfilled.and.notify(done);
         });
 
+        var createUser = function(user){
+            return corbelDriver.iam.user()
+            .create(user)
+            .should.eventually.be.fulfilled;
+        };
+
         it('basic user is created', function(done) {
 
-            corbelDriver.iam.user()
-            .create(user)
-            .should.eventually.be.fulfilled
+            createUser(user)
             .then(function(id) {
                 userId = id;
                 expect(userId).not.to.be.equal(undefined);
@@ -60,9 +64,7 @@ describe('In IAM module', function() {
                 notificationEnabled: true
             };
 
-            corbelDriver.iam.user()
-            .create(user)
-            .should.eventually.be.fulfilled
+            createUser(user)
             .then(function(id) {
                 userId = id;
                 expect(userId).not.to.be.equal(undefined);
@@ -89,9 +91,7 @@ describe('In IAM module', function() {
                 notificationEnabled: true
             };
 
-            corbelDriver.iam.user()
-            .create(user)
-            .should.eventually.be.fulfilled
+            createUser(user)
             .then(function(id) {
                 userId = id;
                 expect(userId).not.to.be.equal(undefined);
@@ -128,11 +128,9 @@ describe('In IAM module', function() {
         });
 
         it('basic user is created with differences between email and username', function(done) {
-            user.username = 'differentUsername';
+            user.username = 'differentUsername' +random;
 
-            corbelDriver.iam.user()
-            .create(user)
-            .should.eventually.be.fulfilled
+            createUser(user)
             .then(function(id) {
                 userId = id;
                 expect(userId).not.to.be.equal(undefined);
@@ -146,9 +144,7 @@ describe('In IAM module', function() {
                     'oauthId': random
             };
 
-            corbelDriver.iam.user()
-            .create(user)
-            .should.eventually.be.fulfilled
+            createUser(user)
             .then(function(id) {
                 userId = id;
                 expect(userId).not.to.be.equal(undefined);
@@ -162,9 +158,7 @@ describe('In IAM module', function() {
                     'oauthId': random
             };
 
-            corbelDriver.iam.user()
-            .create(user)
-            .should.eventually.be.fulfilled
+            createUser(user)
             .then(function(id) {
                 userId = id;
                 expect(userId).not.to.be.equal(undefined);
@@ -178,9 +172,7 @@ describe('In IAM module', function() {
                     'oauthId': random
             };
 
-            corbelDriver.iam.user()
-            .create(user)
-            .should.eventually.be.fulfilled
+            createUser(user)
             .then(function(id) {
                 userId = id;
                 expect(userId).not.to.be.equal(undefined);
