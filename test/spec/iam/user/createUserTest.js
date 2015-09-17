@@ -24,17 +24,17 @@ describe('In IAM module', function() {
         afterEach(function(done) {
             corbelDriver.iam.user(userId)
             .delete()
-            .should.eventually.be.fulfilled
+            .should.be.eventually.fulfilled
             .then(function() {
                 return corbelDriver.iam.user(userId)
                 .get()
-                .should.eventually.be.rejected;
+                .should.be.eventually.rejected;
             })
             .then(function(e) {
                 expect(e).to.have.property('status', 404);
                 expect(e).to.have.deep.property('data.error', 'not_found');
             })
-            .should.eventually.be.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         it('basic user is created', function(done) {
