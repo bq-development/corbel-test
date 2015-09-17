@@ -70,7 +70,35 @@ describe('In IAM module when requests an access token', function() {
                     )
                 })
                 .should.be.eventually.fulfilled.and.notify(done);
-        });
+        }
+    );     
+
+    it('if our system clock is slow, server replies invalid_time', function(done) {
+        var requestDomain = 'silkroad-qa';
+        var claims = {
+            'iss': claimDefault.clientId,
+            'request_domain': requestDomain,
+            'aud': aud,
+            'scope': claimDefault.scopes,
+            'version': version,
+            'exp': 1,
+            'iat': 2
+        };
+
+        testDriver.iam.token().create({
+            jwt: corbel.jwt.generate(
+                claims,
+                claimDefault.clientSecret,
+                jwtAlgorithm
+            )
+        })
+        .should.be.eventually.rejected
+        .then(function(e) {
+            expect(e).to.have.property('status', 401);
+            expect(e).to.have.deep.property('data.error', 'invalid_time');
+        })
+        .should.be.eventually.fulfilled.and.notify(done);
+    });
 
     describe('with not allowed request domain ', function() {
 
