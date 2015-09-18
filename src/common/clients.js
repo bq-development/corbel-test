@@ -71,11 +71,21 @@ function loginAsRandomUser(driver) {
     });
 }
 
+function loginUser(driver, username, password) {
+    var params = {
+        claims: {
+            'basic_auth.username': username,
+            'basic_auth.password': password
+        }
+    };
+    return driver.iam.token().create(params);
+}
 
 module.exports = {
     login: login,
     loginAll: loginAll,
     loginAsRandomUser: loginAsRandomUser,
+    loginUser: loginUser,
     drivers: drivers,
     logins: logins,
     tokens: tokens
