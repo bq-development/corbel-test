@@ -58,6 +58,7 @@ describe('In IAM module', function() {
 
         describe('When request delete me with client token ', function() {
 
+
             before(function(done) {
                 app.session.destroy();
                 var getExp = function() {
