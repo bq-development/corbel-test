@@ -13,7 +13,7 @@ describe('In RESOURCES module', function() {
             date : Date.now()
         };
 
-        before(function(done) {
+        beforeEach(function(done) {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
             corbelDriver.resources.collection(COLLECTION_A)
             .add(TEST_OBJECT).
@@ -31,7 +31,7 @@ describe('In RESOURCES module', function() {
             .should.notify(done);
         });
 
-        after(function(done) {
+        afterEach(function(done) {
             corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
             .should.be.eventually.fulfilled
             .then(function() {
@@ -41,7 +41,7 @@ describe('In RESOURCES module', function() {
             should.eventually.be.fulfilled.notify(done);
         });
 
-        it('Creates a new registry in the relation', function(done){
+        it('a registry in the relation is created and updated', function(done){
             corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
             .add(idResourceB, {
                 myextrafield : 'test'
@@ -53,25 +53,22 @@ describe('In RESOURCES module', function() {
             })
             .should.be.fulfilled
             .then(function(response){
-                expect(response.data).to.have.property('myextrafield').to.be.equals('test');
+                expect(response).to.have.deep.property('data.myextrafield', 'test');
             })
-            .should.notify(done);
-        });
-
-        it('Updates an existing registry in the relation', function(done){
-            corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
-            .add(idResourceB, {
-                newfield : 'testnewField'
+            .then(function(){
+                return corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
+                .add(idResourceB, {
+                    myextrafield : 'updatedField'
+                })
+                .should.be.eventually.fulfilled;
             })
-            .should.be.fulfilled
             .then(function(response){
                 return corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
                     .get(idResourceB);
             })
             .should.be.fulfilled
             .then(function(response){
-                expect(response.data).to.have.property('myextrafield').to.be.equals('test');
-                expect(response.data).to.have.property('newfield').to.be.equals('testnewField');
+                expect(response).to.have.deep.property('data.myextrafield', 'updatedField');
             })
             .should.notify(done);
         });
