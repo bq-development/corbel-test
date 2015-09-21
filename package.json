@@ -30,12 +30,12 @@
     "karma-mocha-reporter": "^1.0.2",
     "karma-phantomjs-launcher": "^0.2.1",
     "karma-sinon": "^1.0.4",
+    "karma-tap-reporter": "0.0.4",
     "load-grunt-tasks": "^0.6.0",
     "mocha": "^2.2.5",
     "q": "^1.4.1",
     "sinon": "^1.15.4",
     "time-grunt": "^1.2.1"
-
   },
   "dependencies": {
     "lodash": "^3.10.1",

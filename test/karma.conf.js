@@ -57,7 +57,8 @@ module.exports = function(config) {
             'karma-mocha-debug',
             'karma-mocha-reporter',
             'karma-chai-plugins',
-            'karma-sinon'
+            'karma-sinon',
+            'karma-tap-reporter'
         ],
         phantomjsLauncher: {
             flags: [
@@ -82,7 +83,11 @@ module.exports = function(config) {
 
         // test results reporter to use
         // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-        reporters: ['mocha'],
+        reporters: ['tap', 'mocha'],
+
+        tapReporter: {
+          outputFile: '.report/report.tap'
+        },
 
         // level of logging
         // possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG
