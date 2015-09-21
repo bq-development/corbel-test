@@ -51,5 +51,27 @@ describe('In RESOURCES module', function() {
             })
             .should.notify(done);
         });
+
+        it('an error [400] is returned while trying to create a relation with unnexistent resource', function(done) {
+            corbelDriver.resources.relation(COLLECTION_A, 'notExistingId', COLLECTION_B)
+            .add(idResourceB)
+            .should.eventually.be.rejected
+            .then(function(e) {
+                expect(e).to.have.property('status', 400);
+                expect(e).to.have.deep.property('data.error', 'bad_request');
+            })
+            .should.notify(done);
+        });
+
+        it('an error [400] is returned while trying to create a relation without relationId', function(done) {
+            corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
+            .add(undefined)
+            .should.eventually.be.rejected
+            .then(function(e) {
+                expect(e).to.have.property('status', 400);
+                expect(e).to.have.deep.property('data.error', 'bad_request');
+            })
+            .should.notify(done);
+        });
     });
 });
