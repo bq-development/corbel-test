@@ -57,6 +57,24 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled.and.notify(done);
             });
 
+            it('in a _updatedAt field', function(done) {
+                var params = {
+                    sort: {
+                        _updatedAt: 'asc'
+                    }
+                };
+
+                corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(response.data).have.length(amount);
+                    expect(corbelTest.common.resources.checkSortingAsc(response.data, '_updatedAt'))
+                        .to.be.equal(true);
+                })
+                .should.be.eventually.fulfilled.and.notify(done);
+            });
+
             it('in a numeric field and aplying query parameters', function(done) {
                 var params = {
                     sort: {
@@ -116,6 +134,24 @@ describe('In RESOURCES module', function() {
                 .then(function(response) {
                     expect(response.data).have.length(amount);
                     expect(corbelTest.common.resources.checkSortingDesc(response.data, 'stringField'))
+                        .to.be.equal(true);
+                })
+                .should.be.eventually.fulfilled.and.notify(done);
+            });
+
+            it('in a _updatedAt field', function(done) {
+                var params = {
+                    sort: {
+                        _updatedAt: 'desc'
+                    }
+                };
+
+                corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(response.data).have.length(amount);
+                    expect(corbelTest.common.resources.checkSortingDesc(response.data, '_updatedAt'))
                         .to.be.equal(true);
                 })
                 .should.be.eventually.fulfilled.and.notify(done);
