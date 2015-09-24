@@ -3,15 +3,6 @@ describe('In IAM module', function() {
     describe('while testing get user profile', function() {
         var corbelDriver;
         var corbelRootDriver;
-        var random;
-        var userId;
-        var emailDomain = '@funkifake.com';
-        var user = {
-            'firstName': 'userGet',
-            'email': 'user.get.',
-            'username': 'user.get.',
-            'password': 'pass'
-        };
 
         before(function() {
             corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
