@@ -79,7 +79,7 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('a user is got through admin driver', function(done) {
+        it('all users are got through admin driver', function(done) {
 
             var user2Id;
             random = Date.now();
