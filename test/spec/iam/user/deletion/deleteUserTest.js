@@ -11,7 +11,7 @@ describe('In IAM module', function() {
         };
 
         before(function() {
-            corbelDriver = corbelTest.drivers['ADMIN_USER'];
+            corbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
         });
 
         beforeEach(function(done) {
