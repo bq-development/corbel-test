@@ -39,6 +39,80 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled.and.notify(done);
             });
 
+            it.skip('in the min aggregation case, the match element is returned', function(done) {
+                var params = {
+                    aggregation: {
+                        '$min': 'intField'
+                    }
+                };
+
+                corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.min', 100);
+                })
+                .should.notify(done);
+            });
+
+            it.skip('in the max aggregation case, the match element is returned', function(done) {
+                var params = {
+                    aggregation: {
+                        '$max': 'intField'
+                    }
+                };
+
+                corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.max', amount * 100);
+                })
+                .should.notify(done);
+            });
+
+            it.skip('with max aggregation over a query, the match element is returned', function(done) {
+                var params = {
+                    aggregation: {
+                        '$max': 'intField'
+                    },
+                    query: [{
+                        '$lte': {
+                            intField: 1000
+                        }
+                    }]
+                };
+
+                corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.max', 1000);
+                })
+                .should.be.eventually.fulfilled.and.notify(done);
+            });
+
+            it.skip('with min aggregation over a query, the match element is returned', function(done) {
+                var params = {
+                    aggregation: {
+                        '$min': 'intField'
+                    },
+                    query: [{
+                        '$gte': {
+                            intField: 1000
+                        }
+                    }]
+                };
+
+                corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.min', 1000);
+                })
+                .should.be.eventually.fulfilled.and.notify(done);
+            });
+
             it('with count aggregation over a query, the elements that match the query are returned', function(done) {
                 var params = {
                     aggregation: {
