@@ -19,7 +19,7 @@ describe('In IAM module', function() {
             corbelDefaultDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
             var random = Date.now();
 
-            corbelDriver.iam.user()
+            corbelDriver.iam.users()
             .create({
                 'firstName': deleteUserMe.firstName,
                 'lastName': deleteUserMe.lastName,

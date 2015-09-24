@@ -18,7 +18,7 @@ describe('In IAM module', function() {
             username = 'user.updateMe' + random + '@funkifake.com';
             password = 'passUpdateMe';
 
-            corbelDriver.iam.user()
+            corbelDriver.iam.users()
             .create({
                 'firstName': 'userUpdateMe',
                 'lastName': 'userUpdateMe',

@@ -18,7 +18,7 @@ describe('In IAM module', function() {
             username = 'user.signOut' + random + '@funkifake.com';
             password = 'passSignOut';
 
-            corbelDriver.iam.user()
+            corbelDriver.iam.users()
             .create({
                 'firstName': 'usersignOut',
                 'lastName': 'usersignOut2',

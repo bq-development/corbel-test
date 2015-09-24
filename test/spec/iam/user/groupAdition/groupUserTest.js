@@ -10,7 +10,7 @@ describe('In IAM module', function() {
             corbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
             random = Date.now();
 
-            corbelDriver.iam.user()
+            corbelDriver.iam.users()
             .create({
                 'firstName':'firstNameTest',
                 'email': 'userTest' + random + domainEmail,

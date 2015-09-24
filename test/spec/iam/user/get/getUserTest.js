@@ -21,7 +21,7 @@ describe('In IAM module', function() {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
             random = Date.now();
 
-            corbelDriver.iam.user()
+            corbelDriver.iam.users()
             .create({
                 'firstName': user.firstName + random,
                 'email': user.email + random + emailDomain,
@@ -84,7 +84,7 @@ describe('In IAM module', function() {
             var user2Id;
             random = Date.now();
 
-            corbelDriver.iam.user()
+            corbelDriver.iam.users()
             .create({
                 'firstName': user.firstName + random,
                 'email': user.email + random + emailDomain,
@@ -95,7 +95,7 @@ describe('In IAM module', function() {
             .then(function(id) {
                 user2Id = id;
 
-                return corbelRootDriver.iam.user()
+                return corbelRootDriver.iam.users()
                 .get()
                 .should.be.eventually.fulfilled;
             })
@@ -128,7 +128,7 @@ describe('In IAM module', function() {
                 }]
             };
 
-            corbelRootDriver.iam.user()
+            corbelRootDriver.iam.users()
             .get(params)
             .should.be.eventually.fulfilled
             .then(function(response) {
@@ -146,7 +146,7 @@ describe('In IAM module', function() {
                 }]
             };
 
-            corbelRootDriver.iam.user()
+            corbelRootDriver.iam.users()
             .get(params)
             .should.be.eventually.fulfilled
             .then(function(response) {
@@ -164,7 +164,7 @@ describe('In IAM module', function() {
                 }]
             };
 
-            corbelRootDriver.iam.user()
+            corbelRootDriver.iam.users()
             .get(params)
             .should.be.eventually.fulfilled
             .then(function(response) {
@@ -186,7 +186,7 @@ describe('In IAM module', function() {
             .should.be.eventually.fulfilled
             .then(function(response){
                 users = response;
-                return corbelRootDriver.iam.user()
+                return corbelRootDriver.iam.users()
                 .get(params)
                 .should.be.eventually.fulfilled;
             })

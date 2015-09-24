@@ -30,14 +30,14 @@ describe('In IAM module', function() {
 
         it('an error is returned while trying to create an user with an email that already exists', function(done) {
 
-            corbelDriver.iam.user()
+            corbelDriver.iam.users()
             .create(user)
             .should.be.eventually.fulfilled
             .then(function(id){
                 userId = id;
                 user.username = user.username + emailDomain;
 
-                return corbelDriver.iam.user()
+                return corbelDriver.iam.users()
                 .create(user)
                 .should.be.eventually.rejected;
             })
@@ -51,13 +51,13 @@ describe('In IAM module', function() {
 
         it('an error is returned while trying to create an user with an username that already exists', function(done) {
 
-            corbelDriver.iam.user()
+            corbelDriver.iam.users()
             .create(user)
             .should.be.eventually.fulfilled
             .then(function(id){
                 userId = id;
 
-                return corbelDriver.iam.user()
+                return corbelDriver.iam.users()
                 .create(user);
             })
             .should.eventually.be.rejected
@@ -72,7 +72,7 @@ describe('In IAM module', function() {
         it('an error [422] is returned while trying to create an user without email entity', function(done) {
             delete user.email;
 
-            corbelDriver.iam.user()
+            corbelDriver.iam.users()
             .create({
                 'firstName': 'firstname',
                 'username': 'username'
@@ -88,7 +88,7 @@ describe('In IAM module', function() {
         it('an error [422] is returned while trying to create an user without username entity', function(done) {
             delete user.username;
 
-            corbelDriver.iam.user()
+            corbelDriver.iam.users()
             .create({
                 'firstName': 'firstname',
                 'email': 'email@funkifake.com'
@@ -104,7 +104,7 @@ describe('In IAM module', function() {
         it('an error [403] is returned while trying to create an user with invalid scopes entity', function(done) {
             user.scopes = ['iam:user:xxx', 'resources:music:streaming'];
 
-            corbelDriver.iam.user()
+            corbelDriver.iam.users()
             .create(user)
             .should.eventually.be.rejected
             .then(function(e) {
@@ -120,7 +120,7 @@ describe('In IAM module', function() {
                     'oauthId': random
             };
 
-            corbelDriver.iam.user()
+            corbelDriver.iam.users()
             .create(user)
             .should.eventually.be.fulfilled
             .then(function(id) {
@@ -129,7 +129,7 @@ describe('In IAM module', function() {
                 user.email = 'createUserIam.iam.' + random + emailDomain;
                 user.username = 'createUserIam.iam.' + random + emailDomain;
 
-                return corbelDriver.iam.user()
+                return corbelDriver.iam.users()
                 .create(user)
                 .should.be.eventually.rejected;
             })
@@ -146,7 +146,7 @@ describe('In IAM module', function() {
                     'oauthId': random
             };
 
-            corbelDriver.iam.user()
+            corbelDriver.iam.users()
             .create(user)
             .should.eventually.be.rejected.
             then(function(e) {

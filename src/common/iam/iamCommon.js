@@ -59,7 +59,7 @@ function createUsers(driver, amount) {
 }
 
 function createUser(userData, driver){
-    return driver.iam.user().create(userData).then(function(userId) {
+    return driver.iam.users().create(userData).then(function(userId) {
         userData.id = userId;
         return userData;
     });

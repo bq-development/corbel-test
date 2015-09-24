@@ -48,7 +48,7 @@ describe('In IAM module', function() {
 
         it('an error is returned while trying to get all users with unauthorized driver', function(done) {
 
-            corbelDriver.iam.user()
+            corbelDriver.iam.users()
             .get()
             .should.be.eventually.rejected
             .then(function(e) {

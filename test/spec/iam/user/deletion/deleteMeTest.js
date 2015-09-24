@@ -22,7 +22,7 @@ describe('In IAM module', function() {
         beforeEach(function(done) {
             var random = Date.now();
 
-            corbelRootDriver.iam.user()
+            corbelRootDriver.iam.users()
             .create({
                 'firstName': deleteUserMe.firstName,
                 'lastName': deleteUserMe.lastName,

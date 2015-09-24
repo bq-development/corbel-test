@@ -18,7 +18,7 @@ describe('In IAM module, testing  errors in add identity', function() {
             'username': 'add.identity.' + random + domainEmail,
             'scopes': ['iam:user:create', 'resources:music:read_catalog', 'resources:music:streaming']
         };
-        corbelDriver.iam.user()
+        corbelDriver.iam.users()
         .create(user)
         .should.be.eventually.fulfilled
         .then(function(id) {
@@ -78,7 +78,7 @@ describe('In IAM module, testing  errors in add identity', function() {
                     'username': addIdentityUser2.username + random2 + domainEmail,
                     'scopes': addIdentityUser2.scopes
                 };
-                return corbelDriver.iam.user().create(user2)
+                return corbelDriver.iam.users().create(user2)
                 .should.be.eventually.fulfilled;
             })
             .then(function(id) {

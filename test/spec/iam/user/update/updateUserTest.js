@@ -17,7 +17,7 @@ describe('In IAM module', function() {
         beforeEach(function(done) {
             var random = Date.now();
 
-            corbelDriver.iam.user()
+            corbelDriver.iam.users()
             .create({
                 'firstName': userUpdateTest.firstName,
                 'email': userUpdateTest.email + random + emailDomain,

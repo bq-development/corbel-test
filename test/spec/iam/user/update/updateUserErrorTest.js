@@ -14,7 +14,7 @@ describe('In IAM module', function() {
         var createUser = function() {
             random = Date.now();
 
-            return corbelDriver.iam.user()
+            return corbelDriver.iam.users()
             .create({
                 'firstName': userUpdateTest.firstName,
                 'email': userUpdateTest.email + random + emailDomain,

@@ -18,7 +18,7 @@ describe('In IAM module, testing add identity', function() {
             'scopes': ['iam:user:create', 'resources:music:read_catalog', 'resources:music:streaming']
         };
 
-        corbelDriver.iam.user()
+        corbelDriver.iam.users()
         .create(user)
         .should.be.eventually.fulfilled
         .then(function(id) {

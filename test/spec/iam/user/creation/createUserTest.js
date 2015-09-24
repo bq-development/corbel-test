@@ -38,7 +38,7 @@ describe('In IAM module', function() {
         });
 
         var createUser = function(user){
-            return corbelDriver.iam.user()
+            return corbelDriver.iam.users()
             .create(user)
             .should.eventually.be.fulfilled;
         };
