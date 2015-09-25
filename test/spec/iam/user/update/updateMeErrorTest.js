@@ -70,5 +70,24 @@ describe('In IAM module', function() {
             })
             .should.notify(done);
         });
+
+        it('an error [401] is returned while trying to use user("me").update with no logged user', function(done) {
+
+            corbelDriver.iam.user('me')
+            .signOut()
+            .should.be.eventually.fulfilled
+            .then(function(){
+                return corbelDriver.iam.user('me')
+                .update({
+                    'firstName': 'user Modified Me'
+                })
+                .should.be.eventually.rejected;
+            })
+            .then(function(e) {
+                expect(e).to.have.property('status', 401);
+                expect(e).to.have.deep.property('data.error', 'unauthorized');
+            })
+            .should.notify(done);
+        });
     });
 });

@@ -67,6 +67,18 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
+        it('a logged user is got through user().get()', function(done) {
+
+            corbelDriver.iam.user()
+            .get()
+            .should.be.eventually.fulfilled
+            .then(function(response) {
+                expect(response).to.have.deep.property('data.firstName', user.firstName + random);
+                expect(response).to.have.deep.property('data.id', userId);
+            })
+            .should.notify(done);
+        });
+
         it('a user is got through admin driver and userId', function(done) {
 
             corbelRootDriver.iam.user(userId)
