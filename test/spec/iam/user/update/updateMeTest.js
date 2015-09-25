@@ -105,6 +105,23 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
+        it('user password can not be updated through updateMe', function(done) {
+            corbelDriver.iam.user()
+            .updateMe({
+                'password': 'newPass'
+            })
+            .should.be.eventually.fulfilled
+            .then(function() {
+                return corbelRootDriver.iam.user(userId)
+                .get()
+                .should.be.eventually.fulfilled;
+            })
+            .then(function(response) {
+                expect(response).not.to.have.deep.property('data.password');
+            })
+            .should.notify(done);
+        });
+
         it('user email is updated through updateMe', function(done) {
             var newEmail = 'modifiedemail@funkifake.com';
             corbelDriver.iam.user()

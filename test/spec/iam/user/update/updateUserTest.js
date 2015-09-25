@@ -4,10 +4,11 @@ describe('In IAM module', function() {
         var corbelDriver;
         var userId;
         var emailDomain = '@funkifake.com';
-        var userUpdateTest = {
+        var user = {
             'firstName': 'userUpdate',
             'email': 'user.update.',
-            'username': 'user.update.'
+            'username': 'user.update.',
+            'password': 'pass'
         };
 
         before(function() {
@@ -19,9 +20,10 @@ describe('In IAM module', function() {
 
             corbelDriver.iam.users()
             .create({
-                'firstName': userUpdateTest.firstName,
-                'email': userUpdateTest.email + random + emailDomain,
-                'username': userUpdateTest.username + random + emailDomain
+                'firstName': user.firstName,
+                'email': user.email + random + emailDomain,
+                'username': user.username + random + emailDomain,
+                'password': user.password
             })
             .should.be.eventually.fulfilled
             .then(function(id) {
@@ -98,6 +100,24 @@ describe('In IAM module', function() {
             })
             .then(function(user) {
                 expect(user).to.have.deep.property('data.email', newEmail);
+            })
+            .should.notify(done);
+        });
+
+        it.only('user password can not be updated', function(done) {
+
+            corbelDriver.iam.user(userId)
+            .update({
+                'password': 'newPass'
+            })
+            .should.be.eventually.fulfilled
+            .then(function() {
+                return corbelDriver.iam.user(userId)
+                .get()
+                .should.be.eventually.fulfilled;
+            })
+            .then(function(user) {
+                expect(user).not.to.have.deep.property('data.password');
             })
             .should.notify(done);
         });
