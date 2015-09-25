@@ -85,6 +85,18 @@ describe('In IAM module', function() {
             should.notify(done);
         });
 
+        it('a user profile is got through user()', function(done) {
+
+            corbelDriver.iam.user()
+            .getProfile()
+            .then(function(response) {
+                expect(response).to.have.deep.property('data.username', user.username + random);
+                expect(response).to.have.deep.property('data.firstName', user.firstName + random);
+                expect(response).to.have.deep.property('data.lastName', user.lastName);
+                expect(response).to.have.deep.property('data.email', user.email + random + domainEmail);
+            }).
+            should.notify(done);
+        });
 
         it('all users profile are got through default driver', function(done) {
 

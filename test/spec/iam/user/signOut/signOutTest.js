@@ -52,7 +52,7 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('the logged user is signed out', function(done) {
+        it('the logged user is signed out using "me"', function(done) {
             corbelDriver.iam.user('me')
             .get()
             .should.be.eventually.fulfilled
@@ -60,6 +60,29 @@ describe('In IAM module', function() {
                 expect(response).to.have.deep.property('data.id', userId);
 
                 return corbelDriver.iam.user('me')
+                .signOut()
+                .should.be.eventually.fulfilled;
+            })
+            .then(function() {
+                return corbelDriver.iam.user('me')
+                .get()
+                .should.be.eventually.rejected;
+            })
+            .then(function(e) {
+                expect(e).to.have.property('status', 401);
+                expect(e).to.have.deep.property('data.error', 'unauthorized');
+            })
+            .should.notify(done);
+        });
+
+        it('the logged user is signed out using user()', function(done) {
+            corbelDriver.iam.user('me')
+            .get()
+            .should.be.eventually.fulfilled
+            .then(function(response) {
+                expect(response).to.have.deep.property('data.id', userId);
+
+                return corbelDriver.iam.user()
                 .signOut()
                 .should.be.eventually.fulfilled;
             })
