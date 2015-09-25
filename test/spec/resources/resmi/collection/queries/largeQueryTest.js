@@ -1,6 +1,6 @@
 describe('In RESOURCES module', function() {
 
-    describe('In RESMI module, testing collection large queries,', function() {
+    describe('In RESMI module', function() {
         var corbelDriver;
         var COLLECTION = 'test:CorbelJSObjectQuery' + Date.now();
         var amount = 10;
@@ -17,9 +17,9 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        describe('when get collection using the equals query language', function() {
+        describe('while testing collection large queries', function() {
 
-            it('returns elements satisfying the numeric equality', function(done) {
+            it('elements which satisfie the queries are returned', function(done) {
                 var params = {
                     query: [],
                     pagination: {
