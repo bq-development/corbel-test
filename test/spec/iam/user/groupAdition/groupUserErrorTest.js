@@ -63,7 +63,7 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('an error is returned while trying to add a group to a user without authorithation', function(done) {
+        it('an error is returned while trying to add a group to a user without authorization', function(done) {
             var corbelUnauthorizedDriver = corbelTest.drivers['DEFAULT_USER'];
             
             corbelUnauthorizedDriver.iam.user(userId)
@@ -88,7 +88,7 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('an error is returned while trying to add a group to a user without authorithation', function(done) {
+        it('an error is returned while trying to delete a group to a user without authorization', function(done) {
             var corbelUnauthorizedDriver = corbelTest.drivers['DEFAULT_USER'];
             
             corbelUnauthorizedDriver.iam.user(userId)

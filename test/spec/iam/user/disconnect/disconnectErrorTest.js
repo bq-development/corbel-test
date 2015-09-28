@@ -17,5 +17,27 @@ describe('In IAM module', function() {
             })
             .should.notify(done);
         });
+
+        it('an error [401] is returned while trying to disconnect a non logged user using "me"', function(done) {
+            corbelRootDriver.iam.user('me')
+            .disconnect()
+            .should.be.eventually.rejected
+            .then(function(e) {
+                expect(e).to.have.property('status', 401);
+                expect(e).to.have.deep.property('data.error', 'unauthorized');
+            })
+            .should.notify(done);
+        });
+
+        it('an error [401] is returned while trying to disconnect a non logged user', function(done) {
+            corbelRootDriver.iam.user()
+            .disconnect()
+            .should.be.eventually.rejected
+            .then(function(e) {
+                expect(e).to.have.property('status', 401);
+                expect(e).to.have.deep.property('data.error', 'unauthorized');
+            })
+            .should.notify(done);
+        });
     });
 });

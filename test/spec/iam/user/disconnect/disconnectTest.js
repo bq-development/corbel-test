@@ -52,7 +52,7 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('the logged user is disconnected', function(done) {
+        it('the logged user is disconnected using "me"', function(done) {
             corbelDriver.iam.user('me')
             .get()
             .should.be.eventually.fulfilled
@@ -75,7 +75,30 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('and admin user can disconnect a logged user', function(done) {
+        it('the logged user is disconnected', function(done) {
+            corbelDriver.iam.user()
+            .get()
+            .should.be.eventually.fulfilled
+            .then(function(response) {
+                expect(response).to.have.deep.property('data.id', userId);
+
+                return corbelDriver.iam.user()
+                .disconnect()
+                .should.be.eventually.fulfilled;
+            })
+            .then(function() {
+                return corbelDriver.iam.user()
+                .get()
+                .should.be.eventually.rejected;
+            })
+            .then(function(e) {
+                expect(e).to.have.property('status', 401);
+                expect(e).to.have.deep.property('data.error', 'unauthorized');
+            })
+            .should.notify(done);
+        });
+
+        it('an admin user can disconnect a logged user', function(done) {
             corbelDriver.iam.user('me')
             .get()
             .should.be.eventually.fulfilled
