@@ -6,6 +6,14 @@ Reviewed-on: http://git.dev.bqsoftware.net/7073
 Project: corbel-test
 Branch: refs/heads/master
 
+Code-Review+2: delCerroCristian <cristian.delcerro@bqreaders.com>
+Verified+1: Jenkins <dev@bq.com>
+Submitted-by: delCerroCristian <cristian.delcerro@bqreaders.com>
+Submitted-at: Thu, 13 Aug 2015 11:32:53 +0000
+Reviewed-on: http://git.dev.bqsoftware.net/7073
+Project: corbel-test
+Branch: refs/heads/master
+
 Code-Review+2: <cristian.delcerro@bqreaders.com>
 Verified+1: Jenkins <dev@bq.com>
 Submitted-by: <cristian.delcerro@bqreaders.com>
