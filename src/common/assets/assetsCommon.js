@@ -19,7 +19,30 @@ function getAsset(scopes) {
     };
 }
 
+function createAsset(count, userId) {
+    return {
+        userId: userId,
+        name: 'createAssetTest' + count,
+        productId: String(Date.now()),
+        expire: getExpire(),
+        active: true,
+        scopes: ['custom:test;type=Custom;customId=' + count]
+    };
+}
+
+function createMultipleAssets(driver, count, userId) {
+    var promises = [];
+    for (var i = 0; i <= count; i++) {
+        var promise = driver.assets().create(createAsset(i, userId));
+        promises.push(promise);
+    }
+    return Promise.all(promises);
+}
+
+
 module.exports = {
     getExpire : getExpire,
-    getAsset : getAsset
+    getAsset : getAsset,
+    createAsset : createAsset,
+    createMultipleAssets : createMultipleAssets
 };
