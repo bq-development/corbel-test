@@ -1,5 +1,5 @@
 describe('In RESOURCES module', function() {
-    
+
     describe('In RESMI module, testing relation queries, ', function() {
         var corbelDriver;
         var TIMESTAMP = Date.now();
@@ -13,7 +13,7 @@ describe('In RESOURCES module', function() {
         describe('Relation has queries and when ', function() {
             var amount = 5;
             var idResourceInA;
-            var idsResourecesInB;
+            var idsResourcesInB;
 
             before(function(done) {
                 corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION_A, 1)
@@ -25,10 +25,10 @@ describe('In RESOURCES module', function() {
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(ids) {
-                    idsResourecesInB = ids;
+                    idsResourcesInB = ids;
 
                     return corbelTest.common.resources.createRelationFromSingleObjetToMultipleObject
-                        (corbelDriver, COLLECTION_A, idResourceInA, COLLECTION_B, idsResourecesInB)
+                    (corbelDriver, COLLECTION_A, idResourceInA, COLLECTION_B, idsResourcesInB)
                     .should.be.eventually.fulfilled;
                 })
                 .should.be.eventually.fulfilled.notify(done);
@@ -45,7 +45,40 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled.notify(done);
             });
 
-            describe('get relation with ', function() {
+            describe('while testing relation large queries', function() {
+
+                it('elements which satisfy the queries are returned', function(done) {
+                    var params = {
+                        query: [],
+                        pagination: {
+                            page: 0,
+                            pageSize: 20
+                        }
+                    };
+
+                    var query = {
+                        '$in': {
+                            '_dst_id': []
+                        }
+                    };
+
+                    for(var i=0;i<500;i++){
+                        query['$in']['_dst_id'].push(COLLECTION_B + '/' + idsResourcesInB[0]);
+                    }
+
+                    params.query.push(query);
+
+                    corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                    .get(null, params)
+                    .should.be.eventually.fulfilled
+                    .then(function(response) {
+                        expect(response.data.length).to.be.equal(1);
+                    })
+                    .should.notify(done);
+                });
+            });
+
+            describe('get relation with', function() {
 
                 describe('query language equals ', function() {
 
@@ -207,15 +240,15 @@ describe('In RESOURCES module', function() {
 
                     it('successes returning elements satisfying the request', function(done) {
                         var params = {
-                                query: [{
-                                    '$gte': {
-                                        intCount: 200
-                                    }
+                            query: [{
+                                '$gte': {
+                                    intCount: 200
+                                }
                             }, {
-                                    '$lte': {
-                                        intCount: 400
-                                    }
-                                }]
+                                '$lte': {
+                                    intCount: 400
+                                }
+                            }]
                         };
 
                         corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
@@ -247,7 +280,7 @@ describe('In RESOURCES module', function() {
                         .should.be.eventually.fulfilled
                         .then(function(response) {
                             expect(response.data.length).to.be.equal(4);
-                        response.data.forEach(function(element) {
+                            response.data.forEach(function(element) {
                                 expect(element.intCount).not.equal(300);
                             });
                         })
@@ -281,15 +314,15 @@ describe('In RESOURCES module', function() {
 
                     it('successes returning elements satisfying the request', function(done) {
                         var params = {
-                                query: [{
-                                    '$eq': {
-                                        stringSortCut: 'Test Short Cut'
-                                    }
+                            query: [{
+                                '$eq': {
+                                    stringSortCut: 'Test Short Cut'
+                                }
                             }, {
-                                    '$in': {
-                                        ObjectNumber: [3, 5]
-                                    }
-                                }]
+                                '$in': {
+                                    ObjectNumber: [3, 5]
+                                }
+                            }]
                         };
 
                         corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
