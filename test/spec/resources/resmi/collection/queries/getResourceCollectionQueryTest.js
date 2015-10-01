@@ -4,6 +4,7 @@ describe('In RESOURCES module', function() {
         var corbelDriver;
         var COLLECTION = 'test:CorbelJSObjectQuery' + Date.now();
         var amount = 10;
+        var punctQueryValue = 'La sombra. Celín. Tropiquillos. Theros.';
 
         beforeEach(function(done) {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
@@ -91,7 +92,7 @@ describe('In RESOURCES module', function() {
                 var params = {
                     query: [{
                         '$eq': {
-                            punctuationTest: 'La sombra. Celín. Tropiquillos. Theros.'
+                            punctuationTest: punctQueryValue
                         }
                     }]
                 };
@@ -100,8 +101,10 @@ describe('In RESOURCES module', function() {
                 .get(params)
                 .should.be.eventually.fulfilled
                 .then(function(response) {
-                    expect(response.data.length).to.be.equal(10);
-                    expect(response.data[0].punctuationTest).to.be.equal('La sombra. Celín. Tropiquillos. Theros.');
+                    expect(response).to.have.deep.property('data.length', 10);
+                    response.data.forEach(function(resource){
+                        expect(resource).to.have.property('punctuationTest', punctQueryValue);
+                    });
                 })
                 .should.be.eventually.fulfilled.and.notify(done);
             });
@@ -373,7 +376,7 @@ describe('In RESOURCES module', function() {
                 var params = {
                     query: [{
                         '$ne': {
-                            punctuationTest: 'La sombra. Celín. Tropiquillos. Theros.'
+                            punctuationTest: punctQueryValue
                         }
                     }]
                 };
@@ -382,7 +385,7 @@ describe('In RESOURCES module', function() {
                 .get(params)
                 .should.be.eventually.fulfilled
                 .then(function(response) {
-                    expect(response.data.length).to.be.equal(0);
+                    expect(response).to.have.deep.property('data.length', 0);
                 })
                 .should.be.eventually.fulfilled.and.notify(done);
             });
@@ -430,9 +433,7 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled
                 .then(function(response){
                     id = response.data[0].id;
-                })
-                .should.be.eventually.fulfilled
-                .then(function(){
+
                     return corbelDriver.resources.resource(COLLECTION, id)
                     .update(updateParams)
                     .should.be.eventually.fulfilled;
@@ -446,7 +447,7 @@ describe('In RESOURCES module', function() {
                     expect(response.data).to.have.length(1);
                     expect(response.data[0].stringField.match('\\$').length).to.be.above(0);
                 })
-                .should.be.eventually.fulfilled.notify(done);
+                .should.notify(done);
             });
 
             it('returns elements satisfying the request ', function(done) {
@@ -482,8 +483,10 @@ describe('In RESOURCES module', function() {
                 .get(params)
                 .should.be.eventually.fulfilled
                 .then(function(response) {
-                    expect(response.data.length).to.be.equal(10);
-                    expect(response.data[0].punctuationTest).to.be.equal('La sombra. Celín. Tropiquillos. Theros.');
+                    expect(response).to.have.deep.property('data.length', 10);
+                    response.data.forEach(function(resource){
+                        expect(resource).to.have.property('punctuationTest', punctQueryValue);
+                    });
                 })
                 .should.be.eventually.fulfilled.and.notify(done);
             });
