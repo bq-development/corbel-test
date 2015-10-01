@@ -33,6 +33,7 @@ function createdObjectsToQuery(driver, collectionName, amount, extraField) {
             computableField: count + (1 / 3),
             stringSortCut: 'Test Short Cut',
             codingTest: 'ñÑçáéíóúàèìòùâêîôû\'',
+            punctuationTest: 'La sombra. Celín. Tropiquillos. Theros.',
             ObjectNumber: _.range(count + 1),
             ObjectMatch: [{
                 name: 'basic',
