@@ -1,6 +1,6 @@
 describe('In RESOURCES module', function() {
 
-    describe('In RESMI module, while testing collection queries', function() {
+    describe.only('In RESMI module, while testing collection queries', function() {
         var corbelDriver;
         var COLLECTION = 'test:CorbelJSObjectQuery' + Date.now();
         var amount = 10;
@@ -83,6 +83,25 @@ describe('In RESOURCES module', function() {
                 .then(function(response) {
                     expect(response.data.length).to.be.equal(1);
                     expect(response.data[0].stringField).to.be.equal('stringFieldContent10');
+                })
+                .should.be.eventually.fulfilled.and.notify(done);
+            });
+
+            it('returns elements satisfying the String punctuation equality', function(done) {
+                var params = {
+                    query: [{
+                        '$eq': {
+                            punctuationTest: 'La sombra. Celín. Tropiquillos. Theros.'
+                        }
+                    }]
+                };
+
+                corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(response.data.length).to.be.equal(10);
+                    expect(response.data[0].punctuationTest).to.be.equal('La sombra. Celín. Tropiquillos. Theros.');
                 })
                 .should.be.eventually.fulfilled.and.notify(done);
             });
@@ -349,6 +368,25 @@ describe('In RESOURCES module', function() {
                 })
                 .should.be.eventually.fulfilled.and.notify(done);
             });
+
+            it('returns elements satisfying the String punctuation equality', function(done) {
+                var params = {
+                    query: [{
+                        '$ne': {
+                            punctuationTest: 'La sombra. Celín. Tropiquillos. Theros.'
+                        }
+                    }]
+                };
+
+                corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(response.data.length).to.be.equal(0);
+                })
+                .should.be.eventually.fulfilled.and.notify(done);
+            });
+
         });
 
         describe('when get collection using the "like" query language', function() {
@@ -427,6 +465,25 @@ describe('In RESOURCES module', function() {
                     response.data.forEach(function(element) {
                         expect(element.stringSortCut.toLowerCase()).to.contain('test');
                     });
+                })
+                .should.be.eventually.fulfilled.and.notify(done);
+            });
+
+            it('returns elements satisfying the String punctuation request', function(done) {
+                var params = {
+                    query: [{
+                        '$like': {
+                            punctuationTest: 'La sombra. Cel'
+                        }
+                    }]
+                };
+
+                corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(response.data.length).to.be.equal(10);
+                    expect(response.data[0].punctuationTest).to.be.equal('La sombra. Celín. Tropiquillos. Theros.');
                 })
                 .should.be.eventually.fulfilled.and.notify(done);
             });
