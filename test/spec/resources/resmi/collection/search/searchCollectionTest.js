@@ -32,7 +32,8 @@ describe('In RESOURCES module', function() {
                     id: random + ':3',
                     field3: 'teSt' + random,
                     description: 'And this is the third resource',
-                    sortField: 'peach'
+                    sortField: 'peach',
+                    punctuationTest: 'La sombra. Celín. Tropiquillos. Theros.'
                 };
 
                 corbelDriver.resources.resource(COLLECTION, random + ':1')
@@ -75,7 +76,8 @@ describe('In RESOURCES module', function() {
                         field3: 'teSt' + random,
                         notIndexedField: 12345,
                         description: 'And this is the third resource',
-                        sortField: 'peach'
+                        sortField: 'peach',
+                        punctuationTest: 'La sombra. Celín. Tropiquillos. Theros.'
                     })
                     .should.be.eventually.fulfilled;
                 })
@@ -112,6 +114,48 @@ describe('In RESOURCES module', function() {
                     };
 
                     expect(data.length).to.be.equal(3);
+                    data.forEach(function(entry) {
+                        delete entry.links;
+                    });
+                    expect(data).to.include(object1);
+                    expect(data).to.include(object2);
+                    expect(data).to.include(object3);
+
+                    return corbelDriver.resources.collection(COLLECTION)
+                    .get(params)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function(result) {
+                    expect(result).to.have.deep.property('data.count', 3);
+                })
+                .should.notify(done);
+            });
+
+            it('returns elements that satisfy a punctuation search', function(done) {
+                var params = {
+                    search: 'La sombra. Celín. Tropiquillos. Theros.',
+                    binded: true
+                };
+
+                corbelTest.common.utils.retry(function() {
+                    return corbelDriver.resources.collection(COLLECTION)
+                    .get(params)
+                    .then(function(response) {
+                        if (response.data.length !== 1) {
+                            return q.reject();
+                        } else {
+                            return response;
+                        }
+                    });
+                }, MAX_RETRY, RETRY_PERIOD)
+                .should.eventually.be.fulfilled
+                .then(function(response) {
+                    var data = response.data;
+                    params.aggregation = {
+                        '$count': '*'
+                    };
+
+                    expect(data.length).to.be.equal(1);
                     data.forEach(function(entry) {
                         delete entry.links;
                     });
