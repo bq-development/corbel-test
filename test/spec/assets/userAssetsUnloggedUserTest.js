@@ -1,15 +1,14 @@
 describe('In ASSETS module', function() {
-    describe('when a client asks for assets without authorization', function(){
-
+    describe('when requesting several assets using invalid a claim', function(){
         var corbelDriver;
 
         before(function() {
-            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
+            corbelDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
         });
 
         it('request is rejected due to authorization reasons', function(done) {
             corbelDriver.assets().access()
-            .should.be.eventually.rejected
+            .should.eventually.be.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 401);
             })
