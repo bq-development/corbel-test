@@ -382,7 +382,7 @@ describe('In RESOURCES module', function() {
                 var params = {
                     query: [{
                         '$like': {
-                            stringField: '\\\\$'
+                            stringField: '\\$'
                         }
                     }]
                 };
