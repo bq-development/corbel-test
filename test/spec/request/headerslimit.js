@@ -77,8 +77,8 @@ describe('In CorbelJS module', function(){
 	    	requestAndVerifyWithCustomHeaderLength(8192).
 	        should.be.eventually.fulfilled.
 	        then(function(response) {
-	            expect(response).to.have.property('status').and.equals(200);
-	            expect(response.data).not.to.include.keys('obj1');
+	            expect(response).not.to.include.deep.keys('data.obj1');
+				expect([200, 400]).to.include.members([response.status]);
 	        }).
             should.notify(done);
 	    });
