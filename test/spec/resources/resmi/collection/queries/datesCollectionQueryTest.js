@@ -18,7 +18,7 @@ describe('In RESOURCES module', function() {
             .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        describe('when get collection using "greater than" query language', function(){
+        describe('when getting a collection using "greater than" query language', function(){
 
             it('used timestamp parameter in the query applying to _updateAt field', function(done){
                 var date;
@@ -140,9 +140,39 @@ describe('In RESOURCES module', function() {
 
         });
 
-        describe('when get collection using "lower than" query language', function(){
+        describe('when getting a collection using "lower than" query language', function(){
 
-            it('used timestamp parameter in the query applying to _updateAt field', function(done){
+            it('does not exists a document with an _expireAt field that matches expected value', function(done) {
+                var expireAtCollection = 'test:ExpireAt';
+
+                var testObject = {
+                    test: 'test',
+                    _expireAt: Date.now() + 1000
+                };
+
+                var params = {
+                    query: [{
+                        '$lt': {
+                            _expireAt: 'ISODate(' + (new Date(Date.now() + 10000 )).toISOString() + ')'
+                        }
+                    }]
+                };
+
+                corbelDriver.resources.collection(expireAtCollection)
+                .add(testObject)
+                .should.be.eventually.fulfilled
+                .then(function() {
+                    return corbelDriver.resources.collection(expireAtCollection)
+                        .get(params)
+                        .should.be.eventually.fulfilled;
+                })
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', 0);
+                })
+                .should.notify(done);
+            });
+
+            it('a timestamp parameter is used in the query and applied to _updateAt field', function(done){
                 var date;
                 var updateParams = { randomField : 'qwer' };
                 var queryParams;
