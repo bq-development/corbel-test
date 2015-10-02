@@ -136,8 +136,6 @@ describe('In IAM module', function() {
             .should.be.eventually.fulfilled.and.notify(done);
         });
 
-
-
         it('a client is updated', function(done) {
             var expectedClient = corbelTest.common.iam.getClient(Date.now(), testDomainId);
             var newName = 'newClientName';
@@ -174,6 +172,31 @@ describe('In IAM module', function() {
                 .should.be.eventually.fulfilled;
             })
             .should.be.eventually.fulfilled.and.notify(done);
+        });
+
+        it('a nonexistent client is not updated', function(done) {
+            var expectedClient = corbelTest.common.iam.getClient(Date.now(), testDomainId);
+            var newName = 'newClientName';
+            var updatedClient = {
+                id: 'newId',
+                domain: expectedClient.domain,
+                signatureAlgorithm: expectedClient.signatureAlgorithm,
+                name: newName
+            };
+
+            CorbelDriver.iam.client(updatedClient.domain, updatedClient.id)
+            .update(updatedClient)
+            .should.be.eventually.fulfilled
+            .then(function() {
+                return CorbelDriver.iam.client(updatedClient.domain, updatedClient.id)
+                .get()
+                .should.be.eventually.rejected;
+            })
+            .then(function(e) {
+                expect(e).to.have.property('status', 404);
+                expect(e).to.have.deep.property('data.error', 'not_found');
+            })
+            .should.notify(done);
         });
 
         it('a client is removed', function(done) {

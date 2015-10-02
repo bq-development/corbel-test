@@ -147,20 +147,6 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        // When a client does not exist, it is created
-        it.skip('an error 404 is returned when try to update a client which does not exist', function(done) {
-            var id = 'Pepito';
-
-            corbelRootDriver.iam.client(domainId, id)
-            .update(corbelTest.common.iam.getClient())
-            .should.be.eventually.rejected
-            .then(function(e) {
-                expect(e).to.have.property('status', 404);
-                expect(e).to.have.deep.property('data.error', 'not_found');
-            })
-            .should.notify(done);
-        });
-
         it('an error 401 is returned when try to update a client without authorization', function(done) {
             var id = Date.now();
 
