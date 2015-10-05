@@ -2,6 +2,8 @@ describe('In ASSETS module', function() {
     describe('when creating assets with an admin user', function(){
         var corbelDriver;
         var createdAssetsIds;
+        var promises;
+
         before(function() {
             corbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
         });
@@ -11,8 +13,9 @@ describe('In ASSETS module', function() {
         });
 
         afterEach(function(done){
+            promises = [];
             createdAssetsIds.forEach(function(assetId){
-                corbelDriver.assets(assetId).delete()
+                promises.push(corbelDriver.assets(assetId).delete()
                 .should.be.eventually.fulfilled
                 .then(function(){
                     return corbelDriver.assets(assetId).get()
@@ -21,9 +24,10 @@ describe('In ASSETS module', function() {
                 .then(function(e) {
                     expect(e).to.have.property('status', 404);
                     expect(e).to.have.deep.property('data.error', 'not_found');
-                })
-                .should.notify(done);
+                }));
             });
+            return Promise.all(promises)
+            .should.be.eventually.fulfilled.and.notify(done);
         });
 
         it('asset gets created', function(done) {
@@ -53,7 +57,7 @@ describe('In ASSETS module', function() {
             .then(function(id) {
                 assetId = id;
                 createdAssetsIds.push(assetId);
-                
+
                 return corbelDriver.assets(assetId).get()
                 .should.be.eventually.fulfilled;
             }).then(function(response) {
