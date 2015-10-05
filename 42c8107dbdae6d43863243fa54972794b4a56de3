@@ -15,6 +15,14 @@ Project: corbel-test
 Branch: refs/heads/master
 
 Verified+1: Jenkins <dev@bq.com>
+Code-Review+2: delCerroCristian <cristian.delcerro@bqreaders.com>
+Submitted-by: delCerroCristian <cristian.delcerro@bqreaders.com>
+Submitted-at: Wed, 26 Aug 2015 10:57:32 +0000
+Reviewed-on: http://git.dev.bqsoftware.net/7268
+Project: corbel-test
+Branch: refs/heads/master
+
+Verified+1: Jenkins <dev@bq.com>
 Code-Review+2: <cristian.delcerro@bqreaders.com>
 Submitted-by: <cristian.delcerro@bqreaders.com>
 Submitted-at: Wed, 26 Aug 2015 10:57:32 +0000
