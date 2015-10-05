@@ -22,10 +22,11 @@ describe('In ASSETS module', function() {
 
         describe('when no user is logged-in', function() {
 
-            var corbelDriver;
+            var corbelDriver, rootCorbelDriver;
             var user;
 
             before(function(done) {
+                rootCorbelDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
                 corbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
                 corbelTest.common.iam.createUsers(corbelDriver, 1)
                 .should.be.eventually.fulfilled
@@ -38,7 +39,7 @@ describe('In ASSETS module', function() {
             });
 
             afterEach(function(done){
-                corbelDriver.iam.user(user.id).delete()
+                rootCorbelDriver.iam.user(user.id).delete()
                 .should.be.eventually.fulfilled.and.notify(done);
             });
 
