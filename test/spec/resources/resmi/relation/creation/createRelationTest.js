@@ -44,7 +44,8 @@ describe('In RESOURCES module', function() {
         it('a registry in the relation is created and updated', function(done){
             corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
             .add(idResourceB, {
-                myextrafield : 'test'
+                myextrafield : 'test',
+                secondField : 'second'
             })
             .should.be.fulfilled
             .then(function(response){
@@ -54,11 +55,13 @@ describe('In RESOURCES module', function() {
             .should.be.fulfilled
             .then(function(response){
                 expect(response).to.have.deep.property('data.myextrafield', 'test');
+                expect(response).to.have.deep.property('data.secondField', 'second');
             })
             .then(function(){
                 return corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
                 .add(idResourceB, {
-                    myextrafield : 'updatedField'
+                    myextrafield : 'updatedField',
+                    thirdField : 'third'
                 })
                 .should.be.eventually.fulfilled;
             })
@@ -66,9 +69,11 @@ describe('In RESOURCES module', function() {
                 return corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
                     .get(idResourceB);
             })
-            .should.be.fulfilled
+            .should.be.eventually.fulfilled
             .then(function(response){
                 expect(response).to.have.deep.property('data.myextrafield', 'updatedField');
+                expect(response).to.have.deep.property('data.secondField', 'second');
+                expect(response).to.have.deep.property('data.thirdField', 'third');
             })
             .should.notify(done);
         });
