@@ -162,12 +162,21 @@ describe('In RESOURCES module', function() {
                 .add(testObject)
                 .should.be.eventually.fulfilled
                 .then(function() {
-                    return corbelDriver.resources.collection(expireAtCollection)
+                    return corbelTest.common.utils.retry(function(){
+                        return corbelDriver.resources.collection(expireAtCollection)
                         .get(params)
-                        .should.be.eventually.fulfilled;
-                })
-                .then(function(response) {
-                    expect(response).to.have.deep.property('data.length', 0);
+                        .then(function(response) {
+                            if (response.data.length !== 0) {
+                                return Promise.reject();
+                            } else {
+                                return response;
+                            }
+                        });
+                    }, 10, 10)
+                    .should.be.eventually.fulfilled
+                    .then(function(response) {
+                        expect(response).to.have.deep.property('data.length', 0);
+                    });
                 })
                 .should.notify(done);
             });
