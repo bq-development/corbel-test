@@ -12,6 +12,7 @@ describe('In RESOURCES module', function() {
 
         describe('testing search on collection', function() {
             var random, object1, object2, object3;
+            var punctText = 'La sombra. Celín. Tropiquillos. Theros.';
 
             beforeEach(function(done) {
                 random = Date.now();
@@ -33,7 +34,7 @@ describe('In RESOURCES module', function() {
                     field3: 'teSt' + random,
                     description: 'And this is the third resource',
                     sortField: 'peach',
-                    punctuationTest: 'La sombra. Celín. Tropiquillos. Theros.'
+                    punctuationTest: punctText + random
                 };
 
                 corbelDriver.resources.resource(COLLECTION, random + ':1')
@@ -77,7 +78,7 @@ describe('In RESOURCES module', function() {
                         notIndexedField: 12345,
                         description: 'And this is the third resource',
                         sortField: 'peach',
-                        punctuationTest: 'La sombra. Celín. Tropiquillos. Theros.'
+                        punctuationTest: punctText + random
                     })
                     .should.be.eventually.fulfilled;
                 })
@@ -91,8 +92,7 @@ describe('In RESOURCES module', function() {
 
             it('returns elements that satisfy a simple search', function(done) {
                 var params = {
-                    search: 'test' + random,
-                    binded: true
+                    search: 'test' + random
                 };
 
                 corbelTest.common.utils.retry(function() {
@@ -133,8 +133,7 @@ describe('In RESOURCES module', function() {
 
             it('returns elements that satisfy a punctuation search', function(done) {
                 var params = {
-                    search: 'La sombra. Celín. Tropiquillos. Theros.',
-                    binded: true
+                    search: punctText + random
                 };
 
                 corbelTest.common.utils.retry(function() {
@@ -151,24 +150,12 @@ describe('In RESOURCES module', function() {
                 .should.eventually.be.fulfilled
                 .then(function(response) {
                     var data = response.data;
-                    params.aggregation = {
-                        '$count': '*'
-                    };
-
-                    expect(data.length).to.be.equal(1);
                     data.forEach(function(entry) {
                         delete entry.links;
                     });
-                    expect(data).to.include(object1);
-                    expect(data).to.include(object2);
-                    expect(data).to.include(object3);
 
-                    return corbelDriver.resources.collection(COLLECTION)
-                    .get(params)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(result) {
-                    expect(result).to.have.deep.property('data.count', 3);
+                    expect(data.length).to.be.equal(1);
+                    expect(data).to.include(object3);
                 })
                 .should.notify(done);
             });
