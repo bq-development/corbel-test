@@ -92,7 +92,8 @@ describe('In RESOURCES module', function() {
 
             it('returns elements that satisfy a simple search', function(done) {
                 var params = {
-                    search: 'test' + random
+                    search: 'test' + random,
+                    binded: false
                 };
 
                 corbelTest.common.utils.retry(function() {
@@ -100,7 +101,7 @@ describe('In RESOURCES module', function() {
                     .get(params)
                     .then(function(response) {
                         if (response.data.length !== 3) {
-                            return q.reject();
+                            return Promise.reject();
                         } else {
                             return response;
                         }
@@ -112,11 +113,11 @@ describe('In RESOURCES module', function() {
                     params.aggregation = {
                         '$count': '*'
                     };
-
-                    expect(data.length).to.be.equal(3);
                     data.forEach(function(entry) {
                         delete entry.links;
                     });
+
+                    expect(data.length).to.be.equal(3);
                     expect(data).to.include(object1);
                     expect(data).to.include(object2);
                     expect(data).to.include(object3);
@@ -133,7 +134,8 @@ describe('In RESOURCES module', function() {
 
             it('returns elements that satisfy a punctuation search', function(done) {
                 var params = {
-                    search: punctText + random
+                    search: punctText + random,
+                    binded: false
                 };
 
                 corbelTest.common.utils.retry(function() {
@@ -141,7 +143,7 @@ describe('In RESOURCES module', function() {
                     .get(params)
                     .then(function(response) {
                         if (response.data.length !== 1) {
-                            return q.reject();
+                            return Promise.reject();
                         } else {
                             return response;
                         }
