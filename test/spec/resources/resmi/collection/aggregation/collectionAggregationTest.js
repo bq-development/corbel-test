@@ -39,7 +39,7 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled.and.notify(done);
             });
 
-            it('in the min aggregation case, the match element is returned', function(done) {
+            it.skip('in the min aggregation case, the match element is returned', function(done) {
                 var params = {
                     aggregation: {
                         '$min': 'intField'
@@ -55,7 +55,7 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            it('in the max aggregation case, the match element is returned', function(done) {
+            it.skip('in the max aggregation case, the match element is returned', function(done) {
                 var params = {
                     aggregation: {
                         '$max': 'intField'
@@ -71,7 +71,7 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            it('with max aggregation over a query, the match element is returned', function(done) {
+            it.skip('with max aggregation over a query, the match element is returned', function(done) {
                 var params = {
                     aggregation: {
                         '$max': 'intField'
@@ -92,7 +92,7 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled.and.notify(done);
             });
 
-            it('with min aggregation over a query, the match element is returned', function(done) {
+            it.skip('with min aggregation over a query, the match element is returned', function(done) {
                 var params = {
                     aggregation: {
                         '$min': 'intField'
