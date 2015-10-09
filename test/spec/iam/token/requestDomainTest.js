@@ -43,7 +43,7 @@ describe('In IAM module when requests an access token', function() {
             .then(function(e) {
                 expect(e.status).to.be.equal(401);
                 var error = e.data;
-                expect(error.error).to.be.equal('unauthorized_token');
+                expect(error.error).to.be.equal('unauthorized');
             })
             .should.be.eventually.fulfilled.and.notify(done);
     });
@@ -151,7 +151,7 @@ describe('In IAM module when requests an access token', function() {
                 .then(function(e) {
                     expect(e.status).to.be.equal(401);
                     var error = e.data;
-                    expect(error.error).to.be.equal('unauthorized_token');
+                    expect(error.error).to.be.equal('unauthorized');
                 })
                 .should.be.eventually.fulfilled.and.notify(done);
         });
@@ -221,7 +221,7 @@ describe('In IAM module when requests an access token', function() {
                 .then(function(e) {
                     expect(e.status).to.be.equal(401);
                     var error = e.data;
-                    expect(error.error).to.be.equal('unauthorized_token');
+                    expect(error.error).to.be.equal('unauthorized');
                 })
                 .should.be.eventually.fulfilled.and.notify(done);
         });
@@ -268,7 +268,7 @@ describe('In IAM module when requests an access token', function() {
                 .then(function(e) {
                     expect(e.status).to.be.equal(401);
                     var error = e.data;
-                    expect(error.error).to.be.equal('unauthorized_token');
+                    expect(error.error).to.be.equal('unauthorized');
                 })
                 .should.be.eventually.fulfilled.and.notify(done);
         });
@@ -298,7 +298,7 @@ describe('In IAM module when requests an access token', function() {
                     .then(function(e) {
                         expect(e.status).to.be.equal(401);
                         var error = e.data;
-                        expect(error.error).to.be.equal('unauthorized_token');
+                        expect(error.error).to.be.equal('unauthorized');
                     })
                     .should.be.eventually.fulfilled.and.notify(done);
             });

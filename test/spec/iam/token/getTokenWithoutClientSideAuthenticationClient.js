@@ -16,7 +16,7 @@ describe('In IAM module, when get a token with/out client side authentication', 
     });
 
 
-    it(' with not allowed client, it fails returning error UNAUTHORIZED(401', function(done) {
+    it(' with not allowed client, it fails returning error UNAUTHORIZED(401)', function(done) {
         var claims = {
             iss: clientIdrequestDomainClient,
             prn: testPrn,
@@ -38,7 +38,7 @@ describe('In IAM module, when get a token with/out client side authentication', 
             .then(function(e) {
                 var error = e.data;
                 expect(e.status).to.be.equal(401);
-                expect(error.error).to.be.equal('unauthorized_token');
+                expect(error.error).to.be.equal('unauthorized');
             })
             .should.be.eventually.fulfilled.and.notify(done);
     });
