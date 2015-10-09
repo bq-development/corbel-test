@@ -25,7 +25,7 @@ describe('In ASSETS module', function() {
             .then(function(e) {
                 expect(e).to.have.property('status', 404);
                 expect(e).to.have.deep.property('data.error', 'not_found');
-    
+
                 return userCorbelDriver.iam.user(user.id).delete()
                 .should.be.eventually.fulfilled;
             })
@@ -60,7 +60,7 @@ describe('In ASSETS module', function() {
             })
             .then(function(e) {
                 expect(e).to.have.property('status', 401);
-                expect(e).to.have.deep.property('data.error', 'unauthorized');
+                expect(e).to.have.deep.property('data.error', 'unauthorized_token');
                 return clientCorbelDriver.assets().access()
                 .should.be.eventually.fulfilled;
             })

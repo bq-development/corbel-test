@@ -66,7 +66,7 @@ describe('In IAM module', function() {
             })
             .then(function(e) {
                 expect(e).to.have.property('status', 401);
-                expect(e).to.have.deep.property('data.error', 'unauthorized');
+                expect(e).to.have.deep.property('data.error', 'invalid_token');
             })
             .should.notify(done);
         });
@@ -85,7 +85,7 @@ describe('In IAM module', function() {
             })
             .then(function(e) {
                 expect(e).to.have.property('status', 401);
-                expect(e).to.have.deep.property('data.error', 'unauthorized');
+                expect(e).to.have.deep.property('data.error', 'invalid_token');
             })
             .should.notify(done);
         });

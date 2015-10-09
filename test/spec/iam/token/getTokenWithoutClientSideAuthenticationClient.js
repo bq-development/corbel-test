@@ -38,7 +38,7 @@ describe('In IAM module, when get a token with/out client side authentication', 
             .then(function(e) {
                 var error = e.data;
                 expect(e.status).to.be.equal(401);
-                expect(error.error).to.be.equal('unauthorized');
+                expect(error.error).to.be.equal('unauthorized_token');
             })
             .should.be.eventually.fulfilled.and.notify(done);
     });

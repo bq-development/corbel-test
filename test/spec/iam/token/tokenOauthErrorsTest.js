@@ -40,7 +40,7 @@ describe('In IAM module, When try to get token with', function() {
                 .then(function(response) {
                     var error = response.data;
                     expect(response).to.have.property('status', 401);
-                    expect(error).to.have.property('error', 'unauthorized');
+                    expect(error).to.have.property('error', 'unauthorized_token');
                 })
                 .should.be.eventually.fulfilled.notify(done);
         });
@@ -71,7 +71,7 @@ describe('In IAM module, When try to get token with', function() {
                 .then(function(response) {
                     var error = response.data;
                     expect(response).to.have.property('status', 401);
-                    expect(error).to.have.property('error', 'unauthorized');
+                    expect(error).to.have.property('error', 'unauthorized_token');
                 })
                 .should.be.eventually.fulfilled.notify(done);
         });
