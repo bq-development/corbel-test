@@ -10,7 +10,7 @@ describe('In RESOURCES module, in TERRA rem', function() {
             corbelDriver = corbelTest.drivers['ADMIN_CLIENT'];
         });
 
-        it('a pin can be gotten', function(done) {
+        it.skip('a pin can be gotten', function(done) {
 
             corbelDriver.resources.resource(TERRA_PINCOLLECTION, rightMobileNumber)
             .update()

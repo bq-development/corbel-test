@@ -10,7 +10,7 @@ describe('In RESOURCES module, in TERRA rem', function() {
             corbelDriver = corbelTest.drivers['ADMIN_CLIENT'];
         });
 
-        it('a subscription can be created, checked and deleted', function(done) {
+        it.skip('a subscription can be created, checked and deleted', function(done) {
 
             corbelDriver.resources.resource(TERRA_COLLECTION, rightMobileNumber)
             .get()
