@@ -44,7 +44,9 @@ function createdObjectsToQuery(driver, collectionName, amount, extraField) {
                 identifier: 'id' + count,
                 type: 'premium'
             }],
-            randomField: 'asdf'
+            randomField: 'asdf',
+            distinctField: count % 2,
+            distinctField2: count % 4
         };
 
         if (extraField) {
@@ -118,7 +120,9 @@ function createRelationFromSingleObjetToMultipleObject(driver, collectionA, idRe
             intCount: 100 * count,
             stringField: 'stringContent' + count,
             stringSortCut: 'Test Short Cut',
-            ObjectNumber: _.range(count + 1)
+            ObjectNumber: _.range(count + 1),
+            distinctField: count % 2,
+            distinctField2: count % 4
         };
 
         var promise = driver.resources.relation(collectionA, idResourceInA, collectionB).add(idB, jsonRelationData);
