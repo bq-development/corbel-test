@@ -2,7 +2,7 @@ describe('In RESOURCES module', function() {
 
     describe('In RESMI module, testing get relation', function() {
         var corbelDriver;
-        
+
         describe('When request to retrieve elements of a resources relation,', function() {
             var TIMESTAMP = Date.now();
             var COLLECTION_A = 'test:CoreJSObjectLinkA' + TIMESTAMP;
@@ -104,6 +104,18 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled
                 .then(function(response) {
                     expect(response.data).to.have.property('length').to.be.equal(0);
+                })
+                .should.be.eventually.fulfilled.notify(done);
+            });
+
+
+            it('if the relation not exist & is included the destid, fails returning NOT FOUND (404) ', function(done) {
+                corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
+                .get('notExistingId')
+                .should.be.eventually.rejected
+                .then(function(e) {
+                    expect(e).to.have.property('status', 404);
+                    expect(e).to.have.deep.property('data.error', 'not_found');
                 })
                 .should.be.eventually.fulfilled.notify(done);
             });
