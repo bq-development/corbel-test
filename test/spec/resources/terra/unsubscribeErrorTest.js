@@ -23,7 +23,7 @@ describe('In RESOURCES module, in TERRA rem', function() {
             .should.notify(done);
         });
 
-        it('an error [403] is returned while trying to unsubscribe with not valid pin', function(done) {
+        it.skip('an error [403] is returned while trying to unsubscribe with not valid pin', function(done) {
 
             corbelDriver.resources.resource(TERRA_COLLECTION, rightMobileNumber)
             .update(null, {customQueryParams: {pin: rightPinNumber}})

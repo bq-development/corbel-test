@@ -24,7 +24,7 @@ describe('In RESOURCES module, in TERRA rem', function() {
             .should.notify(done);
         });
 
-        it('an error [403] is returned while trying to subscribe with not valid pin', function(done) {
+        it.skip('an error [403] is returned while trying to subscribe with not valid pin', function(done) {
 
             corbelDriver.resources.resource(TERRA_COLLECTION, rightMobileNumber)
             .update(null, {customQueryParams: {pin: wrongPinNumber}})
@@ -36,7 +36,7 @@ describe('In RESOURCES module, in TERRA rem', function() {
             .should.notify(done);
         });
 
-        it('an error [403] is returned while trying to subscribe and the number is already subscribed', function(done) {
+        it.skip('an error is returned while trying to subscribe and the number is already subscribed', function(done) {
 
             corbelDriver.resources.resource(TERRA_COLLECTION, rightMobileNumber)
             .update(null, {customQueryParams: {pin: rightPinNumber}})
