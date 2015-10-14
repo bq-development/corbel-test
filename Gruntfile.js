@@ -115,6 +115,11 @@ module.exports = function(grunt) {
         'karma:unit'
     ]);
 
+    grunt.registerTask('test-ci', function() {
+        grunt.task.run(['test']);
+        return 0;
+    });
+
     grunt.registerTask('default', ['test']);
 
 };
