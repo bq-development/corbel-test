@@ -42,9 +42,10 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled
                 .then(function() {
                     return corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
-                    .delete();
+                    .delete()
+                    .should.eventually.be.fulfilled;
                 }).
-                should.be.eventually.fulfilled.and.notify(done);
+                should.notify(done);
             });
 
             it('a relation with no extra fields can be created', function(done) {
