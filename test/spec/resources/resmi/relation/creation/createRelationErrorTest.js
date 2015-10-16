@@ -16,14 +16,14 @@ describe('In RESOURCES module', function() {
         beforeEach(function(done) {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
             corbelDriver.resources.collection(COLLECTION_A)
-            .add(TEST_OBJECT).
-            should.eventually.be.fulfilled.
-            then(function(id) {
+            .add(TEST_OBJECT)
+            .should.be.eventually.fulfilled
+            .then(function(id) {
                 idResourceA = id;
 
                 return corbelDriver.resources.collection(COLLECTION_B)
                     .add(TEST_OBJECT)
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
             })
             .then(function(id) {
                 idResourceB = id;
@@ -36,15 +36,16 @@ describe('In RESOURCES module', function() {
             .should.be.eventually.fulfilled
             .then(function() {
                 return corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
-                    .delete();
-            }).
-            should.eventually.be.fulfilled.notify(done);
+                    .delete()
+                    .should.be.eventually.fulfilled;
+            })
+            .should.notify(done);
         });
 
         it('an error [422] is returned while trying to add a malformed data', function(done){
             corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
             .add(idResourceB, 'malformed')
-            .should.be.rejected
+            .should.be.eventually.rejected
             .then(function(e){
                 expect(e).to.have.property('status', 422);
                 expect(e).to.have.deep.property('data.error', 'invalid_entity');
@@ -55,7 +56,7 @@ describe('In RESOURCES module', function() {
         it('an error [400] is returned while trying to create a relation with unnexistent resource', function(done) {
             corbelDriver.resources.relation(COLLECTION_A, 'notExistingId', COLLECTION_B)
             .add(idResourceB)
-            .should.eventually.be.rejected
+            .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 400);
                 expect(e).to.have.deep.property('data.error', 'bad_request');
@@ -66,7 +67,18 @@ describe('In RESOURCES module', function() {
         it('an error [400] is returned while trying to create a relation without relationId', function(done) {
             corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
             .add(undefined)
-            .should.eventually.be.rejected
+            .should.be.eventually.rejected
+            .then(function(e) {
+                expect(e).to.have.property('status', 400);
+                expect(e).to.have.deep.property('data.error', 'bad_request');
+            })
+            .should.notify(done);
+        });
+
+        it('400 is returned creating a relation with unnexistent resource and no relationId', function(done) {
+            corbelDriver.resources.relation(COLLECTION_A, 'notExistingId', COLLECTION_B)
+            .add(undefined)
+            .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 400);
                 expect(e).to.have.deep.property('data.error', 'bad_request');
