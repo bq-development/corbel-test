@@ -36,9 +36,10 @@ describe('In RESOURCES module', function() {
             .should.be.eventually.fulfilled
             .then(function() {
                 return corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
-                .delete();
+                .delete()
+                .should.eventually.be.fulfilled;
             }).
-            should.eventually.be.fulfilled.notify(done);
+            should.notify(done);
         });
 
         it('a registry in the relation is created and updated', function(done){
