@@ -13,6 +13,11 @@ describe('In RESOURCES module', function() {
             date : Date.now()
         };
 
+        var EXTRA_DATA = {
+            myextrafield : 'test',
+            secondField : 'second'
+        };
+
         describe('when testing relation creation ', function() {
             beforeEach(function(done) {
                 corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
@@ -81,10 +86,7 @@ describe('In RESOURCES module', function() {
                 })
                 .then(function() {
                     return corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
-                    .add(idResourceB, {
-                        myextrafield : 'test',
-                        secondField : 'second'
-                    })
+                    .add(idResourceB, EXTRA_DATA)
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(response){
@@ -102,10 +104,7 @@ describe('In RESOURCES module', function() {
 
             it('a relation with extra fields can be created and updated', function(done) {
                 corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
-                .add(idResourceB, {
-                    myextrafield : 'test',
-                    secondField : 'second'
-                })
+                .add(idResourceB, EXTRA_DATA)
                 .should.be.fulfilled
                 .then(function(response){
                     return corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
