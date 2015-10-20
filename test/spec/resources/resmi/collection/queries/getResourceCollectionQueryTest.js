@@ -17,6 +17,46 @@ describe('In RESOURCES module', function() {
             .should.be.eventually.fulfilled.and.notify(done);
         });
 
+        describe('when getting a collection including the $size operation in a query', function() {
+            it('returns only elements where ObjectNumbers (array) size equals 3',
+             function(done) {
+                var params = {
+                    query: [{
+                        '$size': {
+                            ObjectNumber: 3
+                        }
+                    }]
+                };
+
+                corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.eventually.be.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length',1);
+                    expect(response).to.have.deep.property('data[0].ObjectNumber.length',3);
+                })
+                .should.be.eventually.fulfilled.and.notify(done);
+            });
+
+            it('returns no elements when size operation is applied to a non-array type field', function(done) {
+                var params = {
+                    query: [{
+                        '$size': {
+                            intField: 2
+                        }
+                    }]
+                };
+
+                corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.eventually.be.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length',0);
+                })
+                .should.be.eventually.fulfilled.and.notify(done);
+            });
+        });
+
         describe('when get collection using the equals query language', function() {
 
             it('returns elements satisfying the numeric equality', function(done) {
