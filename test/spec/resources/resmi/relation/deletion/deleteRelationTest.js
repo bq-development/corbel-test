@@ -60,7 +60,6 @@ describe('In RESOURCES module', function() {
         });
 
         it('a registry in a relation is deleted', function(done) {
-
             corbelDriver.resources.relation(COLLECTION_A, idResourceA1, COLLECTION_B)
             .add(idResourceB)
             .should.be.eventually.fulfilled
@@ -79,9 +78,39 @@ describe('In RESOURCES module', function() {
 
                 return corbelDriver.resources.relation(COLLECTION_A, idResourceA1, COLLECTION_B)
                 .delete(idResourceB).
-                should.eventually.be.fulfilled;
+                should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.notify(done);
+            .should.notify(done);
+        });
+
+        it('a registry in a relation is deleted successfuly sending options in the request', function(done) {
+            var params = {
+                aggregation: {
+                    '$count': 'test'
+                }
+            };
+
+            corbelDriver.resources.relation(COLLECTION_A, idResourceA1, COLLECTION_B)
+            .add(idResourceB)
+            .should.be.eventually.fulfilled
+            .then(function() {
+                return corbelDriver.resources.relation(COLLECTION_A, idResourceA1, COLLECTION_B)
+                .delete(idResourceB, params)
+                .should.be.eventually.fulfilled;
+            })
+            .then(function() {
+                return corbelDriver.resources.relation(COLLECTION_A, idResourceA1, COLLECTION_B)
+                .get()
+                .should.be.eventually.fulfilled;
+            })
+            .then(function(response) {
+                expect(response).to.have.deep.property('data.length', 0);
+
+                return corbelDriver.resources.relation(COLLECTION_A, idResourceA1, COLLECTION_B)
+                .delete(idResourceB).
+                should.be.eventually.fulfilled;
+            })
+            .should.notify(done);
         });
 
         it('all registries in a relation are deleted', function(done) {
@@ -201,16 +230,16 @@ describe('In RESOURCES module', function() {
             .then(function(e) {
                 expect(e).to.have.property('status', 405);
             })
-            .should.be.eventually.fulfilled.notify(done);
+            .should.notify(done);
         });
 
-        it('a delete relation request with invalid id is successed', function(done) {
+        it('a delete relation request with invalid id is processed successfuly', function(done) {
             corbelDriver.resources.relation(COLLECTION_A, idResourceA1, COLLECTION_B)
             .delete('failId')
             .should.be.eventually.fulfilled.notify(done);
         });
 
-        it('a delete relation request with invalid relation is successed', function(done) {
+        it('a delete relation request with invalid relation is processed successfuly', function(done) {
             corbelDriver.resources.relation(COLLECTION_A, idResourceA1, 'test:CorbelJSObjectFail')
             .delete(idResourceB)
             .should.be.eventually.fulfilled.notify(done);
