@@ -55,7 +55,7 @@ describe('In IAM module', function() {
                 expect(e).to.have.property('status', 401);
                 expect(e).to.have.deep.property('data.error', 'unauthorized_token');
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         it('an error [409] is returned when trying to create a group that already exists', function(done) {
@@ -82,7 +82,7 @@ describe('In IAM module', function() {
                 .delete()
                 .should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         it('an error [400] is returned when trying to create a group with unexistent scopes', function(done) {
@@ -126,7 +126,7 @@ describe('In IAM module', function() {
                 .delete()
                 .should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         it('an error [401] is returned when trying to add scopes without propper permissions', function(done) {
@@ -153,7 +153,7 @@ describe('In IAM module', function() {
                 .delete()
                 .should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         it('an error [400] is returned when trying to add unexistent scopes', function(done) {
@@ -180,7 +180,7 @@ describe('In IAM module', function() {
                 .delete()
                 .should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         it('an error [422] is returned when trying to add malformed scopes', function(done) {
@@ -207,7 +207,7 @@ describe('In IAM module', function() {
                 .delete()
                 .should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         it('an error [401] is returned when trying to remove a group without propper permissions', function(done) {
@@ -233,7 +233,7 @@ describe('In IAM module', function() {
                 .delete()
                 .should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         it('an error [401] is returned when trying to get a group without propper permissions', function(done) {
@@ -259,7 +259,7 @@ describe('In IAM module', function() {
                 .delete()
                 .should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         it('an error [401] is returned when trying to get all groups without propper permissions', function(done) {
@@ -271,7 +271,7 @@ describe('In IAM module', function() {
                 expect(e).to.have.property('status', 401);
                 expect(e).to.have.deep.property('data.error', 'unauthorized_token');
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         it('an error [404] is returned when trying to get a group and it does not exist', function(done) {
@@ -284,7 +284,7 @@ describe('In IAM module', function() {
                 expect(e).to.have.property('status', 404);
                 expect(e).to.have.deep.property('data.error', 'group_not_exists');
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         it('an error [401] is returned when trying to add scopes in a group without permissions', function(done) {
@@ -310,7 +310,7 @@ describe('In IAM module', function() {
                 .delete()
                 .should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         it('an error [404] is returned when trying to add scopes in a group and it does not exist', function(done) {
@@ -323,7 +323,7 @@ describe('In IAM module', function() {
                 expect(e).to.have.property('status', 404);
                 expect(e).to.have.deep.property('data.error', 'group_not_exists');
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         it('an error [404] is returned when trying to remove scopes in a group and it does not exist', function(done) {
@@ -336,7 +336,7 @@ describe('In IAM module', function() {
                 expect(e).to.have.property('status', 404);
                 expect(e).to.have.deep.property('data.error', 'group_not_exists');
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         it('an error [401] is returned when trying to remove scopes in a group without permissions', function(done) {

@@ -2,9 +2,17 @@ describe('In IAM module', function() {
 
     describe('domain management allows create full appplication with', function() {
         var corbelRootDriver;
+<<<<<<< Updated upstream
 
         before(function() {
             corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
+=======
+        var corbelDriver;
+
+        before(function() {
+            corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
+            corbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
+>>>>>>> Stashed changes
         });
 
 
@@ -160,17 +168,28 @@ describe('In IAM module', function() {
                 userData= user[0];
 
                 return corbelTest.common.clients
+<<<<<<< Updated upstream
                 .loginUser(corbelRootDriver, userData.username, userData.password)
                 .should.eventually.be.fulfilled;
             })
             .then(function() {
                 return corbelRootDriver.iam.user(userData.id)
+=======
+                .loginUser(corbelDriver, userData.username, userData.password)
+                .should.eventually.be.fulfilled;
+            })
+            .then(function() {
+                return corbelDriver.iam.user(userData.id)
+>>>>>>> Stashed changes
                 .delete()
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
+<<<<<<< Updated upstream
                 // falla, con el driver debería tener permisos igual que antes
                 // y ahora lanza un 401 en vez de 404
+=======
+>>>>>>> Stashed changes
                 return corbelRootDriver.iam.user(userData.id)
                 .get()
                 .should.be.eventually.rejected;

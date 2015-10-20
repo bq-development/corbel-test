@@ -37,10 +37,6 @@ function createUser(userData, driver){
     });
 }
 
-function deleteUser(userId, driver){
-    return driver.iam.user(userId).delete();
-}
-
 function getDomain(timeStamp, desc, sufix) {
     return {
         id: 'TestDomain_' + (timeStamp ? timeStamp : Date.now()) +
@@ -75,7 +71,6 @@ function getScope(id) {
 module.exports = {
     createUsers: createUsers,
     createUser: createUser,
-    deleteUser : deleteUser,
     getDomain: getDomain,
     getClient: getClient,
     getScope: getScope
