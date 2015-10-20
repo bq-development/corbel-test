@@ -1,5 +1,4 @@
 describe('In RESOURCES module', function() {
-
     describe('In RESMI module, while testing relation\'s links', function() {
 
         var corbelDriver;
@@ -27,7 +26,7 @@ describe('In RESOURCES module', function() {
             .then(function(id) {
                 idResourceB = id;
             })
-            .should.be.eventually.fulfilled.notify(done);
+            .should.notify(done);
         });
 
         after(function(done) {
@@ -39,7 +38,7 @@ describe('In RESOURCES module', function() {
                 .delete()
                 .should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.notify(done);
+            .should.notify(done);
         });
 
 
@@ -65,7 +64,7 @@ describe('In RESOURCES module', function() {
                 .delete()
                 .should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.notify(done);
+            .should.notify(done);
         });
     });
 });
