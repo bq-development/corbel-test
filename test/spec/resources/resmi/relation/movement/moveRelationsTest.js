@@ -30,10 +30,10 @@ describe('In RESOURCES module', function() {
                 idsResourecesInB = ids;
 
                 return corbelTest.common.resources.createRelationFromSingleObjetToMultipleObject
-                    (corbelDriver,COLLECTION_A, idResourceInA, COLLECTION_B, idsResourecesInB)
+                (corbelDriver,COLLECTION_A, idResourceInA, COLLECTION_B, idsResourecesInB)
                 .should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.notify(done);
+            .should.notify(done);
         });
 
         afterEach(function(done) {
@@ -44,13 +44,154 @@ describe('In RESOURCES module', function() {
                 .delete()
                 .should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.notify(done);
+            .should.notify(done);
         });
 
-        describe('relation has sorting in the insertion', function() {
+        describe('a relation that does not have parameters', function() {
 
-            it('should move relation in differents positions and success returning elements', function(done) {
+            it('is moved one position', function(done) {
+                var idResource3;
+                
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    idResource3 = response.data[2].id;
 
+                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                    .move(idResource3, 1)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function() {
+                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                    .get(null, params)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data[0].id', idResource3);
+                })
+                .should.notify(done);
+            });
+
+            it('move request returns a 400 error if position number is not specified',
+            function(done) {
+                var idResource;
+
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(corbelTest.common.resources.checkSortingAsc(response.data, '_order'))
+                    .to.be.equal(true);
+                    idResource = response.data[2].id;
+
+                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                    .move(idResource)
+                    .should.be.eventually.rejected;
+                })
+                .then(function(e) {
+                    expect(e).to.have.property('status', 400);
+                    expect(e).to.have.deep.property('data.error', 'bad_request');
+                })
+                .should.notify(done);
+            });
+
+            it('move request returns a 400 error if position number is 0', function(done) {
+                var idResource;
+
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(corbelTest.common.resources.checkSortingAsc(response.data, '_order'))
+                    .to.be.equal(true);
+                    idResource = response.data[2].id;
+
+                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                    .move(idResource, 0)
+                    .should.be.eventually.rejected;
+                })
+                .then(function(e) {
+                    expect(e).to.have.property('status', 400);
+                    expect(e).to.have.deep.property('data.error', 'bad_request');
+                })
+                .should.notify(done);
+            }); 
+
+            it('move request returns a 400 error if position number is -1', function(done) {
+                var idResource;
+
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(corbelTest.common.resources.checkSortingAsc(response.data, '_order'))
+                    .to.be.equal(true);
+                    idResource = response.data[2].id;
+
+                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                    .move(idResource, -1)
+                    .should.be.eventually.rejected;
+                })
+                .then(function(e) {
+                    expect(e).to.have.property('status', 400);
+                    expect(e).to.have.deep.property('data.error', 'bad_request');
+                })
+                .should.notify(done);
+            });  
+
+            it('move request returns a 400 error if position number is a string', function(done) {
+                var idResource;
+
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(corbelTest.common.resources.checkSortingAsc(response.data, '_order'))
+                    .to.be.equal(true);
+                    idResource = response.data[2].id;
+
+                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                    .move(idResource, 'invalidPositionString')
+                    .should.be.eventually.rejected;
+                })
+                .then(function(e) {
+                    expect(e).to.have.property('status', 400);
+                    expect(e).to.have.deep.property('data.error', 'bad_request');
+                })
+                .should.notify(done);
+            });  
+        });
+
+        describe('a relation that has parameters', function() {
+
+            it('is moved one position', function(done) {
+                var idResource3;
+                
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null, params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(corbelTest.common.resources.checkSortingAsc(response.data, '_order'))
+                    .to.be.equal(true);
+                    idResource3 = response.data[2].id;
+
+                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                    .move(idResource3, 1)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function() {
+                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                    .get(null, params)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data[0].id', idResource3);
+                })
+                .should.notify(done);
+            });
+
+            it('is moved in different positions', function(done) {
                 var idResource3;
                 var idResourceMiddle;
                 var idResourceLast;
@@ -66,105 +207,153 @@ describe('In RESOURCES module', function() {
                     return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                     .move(idResource3, 1)
                     .should.be.eventually.fulfilled;
-                }).then(function() {
+                })
+                .then(function() {
                     return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                     .get(null, params)
                     .should.be.eventually.fulfilled;
-                }).then(function(response) {
-                    expect(response.data[0].id).to.be.equal(idResource3);
+                })
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data[0].id', idResource3);
                     idResourceMiddle = response.data[2].id;
 
                     return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                     .move(idResourceMiddle, amount)
                     .should.be.eventually.fulfilled;
-                }).then(function() {
+                })
+                .then(function() {
                     return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                     .get(null, params)
                     .should.be.eventually.fulfilled;
-                }).then(function(response) {
-                    expect(response.data[amount - 1].id).to.be.equal(idResourceMiddle);
+                })
+                .then(function(response) {
+                    expect(response.data[amount - 1]).to.have.property('id', idResourceMiddle);
                     idResourceLast = response.data[amount - 1].id;
 
                     return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                     .move(idResourceLast, 3)
                     .should.be.eventually.fulfilled;
-                }).then(function() {
+                })
+                .then(function() {
                     return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                     .get(null, params)
                     .should.be.eventually.fulfilled;
-                }).then(function(response) {
-                    expect(response.data[2].id).to.be.equal(idResourceLast);
                 })
-                .should.be.eventually.fulfilled.notify(done);
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data[2].id', idResourceLast);
+                })
+                .should.notify(done);
             });
 
-          it('should move relation without number position and fail returning error 400 BAD REQUEST',
-          function(done) {
+            it('move request returns a 400 error if position number is not specified',
+            function(done) {
+                var idResource;
 
-              var idResource;
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null, params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(corbelTest.common.resources.checkSortingAsc(response.data, '_order'))
+                    .to.be.equal(true);
+                    idResource = response.data[2].id;
 
-              corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-              .get(null, params)
-              .should.be.eventually.fulfilled
-              .then(function(response) {
-                  expect(corbelTest.common.resources.checkSortingAsc(response.data, '_order'))
-                  .to.be.equal(true);
-                  idResource = response.data[2].id;
-
-                  return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                  .move(idResource)
-                  .should.be.eventually.rejected;
-              })
-              .then(function(e) {
-                  expect(e).to.have.property('status', 400);
-              })
-              .should.be.eventually.fulfilled.notify(done);
-          });
-
-          it('should move relation to 0 position and fail returning error 400 BAD REQUEST', function(done) {
-
-              var idResource;
-
-              corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-              .get(null, params)
-              .should.be.eventually.fulfilled
-              .then(function(response) {
-                  expect(corbelTest.common.resources.checkSortingAsc(response.data, '_order'))
-                  .to.be.equal(true);
-                  idResource = response.data[2].id;
-
-                  return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                  .move(idResource, 0)
-                  .should.be.eventually.rejected;
-              })
-              .then(function(e) {
-                  expect(e).to.have.property('status', 400);
-              })
-              .should.be.eventually.fulfilled.notify(done);
-          });
-    });
-
-    describe('Move relation the last position to specific postion over 200 times ', function() {
-
-        it('should success returning elements', function(done) {
-            corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-            .get(null, params)
-            .should.be.eventually.fulfilled
-            .then(function(response) {
-              expect(corbelTest.common.resources.checkSortingAsc(response.data, '_order'))
-              .to.be.equal(true);
-
-              return corbelTest.common.resources.fastMove(corbelDriver,
-                response.data[amount - 1].id, response.data[amount - 2].id,
-                200, COLLECTION_A, idResourceInA, COLLECTION_B)
-                .should.eventually.fulfilled;
-              })
-              .then(function(idResource) {
-                return corbelTest.common.resources.repeatMove(corbelDriver, idResource, 10,
-                  COLLECTION_A, idResourceInA, COLLECTION_B, params, amount)
-                  .should.eventually.fulfilled;
+                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                    .move(idResource)
+                    .should.be.eventually.rejected;
                 })
-                .should.be.eventually.fulfilled.notify(done);
+                .then(function(e) {
+                    expect(e).to.have.property('status', 400);
+                    expect(e).to.have.deep.property('data.error', 'bad_request');
+                })
+                .should.notify(done);
+            });
+
+            it('move request returns a 400 error if position number is 0', function(done) {
+                var idResource;
+
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null, params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(corbelTest.common.resources.checkSortingAsc(response.data, '_order'))
+                    .to.be.equal(true);
+                    idResource = response.data[2].id;
+
+                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                    .move(idResource, 0)
+                    .should.be.eventually.rejected;
+                })
+                .then(function(e) {
+                    expect(e).to.have.property('status', 400);
+                    expect(e).to.have.deep.property('data.error', 'bad_request');
+                })
+                .should.notify(done);
+            });  
+
+            it('move request returns a 400 error if position number is -1', function(done) {
+                var idResource;
+
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null, params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(corbelTest.common.resources.checkSortingAsc(response.data, '_order'))
+                    .to.be.equal(true);
+                    idResource = response.data[2].id;
+
+                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                    .move(idResource, -1)
+                    .should.be.eventually.rejected;
+                })
+                .then(function(e) {
+                    expect(e).to.have.property('status', 400);
+                    expect(e).to.have.deep.property('data.error', 'bad_request');
+                })
+                .should.notify(done);
+            }); 
+
+            it('move request returns a 400 error if position number is a string', function(done) {
+                var idResource;
+
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null, params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(corbelTest.common.resources.checkSortingAsc(response.data, '_order'))
+                    .to.be.equal(true);
+                    idResource = response.data[2].id;
+
+                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                    .move(idResource, 'invalidPositionString')
+                    .should.be.eventually.rejected;
+                })
+                .then(function(e) {
+                    expect(e).to.have.property('status', 400);
+                    expect(e).to.have.deep.property('data.error', 'bad_request');
+                })
+                .should.notify(done);
+            });
+
+            it('move relation from the last position to specific postion over 200 times', function(done) {
+                
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null, params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(corbelTest.common.resources.checkSortingAsc(response.data, '_order'))
+                    .to.be.equal(true);
+
+                    return corbelTest.common.resources.fastMove(corbelDriver,
+                    response.data[amount - 1].id, response.data[amount - 2].id,
+                    200, COLLECTION_A, idResourceInA, COLLECTION_B)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function(idResource) {
+                    return corbelTest.common.resources.repeatMove(corbelDriver, idResource, 10,
+                    COLLECTION_A, idResourceInA, COLLECTION_B, params, amount)
+                    .should.be.eventually.fulfilled;
+                })
+                .should.notify(done);
             });
         });
     });
