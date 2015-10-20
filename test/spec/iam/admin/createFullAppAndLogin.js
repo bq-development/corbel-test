@@ -2,9 +2,11 @@ describe('In IAM module', function() {
 
     describe('domain management allows create full appplication with', function() {
         var corbelRootDriver;
+        var corbelDriver;
 
         before(function() {
             corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
+            corbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
         });
 
 
@@ -111,7 +113,7 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('new user can be created, login and deleted', function(done) {
+        it('new user can be created, logged and deleted', function(done) {
             var userData = {
                 email: 'myEmail@funkifake.com',
                 username: 'new user',
@@ -160,17 +162,15 @@ describe('In IAM module', function() {
                 userData= user[0];
 
                 return corbelTest.common.clients
-                .loginUser(corbelRootDriver, userData.username, userData.password)
+                .loginUser(corbelDriver, userData.username, userData.password)
                 .should.eventually.be.fulfilled;
             })
             .then(function() {
-                return corbelRootDriver.iam.user(userData.id)
+                return corbelDriver.iam.user(userData.id)
                 .delete()
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                // falla, con el driver debería tener permisos igual que antes
-                // y ahora lanza un 401 en vez de 404
                 return corbelRootDriver.iam.user(userData.id)
                 .get()
                 .should.be.eventually.rejected;
