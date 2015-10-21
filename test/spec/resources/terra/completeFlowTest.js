@@ -7,7 +7,7 @@ describe('In RESOURCES module, in TERRA rem', function() {
         var rightPinNumber = '0000';
 
         before(function() {
-            corbelDriver = corbelTest.drivers['ADMIN_CLIENT'];
+            corbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
         });
 
         it.skip('a subscription can be created, checked and deleted', function(done) {

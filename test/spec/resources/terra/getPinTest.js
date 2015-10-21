@@ -7,7 +7,7 @@ describe('In RESOURCES module, in TERRA rem', function() {
         var wrongMobileNumber = '56989';
 
         before(function() {
-            corbelDriver = corbelTest.drivers['ADMIN_CLIENT'];
+            corbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
         });
 
         it.skip('a pin can be gotten', function(done) {

@@ -9,7 +9,7 @@ describe('In RESOURCES module, in TERRA rem', function() {
         var wrongPinNumber = '1111';
 
         before(function() {
-            corbelDriver = corbelTest.drivers['ADMIN_CLIENT'];
+            corbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
         });
 
         it('an error [404] is returned while trying to unsubscribe an unsubscribed number', function(done) {
