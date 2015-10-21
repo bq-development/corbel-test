@@ -21,18 +21,6 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('an error is returned while trying to get a profile with unauthorized driver using user()', function(done) {
-
-            corbelRootDriver.iam.user()
-            .getProfile()
-            .should.be.eventually.rejected
-            .then(function(e) {
-                expect(e).to.have.property('status', 401);
-                expect(e).to.have.deep.property('data.error', 'unauthorized_token');
-            })
-            .should.notify(done);
-        });
-
         it('an error is returned while trying to get an unexistent user profile', function(done) {
 
             corbelRootDriver.iam.user('unexistent')

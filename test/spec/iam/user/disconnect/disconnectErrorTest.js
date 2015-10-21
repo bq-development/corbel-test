@@ -30,7 +30,7 @@ describe('In IAM module', function() {
         });
 
         it('an error [401] is returned while trying to disconnect a non logged user', function(done) {
-            corbelRootDriver.iam.user()
+            corbelRootDriver.iam.user('me')
             .disconnect()
             .should.be.eventually.rejected
             .then(function(e) {

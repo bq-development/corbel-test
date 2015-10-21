@@ -6,16 +6,8 @@ describe('In IAM module', function() {
     });
 
     describe('while testing not found errors in devices', function() {
-        var userId;
         var corbelDriver;
-        var random;
-        var user = {
-            'firstName': 'userGet',
-            'email': 'user.get.',
-            'username': 'user.get.',
-            'password': 'pass'
-        };
-        var emailDomain = '@funkifake.com';
+        var user;
         var device = {
             notificationUri: '123',
             uid: '123',
@@ -26,32 +18,24 @@ describe('In IAM module', function() {
 
         beforeEach(function(done) {
             corbelDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
-            random = Date.now();
 
-            corbelDriver.iam.users()
-            .create({
-                'firstName': user.firstName + random,
-                'email': user.email + random + emailDomain,
-                'username': user.username + random + emailDomain,
-                'password': user.password
-            })
+            corbelTest.common.iam.createUsers(corbelDriver, 1)
             .should.be.eventually.fulfilled
-            .then(function(id) {
-                userId = id;
+            .then(function(createdUsers) {
+                user = createdUsers[0];
 
-                return corbelTest.common.clients.loginUser
-                (corbelDriver, user.username + random + emailDomain, user.password)
-                .should.eventually.be.fulfilled;
+                return corbelTest.common.clients.loginUser(corbelDriver, user.username, user.password)
+                .should.be.eventually.fulfilled;
             })
             .should.notify(done);
         });
 
         afterEach(function(done) {
-            corbelRootDriver.iam.user(userId)
+            corbelRootDriver.iam.user(user.id)
             .delete()
             .should.be.eventually.fulfilled
             .then(function() {
-                return corbelRootDriver.iam.user(userId)
+                return corbelRootDriver.iam.user(user.id)
                 .get()
                 .should.be.eventually.rejected;
             })
@@ -63,7 +47,7 @@ describe('In IAM module', function() {
         });
 
         it('fails with 404 not found when request retrieve a not existing device information', function(done) {
-            corbelDriver.iam.user(userId)
+            corbelDriver.iam.user(user.id)
             .getDevice('notExistingId')
             .should.eventually.be.rejected
             .then(function(e) {
@@ -84,25 +68,14 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('fails with 404 using user() when request retrieve a not existing device information', function(done) {
-            corbelDriver.iam.user()
-            .getDevice('notExistingId')
-            .should.eventually.be.rejected
-            .then(function(e) {
-                expect(e).to.have.property('status', 404);
-                expect(e).to.have.deep.property('data.error', 'not_found');
-            })
-            .should.notify(done);
-        });
-
         it('deleteMyDevice function can be used despite the device does not exist', function(done) {
-            corbelDriver.iam.user()
+            corbelDriver.iam.user('me')
             .deleteMyDevice('notExistingId')
             .should.be.eventually.fulfilled
             .then(function() {
-                return corbelDriver.iam.user()
+                return corbelDriver.iam.user('me')
                 .getMyDevices()
-                .should.eventually.be.fulfilled;
+                .should.be.eventually.fulfilled;
             })
             .then(function(devices) {
                 expect(devices).to.have.deep.property('data.length', 0);
@@ -111,28 +84,13 @@ describe('In IAM module', function() {
         });
 
         it('deleteDevice function can be used despite the device does not exist', function(done) {
-            corbelDriver.iam.user()
-            .deleteDevice('notExistingId')
-            .should.be.eventually.fulfilled
-            .then(function() {
-                return corbelDriver.iam.user()
-                .getMyDevices()
-                .should.eventually.be.fulfilled;
-            })
-            .then(function(devices) {
-                expect(devices).to.have.deep.property('data.length', 0);
-            })
-            .should.notify(done);
-        });
-
-        it('deleteDevice with me function can be used despite the device does not exist', function(done) {
             corbelDriver.iam.user('me')
             .deleteDevice('notExistingId')
             .should.be.eventually.fulfilled
             .then(function() {
-                return corbelDriver.iam.user()
+                return corbelDriver.iam.user('me')
                 .getMyDevices()
-                .should.eventually.be.fulfilled;
+                .should.be.eventually.fulfilled;
             })
             .then(function(devices) {
                 expect(devices).to.have.deep.property('data.length', 0);
