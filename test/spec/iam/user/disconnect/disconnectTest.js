@@ -3,51 +3,38 @@ describe('In IAM module', function() {
     describe('while testing disconnect', function() {
         var corbelDriver;
         var corbelRootDriver;
-        var userId;
-        var random;
-        var username;
-        var password;
+        var user;
 
         before(function(){
             corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
         });
 
         beforeEach(function(done) {
-            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
-            random = Date.now();
-            username = 'user.signOut' + random + '@funkifake.com';
-            password = 'passSignOut';
+            corbelDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
 
-            corbelDriver.iam.users()
-            .create({
-                'firstName': 'usersignOut',
-                'lastName': 'usersignOut2',
-                'email': 'user.signOut' + random + '@funkifake.com',
-                'username': username,
-                'password': password
-            })
+            corbelTest.common.iam.createUsers(corbelDriver, 1)
             .should.be.eventually.fulfilled
-            .then(function(id) {
-                userId = id;
+            .then(function(createdUsers) {
+                user = createdUsers[0];
 
-                return corbelTest.common.clients.loginUser(corbelDriver, username, password)
+                return corbelTest.common.clients.loginUser(corbelDriver, user.username, user.password)
                 .should.eventually.be.fulfilled;
             })
             .should.notify(done);
         });
 
         afterEach(function(done) {
-            corbelRootDriver.iam.user(userId)
+            corbelRootDriver.iam.user(user.id)
             .delete()
             .should.be.eventually.fulfilled
             .then(function() {
-                return corbelRootDriver.iam.user(userId)
+                return corbelRootDriver.iam.user(user.id)
                 .get()
-                .should.eventually.be.rejected;
+                .should.be.eventually.rejected;
             })
-            .then(function(response) {
-                expect(response).to.have.property('status', 404);
-                expect(response).to.have.deep.property('data.error', 'not_found');
+            .then(function(e) {
+                expect(e).to.have.property('status', 404);
+                expect(e).to.have.deep.property('data.error', 'not_found');
             })
             .should.notify(done);
         });
@@ -57,7 +44,7 @@ describe('In IAM module', function() {
             .get()
             .should.be.eventually.fulfilled
             .then(function(response) {
-                expect(response).to.have.deep.property('data.id', userId);
+                expect(response).to.have.deep.property('data.id', user.id);
 
                 return corbelDriver.iam.user('me')
                 .disconnect()
@@ -65,29 +52,6 @@ describe('In IAM module', function() {
             })
             .then(function() {
                 return corbelDriver.iam.user('me')
-                .get()
-                .should.be.eventually.rejected;
-            })
-            .then(function(e) {
-                expect(e).to.have.property('status', 401);
-                expect(e).to.have.deep.property('data.error', 'invalid_token');
-            })
-            .should.notify(done);
-        });
-
-        it('the logged user is disconnected', function(done) {
-            corbelDriver.iam.user()
-            .get()
-            .should.be.eventually.fulfilled
-            .then(function(response) {
-                expect(response).to.have.deep.property('data.id', userId);
-
-                return corbelDriver.iam.user()
-                .disconnect()
-                .should.be.eventually.fulfilled;
-            })
-            .then(function() {
-                return corbelDriver.iam.user()
                 .get()
                 .should.be.eventually.rejected;
             })
@@ -103,9 +67,9 @@ describe('In IAM module', function() {
             .get()
             .should.be.eventually.fulfilled
             .then(function(response) {
-                expect(response).to.have.deep.property('data.id', userId);
+                expect(response).to.have.deep.property('data.id', user.id);
 
-                return corbelRootDriver.iam.user(userId)
+                return corbelRootDriver.iam.user(user.id)
                 .disconnect()
                 .should.be.eventually.fulfilled;
             })

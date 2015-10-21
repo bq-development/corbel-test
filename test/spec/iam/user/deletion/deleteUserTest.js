@@ -3,45 +3,30 @@ describe('In IAM module', function() {
     describe('while testing delete user', function() {
         var corbelDriver;
         var corbelRootDriver;
-        var userId;
-        var emailDomain = '@funkifake.com';
-        var random;
-        var user = {
-            'firstName': 'userDelete',
-            'email': 'user.delete.',
-            'username': 'user.delete.',
-            'password': 'pass'
-        };
+        var user;
 
         before(function() {
             corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
         });
 
         beforeEach(function(done) {
-            random = Date.now();
             corbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
 
-            corbelDriver.iam.users()
-            .create({
-                'firstName': user.firstName,
-                'email': user.email + random + emailDomain,
-                'username': user.username + random,
-                'password': user.password
-            })
+            corbelTest.common.iam.createUsers(corbelDriver, 1)
             .should.be.eventually.fulfilled
-            .then(function(id) {
-                userId = id;
+            .then(function(createdUsers) {
+                user = createdUsers[0];
             })
             .should.notify(done);
         });
 
         it('basic user is deleted', function(done) {
 
-            corbelDriver.iam.user(userId)
+            corbelDriver.iam.user(user.id)
             .delete()
             .should.be.eventually.fulfilled
             .then(function() {
-                return corbelDriver.iam.user(userId)
+                return corbelDriver.iam.user(user.id)
                 .get()
                 .should.be.eventually.rejected;
             })
@@ -55,7 +40,7 @@ describe('In IAM module', function() {
         it('basic user is deleted using "me"', function(done) {
 
             corbelTest.common.clients.loginUser
-                (corbelDriver, user.username + random, user.password)
+                (corbelDriver, user.username, user.password)
             .should.be.eventually.fulfilled
             .then(function(){
                 return corbelDriver.iam.user('me')
@@ -63,7 +48,7 @@ describe('In IAM module', function() {
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return corbelRootDriver.iam.user(userId)
+                return corbelRootDriver.iam.user(user.id)
                 .get()
                 .should.be.eventually.rejected;
             })
@@ -85,18 +70,18 @@ describe('In IAM module', function() {
                 notificationEnabled: true
             };
 
-            corbelDriver.iam.user(userId)
+            corbelDriver.iam.user(user.id)
             .registerDevice(device)
             .should.eventually.be.fulfilled
             .then(function(id) {
                 deviceId = id;
                 
-                return corbelDriver.iam.user(userId)
+                return corbelDriver.iam.user(user.id)
                 .delete()
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return corbelDriver.iam.user(userId)
+                return corbelDriver.iam.user(user.id)
                 .getDevice(deviceId)
                 .should.eventually.be.rejected;
             }).
@@ -119,14 +104,14 @@ describe('In IAM module', function() {
                 notificationEnabled: true
             };
 
-            corbelDriver.iam.user(userId)
+            corbelDriver.iam.user(user.id)
             .registerDevice(device)
             .should.eventually.be.fulfilled
             .then(function(id) {
                 deviceId = id;
                 
                 return corbelTest.common.clients.loginUser
-                    (corbelDriver, user.username + random, user.password)
+                    (corbelDriver, user.username, user.password)
                 .should.be.eventually.fulfilled;
             })
             .then(function(){
@@ -135,7 +120,7 @@ describe('In IAM module', function() {
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return corbelRootDriver.iam.user(userId)
+                return corbelRootDriver.iam.user(user.id)
                 .getDevice(deviceId)
                 .should.eventually.be.rejected;
             }).

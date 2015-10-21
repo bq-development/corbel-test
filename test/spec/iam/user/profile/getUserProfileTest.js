@@ -3,71 +3,51 @@ describe('In IAM module', function() {
     describe('while testing get user profile', function() {
         var corbelRootDriver;
         var corbelDriver;
-        var userId;
-        var random;
-        var domainEmail = '@funkifake.com';
-
-        var user = {
-            'firstName': 'get.identity',
-            'lastName': 'registerUser',
-            'email': 'get.profile',
-            'username': 'get.profile',
-            'password': 'passRegisterUser',
-            'phoneNumber': '654654654',
-        };
+        var user;
 
         before(function(){
             corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone(); 
         });
 
         beforeEach(function(done) {
-            corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
-            random = Date.now();
+            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
 
-            corbelDriver.iam.users()
-            .create({
-            'firstName': user.firstName + random,
-            'lastName': user.lastName,
-            'email': user.email + random + domainEmail,
-            'username': user.username + random,
-            'password': user.password,
-            'phoneNumber': user.phoneNumber
-            })
+            corbelTest.common.iam.createUsers(corbelDriver, 1)
             .should.be.eventually.fulfilled
-            .then(function(id) {
-                userId = id;
-                return corbelTest.common.clients.loginUser
-                    (corbelDriver, user.username + random + domainEmail, user.password)
+            .then(function(createdUsers) {
+                user = createdUsers[0];
+
+                return corbelTest.common.clients.loginUser(corbelDriver, user.username, user.password)
                 .should.eventually.be.fulfilled;
             })
             .should.notify(done);
         });
 
         afterEach(function(done) {
-            corbelRootDriver.iam.user(userId)
+            corbelRootDriver.iam.user(user.id)
             .delete()
             .should.be.eventually.fulfilled
             .then(function() {
-                return corbelRootDriver.iam.user(userId)
+                return corbelRootDriver.iam.user(user.id)
                 .get()
-                .should.be.eventually.rejected;
+                .should.eventually.be.rejected;
             })
-            .then(function(e) {
-                expect(e).to.have.property('status', 404);
-                expect(e).to.have.deep.property('data.error', 'not_found');
+            .then(function(response) {
+                expect(response).to.have.property('status', 404);
+                expect(response).to.have.deep.property('data.error', 'not_found');
             })
             .should.notify(done);
         });
 
         it('a user profile is got through id and admin driver', function(done) {
 
-            corbelRootDriver.iam.user(userId)
+            corbelRootDriver.iam.user(user.id)
             .getProfile()
             .then(function(response) {
-                expect(response).to.have.deep.property('data.username', user.username + random);
-                expect(response).to.have.deep.property('data.firstName', user.firstName + random);
+                expect(response).to.have.deep.property('data.username', user.username);
+                expect(response).to.have.deep.property('data.firstName', user.firstName);
                 expect(response).to.have.deep.property('data.lastName', user.lastName);
-                expect(response).to.have.deep.property('data.email', user.email + random + domainEmail);
+                expect(response).to.have.deep.property('data.email', user.email.toLowerCase());
             }).
             should.notify(done);
         });
@@ -77,44 +57,21 @@ describe('In IAM module', function() {
             corbelDriver.iam.user('me')
             .getProfile()
             .then(function(response) {
-                expect(response).to.have.deep.property('data.username', user.username + random);
-                expect(response).to.have.deep.property('data.firstName', user.firstName + random);
+                expect(response).to.have.deep.property('data.username', user.username);
+                expect(response).to.have.deep.property('data.firstName', user.firstName);
                 expect(response).to.have.deep.property('data.lastName', user.lastName);
-                expect(response).to.have.deep.property('data.email', user.email + random + domainEmail);
-            }).
-            should.notify(done);
-        });
-
-        it('a user profile is got through user()', function(done) {
-
-            corbelDriver.iam.user()
-            .getProfile()
-            .then(function(response) {
-                expect(response).to.have.deep.property('data.username', user.username + random);
-                expect(response).to.have.deep.property('data.firstName', user.firstName + random);
-                expect(response).to.have.deep.property('data.lastName', user.lastName);
-                expect(response).to.have.deep.property('data.email', user.email + random + domainEmail);
+                expect(response).to.have.deep.property('data.email', user.email.toLowerCase());
             }).
             should.notify(done);
         });
 
         it('all users profile are got through default driver', function(done) {
+            var user2;
 
-            var user2Id;
-            random = Date.now();
-
-            corbelDriver.iam.users()
-            .create({
-                'firstName': user.firstName + random,
-                'lastName': user.lastName,
-                'email': user.email + random + domainEmail,
-                'username': user.username + random,
-                'password': user.password,
-                'phoneNumber': user.phoneNumber
-            })
+            corbelTest.common.iam.createUsers(corbelDriver, 1)
             .should.be.eventually.fulfilled
-            .then(function(id) {
-                user2Id = id;
+            .then(function(createdUsers) {
+                user2 = createdUsers[0];
 
                 return corbelDriver.iam.users()
                 .getProfiles()
@@ -124,12 +81,12 @@ describe('In IAM module', function() {
                 expect(response).to.have.deep.property('data.length').and.be.above(1);
             })
             .then(function() {
-                return corbelRootDriver.iam.user(user2Id)
+                return corbelRootDriver.iam.user(user2.id)
                 .delete()
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return corbelRootDriver.iam.user(user2Id)
+                return corbelRootDriver.iam.user(user2.id)
                 .get()
                 .should.be.eventually.rejected;
             })
@@ -141,21 +98,12 @@ describe('In IAM module', function() {
         });
         it('all users profile are got through admin driver', function(done) {
 
-            var user2Id;
-            random = Date.now();
+            var user2;
 
-            corbelDriver.iam.users()
-            .create({
-                'firstName': user.firstName + random,
-                'lastName': user.lastName,
-                'email': user.email + random + domainEmail,
-                'username': user.username + random,
-                'password': user.password,
-                'phoneNumber': user.phoneNumber
-            })
+            corbelTest.common.iam.createUsers(corbelDriver, 1)
             .should.be.eventually.fulfilled
-            .then(function(id) {
-                user2Id = id;
+            .then(function(createdUsers) {
+                user2 = createdUsers[0];
 
                 return corbelRootDriver.iam.users()
                 .getProfiles()
@@ -165,12 +113,12 @@ describe('In IAM module', function() {
                 expect(response).to.have.deep.property('data.length').and.be.above(1);
             })
             .then(function() {
-                return corbelRootDriver.iam.user(user2Id)
+                return corbelRootDriver.iam.user(user2.id)
                 .delete()
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return corbelRootDriver.iam.user(user2Id)
+                return corbelRootDriver.iam.user(user2.id)
                 .get()
                 .should.be.eventually.rejected;
             })
@@ -185,7 +133,7 @@ describe('In IAM module', function() {
             var params = {
                 query: [{
                     '$eq': {
-                        'firstName': user.firstName + random
+                        'firstName': user.firstName
                     }
                 }]
             };

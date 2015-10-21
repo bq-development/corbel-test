@@ -2,40 +2,28 @@ describe('In IAM module', function() {
 
     describe('while testing update user', function() {
         var corbelDriver;
-        var userId;
-        var emailDomain = '@funkifake.com';
-        var userUpdateTest = {
-            'firstName': 'userUpdate',
-            'email': 'user.update.',
-            'username': 'user.update.'
-        };
+        var user;
 
         before(function() {
-            corbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
+            corbelDriver = corbelTest.drivers['ADMIN_USER'];
         });
 
         beforeEach(function(done) {
-            var random = Date.now();
 
-            corbelDriver.iam.users()
-            .create({
-                'firstName': userUpdateTest.firstName,
-                'email': userUpdateTest.email + random + emailDomain,
-                'username': userUpdateTest.username + random + emailDomain
-            })
+            corbelTest.common.iam.createUsers(corbelDriver, 1)
             .should.be.eventually.fulfilled
-            .then(function(id) {
-                userId = id;
+            .then(function(createdUsers) {
+                user = createdUsers[0];
             })
             .should.notify(done);
         });
 
         afterEach(function(done) {
-            corbelDriver.iam.user(userId)
+            corbelDriver.iam.user(user.id)
             .delete()
             .should.be.eventually.fulfilled
             .then(function() {
-                return corbelDriver.iam.user(userId)
+                return corbelDriver.iam.user(user.id)
                 .get()
                 .should.be.eventually.rejected;
             })
@@ -48,13 +36,13 @@ describe('In IAM module', function() {
 
         it('user firstName is updated', function(done) {
 
-            corbelDriver.iam.user(userId)
+            corbelDriver.iam.user(user.id)
             .update({
                 'firstName': 'user Modified'
             })
             .should.be.eventually.fulfilled
             .then(function() {
-                return corbelDriver.iam.user(userId)
+                return corbelDriver.iam.user(user.id)
                 .get()
                 .should.be.eventually.fulfilled;
             })
@@ -67,13 +55,13 @@ describe('In IAM module', function() {
         it('user username is updated', function(done) {
             var newUserName = 'NewUserName' + Date.now();
 
-            corbelDriver.iam.user(userId)
+            corbelDriver.iam.user(user.id)
             .update({
                 'username': newUserName
             })
             .should.be.eventually.fulfilled
             .then(function() {
-                return corbelDriver.iam.user(userId)
+                return corbelDriver.iam.user(user.id)
                 .get()
                 .should.be.eventually.fulfilled;
             })
@@ -84,15 +72,15 @@ describe('In IAM module', function() {
         });
 
         it('user email is updated', function(done) {
-            var newEmail = 'newemail' + Date.now() + emailDomain;
+            var newEmail = 'newemail' + Date.now() + '@funkifake.com';
 
-            corbelDriver.iam.user(userId)
+            corbelDriver.iam.user(user.id)
             .update({
                 'email': newEmail
             })
             .should.be.eventually.fulfilled
             .then(function() {
-                return corbelDriver.iam.user(userId)
+                return corbelDriver.iam.user(user.id)
                 .get()
                 .should.be.eventually.fulfilled;
             })
@@ -104,13 +92,13 @@ describe('In IAM module', function() {
 
         it('user scopes are updated', function(done) {
 
-            corbelDriver.iam.user(userId)
+            corbelDriver.iam.user(user.id)
             .update({
                 'scopes': ['iam:user:delete']
             })
             .should.be.eventually.fulfilled
             .then(function() {
-                return corbelDriver.iam.user(userId)
+                return corbelDriver.iam.user(user.id)
                 .get()
                 .should.eventually.be.fulfilled;
             })
@@ -123,7 +111,7 @@ describe('In IAM module', function() {
 
         it('user is updated without new content', function(done) {
 
-            corbelDriver.iam.user(userId)
+            corbelDriver.iam.user(user.id)
             .update()
             .should.eventually.be.fulfilled.and.notify(done);
         });

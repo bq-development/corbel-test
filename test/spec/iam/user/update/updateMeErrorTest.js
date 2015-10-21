@@ -3,10 +3,7 @@ describe('In IAM module', function() {
     describe('while testing updateMe', function() {
         var corbelDriver;
         var corbelRootDriver;
-        var userId;
-        var random;
-        var username;
-        var password;
+        var user;
 
         before(function(){
             corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
@@ -14,34 +11,24 @@ describe('In IAM module', function() {
 
         beforeEach(function(done) {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
-            random = Date.now();
-            username = 'user.updateMe' + random + '@funkifake.com';
-            password = 'passUpdateMe';
 
-            corbelDriver.iam.users()
-            .create({
-                'firstName': 'userUpdateMe',
-                'lastName': 'userUpdateMe',
-                'email': 'user.updateMe' + random + '@funkifake.com',
-                'username': username,
-                'password': password
-            })
+            corbelTest.common.iam.createUsers(corbelDriver, 1)
             .should.be.eventually.fulfilled
-            .then(function(id) {
-                userId = id;
+            .then(function(createdUsers) {
+                user = createdUsers[0];
 
-                return corbelTest.common.clients.loginUser(corbelDriver, username, password)
+                return corbelTest.common.clients.loginUser(corbelDriver, user.username, user.password)
                 .should.eventually.be.fulfilled;
             })
             .should.notify(done);
         });
 
         afterEach(function(done) {
-            corbelRootDriver.iam.user(userId)
+            corbelRootDriver.iam.user(user.id)
             .delete()
             .should.be.eventually.fulfilled
             .then(function() {
-                return corbelRootDriver.iam.user(userId)
+                return corbelRootDriver.iam.user(user.id)
                 .get()
                 .should.eventually.be.rejected;
             })
@@ -58,7 +45,7 @@ describe('In IAM module', function() {
             .signOut()
             .should.be.eventually.fulfilled
             .then(function(){
-                return corbelDriver.iam.user()
+                return corbelDriver.iam.user('me')
                 .updateMe({
                     'firstName': 'user Modified Me'
                 })
