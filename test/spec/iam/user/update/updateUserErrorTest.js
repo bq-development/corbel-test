@@ -2,45 +2,29 @@ describe('In IAM module', function() {
 
     describe('while testing update user', function() {
         var corbelDriver;
-        var userId;
+        var user;
         var random;
         var emailDomain = '@funkifake.com';
-        var userUpdateTest = {
-            'firstName': 'userUpdate',
-            'email': 'user.update.',
-            'username': 'user.update.'
-        };
-
-        var createUser = function() {
-            random = Date.now();
-
-            return corbelDriver.iam.users()
-            .create({
-                'firstName': userUpdateTest.firstName,
-                'email': userUpdateTest.email + random + emailDomain,
-                'username': userUpdateTest.username + random + emailDomain
-            })
-            .should.be.eventually.fulfilled;
-        };
 
         before(function() {
             corbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
         });
 
         beforeEach(function(done) {
-            createUser()
-            .then(function(id) {
-                userId = id;
+            corbelTest.common.iam.createUsers(corbelDriver, 1)
+            .should.be.eventually.fulfilled
+            .then(function(createdUsers) {
+                user = createdUsers[0];
             })
             .should.notify(done);
         });
 
         afterEach(function(done) {
-            corbelDriver.iam.user(userId)
+            corbelDriver.iam.user(user.id)
             .delete()
             .should.be.eventually.fulfilled
             .then(function() {
-                return corbelDriver.iam.user(userId)
+                return corbelDriver.iam.user(user.id)
                 .get()
                 .should.be.eventually.rejected;
             })
@@ -52,23 +36,23 @@ describe('In IAM module', function() {
         });
 
         it('an error is returned while trying to update an username with another that already exists', function(done) {
-            var secondUserId;
+            var secondUser;
             var newUserName = 'NewUserName' + Date.now();
             random = Date.now();
 
-            createUser()
+            corbelTest.common.iam.createUsers(corbelDriver, 1)
             .should.be.eventually.fulfilled
-            .then(function(id) {
-                secondUserId = id;
+            .then(function(createdUsers) {
+                secondUser = createdUsers[0];
 
-                return corbelDriver.iam.user(userId)
+                return corbelDriver.iam.user(user.id)
                 .update({
                     'username': newUserName
                 })
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return corbelDriver.iam.user(secondUserId)
+                return corbelDriver.iam.user(secondUser.id)
                 .update({
                     'username': newUserName
                 })
@@ -79,7 +63,7 @@ describe('In IAM module', function() {
                 expect(e).to.have.deep.property('data.error', 'conflict');
             })
             .then(function() {
-                return corbelDriver.iam.user(secondUserId)
+                return corbelDriver.iam.user(secondUser.id)
                 .delete()
                 .should.be.eventually.fulfilled;
             })
@@ -87,23 +71,23 @@ describe('In IAM module', function() {
         });
 
         it('an error is returned while trying to update an email with another that already exists', function(done) {
-            var secondUserId;
+            var secondUser;
             var newEmail = 'NewEmail' + Date.now() + emailDomain;
             random = Date.now();
 
-            createUser()
+            corbelTest.common.iam.createUsers(corbelDriver, 1)
             .should.be.eventually.fulfilled
-            .then(function(id) {
-                secondUserId = id;
+            .then(function(createdUsers) {
+                secondUser = createdUsers[0];
 
-                return corbelDriver.iam.user(userId)
+                return corbelDriver.iam.user(user.id)
                 .update({
                     'email': newEmail
                 })
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return corbelDriver.iam.user(secondUserId)
+                return corbelDriver.iam.user(secondUser.id)
                 .update({
                     'email': newEmail
                 })
@@ -114,7 +98,7 @@ describe('In IAM module', function() {
                 expect(e).to.have.deep.property('data.error', 'conflict');
             })
             .then(function() {
-                return corbelDriver.iam.user(secondUserId)
+                return corbelDriver.iam.user(secondUser.id)
                 .delete()
                 .should.be.eventually.fulfilled;
             })
@@ -122,7 +106,7 @@ describe('In IAM module', function() {
         });
 
         it('an error [403] is returned while trying to update an user with incorrect email', function(done) {
-            corbelDriver.iam.user(userId)
+            corbelDriver.iam.user(user.id)
             .update({
                 'email': 'incorrect'
             })
@@ -135,7 +119,7 @@ describe('In IAM module', function() {
         });
 
         it('an error [403] is returned while trying to update an user with incorrect scopes', function(done) {
-            corbelDriver.iam.user(userId)
+            corbelDriver.iam.user(user.id)
             .update({
                 'scopes': ['incorrect:scope']
             })
