@@ -17,8 +17,8 @@ function createUsers(driver, amount) {
         var emailAccount = 'registerUser' + random + '@funkifake.com';
 
         var userData = {
-            'firstName': 'registerUser',
-            'lastName': 'registerUser',
+            'firstName': 'registerUser' + random,
+            'lastName': 'registerUser' + random,
             'email': 'registerUser' + random + '@funkifake.com',
             'username': 'registerUser' + random + '@funkifake.com',
             'password': 'passRegisterUser'

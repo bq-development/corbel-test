@@ -3,16 +3,7 @@ describe('In IAM module', function() {
     describe('while testing delete me', function() {
         var corbelRootDriver;
         var corbelDriver;
-        var userId;
-        var random;
-        var emailDomain = '@funkifake.com';
-        var deleteUserMe = {
-            'firstName': 'userDeleteMe',
-            'lastName': 'userDeleteMe',
-            'email': 'user.deleteMe',
-            'username': 'user.deleteMe',
-            'password': 'passDeleteMe'
-        };
+        var user;
 
         before(function() {
             corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
@@ -20,34 +11,26 @@ describe('In IAM module', function() {
         });
 
         beforeEach(function(done) {
-            var random = Date.now();
 
-            corbelRootDriver.iam.users()
-            .create({
-                'firstName': deleteUserMe.firstName,
-                'lastName': deleteUserMe.lastName,
-                'email': deleteUserMe.email + random + emailDomain,
-                'username': deleteUserMe.username + random + emailDomain,
-                'password': deleteUserMe.password,
-            })
+            corbelTest.common.iam.createUsers(corbelDriver, 1)
             .should.be.eventually.fulfilled
-            .then(function(id) {
-                userId = id;
+            .then(function(createdUsers) {
+                user = createdUsers[0];
 
                 return corbelTest.common.clients.loginUser
-                    (corbelDriver, deleteUserMe.username + random + emailDomain, deleteUserMe.password)
-                .should.eventually.be.fulfilled;
+                    (corbelDriver, user.username, user.password)
+                .should.be.eventually.fulfilled;
             })
             .should.notify(done);
         });
 
         it('the logged user deletes himself', function(done) {
 
-            corbelDriver.iam.user()
+            corbelDriver.iam.user('me')
             .deleteMe()
             .should.be.eventually.fulfilled
             .then(function() {
-                return corbelRootDriver.iam.user(userId)
+                return corbelRootDriver.iam.user(user.id)
                 .get()
                 .should.be.eventually.rejected;
             })
