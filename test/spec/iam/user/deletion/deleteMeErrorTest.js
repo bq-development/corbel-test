@@ -3,48 +3,31 @@ describe('In IAM module', function() {
     describe('while testing delete me', function() {
         var corbelDriver;
         var corbelDefaultDriver;
-        var userId;
-        var random;
-        var emailDomain = '@funkifake.com';
-        var deleteUserMe = {
-            'firstName': 'userDeleteMe',
-            'lastName': 'userDeleteMe',
-            'email': 'user.deleteMe',
-            'username': 'user.deleteMe',
-            'password': 'passDeleteMe'
-        };
+        var user;
 
         beforeEach(function(done) {
             corbelDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
             corbelDefaultDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
-            var random = Date.now();
 
-            corbelDriver.iam.users()
-            .create({
-                'firstName': deleteUserMe.firstName,
-                'lastName': deleteUserMe.lastName,
-                'email': deleteUserMe.email + random + emailDomain,
-                'username': deleteUserMe.username + random + emailDomain,
-                'password': deleteUserMe.password,
-            })
+            corbelTest.common.iam.createUsers(corbelDriver, 1)
             .should.be.eventually.fulfilled
-            .then(function(id) {
-                userId = id;
+            .then(function(createdUsers) {
+                user = createdUsers[0];
 
                 return corbelTest.common.clients.loginUser
-                    (corbelDriver, deleteUserMe.username + random + emailDomain, deleteUserMe.password)
-                .should.eventually.be.fulfilled;
+                    (corbelDriver, user.username, user.password)
+                .should.be.eventually.fulfilled;
             })
             .should.notify(done);
         });
 
         it('an error is returned while trying to get user with the same driver after use deleteMe', function(done) {
 
-            corbelDriver.iam.user()
+            corbelDriver.iam.user('me')
             .deleteMe()
             .should.be.eventually.fulfilled
             .then(function() {
-                return corbelDriver.iam.user(userId)
+                return corbelDriver.iam.user(user.id)
                 .get()
                 .should.be.eventually.rejected;
             })
@@ -56,7 +39,8 @@ describe('In IAM module', function() {
         });
 
         it('an error is returned while trying to use deleteMe with another logged driver', function(done) {
-            corbelDefaultDriver.iam.user()
+
+            corbelDefaultDriver.iam.user('me')
             .deleteMe()
             .should.be.eventually.rejected
             .then(function(e){
@@ -64,12 +48,12 @@ describe('In IAM module', function() {
                 expect(e).to.have.deep.property('data.error', 'unauthorized_token');
             })
             .then(function(){
-                return corbelDriver.iam.user()
+                return corbelDriver.iam.user('me')
                 .deleteMe()
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return corbelDriver.iam.user(userId)
+                return corbelDriver.iam.user(user.id)
                 .get()
                 .should.be.eventually.rejected;
             })
