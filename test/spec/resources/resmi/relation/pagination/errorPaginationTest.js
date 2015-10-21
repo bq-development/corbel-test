@@ -9,98 +9,118 @@ describe('In RESOURCES module', function() {
         var COLLECTION_A = 'test:CorbelJSPaginationRelationA' + Date.now();
         var COLLECTION_B = 'test:CorbelJSPaginationRelationB' + Date.now();
 
+        var idResourceInA = 5;
+
         before(function() {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
         });
 
-        describe('Relation has pagination and when get relation with ', function() {
-            var idResourceInA = 5;
+        it('400 invalid page size is returned if pageSize is more than max number of page elems 50', function(done) {
+            var params = {
+                pagination: {
+                    pageSize: RESOURCES_MAX_PAGE_SIZE + 1
+                }
+            };
 
-            describe('page size greater than maximum number of elements for page and default page', function() {
+            corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+            .get(null, params)
+            .should.be.eventually.rejected
+            .then(function(e) {
+                expect(e).to.have.property('status', 400);
+                expect(e.data).to.have.property('error', 'invalid_page_size');
+            })
+            .should.notify(done);
+        });
 
-                it('fails returning invalid page size', function(done) {
-                    var params = {
-                        pagination: {
-                            pageSize: RESOURCES_MAX_PAGE_SIZE + 1
-                        }
-                    };
+        it('400 invalid page size is returned if pageSize is less than min number of page elems 0', function(done) {
+            var params = {
+                pagination: {
+                    pageSize: -1
+                }
+            };
 
-                    corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                    .get(null, params)
-                    .should.be.eventually.rejected
-                    .then(function(e) {
-                        expect(e).to.have.property('status', 400);
-                        expect(e.data).to.have.property('error', 'invalid_page_size');
-                    })
-                    .should.be.eventually.fulfilled.notify(done);
-                });
-            });
+            corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+            .get(null, params)
+            .should.be.eventually.rejected
+            .then(function(e) {
+                expect(e).to.have.property('status', 400);
+                expect(e.data).to.have.property('error', 'invalid_page_size');
+            })
+            .should.notify(done);
+        });
 
-            describe('page size less than minimum number of elements for page and default page', function() {
-                it('.fails returning invalid page size', function(done) {
-                    var params = {
-                        pagination: {
-                            pageSize: -1
-                        }
-                    };
+        it('400 invalid page size is returned if pageSize exceeds JS max int value 9007199254740991', function(done) {
+            var params = {
+                pagination: {
+                    pageSize: 9007199254740992
+                }
+            };
 
-                    corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                    .get(null, params)
-                    .should.be.eventually.rejected
-                    .then(function(e) {
-                        expect(e).to.have.property('status', 400);
-                        expect(e.data).to.have.property('error', 'invalid_page_size');
-                    })
-                    .should.be.eventually.fulfilled.notify(done);
-                });
-            });
+            corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+            .get(null, params)
+            .should.be.eventually.rejected
+            .then(function(e) {
+                expect(e).to.have.property('status', 400);
+                expect(e.data).to.have.property('error', 'bad_request');
+            })
+            .should.notify(done);
+        });
 
-            describe('invalid page value', function() {
+        it('400 invalid page value is returned if page value is -1', function(done) {
+            var params = {
+                pagination: {
+                    page: -1
+                }
+            };
 
-                it('fails returning invalid page size', function(done) {
-                    var params = {
-                        pagination: {
-                            page: -1
-                        }
-                    };
+            corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+            .get(null, params)
+            .should.be.eventually.rejected
+            .then(function(e) {
+                expect(e).to.have.property('status', 400);
+                expect(e.data).to.have.property('error', 'invalid_page');
+            })
+            .should.notify(done);
+        });
 
-                    corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                    .get(null, params)
-                    .should.be.eventually.rejected
-                    .then(function(e) {
-                        expect(e).to.have.property('status', 400);
-                        expect(e.data).to.have.property('error', 'invalid_page');
-                    })
-                    .should.be.eventually.fulfilled.notify(done);
-                });
-            });
+        it('400 invalid page is returned if page value exceeds max int value in JS 9007199254740991', function(done) {
+            var params = {
+                pagination: {
+                    page: 9007199254740992
+                }
+            };
 
-            describe('invalid query and specific number of element in an specific page', function() {
+            corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+            .get(null, params)
+            .should.be.eventually.rejected
+            .then(function(e) {
+                expect(e).to.have.property('status', 400);
+                expect(e.data).to.have.property('error', 'bad_request');
+            })
+            .should.notify(done);
+        });
 
-                it('successes returning all resources with intField' +
-                       ' greater than 700 no more than specific page size', function(done) {
-                    var params = {
-                        query: [{
-                            'error': {
-                                intField: 700
-                            }
-                        }],
-                        pagination: {
-                            page: 1,
-                            pageSize: 21
-                        }
-                    };
+        it('400 invalid_query is returned using an invalid query and specific page number and size', function(done) {
+            var params = {
+                query: [{
+                    'error': {
+                        intField: 700
+                    }
+                }],
+                pagination: {
+                    page: 1,
+                    pageSize: 21
+                }
+            };
 
-                    corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                    .get(null, params)
-                    .should.be.eventually.rejected
-                    .then(function(e) {
-                        expect(e).to.have.property('status', 400);
-                        expect(e.data).to.have.property('error', 'invalid_query');
-                    })
-                    .should.be.eventually.fulfilled.notify(done);
-                });
-            });
+            corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+            .get(null, params)
+            .should.be.eventually.rejected
+            .then(function(e) {
+                expect(e).to.have.property('status', 400);
+                expect(e.data).to.have.property('error', 'invalid_query');
+            })
+            .should.notify(done);
         });
     });
 });
