@@ -12,7 +12,7 @@ describe('In RESOURCES module, in TERRA rem', function() {
             corbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
         });
 
-        it('an error [403] is returned while trying to subscribe with not valid number', function(done) {
+        it.skip('an error [403] is returned while trying to subscribe with not valid number', function(done) {
 
             corbelDriver.resources.resource(TERRA_COLLECTION, wrongMobileNumber)
             .update(null, {customQueryParams: {pin: rightPinNumber}})

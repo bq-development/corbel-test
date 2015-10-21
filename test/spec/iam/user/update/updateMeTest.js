@@ -146,7 +146,7 @@ describe('In IAM module', function() {
         });
 
         it('user email is updated through updateMe', function(done) {
-            var newEmail = 'modifiedemail@funkifake.com';
+            var newEmail = 'modifiedemail' + Date.now() + '@funkifake.com';
 
             corbelDriver.iam.user('me')
             .updateMe({
@@ -165,7 +165,7 @@ describe('In IAM module', function() {
         });
 
         it('user email is updated through user("me")', function(done) {
-            var newEmail = 'modifiedemail@funkifake.com';
+            var newEmail = 'modifiedemail' + Date.now() + '@funkifake.com';
             corbelDriver.iam.user('me')
             .update({
                 'email': newEmail

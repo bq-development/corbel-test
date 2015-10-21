@@ -12,7 +12,7 @@ describe('In RESOURCES module, in TERRA rem', function() {
             corbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
         });
 
-        it('an error [404] is returned while trying to unsubscribe an unsubscribed number', function(done) {
+        it.skip('an error [404] is returned while trying to unsubscribe an unsubscribed number', function(done) {
 
             corbelDriver.resources.resource(TERRA_COLLECTION, wrongMobileNumber)
             .delete({customQueryParams: {pin: rightPinNumber}})
