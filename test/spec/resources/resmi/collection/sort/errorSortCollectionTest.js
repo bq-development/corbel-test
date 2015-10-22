@@ -16,49 +16,51 @@ describe('In RESOURCES module', function() {
             };
 
             corbelDriver.resources.collection(COLLECTION)
-            .get(params)
-            .should.be.eventually.rejected
-            .then(function(e) {
-                expect(e).to.have.property('status', 400);
-                expect(e).to.have.deep.property('data.error', 'invalid_sort');
-            }).
-            should.be.eventually.fulfilled.and.notify(done);
+                .get(params)
+                .should.be.eventually.rejected
+                .then(function(e) {
+                    expect(e).to.have.property('status', 400);
+                    expect(e).to.have.deep.property('data.error', 'invalid_sort');
+                })
+                .should.notify(done);
         });
 
         it('when the request uses an incorrect sorting, with correct json but diferent structure,' +
-               ' returns BAD REQUEST (400)', function(done) {
+            ' returns BAD REQUEST (400)',
+            function(done) {
+                var params = {
+                    sort: {
+                        '$gt': {
+                            stringField: 'something'
+                        }
+                    }
+                };
+
+                corbelDriver.resources.collection(COLLECTION)
+                    .get(params)
+                    .should.be.eventually.rejected
+                    .then(function(e) {
+                        expect(e).to.have.property('status', 400);
+                        expect(e).to.have.deep.property('data.error', 'invalid_sort');
+                    })
+                    .should.notify(done);
+            });
+
+        it('when the request uses an incorrect sorting (BAD_REQUEST = 1), returns BAD REQUEST (400)', function(done) {
             var params = {
                 sort: {
-                    '$gt': {
-                        stringField: 'something'
-                    }
+                    BAD_REQUEST: 1
                 }
             };
 
             corbelDriver.resources.collection(COLLECTION)
-            .get(params)
-            .should.be.eventually.rejected
-            .then(function(e) {
-                expect(e).to.have.property('status', 400);
-                expect(e).to.have.deep.property('data.error', 'invalid_sort');
-            })
-            .should.be.eventually.fulfilled.and.notify(done);
-        });
-
-        it('when the request uses an incorrect sorting (BAD_REQUEST = 1), returns BAD REQUEST (400)', function(done) {
-            var params = {sort : {
-                            BAD_REQUEST : 1
-                            }
-                          }; 
-
-            corbelDriver.resources.collection(COLLECTION)
-            .get(params)
-            .should.be.eventually.rejected
-            .then(function(e) {
-                expect(e).to.have.property('status', 400);
-                expect(e).to.have.deep.property('data.error', 'invalid_sort');
-            })
-            .should.be.eventually.fulfilled.and.notify(done);
+                .get(params)
+                .should.be.eventually.rejected
+                .then(function(e) {
+                    expect(e).to.have.property('status', 400);
+                    expect(e).to.have.deep.property('data.error', 'invalid_sort');
+                })
+                .should.notify(done);
         });
 
         it('when the request uses an incorrect sorting (api:sort=BAD_JSON), returns BAD REQUEST (400)', function(done) {
@@ -67,14 +69,31 @@ describe('In RESOURCES module', function() {
             };
 
             corbelDriver.resources.collection(COLLECTION)
-            .get(params)
-            .should.be.eventually.rejected
-            .then(function(e) {
-                expect(e).to.have.property('status', 400);
-                expect(e).to.have.deep.property('data.error', 'invalid_sort');
-            })
-            .should.be.eventually.fulfilled.and.notify(done);
+                .get(params)
+                .should.be.eventually.rejected
+                .then(function(e) {
+                    expect(e).to.have.property('status', 400);
+                    expect(e).to.have.deep.property('data.error', 'invalid_sort');
+                })
+                .should.notify(done);
         });
 
+        it('when the request uses some sorting fields, returns BAD REQUEST (400)', function(done) {
+            var params = {
+                sort: {
+                    stringField: 'asc',
+                    intField: 'desc'
+                }
+            };
+
+            corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.be.eventually.rejected
+                .then(function(e) {
+                    expect(e).to.have.property('status', 400);
+                    expect(e).to.have.deep.property('data.error', 'invalid_sort');
+                })
+                .should.notify(done);
+        });
     });
 });
