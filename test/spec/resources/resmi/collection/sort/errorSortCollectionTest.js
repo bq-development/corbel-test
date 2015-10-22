@@ -49,7 +49,7 @@ describe('In RESOURCES module', function() {
             var params = {sort : {
                             BAD_REQUEST : 1
                             }
-                          }; 
+                          };
 
             corbelDriver.resources.collection(COLLECTION)
             .get(params)
@@ -67,6 +67,21 @@ describe('In RESOURCES module', function() {
             };
 
             corbelDriver.resources.collection(COLLECTION)
+            .get(params)
+            .should.be.eventually.rejected
+            .then(function(e) {
+                expect(e).to.have.property('status', 400);
+                expect(e).to.have.deep.property('data.error', 'invalid_sort');
+            })
+            .should.be.eventually.fulfilled.and.notify(done);
+        });
+
+        it('when the request uses some sorting fields, returns BAD REQUEST (400)', function(done) {
+            var params = {
+                sort: {stringField: 'asc', intField:'desc'}
+            };
+
+                    corbelDriver.resources.collection(COLLECTION)
             .get(params)
             .should.be.eventually.rejected
             .then(function(e) {
