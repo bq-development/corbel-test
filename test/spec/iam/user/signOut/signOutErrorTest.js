@@ -18,9 +18,9 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('an error [401] is returned while trying to signOut a non logged user using user()', function(done) {
-            corbelRootDriver.iam.user('me')
-            .signOut()
+        it('an error [401] is returned while trying to signOut a non logged user using signOutMe', function(done) {
+            corbelRootDriver.iam.user()
+            .signOutMe()
             .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 401);

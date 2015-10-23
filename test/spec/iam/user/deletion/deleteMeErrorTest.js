@@ -23,7 +23,7 @@ describe('In IAM module', function() {
 
         it('an error is returned while trying to get user with the same driver after use deleteMe', function(done) {
 
-            corbelDriver.iam.user('me')
+            corbelDriver.iam.user()
             .deleteMe()
             .should.be.eventually.fulfilled
             .then(function() {
@@ -40,7 +40,7 @@ describe('In IAM module', function() {
 
         it('an error is returned while trying to use deleteMe with another logged driver', function(done) {
 
-            corbelDefaultDriver.iam.user('me')
+            corbelDefaultDriver.iam.user()
             .deleteMe()
             .should.be.eventually.rejected
             .then(function(e){
@@ -48,7 +48,7 @@ describe('In IAM module', function() {
                 expect(e).to.have.deep.property('data.error', 'unauthorized_token');
             })
             .then(function(){
-                return corbelDriver.iam.user('me')
+                return corbelDriver.iam.user()
                 .deleteMe()
                 .should.be.eventually.fulfilled;
             })

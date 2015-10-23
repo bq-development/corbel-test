@@ -26,7 +26,7 @@ describe('In IAM module', function() {
 
         it('the logged user deletes himself', function(done) {
 
-            corbelDriver.iam.user('me')
+            corbelDriver.iam.user()
             .deleteMe()
             .should.be.eventually.fulfilled
             .then(function() {
