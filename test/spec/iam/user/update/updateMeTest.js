@@ -40,7 +40,7 @@ describe('In IAM module', function() {
         });
 
         it('user firsname is updated through updateMe', function(done) {
-            corbelDriver.iam.user('me')
+            corbelDriver.iam.user()
             .updateMe({
                 'firstName': 'user Modified Me'
             })
@@ -74,7 +74,7 @@ describe('In IAM module', function() {
         });
 
         it('user firsname and lastname are updated through updateMe', function(done) {
-            corbelDriver.iam.user('me')
+            corbelDriver.iam.user()
             .updateMe({
                 'firstName': 'user Modified Me',
                 'lastName': 'new lastName'
@@ -112,7 +112,7 @@ describe('In IAM module', function() {
         });
 
         it('user username is updated through updateMe', function(done) {
-            corbelDriver.iam.user('me')
+            corbelDriver.iam.user()
             .updateMe({
                 'username': 'modified username'
             })
@@ -148,7 +148,7 @@ describe('In IAM module', function() {
         it('user email is updated through updateMe', function(done) {
             var newEmail = 'modifiedemail' + Date.now() + '@funkifake.com';
 
-            corbelDriver.iam.user('me')
+            corbelDriver.iam.user()
             .updateMe({
                 'email': newEmail
             })
@@ -183,7 +183,7 @@ describe('In IAM module', function() {
         });
 
         it('user scopes are not updated through updateMe', function(done) {
-            corbelDriver.iam.user('me')
+            corbelDriver.iam.user()
             .updateMe({
                 'scopes': ['ec:purchase:admin']
             })

@@ -45,7 +45,7 @@ describe('In IAM module', function() {
             .signOut()
             .should.be.eventually.fulfilled
             .then(function(){
-                return corbelDriver.iam.user('me')
+                return corbelDriver.iam.user()
                 .updateMe({
                     'firstName': 'user Modified Me'
                 })

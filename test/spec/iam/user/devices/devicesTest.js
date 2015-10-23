@@ -97,18 +97,18 @@ describe('In IAM module', function() {
         it('users can register his devices using registerMyDevice and complete CRUD operations', function(done) {
             var retriveDevice;
 
-            corbelDriver.iam.user('me')
+            corbelDriver.iam.user()
             .getMyDevices()
             .should.be.eventually.fulfilled
             .then(function(devices) {
                 expect(devices).to.have.deep.property('data.length', 0);
 
-                return corbelDriver.iam.user('me')
+                return corbelDriver.iam.user()
                 .registerMyDevice(device)
                 .should.be.eventually.fulfilled;
             })
             .then(function(deviceId) {
-                return corbelDriver.iam.user('me')
+                return corbelDriver.iam.user()
                 .getMyDevice(deviceId)
                 .should.be.eventually.fulfilled;
             })
@@ -120,7 +120,7 @@ describe('In IAM module', function() {
                 expect(retriveDevice.userId).to.be.equals(user.id);
                 device.name = 'My black device';
 
-                return corbelDriver.iam.user('me')
+                return corbelDriver.iam.user()
                 .registerMyDevice(device)
                 .should.be.eventually.fulfilled;
             })
@@ -128,7 +128,7 @@ describe('In IAM module', function() {
                 expect(deviceId).to.be.equals(retriveDevice.id);
                 retriveDevice.name = device.name;
 
-                return corbelDriver.iam.user('me')
+                return corbelDriver.iam.user()
                 .getMyDevices()
                 .should.be.eventually.fulfilled;
             })
@@ -136,12 +136,12 @@ describe('In IAM module', function() {
                 var auxResponseDevices = responseDevices.data || undefined;
                 expect(auxResponseDevices[0]).to.deep.equal(retriveDevice);
 
-                return corbelDriver.iam.user('me')
+                return corbelDriver.iam.user()
                 .deleteMyDevice(auxResponseDevices[0].id)
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return corbelDriver.iam.user('me')
+                return corbelDriver.iam.user()
                 .getMyDevices()
                 .should.be.eventually.fulfilled;
             })

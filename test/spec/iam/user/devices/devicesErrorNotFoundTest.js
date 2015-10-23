@@ -69,11 +69,11 @@ describe('In IAM module', function() {
         });
 
         it('deleteMyDevice function can be used despite the device does not exist', function(done) {
-            corbelDriver.iam.user('me')
+            corbelDriver.iam.user()
             .deleteMyDevice('notExistingId')
             .should.be.eventually.fulfilled
             .then(function() {
-                return corbelDriver.iam.user('me')
+                return corbelDriver.iam.user()
                 .getMyDevices()
                 .should.be.eventually.fulfilled;
             })
@@ -88,7 +88,7 @@ describe('In IAM module', function() {
             .deleteDevice('notExistingId')
             .should.be.eventually.fulfilled
             .then(function() {
-                return corbelDriver.iam.user('me')
+                return corbelDriver.iam.user()
                 .getMyDevices()
                 .should.be.eventually.fulfilled;
             })
