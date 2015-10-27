@@ -119,6 +119,8 @@ function createRelationFromSingleObjetToMultipleObject(driver, collectionA, idRe
         var jsonRelationData = {
             intField: Date.now(),
             intCount: 100 * count,
+            floatCount: 0.1 * count,
+            booleanCount: true,
             stringField: 'stringContent' + count,
             stringSortCut: 'Test Short Cut',
             ObjectNumber: _.range(count + 1),
