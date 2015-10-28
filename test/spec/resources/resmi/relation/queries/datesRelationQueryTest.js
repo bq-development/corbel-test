@@ -27,7 +27,7 @@ describe('In RESOURCES module', function() {
                 (corbelDriver, COLLECTION_A, idResourceInA, COLLECTION_B, idsResourecesInB)
                 .should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         afterEach(function(done) {
@@ -38,7 +38,7 @@ describe('In RESOURCES module', function() {
                 .delete()
                 .should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         describe('When timestamp is used', function() {
@@ -67,7 +67,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', 0);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('should be able to use timestamp parameter in queries with $gt creationTime - 10000', function(done){
@@ -94,7 +94,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', amount);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('should be able to use timestamp parameter in queries with $lt creationTime + 10000', function(done){
@@ -121,7 +121,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', amount);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('should be able to use timestamp parameter in queries with $lt creationTime - 10000', function(done){
@@ -148,7 +148,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', 0);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
         });
 
@@ -186,7 +186,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', 0);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('should be able to use ISODate parameter in queries with $gt creationTime - 10000', function(done){
@@ -221,7 +221,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', amount);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('should be able to use ISODate parameter in queries with $lt creationTime + 10000', function(done){
@@ -256,7 +256,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', 0);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('should be able to use ISODate parameter in queries with $lt creationTime - 10000', function(done){
@@ -291,7 +291,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', amount);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
         });
     });
