@@ -1,6 +1,6 @@
 describe('In RESOURCES module', function() {
 
-    describe('In RESMI module, while testing relation queries', function() {
+    describe('In RESMI module, testing relation queries, ', function() {
         var corbelDriver;
         var COLLECTION_A = 'test:CorbelJSObjectQueryA' + Date.now();
         var COLLECTION_B = 'test:CorbelJSObjectQueryB' + Date.now();
@@ -41,15 +41,14 @@ describe('In RESOURCES module', function() {
             .should.notify(done);
         });
 
-        describe('When timestamp is used', function() {
+        describe('when timestamp is used', function() {
 
             it('should be able to use timestamp parameter in queries with $gt creationTime + 10000', function(done){
                 var date;
                 var queryParams;
 
-                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                .get()
-                .should.be.eventually.fulfilled
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B)
                 .then(function(response){
                     date = response.data[0]._updatedAt;
                     queryParams = {
@@ -60,9 +59,8 @@ describe('In RESOURCES module', function() {
                         }]
                     };
 
-                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                    .get(null, queryParams)
-                    .should.be.eventually.fulfilled;
+                    return corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                        idResourceInA, COLLECTION_B, queryParams);
                 })
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', 0);
@@ -74,9 +72,8 @@ describe('In RESOURCES module', function() {
                 var date;
                 var queryParams;
 
-                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                .get()
-                .should.be.eventually.fulfilled
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B)
                 .then(function(response) {
                     date = response.data[0]._updatedAt;
                     queryParams = {
@@ -87,9 +84,8 @@ describe('In RESOURCES module', function() {
                         }]
                     };
 
-                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                    .get(null, queryParams)
-                    .should.be.eventually.fulfilled;
+                    return corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                        idResourceInA, COLLECTION_B, queryParams);
                 })
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', amount);
@@ -101,9 +97,7 @@ describe('In RESOURCES module', function() {
                 var date;
                 var queryParams;
 
-                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                .get()
-                .should.be.eventually.fulfilled
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A, idResourceInA, COLLECTION_B)
                 .then(function(response){
                     date = response.data[0]._updatedAt;
                     queryParams = {
@@ -114,9 +108,8 @@ describe('In RESOURCES module', function() {
                         }]
                     };
 
-                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                    .get(null, queryParams)
-                    .should.be.eventually.fulfilled;
+                    return corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                        idResourceInA, COLLECTION_B, queryParams);
                 })
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', amount);
@@ -128,9 +121,8 @@ describe('In RESOURCES module', function() {
                 var date;
                 var queryParams;
 
-                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                .get()
-                .should.be.eventually.fulfilled
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B)
                 .then(function(response){
                     date = response.data[0]._updatedAt;
                     queryParams = {
@@ -141,9 +133,8 @@ describe('In RESOURCES module', function() {
                         }]
                     };
 
-                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                    .get(null, queryParams)
-                    .should.be.eventually.fulfilled;
+                    return corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                        idResourceInA, COLLECTION_B, queryParams);
                 })
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', 0);
@@ -152,7 +143,7 @@ describe('In RESOURCES module', function() {
             });
         });
 
-        describe('When ISODate is used', function() {
+        describe('when ISODate is used', function() {
 
             it('should be able to use ISODate parameter in queries with $gt creationTime + 10000', function(done){
                 var date;
@@ -165,9 +156,8 @@ describe('In RESOURCES module', function() {
                     }]
                 };
 
-                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                .get()
-                .should.be.eventually.fulfilled
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B)
                 .then(function(response) {
                     datemillis = response.data[0]._updatedAt;
                     date = 'ISODate(' + new Date(datemillis + 10000).toISOString() + ')';
@@ -179,9 +169,8 @@ describe('In RESOURCES module', function() {
                         }]
                     };
 
-                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                    .get(null, queryParams)
-                    .should.be.eventually.fulfilled;
+                    return corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                        idResourceInA, COLLECTION_B, queryParams);
                 })
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', 0);
@@ -200,9 +189,8 @@ describe('In RESOURCES module', function() {
                     }]
                 };
 
-                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                .get()
-                .should.be.eventually.fulfilled
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B)
                 .then(function(response) {
                     datemillis = response.data[0]._updatedAt;
                     date = 'ISODate(' + new Date(datemillis - 10000).toISOString() + ')';
@@ -214,9 +202,8 @@ describe('In RESOURCES module', function() {
                         }]
                     };
 
-                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                    .get(null, queryParams)
-                    .should.be.eventually.fulfilled;
+                    return corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                        idResourceInA, COLLECTION_B, queryParams);
                 })
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', amount);
@@ -235,9 +222,8 @@ describe('In RESOURCES module', function() {
                     }]
                 };
 
-                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                .get()
-                .should.be.eventually.fulfilled
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B)
                 .then(function(response) {
                     datemillis = response.data[0]._updatedAt;
                     date = 'ISODate(' + new Date(datemillis + 10000).toISOString() + ')';
@@ -249,9 +235,8 @@ describe('In RESOURCES module', function() {
                         }]
                     };
 
-                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                    .get(null, queryParams)
-                    .should.be.eventually.fulfilled;
+                    return corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                        idResourceInA, COLLECTION_B, queryParams);
                 })
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', 0);
@@ -270,9 +255,8 @@ describe('In RESOURCES module', function() {
                     }]
                 };
 
-                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                .get()
-                .should.be.eventually.fulfilled
+                 corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B)
                 .then(function(response) {
                     datemillis = response.data[0]._updatedAt;
                     date = 'ISODate(' + new Date(datemillis - 10000).toISOString() + ')';
@@ -284,9 +268,8 @@ describe('In RESOURCES module', function() {
                         }]
                     };
 
-                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                    .get(null, queryParams)
-                    .should.be.eventually.fulfilled;
+                    return  corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                        idResourceInA, COLLECTION_B, queryParams);
                 })
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', amount);

@@ -188,6 +188,25 @@ function repeatMove(driver, idResource, repeatTimes, COLLECTION_A, idResourceInA
         });
 }
 
+function addResourcesUsingDataArray(driver, collectionA, idResource, collectionB, idsResourcesInB, dataArray) {
+    var promises = [];
+    var promise;
+
+    dataArray.forEach(function(data, index) {
+        promise = driver.resources.relation(collectionA, idResource, collectionB)
+            .add(idsResourcesInB[index], data);
+        promises.push(promise);
+    });
+
+    return Promise.all(promises);
+}
+
+function getRelation(driver, collectionA, idResource, collectionB, params) {
+    return driver.resources.relation(collectionA, idResource, collectionB)
+    .get(null, params)
+    .should.be.eventually.fulfilled;
+}
+
 module.exports = {
     getProperty: getProperty,
     checkSorting: checkSorting,
@@ -198,5 +217,7 @@ module.exports = {
     createRelationFromSingleObjetToMultipleObject: createRelationFromSingleObjetToMultipleObject,
     deleteCreatedRelationObjects: deleteCreatedRelationObjects,
     fastMove: fastMove,
-    repeatMove: repeatMove
+    repeatMove: repeatMove,
+    addResourcesUsingDataArray: addResourcesUsingDataArray,
+    getRelation: getRelation
 };

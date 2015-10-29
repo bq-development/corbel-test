@@ -53,9 +53,8 @@ describe('In RESOURCES module', function() {
                     }]
                 };
 
-                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                .get(null, params)
-                .should.be.eventually.fulfilled
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params)
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 1);
                     expect(response).to.have.deep.property('data[0].id', COLLECTION_B + '/' +

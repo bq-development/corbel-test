@@ -1,48 +1,48 @@
 describe('In RESOURCES module', function() {
 
     describe('In RESMI module, testing relation queries, ', function() {
-        var corbelDriver;
-        var TIMESTAMP = Date.now();
-        var COLLECTION_A = 'test:CorbelJSPaginationRelationA' + TIMESTAMP;
-        var COLLECTION_B = 'test:CorbelJSPaginationRelationB' + TIMESTAMP;
-
-        var amount = 5;
-        var idResourceInA;
-        var idsResourcesInB;
-
-        before(function(done) {
-            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
-
-            corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION_A, 1)
-            .should.be.eventually.fulfilled
-            .then(function(id) {
-                idResourceInA = id[0];
-
-                return corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION_B, amount)
-                .should.be.eventually.fulfilled;
-            })
-            .then(function(ids) {
-                idsResourcesInB = ids;
-
-                return corbelTest.common.resources.createRelationFromSingleObjetToMultipleObject
-                (corbelDriver, COLLECTION_A, idResourceInA, COLLECTION_B, idsResourcesInB)
-                .should.be.eventually.fulfilled;
-            })
-            .should.notify(done);
-        });
-
-        after(function(done) {
-            corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
-            .should.be.eventually.fulfilled
-            .then(function() {
-                return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                .delete()
-                .should.be.eventually.fulfilled;
-            })
-            .should.notify(done);
-        });
 
         describe('query language like', function() {
+            var corbelDriver;
+            var TIMESTAMP = Date.now();
+            var COLLECTION_A = 'test:CorbelJSPaginationRelationA' + TIMESTAMP;
+            var COLLECTION_B = 'test:CorbelJSPaginationRelationB' + TIMESTAMP;
+
+            var amount = 5;
+            var idResourceInA;
+            var idsResourcesInB;
+
+            before(function(done) {
+                corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
+
+                corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION_A, 1)
+                .should.be.eventually.fulfilled
+                .then(function(id) {
+                    idResourceInA = id[0];
+
+                    return corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION_B, amount)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function(ids) {
+                    idsResourcesInB = ids;
+
+                    return corbelTest.common.resources.createRelationFromSingleObjetToMultipleObject
+                    (corbelDriver, COLLECTION_A, idResourceInA, COLLECTION_B, idsResourcesInB)
+                    .should.be.eventually.fulfilled;
+                })
+                .should.notify(done);
+            });
+
+            after(function(done) {
+                corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
+                .should.be.eventually.fulfilled
+                .then(function() {
+                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                    .delete()
+                    .should.be.eventually.fulfilled;
+                })
+                .should.notify(done);
+            });
 
             it('elements that satisfy the regex sintax are returned', function(done) {
                 var params = {
@@ -53,9 +53,8 @@ describe('In RESOURCES module', function() {
                     }]
                 };
 
-                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                .get(null, params)
-                .should.be.eventually.fulfilled
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params)
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 1);
                     expect(response).to.have.deep.property('data[0].stringField', 'stringContent1');
@@ -72,9 +71,8 @@ describe('In RESOURCES module', function() {
                     }]
                 };
 
-                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                .get(null, params)
-                .should.be.eventually.fulfilled
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params)
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 1);
                     expect(response).to.have.deep.property('data[0].stringField', 'stringContent1');
@@ -91,9 +89,8 @@ describe('In RESOURCES module', function() {
                     }]
                 };
 
-                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                .get(null, params)
-                .should.be.eventually.fulfilled
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params)
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', amount);
                     response.data.forEach(function(element) {
@@ -112,9 +109,8 @@ describe('In RESOURCES module', function() {
                     }]
                 };
 
-                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                .get(null, params)
-                .should.be.eventually.fulfilled
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params)
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 0);
                 })

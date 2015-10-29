@@ -2,7 +2,7 @@ describe('In RESOURCES module', function() {
 
     describe('In RESMI module, testing relation queries, ', function() {
 
-        describe('query language greater than with invalid format query', function() {
+        describe('query language size', function() {
             var corbelDriver;
             var TIMESTAMP = Date.now();
             var COLLECTION_A = 'test:CorbelJSPaginationRelationA' + TIMESTAMP;
@@ -44,28 +44,30 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            it('400 invalid query is returned when querying for elems greater than empty array', function(done) {
+            it('elements where ObjectNumber array size is 1 are returned', function(done) {
                 var params = {
                     query: [{
-                        '$gt': {}
+                        '$size': {
+                            ObjectNumber: 1
+                        }
                     }]
                 };
 
-                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                .get(null, params)
-                .should.be.eventually.rejected
-                .then(function(e) {
-                    expect(e).to.have.property('status', 400);
-                    expect(e.data).to.have.property('error', 'invalid_query');
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params)
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', 1);
+                    expect(response).to.have.deep.property('data[0].id', COLLECTION_B + '/' +
+                        idsResourcesInB[0]);
                 })
                 .should.notify(done);
             });
 
-            it('no results are returned when querying for empty array', function(done) {
+            it('0 elements are returned querying for a size different from the relation arrays size', function(done) {
                 var params = {
                     query: [{
-                        '$in': {
-                            ObjectNumber: []
+                        '$size': {
+                            ObjectNumber: 100
                         }
                     }]
                 };
@@ -78,30 +80,31 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            it('400 invalid query is returned if one of the filters used in the query is empty', function(done) {
+            it('multiple elements are returned querying for a common array size', function(done) {
                 var params = {
-                    queries: [{
-                        query: [{
-                            '$gt': {
-                                intCount: 300
-                            }
-                        }]
-                    }, {
-                        query: [{
-                            '$gt': {}
-                        }]
+                    query: [{
+                        '$size': {
+                            ObjectNumber: 2
+                        }
                     }]
                 };
 
+                var dataToAdd = {
+                    ObjectNumber : [2, 3],
+                };
+
                 corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                .get(null, params)
-                .should.be.eventually.rejected
-                .then(function(e) {
-                    expect(e).to.have.property('status', 400);
-                    expect(e).to.have.deep.property('data.error', 'invalid_query');
+                .add(idsResourcesInB[0], dataToAdd)
+                .should.be.eventually.fulfilled
+                .then(function(response){
+                    return corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params);
+                })
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', 2);
                 })
                 .should.notify(done);
-            });
+            });       
         });
     });
 });

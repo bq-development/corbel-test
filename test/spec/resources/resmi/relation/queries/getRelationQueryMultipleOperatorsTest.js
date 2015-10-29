@@ -57,13 +57,12 @@ describe('In RESOURCES module', function() {
                     }]
                 };
 
-                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                .get(null, params)
-                .should.be.eventually.fulfilled
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params)
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 3);
                     response.data.forEach(function(element) {
-                        expect(element.intCount).to.within(200, 400);
+                        expect(element).to.have.property('intCount').and.to.within(200, 400);
                     });
                 })
                 .should.notify(done);
@@ -82,14 +81,13 @@ describe('In RESOURCES module', function() {
                     }]
                 };
 
-                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                .get(null, params)
-                .should.be.eventually.fulfilled
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params)
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 2);
                     response.data.forEach(function(element) {
                         expect(element).to.have.deep.property('stringSortCut', 'Test Short Cut');
-                        expect(element.ObjectNumber).to.contain(3, 5);
+                        expect(element).to.have.property('ObjectNumber').and.to.contain(3, 5);
                     });
                 })
                 .should.notify(done);
@@ -108,14 +106,13 @@ describe('In RESOURCES module', function() {
                     }]
                 };
 
-                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                .get(null, params)
-                .should.be.eventually.fulfilled
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params)
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 3);
                     expect(corbelTest.common.resources.checkSortingAsc(response.data, 'intField'));
                     response.data.forEach(function(element) {
-                        expect(element.intCount).to.be.below(300);
+                        expect(element).to.have.property('intCount').and.to.be.below(300);
                     });
                 }).
                 should.notify(done);
@@ -137,14 +134,13 @@ describe('In RESOURCES module', function() {
                     }]
                 };
 
-                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                .get(null, params)
-                .should.be.eventually.fulfilled
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params)
                 .then(function(response) {
                     expect(corbelTest.common.resources.checkSortingAsc(response.data, 'intField'));
                     expect(response).to.have.deep.property('data.length', 2);
                     response.data.forEach(function(element) {
-                        expect(element.intCount).to.be.below(200);
+                        expect(element).to.have.property('intCount').and.to.be.below(200);
                     });
                 })
                 .should.notify(done);
