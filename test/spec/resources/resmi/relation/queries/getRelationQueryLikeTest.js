@@ -1,6 +1,6 @@
 describe('In RESOURCES module', function() {
 
-    describe('In RESMI module, testing relation queries, ', function() {
+    describe('In RESMI module, testing relation queries', function() {
 
         describe('query language like', function() {
             var corbelDriver;
@@ -11,6 +11,9 @@ describe('In RESOURCES module', function() {
             var amount = 5;
             var idResourceInA;
             var idsResourcesInB;
+            
+            var punctuationSentence ='José María';
+            var specialCharacters = 'ñÑçáéíóúàèìòùâêîôû\'';
 
             before(function(done) {
                 corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
@@ -57,7 +60,10 @@ describe('In RESOURCES module', function() {
                     idResourceInA, COLLECTION_B, params)
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 1);
-                    expect(response).to.have.deep.property('data[0].stringField', 'stringContent1');
+
+                    response.data.forEach(function(element) {
+                        expect(element).to.have.property('stringField', 'stringContent1');
+                    });
                 })
                 .should.notify(done);
             });
@@ -75,7 +81,10 @@ describe('In RESOURCES module', function() {
                     idResourceInA, COLLECTION_B, params)
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 1);
-                    expect(response).to.have.deep.property('data[0].stringField', 'stringContent1');
+
+                    response.data.forEach(function(element) {
+                        expect(element).to.have.property('stringField', 'stringContent1');
+                    });
                 })
                 .should.notify(done);
             });
@@ -94,7 +103,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', amount);
                     response.data.forEach(function(element) {
-                        expect(element.stringSortCut).to.contain('Test');
+                        expect(element).to.have.property('stringSortCut').and.to.contain('Test');
                     });
                 })
                 .should.notify(done);
@@ -113,6 +122,46 @@ describe('In RESOURCES module', function() {
                     idResourceInA, COLLECTION_B, params)
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 0);
+                })
+                .should.notify(done);
+            });
+
+            it('correct elements are returned when querying for special character strings', function(done) {
+                var params = {
+                    query: [{
+                        '$like': {
+                            specialCharacters: specialCharacters
+                        }
+                    }]
+                };
+
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params)
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', amount);
+                    response.data.forEach(function(element) {
+                        expect(element).to.have.property('specialCharacters', specialCharacters);
+                    });
+                })
+                .should.notify(done);
+            });
+
+            it('correct elements are returned when querying for punctuation strings', function(done) {
+                var params = {
+                    query: [{
+                        '$like': {
+                            punctuationSentence: punctuationSentence
+                        }
+                    }]
+                };
+
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params)
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', amount);
+                    response.data.forEach(function(element) {
+                        expect(element).to.have.property('punctuationSentence', punctuationSentence);
+                    });
                 })
                 .should.notify(done);
             });

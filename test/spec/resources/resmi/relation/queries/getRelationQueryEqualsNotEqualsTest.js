@@ -1,6 +1,6 @@
 describe('In RESOURCES module', function() {
 
-    describe('In RESMI module, testing relation queries, ', function() {
+    describe('In RESMI module, testing relation queries', function() {
         var corbelDriver;
         var TIMESTAMP = Date.now();
         var COLLECTION_A = 'test:CorbelJSPaginationRelationA' + TIMESTAMP;
@@ -9,6 +9,9 @@ describe('In RESOURCES module', function() {
         var amount = 5;
         var idResourceInA;
         var idsResourcesInB;
+
+        var punctuationSentence ='José María';
+        var specialCharacters = 'ñÑçáéíóúàèìòùâêîôû\'';
 
         before(function(done) {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
@@ -75,7 +78,10 @@ describe('In RESOURCES module', function() {
                     idResourceInA, COLLECTION_B, params)
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 1);
-                    expect(response).to.have.deep.property('data[0].stringField', 'stringContent1');
+
+                    response.data.forEach(function(element) {
+                        expect(element).to.have.property('stringField', 'stringContent1');
+                    });
                 })
                 .should.notify(done);
             });
@@ -93,7 +99,10 @@ describe('In RESOURCES module', function() {
                     idResourceInA, COLLECTION_B, params)
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', amount);
-                    expect(response).to.have.deep.property('data[0].stringSortCut', 'Test Short Cut');
+
+                    response.data.forEach(function(element) {
+                        expect(element).to.have.property('stringSortCut', 'Test Short Cut');
+                    });
                 })
                 .should.notify(done);
             });
@@ -111,7 +120,10 @@ describe('In RESOURCES module', function() {
                     idResourceInA, COLLECTION_B, params)
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 1);
-                    expect(response).to.have.deep.property('data[0].floatCount', 0.1);
+
+                    response.data.forEach(function(element) {
+                        expect(element).to.have.property('floatCount', 0.1);
+                    });
                 })
                 .should.notify(done);
             });
@@ -129,7 +141,10 @@ describe('In RESOURCES module', function() {
                     idResourceInA, COLLECTION_B, params)
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', amount);
-                    expect(response).to.have.deep.property('data[0].booleanCount', true);
+
+                    response.data.forEach(function(element) {
+                        expect(element).to.have.property('booleanCount', true);
+                    });
                 })
                 .should.notify(done);
             });
@@ -193,6 +208,46 @@ describe('In RESOURCES module', function() {
                 })
                 .should.notify(done);
             });
+
+            it('correct elements are returned when querying for special character strings', function(done) {
+                var params = {
+                    query: [{
+                        '$eq': {
+                            specialCharacters: specialCharacters
+                        }
+                    }]
+                };
+
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params)
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', amount);
+                    response.data.forEach(function(element) {
+                        expect(element).to.have.property('specialCharacters', specialCharacters);
+                    });
+                })
+                .should.notify(done);
+            });
+
+            it('correct elements are returned when querying for punctuation strings', function(done) {
+                var params = {
+                    query: [{
+                        '$eq': {
+                            punctuationSentence: punctuationSentence
+                        }
+                    }]
+                };
+
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params)
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', amount);
+                    response.data.forEach(function(element) {
+                        expect(element).to.have.property('punctuationSentence', punctuationSentence);
+                    });
+                })
+                .should.notify(done);
+            });
         });
 
         describe('query language not equal', function() {
@@ -212,7 +267,7 @@ describe('In RESOURCES module', function() {
                     expect(response).to.have.deep.property('data.length', amount - 1);
 
                     response.data.forEach(function(element) {
-                        expect(element.intCount).not.equal(200);
+                        expect(element).to.have.property('intCount').and.not.equal(200);
                     });
                 })
                 .should.notify(done);
@@ -233,7 +288,7 @@ describe('In RESOURCES module', function() {
                     expect(response).to.have.deep.property('data.length', amount - 1);
 
                     response.data.forEach(function(element) {
-                        expect(element.intCount).not.equal('stringContent1');
+                        expect(element).to.have.property('intCount').and.not.equal('stringContent1');
                     });
                 })
                 .should.notify(done);
@@ -254,7 +309,7 @@ describe('In RESOURCES module', function() {
                     expect(response).to.have.deep.property('data.length', amount - 1);
 
                     response.data.forEach(function(element) {
-                        expect(element.floatCount).not.equal(0.2);
+                        expect(element).to.have.property('floatCount').and.not.equal(0.2);
                     });
                 })
                 .should.notify(done);
@@ -275,7 +330,7 @@ describe('In RESOURCES module', function() {
                     expect(response).to.have.deep.property('data.length', 0);
                     
                     response.data.forEach(function(element) {
-                        expect(element.booleanCount).not.equal(true);
+                        expect(element).to.have.property('booleanCount').and.not.equal(true);
                     });
                 })
                 .should.notify(done);
@@ -315,7 +370,7 @@ describe('In RESOURCES module', function() {
                     expect(response).to.have.deep.property('data.length', amount);
 
                     response.data.forEach(function(element) {
-                        expect(element.isoDate).not.equal(isoDateBoundary);
+                        expect(element).to.have.property('isoDate').and.not.equal(isoDateBoundary);
                     });
                 })
                 .should.notify(done);
@@ -354,7 +409,47 @@ describe('In RESOURCES module', function() {
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', amount - 1);
                     response.data.forEach(function(element) {
-                        expect(element.periodField).not.equal(periodBoundary);
+                        expect(element).to.have.property('periodField').and.not.equal(periodBoundary);
+                    });
+                })
+                .should.notify(done);
+            });
+
+            it('correct elements are returned when querying for special character strings', function(done) {
+                var params = {
+                    query: [{
+                        '$ne': {
+                            specialCharacters: specialCharacters
+                        }
+                    }]
+                };
+
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params)
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', 0);
+                    response.data.forEach(function(element) {
+                        expect(element).to.have.property('specialCharacters', specialCharacters);
+                    });
+                })
+                .should.notify(done);
+            });
+
+            it('correct elements are returned when querying for punctuation strings', function(done) {
+                var params = {
+                    query: [{
+                        '$ne': {
+                            punctuationSentence: punctuationSentence
+                        }
+                    }]
+                };
+
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params)
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', 0);
+                    response.data.forEach(function(element) {
+                        expect(element).to.have.property('punctuationSentence', punctuationSentence);
                     });
                 })
                 .should.notify(done);
