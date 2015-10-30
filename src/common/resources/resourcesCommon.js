@@ -122,6 +122,8 @@ function createRelationFromSingleObjetToMultipleObject(driver, collectionA, idRe
             floatCount: 0.1 * count,
             booleanCount: true,
             stringField: 'stringContent' + count,
+            codingTest: 'ñÑçáéíóúàèìòùâêîôû\'',
+            punctuationTest: 'José María',
             stringSortCut: 'Test Short Cut',
             ObjectNumber: _.range(count + 1),
             distinctField: count % 2,

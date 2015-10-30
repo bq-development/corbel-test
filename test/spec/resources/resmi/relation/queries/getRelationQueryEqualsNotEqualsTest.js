@@ -10,6 +10,9 @@ describe('In RESOURCES module', function() {
         var idResourceInA;
         var idsResourcesInB;
 
+        var punctuationTest ='José María';
+        var codingTest = 'ñÑçáéíóúàèìòùâêîôû\'';
+
         before(function(done) {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
 
@@ -193,6 +196,46 @@ describe('In RESOURCES module', function() {
                 })
                 .should.notify(done);
             });
+
+            it('correct elements are returned when querying for special character strings', function(done) {
+                var params = {
+                    query: [{
+                        '$eq': {
+                            codingTest: codingTest
+                        }
+                    }]
+                };
+
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params)
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', amount);
+                    response.data.forEach(function(element) {
+                        expect(element).to.have.property('codingTest', codingTest);
+                    });
+                })
+                .should.notify(done);
+            });
+
+            it('correct elements are returned when querying for punctuation strings', function(done) {
+                var params = {
+                    query: [{
+                        '$eq': {
+                            punctuationTest: punctuationTest
+                        }
+                    }]
+                };
+
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params)
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', amount);
+                    response.data.forEach(function(element) {
+                        expect(element).to.have.property('punctuationTest', punctuationTest);
+                    });
+                })
+                .should.notify(done);
+            });
         });
 
         describe('query language not equal', function() {
@@ -355,6 +398,46 @@ describe('In RESOURCES module', function() {
                     expect(response).to.have.deep.property('data.length', amount - 1);
                     response.data.forEach(function(element) {
                         expect(element.periodField).not.equal(periodBoundary);
+                    });
+                })
+                .should.notify(done);
+            });
+
+            it('correct elements are returned when querying for special character strings', function(done) {
+                var params = {
+                    query: [{
+                        '$ne': {
+                            codingTest: codingTest
+                        }
+                    }]
+                };
+
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params)
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', 0);
+                    response.data.forEach(function(element) {
+                        expect(element).to.have.property('codingTest', codingTest);
+                    });
+                })
+                .should.notify(done);
+            });
+
+            it('correct elements are returned when querying for punctuation strings', function(done) {
+                var params = {
+                    query: [{
+                        '$ne': {
+                            punctuationTest: punctuationTest
+                        }
+                    }]
+                };
+
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params)
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', 0);
+                    response.data.forEach(function(element) {
+                        expect(element).to.have.property('punctuationTest', punctuationTest);
                     });
                 })
                 .should.notify(done);
