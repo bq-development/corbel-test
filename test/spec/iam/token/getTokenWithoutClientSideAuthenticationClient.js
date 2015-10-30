@@ -16,7 +16,7 @@ describe('In IAM module, when get a token with/out client side authentication', 
     });
 
 
-    it(' with not allowed client, it fails returning error UNAUTHORIZED(401)', function(done) {
+    it('with not allowed client, it fails returning error UNAUTHORIZED(401)', function(done) {
         var claims = {
             iss: clientIdrequestDomainClient,
             prn: testPrn,
