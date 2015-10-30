@@ -1,6 +1,6 @@
 describe('In RESOURCES module', function() {
 
-    describe('In RESMI module, testing relation queries, ', function() {
+    describe('In RESMI module, testing relation queries,', function() {
 
         describe('query language like', function() {
             var corbelDriver;
@@ -11,6 +11,9 @@ describe('In RESOURCES module', function() {
             var amount = 5;
             var idResourceInA;
             var idsResourcesInB;
+            
+            var punctuationTest ='José María';
+            var codingTest = 'ñÑçáéíóúàèìòùâêîôû\'';
 
             before(function(done) {
                 corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
@@ -113,6 +116,46 @@ describe('In RESOURCES module', function() {
                     idResourceInA, COLLECTION_B, params)
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 0);
+                })
+                .should.notify(done);
+            });
+
+            it('correct elements are returned when querying for special character strings', function(done) {
+                var params = {
+                    query: [{
+                        '$like': {
+                            codingTest: codingTest
+                        }
+                    }]
+                };
+
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params)
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', amount);
+                    response.data.forEach(function(element) {
+                        expect(element).to.have.property('codingTest', codingTest);
+                    });
+                })
+                .should.notify(done);
+            });
+
+            it('correct elements are returned when querying for punctuation strings', function(done) {
+                var params = {
+                    query: [{
+                        '$like': {
+                            punctuationTest: punctuationTest
+                        }
+                    }]
+                };
+
+                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
+                    idResourceInA, COLLECTION_B, params)
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', amount);
+                    response.data.forEach(function(element) {
+                        expect(element).to.have.property('punctuationTest', punctuationTest);
+                    });
                 })
                 .should.notify(done);
             });
