@@ -3,6 +3,7 @@ describe('In IAM module', function() {
     describe('domain management allows create full appplication with', function() {
         var corbelRootDriver;
         var corbelDriver;
+        var corbelUserDriver;
 
         before(function() {
             corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
@@ -153,20 +154,29 @@ describe('In IAM module', function() {
             .then(function(response){
                 client.clientsecret = response.data.key;
                 expect(response).to.have.deep.property('data.id', client.id);
+
+                corbelUserDriver = corbel.getDriver({
+                    'clientId': client.id,
+                    'clientSecret': client.clientsecret,
+                    'urlBase': corbelTest.CONFIG.COMMON.urlBase,
+                    'scopes': client.scopes.join(' ')
+                });
+
+                return corbelUserDriver.iam.token().create();
             })
             .then(function(){
-                return corbelTest.common.iam.createUsers(corbelRootDriver, 1) 
+                return corbelTest.common.iam.createUsers(corbelUserDriver, 1) 
                 .should.be.eventually.fulfilled;
             })
             .then(function(user){
                 userData= user[0];
 
                 return corbelTest.common.clients
-                .loginUser(corbelDriver, userData.username, userData.password)
+                .loginUser(corbelUserDriver, userData.username, userData.password)
                 .should.eventually.be.fulfilled;
             })
             .then(function() {
-                return corbelDriver.iam.user(userData.id)
+                return corbelUserDriver.iam.user(userData.id)
                 .delete()
                 .should.be.eventually.fulfilled;
             })
