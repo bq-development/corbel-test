@@ -10,7 +10,7 @@ describe('In ASSETS module', function() {
             });
 
             it('asset is not retrieved due to authorization reasons', function(done) {
-                corbelDriver.assets().getAll()
+                corbelDriver.assets.asset().getAll()
                 .should.be.eventually.rejected
                 .then(function(e) {
                     expect(e).to.have.property('status', 401);
@@ -44,14 +44,14 @@ describe('In ASSETS module', function() {
             });
 
             it('asset is not retrieved due to authorization reasons', function(done) {
-                corbelDriver.assets().getAll()
+                corbelDriver.assets.asset().getAll()
                 .should.be.eventually.fulfilled
                 .then(function(response){
                     return corbelDriver.iam.user(user.id).disconnect()
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(response){
-                    return corbelDriver.assets().getAll()
+                    return corbelDriver.assets.asset().getAll()
                     .should.be.eventually.rejected;
                 })
                 .then(function(e) {

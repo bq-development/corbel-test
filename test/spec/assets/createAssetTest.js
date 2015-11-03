@@ -15,10 +15,10 @@ describe('In ASSETS module', function() {
         afterEach(function(done){
             promises = [];
             createdAssetsIds.forEach(function(assetId){
-                promises.push(corbelDriver.assets(assetId).delete()
+                promises.push(corbelDriver.assets.asset(assetId).delete()
                 .should.be.eventually.fulfilled
                 .then(function(){
-                    return corbelDriver.assets(assetId).get()
+                    return corbelDriver.assets.asset(assetId).get()
                     .should.be.eventually.rejected;
                 })
                 .then(function(e) {
@@ -33,13 +33,13 @@ describe('In ASSETS module', function() {
         it('asset gets created', function(done) {
             var assetId;
 
-            corbelDriver.assets().create(corbelTest.common.assets.getAsset())
+            corbelDriver.assets.asset().create(corbelTest.common.assets.getAsset())
             .should.be.eventually.fulfilled
             .then(function(id) {
                 assetId = id;
                 createdAssetsIds.push(assetId);
 
-                return corbelDriver.assets(assetId).get()
+                return corbelDriver.assets.asset(assetId).get()
                 .should.be.eventually.fulfilled;
             }).then(function(response) {
                 expect(response).to.have.deep.property('data.id', assetId);
@@ -52,13 +52,13 @@ describe('In ASSETS module', function() {
             asset.expire = null;
             var assetId;
 
-            corbelDriver.assets().create(asset)
+            corbelDriver.assets.asset().create(asset)
             .should.be.eventually.fulfilled
             .then(function(id) {
                 assetId = id;
                 createdAssetsIds.push(assetId);
 
-                return corbelDriver.assets(assetId).get()
+                return corbelDriver.assets.asset(assetId).get()
                 .should.be.eventually.fulfilled;
             }).then(function(response) {
                 expect(response).to.have.deep.property('data.id', assetId);
@@ -70,13 +70,13 @@ describe('In ASSETS module', function() {
             var assetId1, assetId2;
             var asset = corbelTest.common.assets.getAsset();
 
-            corbelDriver.assets().create(asset)
+            corbelDriver.assets.asset().create(asset)
             .should.be.eventually.fulfilled
             .then(function(id) {
                 assetId1 = id;
                 createdAssetsIds.push(assetId1);
 
-                return corbelDriver.assets(id).get()
+                return corbelDriver.assets.asset(id).get()
                 .should.be.eventually.fulfilled;
             }).then(function(response) {
                 expect(response).to.have.deep.property('data.name', asset.name);
@@ -86,14 +86,14 @@ describe('In ASSETS module', function() {
                 expect(response).to.have.deep.property('data.scopes')
                 .that.is.deep.equals(asset.scopes);
 
-                return corbelDriver.assets().create(asset)
+                return corbelDriver.assets.asset().create(asset)
                 .should.be.eventually.fulfilled;
             })
             .then(function(id) {
                 assetId2 = id;
                 createdAssetsIds.push(assetId2);
 
-                return corbelDriver.assets(id).get()
+                return corbelDriver.assets.asset(id).get()
                 .should.be.eventually.fulfilled;
             })
             .then(function(response) {
@@ -115,25 +115,25 @@ describe('In ASSETS module', function() {
             asset2.scopes = ['assets:asset'];
             var assetId1, assetId2;
 
-            corbelDriver.assets().create(asset)
+            corbelDriver.assets.asset().create(asset)
             .should.be.eventually.fulfilled
             .then(function(id) {
                 assetId1 = id;
                 createdAssetsIds.push(assetId1);
 
-                return corbelDriver.assets(id).get()
+                return corbelDriver.assets.asset(id).get()
                 .should.be.eventually.fulfilled;
             }).then(function(response) {
                 expect(response).to.have.deep.property('data.id', assetId1);
 
-                return corbelDriver.assets().create(asset2)
+                return corbelDriver.assets.asset().create(asset2)
                 .should.be.eventually.fulfilled;
             })
             .then(function(id) {
                 assetId2 = id;
                 createdAssetsIds.push(assetId1);
 
-                return corbelDriver.assets(id).get()
+                return corbelDriver.assets.asset(id).get()
                 .should.be.eventually.fulfilled;
             })
             .then(function(response) {

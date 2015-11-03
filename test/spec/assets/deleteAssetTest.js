@@ -8,7 +8,7 @@ describe('In ASSETS module', function() {
             });
 
             it('asset is not deleted due to authorization reasons', function(done) {
-                corbelDriver.assets('assetId')
+                corbelDriver.assets.asset('assetId')
                 .delete()
                 .should.be.eventually.rejected
                 .then(function(e) {
@@ -28,25 +28,25 @@ describe('In ASSETS module', function() {
             it('asset is deleted', function(done) {
                 var assetId;
 
-                corbelDriver.assets()
+                corbelDriver.assets.asset()
                 .create(corbelTest.common.assets.getAsset())
                 .should.be.eventually.fulfilled
                 .then(function(id) {
                     assetId = id;
 
-                    return corbelDriver.assets(assetId)
+                    return corbelDriver.assets.asset(assetId)
                     .get()
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.id', assetId);
 
-                    return corbelDriver.assets(assetId)
+                    return corbelDriver.assets.asset(assetId)
                     .delete()
                     .should.be.eventually.fulfilled;
                 })
                 .then(function() {
-                    return corbelDriver.assets(assetId)
+                    return corbelDriver.assets.asset(assetId)
                     .get()
                     .should.be.eventually.rejected;
                 })
@@ -62,25 +62,25 @@ describe('In ASSETS module', function() {
                 asset.expire = null;
                 var assetId;
 
-                corbelDriver.assets()
+                corbelDriver.assets.asset()
                 .create(asset)
                 .should.be.eventually.fulfilled
                 .then(function(id) {
                     assetId = id;
 
-                    return corbelDriver.assets(assetId)
+                    return corbelDriver.assets.asset(assetId)
                     .get()
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.id', assetId);
 
-                    return corbelDriver.assets(assetId)
+                    return corbelDriver.assets.asset(assetId)
                     .delete()
                     .should.be.eventually.fulfilled;
                 })
                 .then(function() {
-                    return corbelDriver.assets(assetId)
+                    return corbelDriver.assets.asset(assetId)
                     .get()
                     .should.be.eventually.rejected;
                 })
