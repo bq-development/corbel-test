@@ -1,0 +1,80 @@
+>> Local Npm module "grunt-corejs-build" not found. Is it installed?
+
+Running "clean:0" (clean) task
+>> 0 paths cleaned.
+
+Running "clean:1" (clean) task
+>> 0 paths cleaned.
+
+Running "jshint:all" (jshint) task
+
+✔ No problems
+
+
+Running "config" task
+
+Running "browserify:dist" (browserify) task
+>> Bundle .tmp/bundle.js created.
+
+Running "express:myServer" (express) task
+
+Running "express-server:myServer" (express-server) task
+Web server started on port:9002, no hostname specified [pid: 62081]
+
+Running "karma:serve" (karma) task
+03 11 2015 19:02:38.045:WARN [karma]: No captured browser, open http://localhost:8080/
+03 11 2015 19:02:38.052:INFO [karma]: Karma v0.13.9 server started at http://localhost:8080/
+03 11 2015 19:02:38.056:INFO [launcher]: Starting browser Chrome
+03 11 2015 19:02:39.307:INFO [Chrome 46.0.2490 (Mac OS X 10.11.1)]: Connected on socket jqVhHNFNFo2FaPJ2AAAA with id 84834284
+Chrome 46.0.2490 (Mac OS X 10.11.1) ERROR
+  Uncaught ReferenceError: require is not defined
+  at /Users/rackdon/Desktop/BQ/Corbel/corbel-test/test/express/app.js:4
+Chrome 46.0.2490 (Mac OS X 10.11.1) ERROR
+  Uncaught ReferenceError: require is not defined
+  at /Users/rackdon/Desktop/BQ/Corbel/corbel-test/test/express/app.js:4
+1..0
+
+Finished in 0.662 secs / 0 secs
+
+SUMMARY:
+✔ 0 tests completed
+03 11 2015 19:02:39.975:INFO [karma-tap-reporter]: writing report to file: /Users/rackdon/Desktop/BQ/Corbel/corbel-test/.report/report.tap
+03 11 2015 19:04:40.440:INFO [watcher]: Changed file "/Users/rackdon/Desktop/BQ/Corbel/corbel-test/test/express/emails/routes.js".
+Chrome 46.0.2490 (Mac OS X 10.11.1) ERROR
+  Uncaught ReferenceError: require is not defined
+  at /Users/rackdon/Desktop/BQ/Corbel/corbel-test/test/express/app.js:4
+Chrome 46.0.2490 (Mac OS X 10.11.1) ERROR
+  Uncaught ReferenceError: require is not defined
+  at /Users/rackdon/Desktop/BQ/Corbel/corbel-test/test/express/app.js:4
+1..0
+
+Finished in 6.884 secs / 0 secs
+
+SUMMARY:
+✔ 0 tests completed
+03 11 2015 19:04:47.579:INFO [karma-tap-reporter]: writing report to file: /Users/rackdon/Desktop/BQ/Corbel/corbel-test/.report/report.tap
+03 11 2015 19:06:34.253:WARN [Chrome 46.0.2490 (Mac OS X 10.11.1)]: Disconnected (1 times)
+03 11 2015 19:06:34.466:ERROR [launcher]: Chrome crashed.
+	
+03 11 2015 19:06:34.495:INFO [launcher]: Trying to start Chrome again (1/2).
+03 11 2015 19:06:35.907:INFO [Chrome 46.0.2490 (Mac OS X 10.11.1)]: Connected on socket wIYkQjsyw0_tsjZ6AAAB with id 84834284
+Chrome 46.0.2490 (Mac OS X 10.11.1) ERROR
+  Uncaught ReferenceError: require is not defined
+  at /Users/rackdon/Desktop/BQ/Corbel/corbel-test/test/express/app.js:4
+Chrome 46.0.2490 (Mac OS X 10.11.1) ERROR
+  Uncaught ReferenceError: require is not defined
+  at /Users/rackdon/Desktop/BQ/Corbel/corbel-test/test/express/app.js:4
+1..0
+
+Finished in 0.631 secs / 0 secs
+
+SUMMARY:
+✔ 0 tests completed
+03 11 2015 19:06:36.542:INFO [karma-tap-reporter]: writing report to file: /Users/rackdon/Desktop/BQ/Corbel/corbel-test/.report/report.tap
+
+
+Execution Time (2015-11-03 18:02:34 UTC)
+jshint:all        2.9s  ▇▇ 1%
+karma:serve    4m 0.1s  ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇ 98%
+Total 4m 3.8s
+

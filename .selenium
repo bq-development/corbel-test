@@ -1,0 +1,12 @@
+{
+	"browsers": {
+		"chrome": {
+			"browserName": "chrome"
+		}
+	},
+	"reporter": "tap",
+    "remote": "ondemand.saucelabs.com",
+    "port": 80,
+    "user": "anthanh_pham",
+    "key": "f08ad49e-bdb5-471d-ad1a-b24e33f8cc95"
+}
