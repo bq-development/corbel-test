@@ -8,7 +8,7 @@ describe('In ASSETS module', function() {
         });
 
         it('request is rejected due to authorization reasons', function(done) {
-            corbelDriver.assets().access()
+            corbelDriver.assets.asset().access()
             .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 401);
@@ -36,20 +36,20 @@ describe('In ASSETS module', function() {
             .should.notify(done);
         });
 
-        after(function(done){
-            rootCorbelDriver.iam.user(user.id).delete()
-            .should.be.eventually.fulfilled.and.notify(done);
-        });
+        // after(function(done){
+        //     rootCorbelDriver.iam.user(user.id).delete()
+        //     .should.be.eventually.fulfilled.and.notify(done);
+        // });
 
         it('asset is not retrieved due to authorization reasons', function(done) {
-            corbelDriver.assets().access()
+            corbelDriver.assets.asset().access()
             .should.be.eventually.fulfilled
             .then(function(response){
                 return corbelDriver.iam.user(user.id).disconnect()
                 .should.be.eventually.fulfilled;
             })
             .then(function(response){
-                return corbelDriver.assets().access()
+                return corbelDriver.assets.asset().access()
                 .should.be.eventually.rejected;
             })
             .then(function(e) {

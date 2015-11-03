@@ -38,14 +38,14 @@ describe('In ASSETS module', function() {
         };
 
         var createAssetForUser = function(driver, asset) {
-            return userCorbelDriver.assets().create(asset)
+            return userCorbelDriver.assets.asset().create(asset)
             .should.be.eventually.fulfilled;
         };
 
         describe('when setting wrong custom parameters', function() {
 
             it('asset is not created when incomplete scope data is defined', function(done) {
-                userCorbelDriver.assets().create({
+                userCorbelDriver.assets.asset().create({
                     userId: testUserData.id,
                     name: 'customAssetWithoutParams',
                     productId: 'customAssetWithoutParams',
@@ -62,7 +62,7 @@ describe('In ASSETS module', function() {
             });
 
             it('asset is not created when wrong user scope data is defined', function(done) {
-                userCorbelDriver.assets().create({
+                userCorbelDriver.assets.asset().create({
                     userId: testUserData.id,
                     name: 'customAssetWithWrongParams',
                     productId: 'customAssetWithWrongParams',
@@ -79,7 +79,7 @@ describe('In ASSETS module', function() {
             });
 
             it('asset is not created when custom scope data is correct but the user one', function(done) {
-                userCorbelDriver.assets().create({
+                userCorbelDriver.assets.asset().create({
                     userId: testUserData.id,
                     name: 'customAssetWithCorrectlyAndWrongsParams',
                     productId: 'customAssetWithCorrectlyAndWrongsParams',
@@ -118,7 +118,7 @@ describe('In ASSETS module', function() {
             });
 
             it('token upgrade works correctly', function(done) {
-                userCorbelDriver.assets().access()
+                userCorbelDriver.assets.asset().access()
                 .should.be.eventually.fulfilled.and.notify(done);
             });
         });
@@ -161,7 +161,7 @@ describe('In ASSETS module', function() {
             });
 
             it('token upgrade works correctly', function(done) {
-                userCorbelDriver.assets().access()
+                userCorbelDriver.assets.asset().access()
                 .should.be.eventually.fulfilled.and.notify(done);
             });
         });

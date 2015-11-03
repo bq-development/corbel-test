@@ -20,7 +20,7 @@ describe('In ASSETS module', function() {
             });
 
             it('asset is not created due to authorization reasons', function(done) {
-                corbelDriver.assets().create(getBaseAsset())
+                corbelDriver.assets.asset().create(getBaseAsset())
                 .should.be.eventually.rejected
                 .then(function(e) {
                     expect(e).to.have.property('status', 401);
@@ -40,7 +40,7 @@ describe('In ASSETS module', function() {
 
                 var asset = getBaseAsset();
                 delete asset.scopes;
-                corbelDriver.assets().create(asset)
+                corbelDriver.assets.asset().create(asset)
                 .should.be.eventually.rejected
                 .then(function(e) {
                     expect(e).to.have.property('status', 400);
@@ -53,7 +53,7 @@ describe('In ASSETS module', function() {
 
                 var asset = getBaseAsset();
                 asset.scopes = [ 'assets = asset' ];
-                corbelDriver.assets().create(asset)
+                corbelDriver.assets.asset().create(asset)
                 .should.be.eventually.rejected
                 .then(function(e) {
                     expect(e).to.have.property('status', 400);
@@ -63,7 +63,7 @@ describe('In ASSETS module', function() {
             });
 
             it('asset is not created since it has not been defined ', function(done) {
-                corbelDriver.assets().create()
+                corbelDriver.assets.asset().create()
                 .should.be.eventually.rejected
                 .then(function(e) {
                     expect(e).to.have.property('status', 422);

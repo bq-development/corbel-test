@@ -35,7 +35,7 @@ function createMultipleAssets(driver, count, userId) {
 
     for (var i = 0; i <= count; i++) {
         var asset = createAsset(i, userId);
-        var promise = driver.assets().create(asset);
+        var promise = driver.assets.asset().create(asset);
         promises.push(promise);
     }
     return Promise.all(promises);

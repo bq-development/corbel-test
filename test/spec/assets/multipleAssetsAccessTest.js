@@ -19,10 +19,10 @@ describe('In ASSETS module', function() {
         afterEach(function(done){
             promises = [];
             createdAssetsIds.forEach(function(assetId){
-                promises.push(corbelDriver.assets(assetId).delete()
+                promises.push(corbelDriver.assets.asset(assetId).delete()
                 .should.be.eventually.fulfilled
                 .then(function(){
-                    return corbelDriver.assets(assetId).get()
+                    return corbelDriver.assets.asset(assetId).get()
                     .should.be.eventually.rejected;
                 })
                 .then(function(e) {
@@ -50,7 +50,7 @@ describe('In ASSETS module', function() {
                 })
                 .should.be.eventually.fulfilled
                 .then(function() {
-                    return corbelDriver.assets().access()
+                    return corbelDriver.assets.asset().access()
                     .should.be.eventually.fulfilled;
                 })
                 .should.notify(done);

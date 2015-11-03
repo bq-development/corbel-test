@@ -11,7 +11,7 @@ describe('In ASSETS module', function() {
             });
 
             it('assets are correctly retrieved with no params defined', function(done) {
-                corbelDriver.assets().getAll()
+                corbelDriver.assets.asset().getAll()
                 .should.be.eventually.fulfilled
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length').not.equal(0);
@@ -20,7 +20,7 @@ describe('In ASSETS module', function() {
             });
 
             it('assets are correctly retrieved when pageSize is defined to 1 at page 0', function(done) {
-                corbelDriver.assets().getAll({
+                corbelDriver.assets.asset().getAll({
                     query: [{
                         'name': 'assettest50'
                     }],
@@ -37,7 +37,7 @@ describe('In ASSETS module', function() {
             });
 
             it('assets are correctly retrieved when pageSize is defined to 15 at page 1', function(done) {
-                corbelDriver.assets().getAll({
+                corbelDriver.assets.asset().getAll({
                     query: [{
                         'userId': 'fooid'
                     }],
@@ -54,7 +54,7 @@ describe('In ASSETS module', function() {
             });
 
             it('assets are correctly retrieved when pageSize is defined to 6 at page 2', function(done) {
-                corbelDriver.assets().getAll({
+                corbelDriver.assets.asset().getAll({
                     query: [{
                         'userId': 'fooid'
                     }],
@@ -71,7 +71,7 @@ describe('In ASSETS module', function() {
             });
 
             it('assets are correctly retrieved when pageSize is defined to 50 at page 0', function(done) {
-                corbelDriver.assets().getAll({
+                corbelDriver.assets.asset().getAll({
                     query: [{
                         'userId': 'fooid'
                     }],
@@ -88,7 +88,7 @@ describe('In ASSETS module', function() {
             });
 
             it('no assets are returned when trying to fech an invalid page', function(done) {
-                corbelDriver.assets().getAll({
+                corbelDriver.assets.asset().getAll({
                     query: [{
                         'userId': 'fooid'
                     }],
@@ -105,7 +105,7 @@ describe('In ASSETS module', function() {
             });
 
             it('server replies with an error when pageSize is over allowed value', function(done) {
-                corbelDriver.assets().getAll({
+                corbelDriver.assets.asset().getAll({
                     query: [{
                         'userId': 'fooid'
                     }],
@@ -123,7 +123,7 @@ describe('In ASSETS module', function() {
             });
 
             it('filtered assets are retrieved when queryParams filters by scope', function(done) {
-                corbelDriver.assets().getAll({
+                corbelDriver.assets.asset().getAll({
                     query: [{
                         '$in': {
                             'scopes': ['assets:asset']
@@ -141,7 +141,7 @@ describe('In ASSETS module', function() {
             });
 
             it('assets are retrieved sorted upwardly', function(done) {
-                corbelDriver.assets().getAll({
+                corbelDriver.assets.asset().getAll({
                     sort: {
                         'name': 'asc'
                     }
@@ -155,7 +155,7 @@ describe('In ASSETS module', function() {
             });
 
             it('assets are retrieved sorted downwardly', function(done) {
-                corbelDriver.assets().getAll({
+                corbelDriver.assets.asset().getAll({
                     sort: {
                         'name': 'desc'
                     }
