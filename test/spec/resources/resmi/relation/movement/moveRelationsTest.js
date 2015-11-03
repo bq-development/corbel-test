@@ -1,6 +1,6 @@
 describe('In RESOURCES module', function() {
 
-    describe('In RESMI module, testing moveRelation, ', function() {
+    describe('In RESMI module, testing moveRelation', function() {
         var corbelDriver;
         var TIMESTAMP = Date.now();
         var COLLECTION_A = 'test:CorbelJSOrderRelationA' + TIMESTAMP;
@@ -81,9 +81,7 @@ describe('In RESOURCES module', function() {
                 .get(null)
                 .should.be.eventually.fulfilled
                 .then(function(response) {
-                    expect(corbelTest.common.resources.checkSortingAsc(response.data, '_order'))
-                    .to.be.equal(true);
-                    idResource = response.data[2].id;
+                    idResource = response.data[0].id;
 
                     return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                     .move(idResource)
@@ -103,9 +101,7 @@ describe('In RESOURCES module', function() {
                 .get(null)
                 .should.be.eventually.fulfilled
                 .then(function(response) {
-                    expect(corbelTest.common.resources.checkSortingAsc(response.data, '_order'))
-                    .to.be.equal(true);
-                    idResource = response.data[2].id;
+                    idResource = response.data[0].id;
 
                     return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                     .move(idResource, 0)
@@ -125,8 +121,6 @@ describe('In RESOURCES module', function() {
                 .get(null)
                 .should.be.eventually.fulfilled
                 .then(function(response) {
-                    expect(corbelTest.common.resources.checkSortingAsc(response.data, '_order'))
-                    .to.be.equal(true);
                     idResource = response.data[2].id;
 
                     return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
@@ -147,8 +141,6 @@ describe('In RESOURCES module', function() {
                 .get(null)
                 .should.be.eventually.fulfilled
                 .then(function(response) {
-                    expect(corbelTest.common.resources.checkSortingAsc(response.data, '_order'))
-                    .to.be.equal(true);
                     idResource = response.data[2].id;
 
                     return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
