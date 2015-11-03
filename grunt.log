@@ -1,0 +1,48 @@
+>> Local Npm module "grunt-corejs-build" not found. Is it installed?
+
+Running "clean:0" (clean) task
+>> 0 paths cleaned.
+
+Running "clean:1" (clean) task
+>> 0 paths cleaned.
+
+Running "jshint:all" (jshint) task
+
+✔ No problems
+
+
+Running "config" task
+
+Running "browserify:dist" (browserify) task
+>> Bundle .tmp/bundle.js created.
+
+Running "express:myServer" (express) task
+
+Running "express-server:myServer" (express-server) task
+Web server started on port:9002, no hostname specified [pid: 2482]
+
+Running "karma:serve" (karma) task
+05 11 2015 11:25:22.871:WARN [karma]: No captured browser, open http://localhost:8080/
+05 11 2015 11:25:22.878:INFO [karma]: Karma v0.13.9 server started at http://localhost:8080/
+05 11 2015 11:25:22.882:INFO [launcher]: Starting browser Chrome
+05 11 2015 11:25:24.264:INFO [Chrome 46.0.2490 (Mac OS X 10.11.1)]: Connected on socket Vx4M3ib2hExEOFYcAAAA with id 32999751
+Chrome 46.0.2490 (Mac OS X 10.11.1) ERROR
+  Uncaught ReferenceError: require is not defined
+  at /Users/rackdon/Desktop/BQ/Corbel/corbel-test/test/express/app.js:4
+Chrome 46.0.2490 (Mac OS X 10.11.1) ERROR
+  Uncaught ReferenceError: require is not defined
+  at /Users/rackdon/Desktop/BQ/Corbel/corbel-test/test/express/app.js:4
+1..0
+
+Finished in 0.701 secs / 0 secs
+
+SUMMARY:
+✔ 0 tests completed
+05 11 2015 11:25:24.969:INFO [karma-tap-reporter]: writing report to file: /Users/rackdon/Desktop/BQ/Corbel/corbel-test/.report/report.tap
+
+
+Execution Time (2015-11-05 10:25:19 UTC)
+jshint:all         2.8s  ▇▇ 1%
+karma:serve     3m 6.6s  ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇ 98%
+Total 3m 10.3s
+

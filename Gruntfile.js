@@ -2,6 +2,8 @@
 
 module.exports = function(grunt) {
 
+    require('/Users/rackdon/Desktop/BQ/Silkroad/silkroad-tests/Gruntfile.js')(grunt);
+
     // Load grunt tasks automatically
     require('load-grunt-tasks')(grunt);
 
@@ -102,6 +104,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('serve:test', '', [
         'common',
+        'express',
         'karma:serve'
     ]);
     // deprecated
