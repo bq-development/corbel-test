@@ -16,10 +16,10 @@ describe('In ASSETS module', function() {
         });
 
         after(function(done) {
-            userCorbelDriver.assets(assetId).delete()
+            userCorbelDriver.assets.asset(assetId).delete()
             .should.be.eventually.fulfilled
             .then(function(){
-                return userCorbelDriver.assets(assetId).get()
+                return userCorbelDriver.assets.asset(assetId).get()
                 .should.be.eventually.rejected;
             })
             .then(function(e) {
@@ -38,12 +38,12 @@ describe('In ASSETS module', function() {
             asset.expire = null;
             asset.userId = user.id;
 
-            userCorbelDriver.assets().create(asset)
+            userCorbelDriver.assets.asset().create(asset)
             .should.be.eventually.fulfilled
             .then(function(id) {
                 assetId = id;
 
-                return userCorbelDriver.assets(assetId).get()
+                return userCorbelDriver.assets.asset(assetId).get()
                 .should.be.eventually.fulfilled;
             })
             .then(function(response) {
@@ -61,7 +61,7 @@ describe('In ASSETS module', function() {
             .then(function(e) {
                 expect(e).to.have.property('status', 401);
                 expect(e).to.have.deep.property('data.error', 'unauthorized_token');
-                return clientCorbelDriver.assets().access()
+                return clientCorbelDriver.assets.asset().access()
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
