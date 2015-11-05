@@ -6,6 +6,20 @@ describe('In SCHEDULER module', function() {
       corbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
     });
             
+    it('a new absolute task is created', function(done){
+        taskId = 'scheduler:TestAbsoluteScheduler:' + Date.now();
+        task = {
+            'taskId':taskId,
+            'taskDefinition': {
+                'message': 'message' 
+            },
+            'moment':'00:01'
+        };
+
+        corbelDriver.scheduler.task().create(task)
+        .should.be.eventually.fulfilled.and.notify(done);
+    });
+
     describe('when a new absolute task is scheduled', function(){
 
         before(function(done) {
@@ -72,6 +86,21 @@ describe('In SCHEDULER module', function() {
             })
             .should.notify(done);
         });
+    });
+
+    it('a new relative task is scheduled', function(done){
+        taskId = 'scheduler:TestRelativeScheduler:' + Date.now();
+        task = {
+            'taskId':taskId,
+            'delay':'P0D',
+            'period':'PT72H',
+            'taskDefinition': {
+                'message': 'message' 
+            },
+        };
+
+        corbelDriver.scheduler.task().create(task)
+        .should.be.eventually.fulfilled.and.notify(done);
     });
 
     describe('when a new relative task is scheduled', function(){
