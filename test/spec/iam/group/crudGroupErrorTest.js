@@ -8,8 +8,9 @@ describe('In IAM module', function() {
     });
 
     describe('when testing group API', function() {
-        var scope1 = corbelTest.common.iam.getScope('scope1' + Date.now());
-        var scope2 = corbelTest.common.iam.getScope('scope2' + Date.now());
+        var scope1;
+        var scope2;
+        var scopes;
 
         var getGroup = function(suffix) {
             suffix = suffix || Date.now();
@@ -20,29 +21,44 @@ describe('In IAM module', function() {
         };
 
         beforeEach(function(done){
-            var promise = Promise.resolve();
-            [scope1, scope2].forEach(function(scope) {
-                    promise = promise.then(function() {
-                        return corbelRootDriver.iam.scope()
-                        .create(scope)
-                        .should.be.eventually.fulfilled;
-                    });
-            });
+            scope1 = corbelTest.common.iam.getScope('scope1' + Date.now());
+            scope2 = corbelTest.common.iam.getScope('scope2' + Date.now());
+            scopes = [scope1, scope2];
 
-            promise.should.be.eventually.fulfilled.and.notify(done);
+            var promises = [];
+            scopes.forEach(function(scope) {
+                var promise = corbelRootDriver.iam.scope()
+                    .create(scope)
+                    .should.be.eventually.fulfilled
+                    .then(function(id){
+                        expect(id).to.be.equal(scope.id);
+                    });
+                    promises.push(promise); 
+                });
+
+            Promise.all(promises)
+            .should.be.eventually.fulfilled.and.notify(done);
         });
 
         afterEach(function(done){
-            var promise = Promise.resolve();
-            [scope1, scope2].forEach(function(scope) {
-                    promise = promise.then(function() {
-                        return corbelRootDriver.iam.scope()
-                        .remove(scope.id)
-                        .should.be.eventually.fulfilled;
+            var promises = [];
+            scopes.forEach(function(scope) {
+                var promise = corbelRootDriver.iam.scope(scope.id)
+                    .remove()
+                    .should.be.eventually.fulfilled
+                    .then(function(){
+                      return corbelRootDriver.iam.scope(scope.id)
+                      .get()
+                      .should.be.eventually.rejected;
+                    })
+                    .then(function(e){
+                      expect(e).to.have.property('status', 404);
+                      expect(e).to.have.deep.property('data.error', 'not_found');
                     });
-            });
-
-            promise.should.be.eventually.fulfilled.and.notify(done);
+                    promises.push(promise);
+                });
+            Promise.all(promises)
+            .should.be.eventually.fulfilled.and.notify(done);
         });
 
         it('an error [401] is returned when tryinging to create a group without propper permissions', function(done) {
