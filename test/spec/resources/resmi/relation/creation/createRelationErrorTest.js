@@ -66,7 +66,7 @@ describe('In RESOURCES module', function() {
 
         it('an error [400] is returned while trying to create a relation without relationId', function(done) {
             corbelDriver.resources.relation(COLLECTION_A, idResourceA, COLLECTION_B)
-            .add(undefined)
+            .add(null)
             .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 400);
@@ -77,7 +77,7 @@ describe('In RESOURCES module', function() {
 
         it('400 is returned creating a relation with unnexistent resource and no relationId', function(done) {
             corbelDriver.resources.relation(COLLECTION_A, 'notExistingId', COLLECTION_B)
-            .add(undefined)
+            .add(null)
             .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 400);

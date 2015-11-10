@@ -162,8 +162,8 @@ describe('In IAM module', function() {
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return corbelRootDriver.iam.scope()
-                .remove(scope3)
+                return corbelRootDriver.iam.scope(scope3.id)
+                .remove()
                 .should.be.eventually.fulfilled;
             })
             .should.notify(done);
