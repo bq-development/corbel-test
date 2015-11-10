@@ -67,11 +67,81 @@ function getScope(id) {
     };
 }
 
+function getRandomMail(){
+    var xhttp = new XMLHttpRequest();
+    var url = 'http://localhost:5454/email/randomemail';
+
+    return new Promise(function(resolve, reject){
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState === 4 && xhttp.status === 200) {
+                resolve(JSON.parse(xhttp.responseText));
+            } 
+        };
+
+        xhttp.open('GET', url, true);
+        xhttp.send();
+    });
+}
+
+/* The response of this method is a list of messages, represented as an array of objects.
+ * Each object has the following properties:
+* ‘mail_id’, 
+* ‘mail_from’ (email address of sender),
+* ‘mail_subject’,
+* ‘mail_excerpt’ (snippet from the email),
+* ‘mail_timestamp’ (a UNIX timestamp),
+* ‘mail_read’ (1 if read, 0 if not),
+* ‘mail_date’
+*/
+function checkMail(token){
+    var xhttp = new XMLHttpRequest();
+    var url = 'http://localhost:5454/email/checkemail';
+
+    return new Promise(function(resolve, reject){
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState === 4 && xhttp.status === 200) {
+                resolve(JSON.parse(xhttp.responseText));
+            } 
+        };
+        xhttp.open('POST', url, true);
+        xhttp.send({token: token});
+    });
+}
+
+function getMail(id){
+    var xhttp = new XMLHttpRequest();
+    var url = 'http://localhost:5454/email/getemail';
+
+    return new Promise(function(resolve, reject){
+        xhttp.onreadystatechange = function() {
+                    if (xhttp.readyState === 4 && xhttp.status === 200) {
+                        resolve(xhttp.responseText);
+                    } 
+                };
+                xhttp.open('GET', url, true);
+                //xhttp.setRequestHeader("Content-type", "");
+                xhttp.send(id);
+    });
+}
+
+function getCodeFromMail(email) {
+    var code = email.text.match(/token=[\S]+\.[\S]+\.[\S]+/g);
+    if (code.length > 0) {
+        code = code[0].split('=')[1];
+    } else {
+        throw new Error('Mail withouth code');
+    }
+    return code;
+}
+
 
 module.exports = {
     createUsers: createUsers,
     createUser: createUser,
     getDomain: getDomain,
     getClient: getClient,
-    getScope: getScope
+    getScope: getScope,
+    getRandomMail: getRandomMail,
+    checkMail: checkMail,
+    getCodeFromMail: getCodeFromMail
 };
