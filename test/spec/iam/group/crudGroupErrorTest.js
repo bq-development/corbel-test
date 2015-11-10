@@ -36,8 +36,8 @@ describe('In IAM module', function() {
             var promise = Promise.resolve();
             [scope1, scope2].forEach(function(scope) {
                     promise = promise.then(function() {
-                        return corbelRootDriver.iam.scope()
-                        .remove(scope.id)
+                        return corbelRootDriver.iam.scope(scope.id)
+                        .remove()
                         .should.be.eventually.fulfilled;
                     });
             });

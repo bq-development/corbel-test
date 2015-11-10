@@ -124,7 +124,7 @@ describe('In IAM module', function() {
         it('an error 404 is returned when try to get a client which does not exist', function(done) {
             var id = Date.now();
 
-            corbelRootDriver.iam.client(domainId)
+            corbelRootDriver.iam.client(domainId, null)
             .get(id)
             .should.be.eventually.rejected
             .then(function(e) {
@@ -137,7 +137,7 @@ describe('In IAM module', function() {
         it('an error 401 is returned when try to get a client without authorization', function(done) {
             var id = Date.now();
 
-            corbelDefaultDriver.iam.client(domainId)
+            corbelDefaultDriver.iam.client(domainId, null)
             .get(id)
             .should.be.eventually.rejected
             .then(function(e) {
