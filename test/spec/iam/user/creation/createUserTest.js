@@ -53,6 +53,25 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
+        it('basic user is created with phone number as username', function(done) {
+
+            user.username = Date.now().toString().substr(4);
+
+            createUser(user)
+            .then(function(id) {
+                userId = id;
+                expect(userId).not.to.be.equal(undefined);
+
+                return corbelDriver.iam.user(userId)
+                    .get()
+                .should.be.eventually.fulfilled;
+            })
+            .then(function(response) {
+                expect(response).to.have.deep.property('data.username', user.username);
+            })
+            .should.notify(done);
+        });
+
         it('basic user is created and a device is added', function(done) {
             var deviceId;
 
