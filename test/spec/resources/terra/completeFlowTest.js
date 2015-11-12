@@ -1,6 +1,6 @@
 describe('In RESOURCES module, in TERRA rem', function() {
 
-    describe('while testing complete subscription flow', function() {
+    describe.skip('while testing complete subscription flow', function() {
         var corbelDriver;
         var TERRA_PINCOLLECTION = 'books:ChilePin';
         var TERRA_COLLECTION = 'books:ChileSubscription';
@@ -8,6 +8,8 @@ describe('In RESOURCES module, in TERRA rem', function() {
         var mobileNumbers = [
               56992283703,
               56989223009,
+              56993224809,
+              56991900237,
               56988545655,
               56994309295,
               56982775431
@@ -18,7 +20,7 @@ describe('In RESOURCES module, in TERRA rem', function() {
         });
 
         mobileNumbers.forEach(function(mobileNumber){
-            it.skip('a subscription can be created, checked and deleted for ' + mobileNumber, function(done) {
+            it('a subscription can be created, checked and deleted for ' + mobileNumber, function(done) {
 
                 corbelDriver.resources.resource(TERRA_PINCOLLECTION, mobileNumber)
                 .update()
