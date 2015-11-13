@@ -81,6 +81,18 @@ module.exports = function(grunt) {
                     'Chrome'
                 ]
             }
+        },
+        express: {
+            options: {
+              // Override defaults here
+              background: true,
+              port : 5454
+            },
+            dev: {
+              options: {
+                script: 'express/server.js'
+              }
+            }
         }
     });
 
@@ -97,7 +109,8 @@ module.exports = function(grunt) {
         'clean',
         'jshint',
         'config',
-        'browserify'
+        'browserify',
+        'express:dev'
     ]);
 
     grunt.registerTask('serve:test', '', [
