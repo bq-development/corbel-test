@@ -1,6 +1,6 @@
-describe('In NOTIFICATIONS module', function() {
+describe('in notification templates module', function() {
 
-    describe('when testing update notifications', function() {
+    describe('when testing update notification templates', function() {
         var corbelDriver;
         var notificationId;
 
@@ -33,7 +33,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('a type field in notifications can be updated', function(done) {
+        it('a type field in notification templates can be updated', function(done) {
             corbelDriver.notifications.notification(notificationId)
                 .update({type: 'sms'})
             .should.be.eventually.fulfilled
@@ -48,7 +48,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('a text field in notifications can be updated', function(done) {
+        it('a text field in notification templates can be updated', function(done) {
             corbelDriver.notifications.notification(notificationId)
                 .update({text: 'updated text'})
             .should.be.eventually.fulfilled
@@ -63,7 +63,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('a sender field in notifications can be updated', function(done) {
+        it('a sender field in notification templates can be updated', function(done) {
             corbelDriver.notifications.notification(notificationId)
                 .update({sender: 'you'})
             .should.be.eventually.fulfilled
@@ -78,7 +78,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('a title field in notifications can be updated', function(done) {
+        it('a title field in notification templates can be updated', function(done) {
             corbelDriver.notifications.notification(notificationId)
                 .update({title: 'updated title'})
             .should.be.eventually.fulfilled
@@ -93,7 +93,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('several fields in notifications can be updated', function(done) {
+        it('several fields in notification templates can be updated', function(done) {
             var updatedNotification = {
                 type: 'sms',
                 sender: 'you',

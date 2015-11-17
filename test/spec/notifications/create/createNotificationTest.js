@@ -29,7 +29,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('a notification can be created and the id is received', function(done) {
+        it('a notification template can be created and the id is received', function(done) {
             corbelDriver.notifications.notification()
                 .create(notificationData)
             .should.be.eventually.fulfilled

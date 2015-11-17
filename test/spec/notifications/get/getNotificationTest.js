@@ -1,6 +1,6 @@
 describe('In NOTIFICATIONS module', function() {
 
-    describe('while getting notifications', function() {
+    describe('while getting notification templates', function() {
         var corbelDriver;
         var notificationList;
 
@@ -21,7 +21,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        it('if there are not params, default number of notifications are received', function(done) {
+        it('if there are not params, default number of notification templates are received', function(done) {
             corbelDriver.notifications.notification()
                 .get()
             .should.be.eventually.fulfilled
@@ -31,7 +31,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('if a page with size 5 is requested, five notifications are received', function(done) {
+        it('if a page with size 5 is requested, five notification templates are received', function(done) {
             var params = {
                 pagination: {
                     pageSize: 5
@@ -47,7 +47,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('if page 1 with size 10 is requested, ten notifications are received', function(done) {
+        it('if page 1 with size 10 is requested, ten notification templates are received', function(done) {
             var params = {
                 pagination: {
                     page: 1,
@@ -64,7 +64,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('only notifications that match the query are received', function(done) {
+        it('only notification templates that match the query are received', function(done) {
             var params = {
                 query: [{
                     '$eq': {
@@ -83,7 +83,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('no notifications are shown if the query is not matched', function(done) {
+        it('no notification templates are received if the query is not matched', function(done) {
             var params = {
                 query: [{
                     '$eq': {
