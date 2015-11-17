@@ -28,7 +28,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('a notification can be deleted', function(done) {
+        it('a notification template can be deleted', function(done) {
             corbelDriver.notifications.notification(notificationId)
                 .delete()
             .should.be.eventually.fulfilled.and.notify(done);
