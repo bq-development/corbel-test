@@ -1,6 +1,6 @@
 describe('In NOTIFICATIONS module', function() {
 
-    describe.only('when notifications are gotten', function() {
+    describe('while getting notifications', function() {
         var corbelDriver;
         var notificationList;
 
