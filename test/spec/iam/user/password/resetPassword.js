@@ -35,7 +35,7 @@ describe('In IAM module', function() {
             var oneTimeToken;
             var corbelResetDriver;
 
-            corbelTest.common.iam.getRandomMail()
+            corbelTest.common.mail.getRandomMail()
             .should.be.eventually.fulfilled
             .then(function(response){
                 user.email = response.emailData.email_addr; // jshint ignore:line
@@ -52,7 +52,7 @@ describe('In IAM module', function() {
             })
             .then(function() {
                 return corbelTest.common.utils.retry(function() {
-                        return corbelTest.common.iam.checkMail(emailAuthorization)
+                        return corbelTest.common.mail.checkMail(emailAuthorization)
                             .then(function(response) {
                                 if (response.emailList.list.length === 0) {
                                     return Promise.reject();
@@ -60,20 +60,20 @@ describe('In IAM module', function() {
                                     return response;
                                 }
                             });
-                    }, 30, 2)
+                    }, 28, 3)
                 .should.be.eventually.fulfilled;
             })
             .then(function(response) {
                 emailAuthorization = response.cookies.PHPSESSID;
                 var emailId = response.emailList.list[0].mail_id; //jshint ignore:line
 
-                return corbelTest.common.iam.getMail(emailAuthorization, emailId)
+                return corbelTest.common.mail.getMail(emailAuthorization, emailId)
                 .should.be.eventually.fulfilled;
             })
             .then(function(mail) {
                 expect(mail).to.have.property('mail_body')
                     .and.to.contain('Click on the link to reset your password');
-                oneTimeToken = corbelTest.common.iam.getCodeFromMail(mail);
+                oneTimeToken = corbelTest.common.mail.getCodeFromMail(mail);
 
                 corbelResetDriver = corbel.getDriver({
                     iamToken: { 
@@ -129,7 +129,7 @@ describe('In IAM module', function() {
             var oneTimeToken;
             var corbelResetDriver;
 
-            corbelTest.common.iam.getRandomMail()
+            corbelTest.common.mail.getRandomMail()
             .should.be.eventually.fulfilled
             .then(function(response){
                 user.email = response.emailData.email_addr; // jshint ignore:line
@@ -146,7 +146,7 @@ describe('In IAM module', function() {
             })
             .then(function() {
                 return corbelTest.common.utils.retry(function() {
-                        return corbelTest.common.iam.checkMail(emailAuthorization)
+                        return corbelTest.common.mail.checkMail(emailAuthorization)
                             .then(function(response) {
                                 if (response.emailList.list.length === 0) {
                                     return Promise.reject();
@@ -154,20 +154,20 @@ describe('In IAM module', function() {
                                     return response;
                                 }
                             });
-                    }, 30, 2)
+                    }, 28, 3)
                 .should.be.eventually.fulfilled;
             })
             .then(function(response) {
                 emailAuthorization = response.cookies.PHPSESSID;
                 var emailId = response.emailList.list[0].mail_id; //jshint ignore:line
 
-                return corbelTest.common.iam.getMail(emailAuthorization, emailId)
+                return corbelTest.common.mail.getMail(emailAuthorization, emailId)
                 .should.be.eventually.fulfilled;
             })
             .then(function(mail) {
                 expect(mail).to.have.property('mail_body')
                     .and.to.contain('Click on the link to reset your password');
-                oneTimeToken = corbelTest.common.iam.getCodeFromMail(mail);
+                oneTimeToken = corbelTest.common.mail.getCodeFromMail(mail);
 
                 corbelResetDriver = corbel.getDriver({
                     iamToken: { 
