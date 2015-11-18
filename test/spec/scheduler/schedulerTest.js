@@ -5,33 +5,87 @@ describe('In SCHEDULER module', function() {
     before(function() {
       corbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
     });
-            
-    it('a new absolute task is created and deleted', function(done){
-        taskId = 'scheduler:TestAbsoluteScheduler:' + Date.now();
-        task = {
-            'taskId':taskId,
-            'taskDefinition': {
-                'message': 'message' 
-            },
-            'moment':'00:01'
-        };
 
-        corbelDriver.scheduler.task().create(task)
-        .should.be.eventually.fulfilled
-        .then(function(){
-            return corbelDriver.scheduler.task(taskId).delete()
-            .should.be.eventually.fulfilled;
-        })
-        .then(function() {
-            return corbelDriver.scheduler.task(taskId).get()
-            .should.be.eventually.rejected;
-        })
-        .then(function(e) {
-            expect(e).to.have.property('status', 404);
-            expect(e).to.have.deep.property('data.error', 'not_found');
-        })
-        .should.notify(done);
+  describe('create without errors', function() {
+
+    afterEach(function(done) {
+      corbelDriver.scheduler.task(taskId).delete()
+      .should.be.eventually.fulfilled
+      .then(function() {
+          return corbelDriver.scheduler.task(taskId).get()
+          .should.be.eventually.rejected;
+      })
+      .then(function(e) {
+          expect(e).to.have.property('status', 404);
+          expect(e).to.have.deep.property('data.error', 'not_found');
+      })
+      .should.notify(done);
     });
+
+    it('a new absolute task is created with date', function(done){
+      taskId = 'scheduler:TestAbsoluteScheduler:' + Date.now();
+      task = {
+          'taskId':taskId,
+          'taskDefinition': {
+              'message': 'message'
+          },
+          'moment':'2007-12-03T10:15:30'
+      };
+
+      corbelDriver.scheduler.task().create(task)
+      .should.be.eventually.fulfilled.and.notify(done);
+    });
+
+    it('a new absolute task is created without date', function(done){
+      taskId = 'scheduler:TestAbsoluteScheduler:' + Date.now();
+      task = {
+          'taskId':taskId,
+          'taskDefinition': {
+              'message': 'message'
+          },
+          'moment':'00:01'
+      };
+
+      corbelDriver.scheduler.task().create(task)
+      .should.be.eventually.fulfilled.and.notify(done);
+    });
+
+  });
+
+  describe('delete without errors', function() {
+
+    beforeEach(function(done) {
+      taskId = 'scheduler:TestAbsoluteScheduler:' + Date.now();
+      task = {
+          'taskId':taskId,
+          'taskDefinition': {
+              'message': 'message'
+          },
+          'moment':'00:01'
+      };
+
+      corbelDriver.scheduler.task().create(task)
+      .should.be.eventually.fulfilled.and.notify(done);
+
+
+    });
+
+    it('a new absolute task is deleted', function(done){
+      corbelDriver.scheduler.task(taskId).delete()
+      .should.be.eventually.fulfilled
+      .then(function() {
+          return corbelDriver.scheduler.task(taskId).get()
+          .should.be.eventually.rejected;
+      })
+      .then(function(e) {
+          expect(e).to.have.property('status', 404);
+          expect(e).to.have.deep.property('data.error', 'not_found');
+      })
+      .should.notify(done);
+    });
+
+    });
+
 
     describe('when a new absolute task is scheduled', function(){
 
@@ -40,7 +94,7 @@ describe('In SCHEDULER module', function() {
             task = {
                 'taskId':taskId,
                 'taskDefinition': {
-                    'message': 'message' 
+                    'message': 'message'
                 },
                 'moment':'00:01'
             };
@@ -109,7 +163,7 @@ describe('In SCHEDULER module', function() {
             'delay':'P0D',
             'period':'PT72H',
             'taskDefinition': {
-                'message': 'message' 
+                'message': 'message'
             },
         };
 
@@ -139,7 +193,7 @@ describe('In SCHEDULER module', function() {
                 'delay':'P0D',
                 'period':'PT72H',
                 'taskDefinition': {
-                    'message': 'message' 
+                    'message': 'message'
                 },
             };
 
