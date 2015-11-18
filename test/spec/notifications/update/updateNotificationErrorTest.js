@@ -33,68 +33,59 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('an error is returned while trying to update notification template with invalid data', function(done) {
+        describe('with wrong data', function() {
             var notificationId;
 
-            corbelTest.common.notifications.createNotification(corbelDriver)
-            .should.be.eventually.fulfilled
-            .then(function(id) {
-                notificationId = id;
+            beforeEach(function(done) {
 
-                return corbelDriver.notifications.notification(notificationId)
+                corbelTest.common.notifications.createNotification(corbelDriver)
+                .should.be.eventually.fulfilled
+                .then(function(id) {
+                    notificationId = id;
+                })
+                .should.notify(done);
+            });
+
+            afterEach(function(done) {
+
+                corbelDriver.notifications.notification(notificationId)
+                    .delete()
+                .should.be.eventually.fulfilled
+                .then(function(){
+                    return corbelDriver.notifications.notification(notificationId)
+                        .get()
+                    .should.be.eventually.rejected;
+                })
+                .then(function(e) {
+                    expect(e).to.have.property('status', 404);
+                    expect(e).to.have.deep.property('data.error', 'not_found');
+                })
+                .should.notify(done);
+            });
+
+            it('an error [422] is returned if the data are invalid', function(done) {
+
+                corbelDriver.notifications.notification(notificationId)
                     .update('invalid')
-                .should.be.eventually.rejected;
-            })
-            .then(function(e) {
-                expect(e).to.have.property('status', 422);
-                expect(e).to.have.deep.property('data.error', 'invalid_entity');
+                .should.be.eventually.rejected
+                .then(function(e) {
+                    expect(e).to.have.property('status', 422);
+                    expect(e).to.have.deep.property('data.error', 'invalid_entity');
+                })
+                .should.notify(done);
+            });
 
-                return corbelDriver.notifications.notification(notificationId)
-                    .delete()
-                .should.be.eventually.fulfilled;
-            })
-            .then(function(){
-                return corbelDriver.notifications.notification(notificationId)
-                    .get()
-                .should.be.eventually.rejected;
-            })
-            .then(function(e) {
-                expect(e).to.have.property('status', 404);
-                expect(e).to.have.deep.property('data.error', 'not_found');
-            })
-            .should.notify(done);
-        });
+            it('an error [422] is returned if the data is an empty json', function(done) {
 
-        it('an error is returned while trying to update notification template with empty json', function(done) {
-            var notificationId;
-
-            corbelTest.common.notifications.createNotification(corbelDriver)
-            .should.be.eventually.fulfilled
-            .then(function(id) {
-                notificationId = id;
-
-                return corbelDriver.notifications.notification(notificationId)
+                corbelDriver.notifications.notification(notificationId)
                     .update({})
-                .should.be.eventually.rejected;
-            })
-            .then(function(e) {
-                expect(e).to.have.property('status', 422);
-                expect(e).to.have.deep.property('data.error', 'invalid_entity');
-
-                return corbelDriver.notifications.notification(notificationId)
-                    .delete()
-                .should.be.eventually.fulfilled;
-            })
-            .then(function(){
-                return corbelDriver.notifications.notification(notificationId)
-                    .get()
-                .should.be.eventually.rejected;
-            })
-            .then(function(e) {
-                expect(e).to.have.property('status', 404);
-                expect(e).to.have.deep.property('data.error', 'not_found');
-            })
-            .should.notify(done);
+                .should.be.eventually.rejected
+                .then(function(e) {
+                    expect(e).to.have.property('status', 422);
+                    expect(e).to.have.deep.property('data.error', 'invalid_entity');
+                })
+                .should.notify(done);
+            });
         });
     });
 });
