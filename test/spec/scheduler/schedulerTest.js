@@ -1,29 +1,89 @@
 describe('In SCHEDULER module', function() {
-    var corbelDriver;
+    var corbelAdminDriver;
     var taskId, task;
 
     before(function() {
-      corbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
+      corbelAdminDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
     });
-            
-    it('a new absolute task is created and deleted', function(done){
+
+    describe('when testing creation without errors', function() {
+
+        afterEach(function(done) {
+            corbelAdminDriver.scheduler.task(taskId).delete()
+            .should.be.eventually.fulfilled
+            .then(function() {
+                return corbelAdminDriver.scheduler.task(taskId).get()
+                .should.be.eventually.rejected;
+            })
+            .then(function(e) {
+                expect(e).to.have.property('status', 404);
+                expect(e).to.have.deep.property('data.error', 'not_found');
+            })
+            .should.notify(done);
+        });
+
+        it('a new absolute task is created with date', function(done){
+            taskId = 'scheduler:TestAbsoluteScheduler:' + Date.now();
+            task = {
+                'taskId':taskId,
+                'taskDefinition': {
+                    'message': 'message'
+                },
+                'moment':'2017-12-03T10:15:30'
+            };
+
+            corbelAdminDriver.scheduler.task().create(task)
+            .should.be.eventually.fulfilled
+            .then(function(id) {
+                expect(id).to.be.equals(taskId);
+            })
+            .should.notify(done);
+        });
+
+        it('a new absolute task is created without date', function(done){
+            taskId = 'scheduler:TestAbsoluteScheduler:' + Date.now();
+            task = {
+                'taskId':taskId,
+                'taskDefinition': {
+                    'message': 'message'
+                },
+                'moment':'00:01'
+            };
+
+            corbelAdminDriver.scheduler.task().create(task)
+            .should.be.eventually.fulfilled
+            .then(function(id) {
+                expect(id).to.be.equals(taskId);
+            })
+            .should.notify(done);
+        });
+    });
+
+    describe('when testing deletion without errors', function() {
+
+      beforeEach(function(done) {
         taskId = 'scheduler:TestAbsoluteScheduler:' + Date.now();
         task = {
             'taskId':taskId,
             'taskDefinition': {
-                'message': 'message' 
+                'message': 'message'
             },
             'moment':'00:01'
         };
 
-        corbelDriver.scheduler.task().create(task)
+        corbelAdminDriver.scheduler.task().create(task)
         .should.be.eventually.fulfilled
-        .then(function(){
-            return corbelDriver.scheduler.task(taskId).delete()
-            .should.be.eventually.fulfilled;
+        .then(function(id) {
+            expect(id).to.be.equals(taskId);
         })
+        .should.notify(done);
+      });
+
+      it('a new absolute task is deleted', function(done){
+        corbelAdminDriver.scheduler.task(taskId).delete()
+        .should.be.eventually.fulfilled
         .then(function() {
-            return corbelDriver.scheduler.task(taskId).get()
+            return corbelAdminDriver.scheduler.task(taskId).get()
             .should.be.eventually.rejected;
         })
         .then(function(e) {
@@ -31,6 +91,7 @@ describe('In SCHEDULER module', function() {
             expect(e).to.have.deep.property('data.error', 'not_found');
         })
         .should.notify(done);
+      });
     });
 
     describe('when a new absolute task is scheduled', function(){
@@ -40,58 +101,59 @@ describe('In SCHEDULER module', function() {
             task = {
                 'taskId':taskId,
                 'taskDefinition': {
-                    'message': 'message' 
+                    'message': 'message'
                 },
                 'moment':'00:01'
             };
 
-            corbelDriver.scheduler.task().create(task)
-            .should.be.eventually.fulfilled.and.notify(done);
+            corbelAdminDriver.scheduler.task().create(task)
+            .should.be.eventually.fulfilled
+            .then(function(id) {
+                expect(id).to.be.equals(taskId);
+            })
+            .should.notify(done);
         });
 
         it('resulting task can be retrieved', function(done) {
-            corbelDriver.scheduler.task(taskId).get()
+            corbelAdminDriver.scheduler.task(taskId).get()
             .should.be.eventually.fulfilled
             .then(function(response) {
                 expect(response).to.have.deep.property('data.taskId', taskId);
-                expect(response).to.have.deep.property('data.period', 'P1D');
+                expect(response).to.not.have.deep.property('data.period');
             })
             .should.notify(done);
         });
 
         it('the task can be rescheduled', function(done) {
-
             var originalNextExecutionValue;
             var params = {
                 'moment':'23:30'
             };
 
-            corbelDriver.scheduler.task(taskId).get()
+            corbelAdminDriver.scheduler.task(taskId).get()
             .should.be.eventually.fulfilled
             .then(function(response) {
                 originalNextExecutionValue = response.data.nextExecution;
                 expect(response).to.have.deep.property('data.taskId', taskId);
-                return corbelDriver.scheduler.task(taskId).update(params)
+                return corbelAdminDriver.scheduler.task(taskId).update(params)
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return corbelDriver.scheduler.task(taskId).get()
+                return corbelAdminDriver.scheduler.task(taskId).get()
                 .should.be.eventually.fulfilled;
             })
             .then(function(response) {
-                expect(response).to.have.deep.property('data.period', 'P1D');
+                expect(response).to.not.have.deep.property('data.period');
                 expect(response).to.have.deep.property('data.nextExecution').not.equals(originalNextExecutionValue);
-
             })
             .should.notify(done);
         });
 
         it('the task can be deleted', function(done) {
-
-            corbelDriver.scheduler.task(taskId).delete()
+            corbelAdminDriver.scheduler.task(taskId).delete()
             .should.be.eventually.fulfilled
             .then(function() {
-                return corbelDriver.scheduler.task(taskId).get()
+                return corbelAdminDriver.scheduler.task(taskId).get()
                 .should.be.eventually.rejected;
             })
             .then(function(e) {
@@ -109,18 +171,19 @@ describe('In SCHEDULER module', function() {
             'delay':'P0D',
             'period':'PT72H',
             'taskDefinition': {
-                'message': 'message' 
+                'message': 'message'
             },
         };
 
-        corbelDriver.scheduler.task().create(task)
+        corbelAdminDriver.scheduler.task().create(task)
         .should.be.eventually.fulfilled
-        .then(function(){
-            return corbelDriver.scheduler.task(taskId).delete()
+        .then(function(id){
+            expect(id).to.be.equals(taskId);
+            return corbelAdminDriver.scheduler.task(taskId).delete()
             .should.be.eventually.fulfilled;
         })
         .then(function() {
-            return corbelDriver.scheduler.task(taskId).get()
+            return corbelAdminDriver.scheduler.task(taskId).get()
             .should.be.eventually.rejected;
         })
         .then(function(e) {
@@ -139,16 +202,19 @@ describe('In SCHEDULER module', function() {
                 'delay':'P0D',
                 'period':'PT72H',
                 'taskDefinition': {
-                    'message': 'message' 
+                    'message': 'message'
                 },
             };
 
-            corbelDriver.scheduler.task().create(task)
-            .should.be.eventually.fulfilled.and.notify(done);
+            corbelAdminDriver.scheduler.task().create(task)
+            .should.be.eventually.fulfilled
+            .then(function(id) {
+                expect(id).to.be.equals(taskId);
+            }).should.notify(done);
         });
 
         it('resulting task can be retrieved', function(done) {
-            corbelDriver.scheduler.task(taskId).get()
+            corbelAdminDriver.scheduler.task(taskId).get()
             .should.be.eventually.fulfilled
             .then(function(response) {
                 expect(response).to.have.deep.property('data.taskId', taskId);
@@ -165,20 +231,20 @@ describe('In SCHEDULER module', function() {
                 'period':'PT48H'
             };
 
-            corbelDriver.scheduler.task(taskId).get()
+            corbelAdminDriver.scheduler.task(taskId).get()
             .should.be.eventually.fulfilled
             .then(function(response) {
                 expect(response).to.have.deep.property('data.taskId', taskId);
-                return corbelDriver.scheduler.task(taskId).get()
+                return corbelAdminDriver.scheduler.task(taskId).get()
                 .should.be.eventually.fulfilled;
             })
             .then(function(data) {
                 originalNextExecutionValue = data.nextExecution;
-                return corbelDriver.scheduler.task(taskId).update(params)
+                return corbelAdminDriver.scheduler.task(taskId).update(params)
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return corbelDriver.scheduler.task(taskId).get()
+                return corbelAdminDriver.scheduler.task(taskId).get()
                 .should.be.eventually.fulfilled;
             })
             .then(function(response) {
@@ -189,10 +255,10 @@ describe('In SCHEDULER module', function() {
 
         it('the task can be deleted', function(done) {
 
-            corbelDriver.scheduler.task(taskId).delete()
+            corbelAdminDriver.scheduler.task(taskId).delete()
             .should.be.eventually.fulfilled
             .then(function() {
-                return corbelDriver.scheduler.task(taskId).get()
+                return corbelAdminDriver.scheduler.task(taskId).get()
                 .should.be.eventually.rejected;
             })
             .then(function(e) {
