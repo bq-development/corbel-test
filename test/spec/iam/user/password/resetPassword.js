@@ -25,7 +25,7 @@ describe('In IAM module', function() {
         });
 
         it('the request can be done with a non existent email', function(done) {
-            corbelDriver.iam.user()
+            corbelDriver.iam.users()
             .sendResetPasswordEmail('nonExistent@nothing.net')
             .should.be.eventually.fulfilled.and.notify(done);
         });
