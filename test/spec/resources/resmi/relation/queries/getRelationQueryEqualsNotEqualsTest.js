@@ -373,7 +373,7 @@ describe('In RESOURCES module', function() {
                     expect(response).to.have.deep.property('data.length', amount);
 
                     response.data.forEach(function(element) {
-                        expect(element).to.have.property('isoDate').and.not.equal(isoDateBoundary);
+                        expect(element.isoDate).to.not.equal(isoDateBoundary);
                     });
                 })
                 .should.notify(done);
@@ -412,7 +412,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response){
                     expect(response).to.have.deep.property('data.length', amount - 1);
                     response.data.forEach(function(element) {
-                        expect(element).to.have.property('periodField').and.not.equal(periodBoundary);
+                        expect(element.periodField).to.not.equal(periodBoundary);
                     });
                 })
                 .should.notify(done);
