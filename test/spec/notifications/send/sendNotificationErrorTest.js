@@ -7,9 +7,28 @@ describe('In NOTIFICATIONS module', function() {
             corbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
         });
 
-        it('an error [422] is returned when trying to send a notification with invalid data', function(done) {
+        it('an error [422] is returned when trying to send a notification without recipient', function(done) {
             var notificationData = {
                 notificationId: 'notification-qa:email',
+                properties: {
+                    content: 'content',
+                    subject: 'title' + Date.now()
+                }
+            };
+
+            corbelDriver.notifications.notification()
+                .sendNotification(notificationData)
+            .should.be.eventually.rejected
+            .then(function(e) {
+                expect(e).to.have.property('status', 422);
+                expect(e).to.have.deep.property('data.error', 'invalid_entity');
+            })
+            .should.notify(done);
+        });
+
+        it('an error [422] is returned when trying to send a notification without notificationId', function(done) {
+            var notificationData = {
+                recipient: 'example@corbelTest.com',
                 properties: {
                     content: 'content',
                     subject: 'title' + Date.now()
