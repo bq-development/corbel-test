@@ -15,105 +15,17 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.get('/email/randomemail', function(req, res){
-    request(API_EMAIL_ENDPOINT + '?' + API_RANDOM_EMAIL_SUFFIX, function (error, response, body) {
-        var cookiesHeader = {};
-        if (!error && response.statusCode === 200) {
-            response.headers['set-cookie'].map(function(cookieArray){
-                cookieArray.split(';').map(function(cookie){
-                    var cookieData = cookie.split('=');
-                    cookiesHeader[cookieData[0]] = cookieData[1] || '';
-                });
-            });
-
-            res.send({cookies: cookiesHeader, emailData: JSON.parse(body)});
-        }else{
-          res.status(500).send(error);
-        }
-    });
-});
-
-app.get('/email/setemail', function(req, res){
-    var credentials = req.query.token;
-    var userEmail = req.query.userEmail;
-    var url = API_EMAIL_ENDPOINT + '?' + API_SET_EMAIL_SUFFIX + '&email_user=' + userEmail;
-    var options = {
-          url: url,
-          headers: {
-              Cookie: 'PHPSESSID=' + credentials
-          }
-    };
-    
-    request(options, function (error, response, body) {
-        var cookiesHeader = {};
-        if (!error && response.statusCode === 200) {
-            response.headers['set-cookie'].map(function(cookieArray){
-                cookieArray.split(';').map(function(cookie){
-                    var cookieData = cookie.split('=');
-                    cookiesHeader[cookieData[0]] = cookieData[1] || '';
-                });
-            });
-
-            res.send({cookies: cookiesHeader, emailData: JSON.parse(body)});
-        }else{
-          res.status(500).send(error);
-        }
-    });
-});
-
-app.get('/email/checkemail', function(req, res){
-    var credentials = req.query.token;
-    var url = API_EMAIL_ENDPOINT + '?' + API_CHECK_EMAIL_SUFFIX;
-    var options = {
-          url: url,
-          headers: {
-              Cookie: 'PHPSESSID=' + credentials
-          }
-    };
-    
-    request(options, function (error, response, body) {
-        var cookiesHeader = {};
-        if (!error && response.statusCode === 200) {
-            response.headers['set-cookie'].map(function(cookieArray){
-                cookieArray.split(';').map(function(cookie){
-                    var cookieData = cookie.split('=');
-                    cookiesHeader[cookieData[0]] = cookieData[1] || '';
-                });
-            });
-
-            res.send({cookies: cookiesHeader, emailList: JSON.parse(body)});
-        }else{
-            console.log('error');
-            res.status(500).send(error);
-        }
-    });
-});
-
-app.get('/email/getemail', function(req, res){
-    var credentials = req.query.token;
-    var emailId = req.query.emailId;
-    var url = API_EMAIL_ENDPOINT + '?' + API_GET_EMAIL_SUFFIX + '&email_id=' + emailId;
-    var options = {
-          url: url,
-          headers: {
-              Cookie: 'PHPSESSID=' + credentials
-          }
-    };
-    
-    request(options, function (error, response, body) {
-      if (!error && response.statusCode === 200) {
-        res.send(JSON.parse(body));
-      }else{
-        res.status(500).send(error);
-      }
-    });
-});
-
 app.get('/', function(req, res) {
     res.send('Corbel-js express server');
 });
 
 app.listen(process.env.PORT || 3000);
 console.log('server started');
+
+[
+  './emails/routes.js'
+].forEach(function(routePath){
+    require(routePath)(app);
+});
 
 module.exports = app;
