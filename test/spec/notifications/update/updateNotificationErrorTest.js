@@ -74,18 +74,6 @@ describe('In NOTIFICATIONS module', function() {
                 })
                 .should.notify(done);
             });
-
-            it('an error [422] is returned if the data is an empty json', function(done) {
-
-                corbelDriver.notifications.notification(notificationId)
-                    .update({})
-                .should.be.eventually.rejected
-                .then(function(e) {
-                    expect(e).to.have.property('status', 422);
-                    expect(e).to.have.deep.property('data.error', 'invalid_entity');
-                })
-                .should.notify(done);
-            });
         });
     });
 });
