@@ -44,6 +44,10 @@ describe('In NOTIFICATIONS module', function() {
             })
             .then(function(response) {
                 expect(response).to.have.deep.property('data.type', 'sms');
+                expect(response).to.have.deep.property('data.title');
+                expect(response).to.have.deep.property('data.id');
+                expect(response).to.have.deep.property('data.text');
+                expect(response).to.have.deep.property('data.sender');
             })
             .should.notify(done);
         });
@@ -59,6 +63,10 @@ describe('In NOTIFICATIONS module', function() {
             })
             .then(function(response) {
                 expect(response).to.have.deep.property('data.text', 'updated text');
+                expect(response).to.have.deep.property('data.type');
+                expect(response).to.have.deep.property('data.title');
+                expect(response).to.have.deep.property('data.id');
+                expect(response).to.have.deep.property('data.sender');
             })
             .should.notify(done);
         });
@@ -74,6 +82,50 @@ describe('In NOTIFICATIONS module', function() {
             })
             .then(function(response) {
                 expect(response).to.have.deep.property('data.sender', 'you');
+                expect(response).to.have.deep.property('data.title');
+                expect(response).to.have.deep.property('data.id');
+                expect(response).to.have.deep.property('data.text');
+                expect(response).to.have.deep.property('data.type');
+            })
+            .should.notify(done);
+        });
+
+        it('the id field in notification templates can not be updated', function(done) {
+            var random = Date.now();
+
+            corbelDriver.notifications.notification(notificationId)
+                .update({id: random})
+            .should.be.eventually.fulfilled
+            .then(function() {
+                return corbelDriver.notifications.notification(notificationId)
+                    .get()
+                .should.be.eventually.fulfilled;
+            })
+            .then(function(response) {
+                expect(response).to.have.deep.property('data.id').and.not.to.be.equal(random);
+                expect(response).to.have.deep.property('data.title');
+                expect(response).to.have.deep.property('data.text');
+                expect(response).to.have.deep.property('data.sender');
+                expect(response).to.have.deep.property('data.type');
+            })
+            .should.notify(done);
+        });
+
+        it('a id field in notification templates can not be removed', function(done) {
+            corbelDriver.notifications.notification(notificationId)
+                .update({id: null})
+            .should.be.eventually.fulfilled
+            .then(function() {
+                return corbelDriver.notifications.notification(notificationId)
+                    .get()
+                .should.be.eventually.fulfilled;
+            })
+            .then(function(response) {
+                expect(response).to.have.deep.property('data.id');
+                expect(response).to.have.deep.property('data.title');
+                expect(response).to.have.deep.property('data.text');
+                expect(response).to.have.deep.property('data.sender');
+                expect(response).to.have.deep.property('data.type');
             })
             .should.notify(done);
         });
@@ -89,6 +141,29 @@ describe('In NOTIFICATIONS module', function() {
             })
             .then(function(response) {
                 expect(response).to.have.deep.property('data.title', 'updated title');
+                expect(response).to.have.deep.property('data.id');
+                expect(response).to.have.deep.property('data.text');
+                expect(response).to.have.deep.property('data.sender');
+                expect(response).to.have.deep.property('data.type');
+            })
+            .should.notify(done);
+        });
+
+        it('a title field in notification templates can be removed', function(done) {
+            corbelDriver.notifications.notification(notificationId)
+                .update({title: null})
+            .should.be.eventually.fulfilled
+            .then(function() {
+                return corbelDriver.notifications.notification(notificationId)
+                    .get()
+                .should.be.eventually.fulfilled;
+            })
+            .then(function(response) {
+                expect(response).not.to.have.deep.property('data.title');
+                expect(response).to.have.deep.property('data.id');
+                expect(response).to.have.deep.property('data.text');
+                expect(response).to.have.deep.property('data.sender');
+                expect(response).to.have.deep.property('data.type');
             })
             .should.notify(done);
         });
