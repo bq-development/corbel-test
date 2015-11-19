@@ -21,7 +21,7 @@ describe('In RESOURCES module, in TERRA rem', function() {
             .should.notify(done);
         });
 
-        it('an error [404] is returned while trying to get the pin with invalid number', function(done) {
+        it.skip('an error [404] is returned while trying to get the pin with invalid number', function(done) {
 
             corbelDriver.resources.resource(TERRA_PINCOLLECTION, wrongMobileNumber)
             .update()
