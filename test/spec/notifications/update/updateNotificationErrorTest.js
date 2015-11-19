@@ -63,10 +63,82 @@ describe('In NOTIFICATIONS module', function() {
                 .should.notify(done);
             });
 
-            it('an error [422] is returned if the data are invalid', function(done) {
+            it('an error [422] is returned if the data is not a json', function(done) {
 
                 corbelDriver.notifications.notification(notificationId)
                     .update('invalid')
+                .should.be.eventually.rejected
+                .then(function(e) {
+                    expect(e).to.have.property('status', 422);
+                    expect(e).to.have.deep.property('data.error', 'invalid_entity');
+                })
+                .should.notify(done);
+            });
+
+            it('an error [422] is returned if the text field is updated to null', function(done) {
+
+                corbelDriver.notifications.notification(notificationId)
+                    .update({text: null})
+                .should.be.eventually.rejected
+                .then(function(e) {
+                    expect(e).to.have.property('status', 422);
+                    expect(e).to.have.deep.property('data.error', 'invalid_entity');
+                })
+                .should.notify(done);
+            });
+
+            it('an error [422] is returned if the type field is updated to null', function(done) {
+
+                corbelDriver.notifications.notification(notificationId)
+                    .update({type: null})
+                .should.be.eventually.rejected
+                .then(function(e) {
+                    expect(e).to.have.property('status', 422);
+                    expect(e).to.have.deep.property('data.error', 'invalid_entity');
+                })
+                .should.notify(done);
+            });
+
+            it('an error [422] is returned if the sender field is updated to null', function(done) {
+
+                corbelDriver.notifications.notification(notificationId)
+                    .update({type: null})
+                .should.be.eventually.rejected
+                .then(function(e) {
+                    expect(e).to.have.property('status', 422);
+                    expect(e).to.have.deep.property('data.error', 'invalid_entity');
+                })
+                .should.notify(done);
+            });
+
+            it('an error [422] is returned if the text field is updated to undefined', function(done) {
+
+                corbelDriver.notifications.notification(notificationId)
+                    .update({text: undefined})
+                .should.be.eventually.rejected
+                .then(function(e) {
+                    expect(e).to.have.property('status', 422);
+                    expect(e).to.have.deep.property('data.error', 'invalid_entity');
+                })
+                .should.notify(done);
+            });
+
+            it('an error [422] is returned if the type field is updated to undefined', function(done) {
+
+                corbelDriver.notifications.notification(notificationId)
+                    .update({type: undefined})
+                .should.be.eventually.rejected
+                .then(function(e) {
+                    expect(e).to.have.property('status', 422);
+                    expect(e).to.have.deep.property('data.error', 'invalid_entity');
+                })
+                .should.notify(done);
+            });
+
+            it('an error [422] is returned if the sender field is updated to undefined', function(done) {
+
+                corbelDriver.notifications.notification(notificationId)
+                    .update({type: undefined})
                 .should.be.eventually.rejected
                 .then(function(e) {
                     expect(e).to.have.property('status', 422);
