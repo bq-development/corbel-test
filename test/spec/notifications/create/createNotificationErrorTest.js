@@ -28,10 +28,64 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('an error [422] is returned while trying to create an invalid notification template', function(done) {
+        it('an error [422] is returned while trying to create an empty template', function(done) {
 
             corbelDriver.notifications.notification()
                 .create({})
+            .should.be.eventually.rejected
+            .then(function(e) {
+                expect(e).to.have.property('status', 422);
+                expect(e).to.have.deep.property('data.error', 'invalid_entity');
+            })
+            .should.notify(done);
+        });
+
+        it('an error [422] is returned while trying to create a template without sender', function(done) {
+            var notificationData = {
+                id: 'mail_notification_' + Date.now(),
+                type: 'mail',
+                text: 'text',
+                title: 'subject'
+            };
+
+            corbelDriver.notifications.notification()
+                .create(notificationData)
+            .should.be.eventually.rejected
+            .then(function(e) {
+                expect(e).to.have.property('status', 422);
+                expect(e).to.have.deep.property('data.error', 'invalid_entity');
+            })
+            .should.notify(done);
+        });
+
+        it('an error [422] is returned while trying to create a template without type', function(done) {
+            var notificationData = {
+                id: 'mail_notification_' + Date.now(),
+                sender: 'me',
+                text: 'text',
+                title: 'subject'
+            };
+
+            corbelDriver.notifications.notification()
+                .create(notificationData)
+            .should.be.eventually.rejected
+            .then(function(e) {
+                expect(e).to.have.property('status', 422);
+                expect(e).to.have.deep.property('data.error', 'invalid_entity');
+            })
+            .should.notify(done);
+        });
+
+        it('an error [422] is returned while trying to create a template without text', function(done) {
+            var notificationData = {
+                id: 'mail_notification_' + Date.now(),
+                sender: 'me',
+                type: 'mail',
+                title: 'subject'
+            };
+
+            corbelDriver.notifications.notification()
+                .create(notificationData)
             .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 422);

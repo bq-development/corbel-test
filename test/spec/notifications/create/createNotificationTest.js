@@ -45,5 +45,43 @@ describe('In NOTIFICATIONS module', function() {
             })
             .should.notify(done);
         });
+
+        it('a notification template can be created without title and the id is received', function(done) {
+            delete notificationData.title;
+
+            corbelDriver.notifications.notification()
+                .create(notificationData)
+            .should.be.eventually.fulfilled
+            .then(function(id) {
+                notificationId = id;
+
+                return corbelDriver.notifications.notification(notificationId)
+                    .get()
+                .should.be.eventually.fulfilled;
+            })
+            .then(function(response) {
+                expect(response).to.have.property('data').and.to.contain(notificationData);
+            })
+            .should.notify(done);
+        });
+
+        it('a notification template can be created without id and a random id is received', function(done) {
+            delete notificationData.id;
+
+            corbelDriver.notifications.notification()
+                .create(notificationData)
+            .should.be.eventually.fulfilled
+            .then(function(id) {
+                notificationId = id;
+
+                return corbelDriver.notifications.notification(notificationId)
+                    .get()
+                .should.be.eventually.fulfilled;
+            })
+            .then(function(response) {
+                expect(response).to.have.property('data').and.to.contain(notificationData);
+            })
+            .should.notify(done);
+        });
     });
 });
