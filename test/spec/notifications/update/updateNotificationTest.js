@@ -33,7 +33,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('a type field in notification templates can be updated', function(done) {
+        it('the type field in notification templates can be updated', function(done) {
             corbelDriver.notifications.notification(notificationId)
                 .update({type: 'sms'})
             .should.be.eventually.fulfilled
@@ -52,7 +52,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('a text field in notification templates can be updated', function(done) {
+        it('the text field in notification templates can be updated', function(done) {
             corbelDriver.notifications.notification(notificationId)
                 .update({text: 'updated text'})
             .should.be.eventually.fulfilled
@@ -71,7 +71,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('a sender field in notification templates can be updated', function(done) {
+        it('the sender field in notification templates can be updated', function(done) {
             corbelDriver.notifications.notification(notificationId)
                 .update({sender: 'you'})
             .should.be.eventually.fulfilled
@@ -111,7 +111,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('a id field in notification templates can not be removed', function(done) {
+        it('the id field in notification templates can not be removed', function(done) {
             corbelDriver.notifications.notification(notificationId)
                 .update({id: null})
             .should.be.eventually.fulfilled
@@ -130,7 +130,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('a title field in notification templates can be updated', function(done) {
+        it('the title field in notification templates can be updated', function(done) {
             corbelDriver.notifications.notification(notificationId)
                 .update({title: 'updated title'})
             .should.be.eventually.fulfilled
@@ -149,7 +149,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('a title field in notification templates can be removed', function(done) {
+        it('the title field in notification templates can be removed', function(done) {
             corbelDriver.notifications.notification(notificationId)
                 .update({title: null})
             .should.be.eventually.fulfilled
