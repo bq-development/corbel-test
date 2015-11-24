@@ -35,7 +35,7 @@ module.exports = function(config) {
         exclude: ['express/server.js'],
 
         // web server port
-        port: 8080,
+        port: 8001,
 
         // Start these browsers, currently available:
         // - Chrome
