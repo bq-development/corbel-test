@@ -69,7 +69,9 @@ module.exports = function(grunt) {
                 client: {
                     mocha: {
                         timeout: 90000
-                    }
+                    },
+                    env: grunt.option('env'),
+                    localServices: grunt.option('local-services')
                 }
             },
             unit: {
