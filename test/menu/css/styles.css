@@ -1,0 +1,66 @@
+#menu {
+    color: white;
+    background-color: #4D394B;
+    width: 220px;
+    height: 100%;
+    top: 0px;
+    position: fixed;
+    overflow: auto;    
+    opacity: 1;
+}
+
+#menu #top{
+    background-color: #3e313c;
+    height: 30px;
+    width: 100%;
+    padding-top: 5%;
+    padding-left: 20px;
+}
+
+#menu #top #title {  
+     font-family: 'Raleway', sans-serif;
+     font-size: 1em;
+     font-weight: bold;
+}
+
+#menu #content{
+    padding: 20px;
+}
+
+#menu #options {  
+    width: 100%;
+    float: left;
+    color: rgb(171, 155, 169);
+}
+
+#menu #options #option {  
+    padding-top: 30px;
+}
+
+#menu #links {  
+    width: 100%;
+    float: left;
+}
+
+#menu #parallel { 
+    float: left; 
+    padding-top: 10%;
+    width: 100%;
+    margin: auto auto;
+}
+
+#menu #remotes .remote-option{
+    float: left; 
+    padding-right: 11px;
+}
+
+#mocha {
+    padding-left: 220px;  
+    width: 100% 
+    float: left;
+}
+
+a, h3 {
+    font-family: Trebuchet, Arial, sans-serif;
+    font-weight: bold;
+}
