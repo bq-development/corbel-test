@@ -36,10 +36,33 @@ describe('In RESOURCES module, in TERRA rem', function() {
 
         mobileNumbers.forEach(function(mobileNumber){
             it('a subscription can be created, checked and deleted for ' + mobileNumber, function(done) {
-
-                corbelDriver.resources.resource(TERRA_PINCOLLECTION, mobileNumber)
-                .update()
+                corbelDriver.resources.resource(TERRA_COLLECTION, mobileNumber)
+                    .get()
                 .should.be.eventually.fulfilled
+                .then(function(response) {
+                    if (response.data.subscribe) {
+                        return corbelDriver.resources.resource(TERRA_PINCOLLECTION, mobileNumber)
+                        .update()
+                        .should.be.eventually.fulfilled
+                        .then(function() {
+                            return corbelDriver.resources.resource(TERRA_COLLECTION, mobileNumber)
+                            .delete({customQueryParams: {pin: pinNumber}})
+                            .should.be.eventually.fulfilled;
+                        });
+                    }
+                })
+                .then(function(){
+                    return corbelDriver.resources.resource(TERRA_COLLECTION, mobileNumber)
+                    .get()
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.subscribe', false);
+
+                    return corbelDriver.resources.resource(TERRA_PINCOLLECTION, mobileNumber)
+                    .update()
+                    .should.be.eventually.fulfilled;
+                })
                 .then(function(response){
                     expect(response).to.have.property('status', 200);
 
@@ -58,7 +81,7 @@ describe('In RESOURCES module, in TERRA rem', function() {
                 .then(function(){
                     return corbelDriver.resources.resource(TERRA_COLLECTION, mobileNumber)
                     .get()
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 })
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.subscribe', true);
@@ -71,7 +94,7 @@ describe('In RESOURCES module, in TERRA rem', function() {
                 .then(function(){
                     return corbelDriver.resources.resource(TERRA_COLLECTION, mobileNumber)
                     .get()
-                    .should.eventually.be.fulfilled;
+                    .should.be.eventually.fulfilled;
                 })
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.subscribe', false);
