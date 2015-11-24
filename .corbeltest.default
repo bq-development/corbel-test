@@ -34,7 +34,7 @@
        "scopes": "SCOPES"
    },
    "COMMON": {
-       "urlBase": "https://{{module}}-{{ENV}}.mydomain.com/v1.0/"
+      "urlBase": "https://{{module}}-{{ENV}}.bqws.io/v1.0/"
    },
    "GLOBALS": {
      "defaultPageSize": 10,
