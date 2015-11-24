@@ -1,0 +1,65 @@
+html {
+    overflow-y: scroll;
+}
+#linksdiv #entry {
+    color: rgb(171, 155, 169);
+    font-family:'Raleway', sans-serif;
+    font-size: 1em;
+    font-weight: bold;
+}
+#linksdiv #collapsable {
+    color: rgb(171, 155, 169);
+    font-family:'Raleway', sans-serif;
+    font-size: 1em;
+    font-weight: bold;
+}
+#linksdiv #link:link {
+    color: rgb(171, 155, 169);
+    font-family:'Raleway', sans-serif;
+    font-size: 0.6em;
+    font-weight: bold;
+}
+#linksdiv #link:visited {
+    color: rgb(171, 155, 169);
+    font-family:'Raleway', sans-serif;
+    font-size: 0.6em;
+    font-weight: bold;
+}
+.arrow-r {
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid white;
+    margin-bottom: 1%;
+    margin-right: 7px;
+    margin-left: 3px;
+    display: inline-block;
+}
+.arrow-d {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid white;
+    margin-bottom: 6px;
+    margin-right: 5px;
+    display: inline-block;
+}
+.collapse-container>:nth-child(odd) {
+    padding: 5px;
+    margin: auto;
+}
+.collapse-container>:nth-child(even) {
+	padding-left: 10px;
+    display: none;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.collapse-container>:first-child {
+    border-radius: 4px 4px 0px 0px;
+}
+.collapse-container>:nth-last-child(2) {
+    border-radius: 0px 0px 3px 3px;
+}

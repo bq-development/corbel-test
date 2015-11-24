@@ -27,7 +27,12 @@ module.exports = function(config) {
             '.tmp/bundle.js',
             'test/beforeAll.js',
             'test/**/*.js',
+            'test/menu/css/collapse.css',
+            'test/menu/css/onoffswitch.css',
+            'test/menu/css/styles.css',
             /*Rem-image's test required*/
+            {pattern:'test/menu/html/menu.html', watched: false, included: false, served: true},
+            {pattern:'test/menu/html/switch.html', watched: false, included: false, served: true},
             {pattern:'src/common/utils/img/logo.png', watched: false, included: false, served: true}
         ],
 
