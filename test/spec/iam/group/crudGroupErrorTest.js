@@ -37,7 +37,7 @@ describe('In IAM module', function() {
                 });
 
             Promise.all(promises)
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         afterEach(function(done){
@@ -58,7 +58,7 @@ describe('In IAM module', function() {
                     promises.push(promise);
                 });
             Promise.all(promises)
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         it('an error [401] is returned when tryinging to create a group without propper permissions', function(done) {
