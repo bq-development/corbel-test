@@ -25,15 +25,13 @@ describe('In IAM module', function() {
             scope2 = corbelTest.common.iam.getScope('scope2' + Date.now());
             scopes = [scope1, scope2];
 
-            var promises = [];
-            scopes.forEach(function(scope) {
-                var promise = corbelRootDriver.iam.scope()
+            var promises = scopes.map(function(scope) {
+                return corbelRootDriver.iam.scope()
                     .create(scope)
                     .should.be.eventually.fulfilled
                     .then(function(id){
                         expect(id).to.be.equal(scope.id);
                     });
-                promises.push(promise); 
             });
 
             Promise.all(promises)
@@ -44,16 +42,7 @@ describe('In IAM module', function() {
             var promises = scopes.map(function(scope) {
                 return corbelRootDriver.iam.scope(scope.id)
                     .remove()
-                    .should.be.fulfilled
-                    .then(function(){
-                      return corbelRootDriver.iam.scope(scope.id)
-                      .get();
-                    })
-                    .should.be.rejected
-                    .then(function(e){
-                      expect(e).to.have.property('status', 404);
-                      expect(e).to.have.deep.property('data.error', 'not_found');
-                    });
+                    .should.be.eventually.fulfilled;
             });
 
             Promise.all(promises)
