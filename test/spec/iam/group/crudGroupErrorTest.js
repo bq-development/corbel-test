@@ -33,8 +33,8 @@ describe('In IAM module', function() {
                     .then(function(id){
                         expect(id).to.be.equal(scope.id);
                     });
-                    promises.push(promise); 
-                });
+                promises.push(promise); 
+            });
 
             Promise.all(promises)
             .should.notify(done);
@@ -48,15 +48,15 @@ describe('In IAM module', function() {
                     .should.be.eventually.fulfilled
                     .then(function(){
                       return corbelRootDriver.iam.scope(scope.id)
-                      .get()
-                      .should.be.eventually.rejected;
+                      .get();
                     })
-                    .then(function(e){
+                    .catch(function(e){
                       expect(e).to.have.property('status', 404);
                       expect(e).to.have.deep.property('data.error', 'not_found');
                     });
-                    promises.push(promise);
-                });
+                promises.push(promise);
+            });
+
             Promise.all(promises)
             .should.notify(done);
         });
@@ -85,15 +85,13 @@ describe('In IAM module', function() {
                 id = createdId;
 
                 return corbelRootDriver.iam.group()
-                .create(group);
+                .create(group)
+                .should.be.eventually.rejected;
             })
-            .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 409);
                 expect(e).to.have.deep.property('data.error', 'group_already_exists');
-            })
-            .should.be.eventually.fulfilled
-            .then(function() {
+
                 return corbelRootDriver.iam.group(id)
                 .delete()
                 .should.be.eventually.fulfilled;
@@ -129,15 +127,13 @@ describe('In IAM module', function() {
                 id = createdId;
 
                 return corbelDriver.iam.group(id)
-                .removeScope('scope1');
+                .removeScope('scope1')
+                .should.be.eventually.rejected;
             })
-            .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 401);
                 expect(e).to.have.deep.property('data.error', 'unauthorized_token');
-            })
-            .should.be.eventually.fulfilled
-            .then(function() {
+
                 return corbelRootDriver.iam.group(id)
                 .delete()
                 .should.be.eventually.fulfilled;
@@ -156,15 +152,13 @@ describe('In IAM module', function() {
                 id = createdId;
 
                 return corbelDriver.iam.group(id)
-                .addScopes('scope');
+                .addScopes('scope')
+                .should.be.eventually.rejected;
             })
-            .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 401);
                 expect(e).to.have.deep.property('data.error', 'unauthorized_token');
-            })
-            .should.be.eventually.fulfilled
-            .then(function() {
+
                 return corbelRootDriver.iam.group(id)
                 .delete()
                 .should.be.eventually.fulfilled;
@@ -183,15 +177,13 @@ describe('In IAM module', function() {
                 id = createdId;
 
                 return corbelRootDriver.iam.group(id)
-                .addScopes(['scope']);
+                .addScopes(['scope'])
+                .should.be.eventually.rejected;
             })
-            .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 400);
                 expect(e).to.have.deep.property('data.error', 'not_existent_scope');
-            })
-            .should.be.eventually.fulfilled
-            .then(function() {
+
                 return corbelRootDriver.iam.group(id)
                 .delete()
                 .should.be.eventually.fulfilled;
@@ -210,15 +202,13 @@ describe('In IAM module', function() {
                 id = createdId;
 
                 return corbelRootDriver.iam.group(id)
-                .addScopes('scope');
+                .addScopes('scope')
+                .should.be.eventually.rejected;
             })
-            .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 422);
                 expect(e).to.have.deep.property('data.error', 'invalid_entity');
-            })
-            .should.be.eventually.fulfilled
-            .then(function() {
+
                 return corbelRootDriver.iam.group(id)
                 .delete()
                 .should.be.eventually.fulfilled;
@@ -236,15 +226,13 @@ describe('In IAM module', function() {
                 id = createdId;
 
                 return corbelDriver.iam.group(id)
-                .delete();
+                .delete()
+                .should.be.eventually.rejected;
             })
-            .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 401);
                 expect(e).to.have.deep.property('data.error', 'unauthorized_token');
-            })
-            .should.be.eventually.fulfilled
-            .then(function() {
+
                 return corbelRootDriver.iam.group(id)
                 .delete()
                 .should.be.eventually.fulfilled;
@@ -262,15 +250,13 @@ describe('In IAM module', function() {
                 id = createdId;
 
                 return corbelDriver.iam.group(id)
-                .get();
+                .get()
+                .should.be.eventually.rejected;
             })
-            .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 401);
                 expect(e).to.have.deep.property('data.error', 'unauthorized_token');
-            })
-            .should.be.eventually.fulfilled
-            .then(function() {
+
                 return corbelRootDriver.iam.group(id)
                 .delete()
                 .should.be.eventually.fulfilled;
@@ -313,15 +299,13 @@ describe('In IAM module', function() {
                 id = createdId;
 
                 return corbelDriver.iam.group(id)
-                .addScopes(['newScope']);
+                .addScopes(['newScope'])
+                .should.be.eventually.rejected;
             })
-            .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 401);
                 expect(e).to.have.deep.property('data.error', 'unauthorized_token');
-            })
-            .should.be.eventually.fulfilled
-            .then(function() {
+
                 return corbelRootDriver.iam.group(id)
                 .delete()
                 .should.be.eventually.fulfilled;
@@ -365,20 +349,18 @@ describe('In IAM module', function() {
                 id = createdId;
 
                 return corbelDriver.iam.group(id)
-                .removeScope('scope1');
+                .removeScope('scope1')
+                .should.be.eventually.rejected;
             })
-            .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 401);
                 expect(e).to.have.deep.property('data.error', 'unauthorized_token');
-            })
-            .should.be.eventually.fulfilled
-            .then(function() {
+
                 return corbelRootDriver.iam.group(id)
                 .delete()
                 .should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
     });
 });
