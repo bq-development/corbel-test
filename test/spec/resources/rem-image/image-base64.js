@@ -8,9 +8,9 @@ describe('In RESOURCES module', function() {
             corbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
         });
 
-        describe('When performing image:operations to base64 type images', function() {
+        describe('when performing image:operations to base64 type images', function() {
             if (window.chrome) {
-                var TEST_IMAGE = 
+                var TEST_IMAGE =
                     'Qk2eAAAAAAAAAHoAAABsAAAAAwAAAAMAAAABABgAAAAAACQAAAATCwAAEwsAAAAAAAAAAAAAQkdScwAAAAAAAA'+
                     'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAD//wD/AP//'+
                     'AAAAAABmZmYA/wAAAH8AAAAAAP9/AAAA//8AAAA=';
@@ -43,7 +43,7 @@ describe('In RESOURCES module', function() {
                     FILENAME = 'TestImage_1_' + Date.now();
 
                     corbelDriver.resources.resource(FOLDER_NAME, FILENAME).update(
-                        TEST_IMAGE, 
+                        TEST_IMAGE,
                         {
                             dataType:'image/bmp',
                             customQueryParams: {
@@ -69,8 +69,8 @@ describe('In RESOURCES module', function() {
                     .should.notify(done);
                 });
 
-                it('Success changing image\'s format (bmp to gif)', function(done) {
-                    var TEST_FORMAT = 
+                it('success changing image s format (bmp to gif)', function(done) {
+                    var TEST_FORMAT =
                         'R0lGODlhAwADAPMAAP8AAAAAf///AGZmZgD/AH8AAAD///8A/wAA/wAAAAAAAAAAAAAAAAAAAAAAAAAAA'+
                         'CH5BAAAAAAAIf8LSW1hZ2VNYWdpY2sHZ2FtbWE9MAAsAAAAAAMAAwAABAcQBDFIMQdFADs=';
 
@@ -90,8 +90,8 @@ describe('In RESOURCES module', function() {
                     .should.notify(done);
                 });
 
-                it('crop', function(done) {
-                    var TEST_CROP = 
+                it('applying crop operation', function(done) {
+                    var TEST_CROP =
                         'Qk2aAAAAAAAAAIoAAAB8AAAAAgAAAAIAAAABABgAAAAAABAAAAATCwAAEwsAAAAAAAAAAAAAAAD/AAD/A'+
                         'AD/AAAAAAAA/0JHUnMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0M7Mvr0fhQz8KV4UAAAAAAAAAAAAAAA'+
                         'AEAAAAAAAAAAAAAAAAAAAAZmZmAP8AAAAAAP9/AAAAAA==';
@@ -103,8 +103,24 @@ describe('In RESOURCES module', function() {
                     .should.notify(done);
                 });
 
-                it('resizeWidth', function(done) {
-                    var TEST_RESIZE_WIDTH = 
+								it('applying blur operation', function(done) {
+                    var TEST_BLUR =
+                        'Qk2uAAAAAAAAAIoAAAB8AAAAAwAAAAMAAAABABgAAAAAAC'+
+												'QAAAATCwAAEwsAAAAAAAAAAAAAAAD/AAD/A'+
+												'AD/AAAAAAAA/0JHUnMAAAAAAAAAAAAAAAAAAAA'+
+												'AAAAAAAAAAAA0M7Mvr0fhQz8KV4UAAAAAAAAA'+
+												'AAAAAAAEAAAAAAAAAAAAAAAAAAAAyatKvVxetBZ'+
+												'PAAAAc3JpZmRmVlRwAAAALyuVLlx9GpWaAAAA';
+
+                    getImageModified('blur=(0.1 , 1.2)')
+                    .then(function(img) {
+                        compareImages(img.data, TEST_BLUR);
+                    })
+                    .should.notify(done);
+                });
+
+                it('applying resizeWidth operation', function(done) {
+                    var TEST_RESIZE_WIDTH =
                         'Qk2aAAAAAAAAAIoAAAB8AAAAAgAAAAIAAAABABgAAAAAABAAAAATCwAAEwsAAAAAAAAAAAAAAAD/AAD/A'+
                         'AD/AAAAAAAA/0JHUnMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0M7Mvr0fhQz8KV4UAAAAAAAAAAAAAAA'+
                         'AEAAAAAAAAAAAAAAAAAAAAv7ZTox5bAAAsPHEQl3kAAA==';
@@ -116,8 +132,8 @@ describe('In RESOURCES module', function() {
                     .should.notify(done);
                 });
 
-                it('resizeHeight', function(done) {
-                    var TEST_RESIZE_HEIGHT = 
+                it('applying resizeHeight operation', function(done) {
+                    var TEST_RESIZE_HEIGHT =
                         'Qk2aAAAAAAAAAIoAAAB8AAAAAgAAAAIAAAABABgAAAAAABAAAAATCwAAEwsAAAAAAAAAAAAAAAD/AAD/A'+
                         'AD/AAAAAAAA/0JHUnMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0M7Mvr0fhQz8KV4UAAAAAAAAAAAAAAA'+
                         'AEAAAAAAAAAAAAAAAAAAAAv7ZTox5bAAAsPHEQl3kAAA==';
@@ -129,8 +145,8 @@ describe('In RESOURCES module', function() {
                     .should.notify(done);
                 });
 
-                it('resizeAndFill', function(done) {
-                    var TEST_RESIZE_AND_FILL = 
+                it('applying resizeAndFill operation', function(done) {
+                    var TEST_RESIZE_AND_FILL =
                         'Qk2uAAAAAAAAAIoAAAB8AAAAAwAAAAMAAAABABgAAAAAACQAAAATCwAAEwsAAAAAAAAAAAAAAAD/AAD/A'+
                         'AD/AAAAAAAA/0JHUnMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0M7Mvr0fhQz8KV4UAAAAAAAAAAAAAAA'+
                         'AEAAAAAAAAAAAAAAAAAAAA//8A/wD//wAAAAAAZmZmAP8AAAB/AAAAAAD/fwAAAP//AAAA';
@@ -142,8 +158,8 @@ describe('In RESOURCES module', function() {
                     .should.notify(done);
                 });
 
-                it('cropFromCenter', function(done) {
-                    var TEST_CROP_FROM_CENTER = 
+                it('applying cropFromCenter operation', function(done) {
+                    var TEST_CROP_FROM_CENTER =
                         'Qk2OAAAAAAAAAIoAAAB8AAAAAQAAAAEAAAABABgAAAAAAAQAAAATCwAAEwsAAAAAAAAAAAAAAAD/AAD/A'+
                         'AD/AAAAAAAA/0JHUnMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0M7Mvr0fhQz8KV4UAAAAAAAAAAAAAAA'+
                         'AEAAAAAAAAAAAAAAAAAAAAAP8AAA==';
