@@ -42,19 +42,19 @@ describe('In IAM module', function() {
         });
 
         afterEach(function(done){
-            var promises = [];
-            scopes.forEach(function(scope) {
-                var promise = corbelRootDriver.iam.scope(scope.id)
+            var promises = scopes.map(function(scope) {
+                return corbelRootDriver.iam.scope(scope.id)
                     .remove()
+                    .should.be.fulfilled
                     .then(function(){
                       return corbelRootDriver.iam.scope(scope.id)
                       .get();
                     })
-                    .catch(function(e){
+                    .should.be.rejected
+                    .then(function(e){
                       expect(e).to.have.property('status', 404);
                       expect(e).to.have.deep.property('data.error', 'not_found');
                     });
-                promises.push(promise);
             });
 
             Promise.all(promises)
