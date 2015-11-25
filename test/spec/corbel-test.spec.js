@@ -49,8 +49,10 @@ describe('In corbel-test project', function() {
 
                 return corbelDriver.resources.resource(COLLECTION, resourceId)
                     .update(blob, {
-                        dataType: 'blob'
-                    });
+                        dataType: 'image/png'
+                    }
+                )
+                .should.be.eventually.fulfilled;
 
             })
             .then(function() {
