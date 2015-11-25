@@ -33,8 +33,8 @@ describe('In IAM module', function() {
                     .then(function(id){
                         expect(id).to.be.equal(scope.id);
                     });
-                    promises.push(promise); 
-                });
+                promises.push(promise); 
+            });
 
             Promise.all(promises)
             .should.notify(done);
@@ -45,18 +45,10 @@ describe('In IAM module', function() {
             scopes.forEach(function(scope) {
                 var promise = corbelRootDriver.iam.scope(scope.id)
                     .remove()
-                    .should.be.eventually.fulfilled
-                    .then(function(){
-                      return corbelRootDriver.iam.scope(scope.id)
-                      .get()
-                      .should.be.eventually.rejected;
-                    })
-                    .then(function(e){
-                      expect(e).to.have.property('status', 404);
-                      expect(e).to.have.deep.property('data.error', 'not_found');
-                    });
-                    promises.push(promise);
-                });
+                    .should.be.eventually.fulfilled;
+                promises.push(promise);
+            });
+
             Promise.all(promises)
             .should.notify(done);
         });
