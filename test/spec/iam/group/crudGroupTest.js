@@ -38,7 +38,7 @@ describe('In IAM module', function() {
                 });
 
             Promise.all(promises)
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         afterEach(function(done){
@@ -59,7 +59,7 @@ describe('In IAM module', function() {
                     promises.push(promise);
                 });
             Promise.all(promises)
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         it('it is possible create and get a group', function(done) {
