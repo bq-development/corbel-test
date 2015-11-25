@@ -10,11 +10,15 @@ describe('In IAM module', function() {
             corbelDefaultDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
         });
 
-        it('an error 401 is returned when try to create a scope without authorization', function(done) {
-            var expectedScope = corbelTest.common.iam.getScope(scopeId);
+        beforeEach(function() {
+            scopeId = 'TestScope' + Date.now();
+        });
+
+        it('an error 401 is returned when trying to create a scope without authorization', function(done) {
+            var scope = corbelTest.common.iam.getScope(scopeId);
 
             corbelDefaultDriver.iam.scope()
-            .create(expectedScope)
+            .create(scope)
             .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 401);
@@ -23,7 +27,7 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('an error 400 is returned when try to create a scope with \';\'', function(done) {
+        it('an error 400 is returned when trying to create a scope with \';\'', function(done) {
             var scope = corbelTest.common.iam.getScope(scopeId);
             scope.id = scope.id + ';';
 
@@ -37,8 +41,8 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('an error 422 is returned when try to create a scope with malformed entity', function(done) {
-            var expectedScope = corbelTest.common.iam.getScope(scopeId);
+        it('an error 422 is returned when trying to create a scope with malformed entity', function(done) {
+            var scope = corbelTest.common.iam.getScope(scopeId);
 
             corbelRootDriver.iam.scope()
             .create('asdf')
@@ -50,10 +54,9 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('an error 401 is returned when try to get a scope without authorization', function(done) {
-            var id = Date.now();
+        it('an error 401 is returned when trying to get a scope without authorization', function(done) {
 
-            corbelDefaultDriver.iam.scope(id)
+            corbelDefaultDriver.iam.scope(scopeId)
             .get()
             .should.be.eventually.rejected
             .then(function(e) {
@@ -63,10 +66,9 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('an error 404 is returned when try to get a scope which does not exist', function(done) {
-            var id = Date.now();
+        it('an error 404 is returned when trying to get a scope which does not exist', function(done) {
 
-            corbelRootDriver.iam.scope(id)
+            corbelRootDriver.iam.scope('non-existent')
             .get()
             .should.be.eventually.rejected
             .then(function(e) {
@@ -76,10 +78,9 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('an error 401 is returned when try to delete a scope without authorization', function(done) {
-            var id = Date.now();
+        it('an error 401 is returned when trying to delete a scope without authorization', function(done) {
 
-            corbelDefaultDriver.iam.scope(id)
+            corbelDefaultDriver.iam.scope(scopeId)
             .remove()
             .should.be.eventually.rejected
             .then(function(e) {

@@ -2,35 +2,43 @@ describe('In IAM module', function() {
 
     describe('when performing scopes CRUD operations', function() {
         var corbelDriver;
-        var scopeId = 'TestScope' + Date.now();
+        var scopeId;
 
         before(function() {
             corbelDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
         });
 
-        it('a scope is created', function(done) {
-            var expectedScope = corbelTest.common.iam.getScope(scopeId);
+        beforeEach(function() {
+            scopeId = 'TestScope' + Date.now();
+        });
+
+        it('a scope can be created', function(done) {
+            var scope = corbelTest.common.iam.getScope(scopeId);
 
             corbelDriver.iam.scope()
-            .create(expectedScope)
+            .create(scope)
             .should.be.eventually.fulfilled
             .then(function(id) {
-                expect(id).to.be.equals(expectedScope.id);
+                expect(id).to.be.equals(scope.id);
 
-                return corbelDriver.iam.scope(expectedScope.id)
+                return corbelDriver.iam.scope(scope.id)
                 .get()
                 .should.be.eventually.fulfilled;
             })
-            .then(function(scope) {
-                expect(scope).to.have.deep.property('data.id', expectedScope.id);
-                expect(scope).to.have.deep.property('data.audience', expectedScope.audience);
-                expect(scope).to.have.deep.property('data.rules[0].testRule', expectedScope.rules[0].testRule);
-                expect(scope).to.have.deep.property('data.parameters.a', expectedScope.parameters.a);
+            .then(function(response) {
+                expect(response).to.have.deep.property('data.id', scope.id);
+                expect(response).to.have.deep.property('data.audience', scope.audience);
+                expect(response).to.have.deep.property('data.rules[0].testRule', scope.rules[0].testRule);
+                expect(response).to.have.deep.property('data.parameters.a', scope.parameters.a);
+
+                return corbelDriver.iam.scope(scope.id)
+                .remove()
+                .should.be.eventually.fulfilled;
             })
             .should.notify(done);
         });
 
-        it('a scope is removed', function(done) {
+        it('a scope can be removed', function(done) {
             var scope = corbelTest.common.iam.getScope(scopeId);
 
             corbelDriver.iam.scope()
@@ -38,18 +46,13 @@ describe('In IAM module', function() {
             .should.be.eventually.fulfilled
             .then(function(id) {
                 return corbelDriver.iam.scope(scope.id)
-                .remove(id)
+                .remove()
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                var MAX_RETRY = 5;
-                var RETRY_PERIOD = 2;
-                return corbelTest.common.utils.retry(function() {
-                    return corbelDriver.iam.scope(scope.id)
-                    .get()
-                    .should.be.eventually.rejected;
-                }, MAX_RETRY, RETRY_PERIOD).
-                should.be.eventually.fulfilled;
+                return corbelDriver.iam.scope(scope.id)
+                .get()
+                .should.be.eventually.rejected;
             })
             .then(function(e) {
                 expect(e).to.have.property('status', 404);
