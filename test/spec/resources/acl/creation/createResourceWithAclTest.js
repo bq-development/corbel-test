@@ -2,7 +2,7 @@ describe('In RESOURCES module', function() {
 
     describe('In ACL module', function() {
 
-        describe('while testing post resources', function() {
+        describe('while testing create resources', function() {
             var corbelDriver;
             var corbelRootDriver;
             var COLLECTION_NAME = 'test:testAcl';
