@@ -7,10 +7,15 @@
  * Creates random users
  * @param  {CorbelDriver} driver
  * @param  {number} amount Number of random users to create
+ * @param  {extraFields} fields to add to the user object
  * @return {Promise}       A promise that resolves when users are created
  */
-function createUsers(driver, amount) {
+function createUsers(driver, amount, extraFields) {
     var promises = [];
+    var obj = extraFields || {};
+    var key;
+    var keys = Object.keys(obj);
+    var n = keys.length;
 
     for (var count = 1; count <= amount; count++) {
         var random = Date.now() + '-' + count;
@@ -23,6 +28,11 @@ function createUsers(driver, amount) {
             'username': 'registerUser' + random + '@funkifake.com',
             'password': 'passRegisterUser'
         };
+
+        while (n--) {
+          key = keys[n];
+          userData[key] = obj[key];
+        }
 
         promises.push(createUser(userData, driver));
     }
