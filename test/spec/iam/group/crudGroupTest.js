@@ -6,7 +6,7 @@ describe('In IAM module', function() {
         corbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
         corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
     });
-    
+
     describe('when testing group API', function() {
         var scope1;
         var scope2;
@@ -68,6 +68,37 @@ describe('In IAM module', function() {
                 expect(obtainedGroup).to.have.deep.property('data.id');
                 expect(obtainedGroup).to.have.deep.property('data.name', group.name);
                 expect(obtainedGroup).to.have.deep.property('data.scopes');
+
+                obtainedGroup.data.scopes.forEach(function(scope) {
+                    expect(obtainedGroup.data.scopes).to.contain(scope);
+                });
+
+                return corbelDriver.iam.group(id)
+                .delete()
+                .should.be.eventually.fulfilled;
+            })
+            .should.notify(done);
+        });
+
+        it('it is possible create and get a group without scopes', function(done) {
+            var group = getGroup(Date.now());
+            delete group.scopes;
+            var id;
+
+            corbelDriver.iam.group()
+            .create(group)
+            .should.be.eventually.fulfilled
+            .then(function(createdId) {
+                id = createdId;
+
+                return corbelDriver.iam.group(id)
+                .get()
+                .should.be.eventually.fulfilled;
+            })
+            .then(function(obtainedGroup) {
+                expect(obtainedGroup).to.have.deep.property('data.id');
+                expect(obtainedGroup).to.have.deep.property('data.name', group.name);
+                expect(obtainedGroup).to.not.have.deep.property('data.scopes');
 
                 obtainedGroup.data.scopes.forEach(function(scope) {
                     expect(obtainedGroup.data.scopes).to.contain(scope);
