@@ -33,8 +33,23 @@ function consultPlugins(url) {
     });
 }
 
+function joinObjects(obj1, obj2) {
+    var key;
+    var keys = Object.keys(obj2);
+    var n = keys.length;
+
+    while (n--) {
+      key = keys[n];
+      obj1[key] = obj2[key];
+    }
+
+    return obj1;
+}
+
+
 module.exports = {
     retry: retry,
     createDeferred: createDeferred,
-    consultPlugins: consultPlugins
+    consultPlugins: consultPlugins,
+    joinObjects: joinObjects
 };
