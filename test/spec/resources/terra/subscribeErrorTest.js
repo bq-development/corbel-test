@@ -12,7 +12,7 @@ describe('In RESOURCES module, in TERRA rem', function() {
             corbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
         });
 
-        it.skip('an error [403] is returned while trying to subscribe with not valid number', function(done) {
+        it('an error [403] is returned while trying to subscribe with not valid number', function(done) {
 
             corbelDriver.resources.resource(TERRA_COLLECTION, wrongMobileNumber)
             .update(null, {customQueryParams: {pin: rightPinNumber}})
@@ -24,19 +24,19 @@ describe('In RESOURCES module, in TERRA rem', function() {
             .should.notify(done);
         });
 
-        it.skip('an error [403] is returned while trying to subscribe with not valid pin', function(done) {
+        it('an error [403] is returned while trying to subscribe with not valid pin', function(done) {
 
             corbelDriver.resources.resource(TERRA_COLLECTION, rightMobileNumber)
             .update(null, {customQueryParams: {pin: wrongPinNumber}})
             .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 403);
-                expect(e).to.have.deep.property('data.error', 'forbidden');
+                expect(e).to.have.deep.property('data.error', 'invalid_pin');
             })
             .should.notify(done);
         });
 
-        it.skip('an error is returned while trying to subscribe and the number is already subscribed', function(done) {
+        it('an error is returned while trying to subscribe and the number is already subscribed', function(done) {
 
             corbelDriver.resources.resource(TERRA_COLLECTION, rightMobileNumber)
             .update(null, {customQueryParams: {pin: rightPinNumber}})
@@ -55,7 +55,7 @@ describe('In RESOURCES module, in TERRA rem', function() {
             })
             .then(function(e) {
                 expect(e).to.have.property('status', 403);
-                expect(e).to.have.deep.property('data.error', 'forbidden');
+                expect(e).to.have.deep.property('data.error', 'already_subscribed');
             })
             .then(function(){
                 return corbelDriver.resources.resource(TERRA_COLLECTION, rightMobileNumber)

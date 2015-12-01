@@ -1,6 +1,6 @@
 describe('In RESOURCES module, in TERRA rem', function() {
 
-    describe.skip('while testing complete subscription flow', function() {
+    describe('while testing complete subscription flow', function() {
         var corbelDriver;
         var TERRA_PINCOLLECTION = 'books:ChilePin';
         var TERRA_COLLECTION = 'books:ChileSubscription';

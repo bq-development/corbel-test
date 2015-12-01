@@ -12,7 +12,7 @@ describe('In RESOURCES module, in TERRA rem', function() {
             corbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
         });
 
-        it.skip('an error [404] is returned while trying to unsubscribe an unsubscribed number', function(done) {
+        it('an error [404] is returned while trying to unsubscribe an unsubscribed number', function(done) {
 
             corbelDriver.resources.resource(TERRA_COLLECTION, wrongMobileNumber)
             .delete({customQueryParams: {pin: rightPinNumber}})
@@ -23,7 +23,7 @@ describe('In RESOURCES module, in TERRA rem', function() {
             .should.notify(done);
         });
 
-        it.skip('an error [403] is returned while trying to unsubscribe with not valid pin', function(done) {
+        it('an error [403] is returned while trying to unsubscribe with not valid pin', function(done) {
 
             corbelDriver.resources.resource(TERRA_COLLECTION, rightMobileNumber)
             .update(null, {customQueryParams: {pin: rightPinNumber}})
@@ -43,7 +43,7 @@ describe('In RESOURCES module, in TERRA rem', function() {
             })
             .then(function(e) {
                 expect(e).to.have.property('status', 403);
-                expect(e).to.have.deep.property('data.error', 'forbidden');
+                expect(e).to.have.deep.property('data.error', 'invalid_pin');
             })
             .then(function(){
                 return corbelDriver.resources.resource(TERRA_COLLECTION, rightMobileNumber)
