@@ -13,14 +13,9 @@
 function createUsers(driver, amount, extraFields) {
     var promises = [];
     var obj = extraFields || {};
-    var key;
-    var keys = Object.keys(obj);
-    var n = keys.length;
 
     for (var count = 1; count <= amount; count++) {
         var random = Date.now() + '-' + count;
-        var emailAccount = 'registerUser' + random + '@funkifake.com';
-
         var userData = {
             'firstName': 'registerUser' + random,
             'lastName': 'registerUser' + random,
@@ -28,10 +23,8 @@ function createUsers(driver, amount, extraFields) {
             'username': 'registerUser' + random + '@funkifake.com',
             'password': 'passRegisterUser'
         };
-
-        while (n--) {
-          key = keys[n];
-          userData[key] = obj[key];
+        if (extraFields) {
+            userData = corbelTest.common.utils.joinObjects(userData, extraFields);
         }
 
         promises.push(createUser(userData, driver));
