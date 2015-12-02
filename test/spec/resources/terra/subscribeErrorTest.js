@@ -19,7 +19,7 @@ describe('In RESOURCES module, in TERRA rem', function() {
             .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 403);
-                expect(e).to.have.deep.property('data.error', 'forbidden');
+                expect(e).to.have.deep.property('data.error', 'invalid_number');
             })
             .should.notify(done);
         });
