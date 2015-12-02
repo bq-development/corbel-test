@@ -1,12 +1,12 @@
 describe('In IAM module', function() {
-    var CorbelDriver;
-
-    before(function() {
-        CorbelDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
-    });
 
     describe('when performing client CRUD operations', function() {
+        var CorbelDriver;
         var testDomainId;
+
+        before(function() {
+            CorbelDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
+        });
 
         var createClients = function(amount, domain, timeStamp) {
             var promises = [];
@@ -42,36 +42,39 @@ describe('In IAM module', function() {
         });
 
         it('a client is created', function(done) {
-            var timeStamp = Date.now();
-            var expectedClient = corbelTest.common.iam.getClient(timeStamp, testDomainId);
-            var createdClientId;
+            var client = {
+                name: 'testClient_' + Date.now(),
+                signatureAlgorithm: 'HS256',
+                domain: testDomainId,
+                scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete', 'iam:user:me']
+                };
+            var clientId;
 
-            CorbelDriver.iam.client(expectedClient.domain)
-            .create(expectedClient)
+            CorbelDriver.iam.client(client.domain)
+            .create(client)
             .should.be.eventually.fulfilled
             .then(function(id) {
-                createdClientId = id;
-                delete expectedClient.id;
+                clientId = id;
 
-                return CorbelDriver.iam.client(expectedClient.domain, id)
+                return CorbelDriver.iam.client(client.domain, id)
                 .get()
                 .should.be.eventually.fulfilled;
             })
-            .then(function(client) {
-                expect(client).to.have.deep.property('data.id', createdClientId);
-                expect(client).to.have.deep.property('data.name', expectedClient.name);
-                expect(client).to.have.deep.property('data.signatureAlgorithm', expectedClient.signatureAlgorithm);
-                expect(client).to.have.deep.property('data.domain', expectedClient.domain);
-                expect(client).to.have.deep.property('data.scopes');
-                client.data.scopes.forEach(function(scope){
-                    expect(expectedClient.scopes).to.contain(scope);
+            .then(function(response) {
+                expect(response).to.have.deep.property('data.id', clientId);
+                expect(response).to.have.deep.property('data.name', client.name);
+                expect(response).to.have.deep.property('data.signatureAlgorithm', client.signatureAlgorithm);
+                expect(response).to.have.deep.property('data.domain', client.domain);
+                expect(response).to.have.deep.property('data.scopes');
+                response.data.scopes.forEach(function(scope){
+                    expect(client.scopes).to.contain(scope);
                 });
 
-                return CorbelDriver.iam.client(expectedClient.domain, createdClientId)
+                return CorbelDriver.iam.client(client.domain, clientId)
                 .remove()
                 .should.be.eventually.fulfilled;
             }).
-            should.be.eventually.fulfilled.and.notify(done);
+            should.notify(done);
         });
 
         it('two clients are created and both have differents keys', function(done) {
@@ -133,49 +136,59 @@ describe('In IAM module', function() {
                 .remove()
                 .should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         it('a client is updated', function(done) {
-            var expectedClient = corbelTest.common.iam.getClient(Date.now(), testDomainId);
+            var client = {
+                name: 'testClient_' + Date.now(),
+                signatureAlgorithm: 'HS256',
+                domain: testDomainId,
+                scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete', 'iam:user:me']
+                };
             var newName = 'newClientName';
-            var expectedClientId;
+            var clientId;
 
-            CorbelDriver.iam.client(expectedClient.domain)
-            .create(expectedClient)
+            CorbelDriver.iam.client(client.domain)
+            .create(client)
             .should.be.eventually.fulfilled
             .then(function(id) {
                 var newClient = {
                     id: id,
-                    domain: expectedClient.domain,
-                    signatureAlgorithm: expectedClient.signatureAlgorithm,
+                    domain: client.domain,
+                    signatureAlgorithm: client.signatureAlgorithm,
                     name: newName
                 };
-                expectedClientId = id;
+                clientId = id;
 
-                return CorbelDriver.iam.client(expectedClient.domain, newClient.id)
+                return CorbelDriver.iam.client(client.domain, newClient.id)
                 .update(newClient)
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return CorbelDriver.iam.client(expectedClient.domain, expectedClientId)
+                return CorbelDriver.iam.client(client.domain, clientId)
                 .get()
                 .should.be.eventually.fulfilled;
             })
-            .then(function(client) {
-                expect(client).to.have.deep.property('data.id', expectedClientId);
-                expect(client).to.have.deep.property('data.domain', expectedClient.domain);
-                expect(client).to.have.deep.property('data.name', newName);
+            .then(function(response) {
+                expect(response).to.have.deep.property('data.id', clientId);
+                expect(response).to.have.deep.property('data.domain', client.domain);
+                expect(response).to.have.deep.property('data.name', newName);
 
-                return CorbelDriver.iam.client(expectedClient.domain, expectedClientId)
+                return CorbelDriver.iam.client(client.domain, clientId)
                 .remove()
                 .should.be.eventually.fulfilled;
             })
-            .should.be.eventually.fulfilled.and.notify(done);
+            .should.notify(done);
         });
 
         it('a nonexistent client is not updated', function(done) {
-            var expectedClient = corbelTest.common.iam.getClient(Date.now(), testDomainId);
+            var expectedClient = {
+                name: 'testClient_' + Date.now(),
+                signatureAlgorithm: 'HS256',
+                domain: testDomainId,
+                scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete', 'iam:user:me']
+                };
             var newName = 'newClientName';
             var updatedClient = {
                 id: 'newId',
@@ -200,7 +213,12 @@ describe('In IAM module', function() {
         });
 
         it('a client is removed', function(done) {
-            var client = corbelTest.common.iam.getClient(Date.now(), testDomainId);
+            var client = {
+                name: 'testClient_' + Date.now(),
+                signatureAlgorithm: 'HS256',
+                domain: testDomainId,
+                scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete', 'iam:user:me']
+                };
             var clientId;
 
             CorbelDriver.iam.client(client.domain)
