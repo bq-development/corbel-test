@@ -57,7 +57,12 @@ describe('In IAM module', function() {
         });
 
         it('an error 409 is returned when try to create an existing client', function(done) {
-            var client = corbelTest.common.iam.getClient(Date.now(), domainId);
+            var client = {
+                name: 'testClient_' + Date.now(),
+                signatureAlgorithm: 'HS256',
+                domain: domainId,
+                scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete', 'iam:user:me']
+                };
             var clientId;
 
             corbelRootDriver.iam.client(client.domain)
