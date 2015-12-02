@@ -58,13 +58,13 @@ function getDomain(timeStamp, desc, sufix, scopes, publicScopes) {
     };
 }
 
-function getClient(timeStamp, domainId, sufix, publicScopes) {
+function getClient(timeStamp, domainId, sufix, scopes) {
     return {
         name: 'testClient_' + (timeStamp ? timeStamp : Date.now()) +
             (sufix ? ('_' + sufix) : ''),
         signatureAlgorithm: 'HS256',
         domain: domainId ? domainId : 'TestDomain',
-        scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete',
+        scopes: scopes ?  scopes : ['iam:user:create', 'iam:user:read', 'iam:user:delete',
             'iam:user:me']
     };
 }
