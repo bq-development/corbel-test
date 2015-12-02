@@ -48,7 +48,7 @@ describe('In RESOURCES module, in TERRA MOCK, testing create subscription', func
             .should.notify(done);
         });
 
-        it('[403] is returned while trying to subscribe a invalid number with pin requested', function(done) {
+        it('[403] is returned while trying to subscribe an invalid number with pin requested', function(done) {
             corbelDriver.resources.resource(TERRA_COLLECTION, BLACKLISTED_REQUESTED_PIN_NUMBER.id)
             .update(null, {customQueryParams: {pin: BLACKLISTED_REQUESTED_PIN_NUMBER.pin}})
             .should.be.eventually.rejected
@@ -73,7 +73,7 @@ describe('In RESOURCES module, in TERRA MOCK, testing create subscription', func
             .should.notify(done);
         });
 
-        it('[403] is returned while trying to subscribe a invalid number with not requested pin', function(done) {
+        it('[403] is returned while trying to subscribe an invalid number with not requested pin', function(done) {
             corbelDriver.resources.resource(TERRA_COLLECTION, BLACKLISTED_NOT_REQUESTED_PIN_NUMBER.id)
             .update(null, {customQueryParams: {pin: BLACKLISTED_NOT_REQUESTED_PIN_NUMBER.pin}})
             .should.be.eventually.rejected
