@@ -5,7 +5,7 @@ describe('In RESOURCES module', function() {
         describe('while testing create resources', function() {
             var corbelDriver;
             var corbelRootDriver;
-            var COLLECTION_NAME = 'test:testAcl';
+            var COLLECTION_NAME = 'test:testAcl' + Date.now();
             var user;
             var resourceId;
             var random;
@@ -34,26 +34,9 @@ describe('In RESOURCES module', function() {
                     .delete()
                 .should.be.eventually.fulfilled
                 .then(function() {
-                    return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
-                    .get()
-                    .should.be.eventually.rejected;
-                })
-                .then(function(e) {
-                    expect(e).to.have.property('status', 404);
-                    expect(e).to.have.deep.property('data.error', 'not_found');
-
                     return corbelRootDriver.iam.user(user.id)
                     .delete()
                     .should.be.eventually.fulfilled;
-                })
-                .then(function() {
-                    return corbelRootDriver.iam.user(user.id)
-                    .get()
-                    .should.be.eventually.rejected;
-                })
-                .then(function(e) {
-                    expect(e).to.have.property('status', 404);
-                    expect(e).to.have.deep.property('data.error', 'not_found');
                 })
                 .should.notify(done);
             });

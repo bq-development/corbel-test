@@ -5,7 +5,7 @@ describe('In RESOURCES module', function() {
         describe('while testing delete resources', function() {
             var corbelDriver;
             var corbelRootDriver;
-            var COLLECTION_NAME = 'test:testAcl';
+            var COLLECTION_NAME = 'test:testAcl' + Date.now();
             var user;
             var resourceId;
             var random;
