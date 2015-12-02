@@ -1,0 +1,14 @@
+<div id="option">
+    <div style="width:60%;float:left;vertical-align:middle">
+        <label id="server-<%= Name %>" class="onoffswitch-name"><%= ShowName %></label>
+    </div>
+    <div style="width:20%;float:left">
+        <div class="onoffswitch">
+            <input type="checkbox" name="<%= Name %>" class="onoffswitch-checkbox" id="<%= Name %>" <%= checked %> >
+            <label class="onoffswitch-label" for="<%= Name %>">
+                <div class="onoffswitch-inner" on="<%= optionOn %>" off="<%= optionOff %>"></div>
+                <div class="onoffswitch-switch"></div>
+            </label>
+        </div>
+    </div>
+</div>

@@ -57,7 +57,7 @@ module.exports = function(grunt) {
         browserify: {
             dist: {
                 files: {
-                    '.tmp/bundle.js': ['src/main.js'],
+                    '.tmp/bundle.js': [ 'src/main.js'],
                 }
             }
         },
@@ -69,7 +69,10 @@ module.exports = function(grunt) {
                 client: {
                     mocha: {
                         timeout: 90000
-                    }
+                    },
+                    env: grunt.option('env'),
+                    localServices: grunt.option('local-services'),
+                    grep: grunt.option('grep')
                 }
             },
             unit: {

@@ -33,9 +33,9 @@
        "clientSecret": "CLIENT_SECRET",
        "scopes": "SCOPES"
    },
-   "COMMON": {
-       "urlBase": "https://{{module}}-{{ENV}}.mydomain.com/v1.0/"
-   },
+  "COMMON": {
+    "urlBase": "https://{{module}}-{{ENV}}.mydomain.com/v1.0/"
+  },
    "GLOBALS": {
      "defaultPageSize": 10,
      "maxPageSize": 50,
