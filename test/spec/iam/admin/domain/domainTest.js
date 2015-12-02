@@ -1,11 +1,11 @@
 describe('In IAM module', function() {
-    var CorbelDriver;
-
-    before(function() {
-        CorbelDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
-    });
 
     describe('when performing domain CRUD operations', function() {
+        var CorbelDriver;
+
+        before(function() {
+            CorbelDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
+        });
 
         var createDomains = function(amount, timeStamp, desc) {
             var promises = [];
@@ -24,7 +24,12 @@ describe('In IAM module', function() {
         };
 
         it('a domain is created', function(done) {
-            var expectedDomain = corbelTest.common.iam.getDomain();
+            var expectedDomain = {
+                id: 'TestDomain_' + Date.now(),
+                description: 'anyDescription',
+                scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete', 'iam:user:me'],
+                publicScopes: []
+            };
 
             CorbelDriver.iam.domain()
             .create(expectedDomain)
@@ -48,7 +53,12 @@ describe('In IAM module', function() {
         });
 
         it('a domain is updated', function(done) {
-            var expectedDomain = corbelTest.common.iam.getDomain();
+            var expectedDomain = {
+                id: 'TestDomain_' + Date.now(),
+                description: 'anyDescription',
+                scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete', 'iam:user:me'],
+                publicScopes: []
+            };
             var newDescription = 'salerjiioejjsadroaeho';
 
             CorbelDriver.iam.domain()
@@ -77,7 +87,12 @@ describe('In IAM module', function() {
         });
 
         it('a domain is removed', function (done) {
-            var expectedDomain = corbelTest.common.iam.getDomain();
+            var expectedDomain = {
+                id: 'TestDomain_' + Date.now(),
+                description: 'anyDescription',
+                scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete', 'iam:user:me'],
+                publicScopes: []
+            };
 
             CorbelDriver.iam.domain()
             .create(expectedDomain)
