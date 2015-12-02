@@ -47,17 +47,18 @@ function createUser(userData, driver){
     });
 }
 
-function getDomain(timeStamp, desc, sufix) {
+function getDomain(timeStamp, desc, sufix, scopes, publicScopes) {
     return {
         id: 'TestDomain_' + (timeStamp ? timeStamp : Date.now()) +
             (sufix ? ('_' + sufix) : ''),
         description: desc ? desc : 'anyDescription',
-        scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete',
-            'iam:user:me']
+        scopes: scopes ? scopes : ['iam:user:create', 'iam:user:read', 'iam:user:delete',
+            'iam:user:me'],
+        publicScopes: publicScopes ? publicScopes : []
     };
 }
 
-function getClient(timeStamp, domainId, sufix) {
+function getClient(timeStamp, domainId, sufix, publicScopes) {
     return {
         name: 'testClient_' + (timeStamp ? timeStamp : Date.now()) +
             (sufix ? ('_' + sufix) : ''),
@@ -68,12 +69,12 @@ function getClient(timeStamp, domainId, sufix) {
     };
 }
 
-function getScope(id) {
+function getScope(id, audience, rules, parameters) {
     return {
         id: id,
-        audience: 'testAudience',
-        rules: [{ testRule: 'this is a rule' }],
-        parameters: { a: Date.now() }
+        audience: audience ? audience : 'testAudience',
+        rules: rules ? rules : [{ testRule: 'this is a rule' }],
+        parameters: parameters ? parameters : { a: Date.now() } 
     };
 }
 
