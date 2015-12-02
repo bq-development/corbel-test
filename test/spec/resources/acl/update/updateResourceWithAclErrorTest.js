@@ -2,7 +2,7 @@ describe('In RESOURCES module', function() {
 
     describe('In ACL module', function() {
 
-        describe('while testing delete resources', function() {
+        describe('while testing update resources', function() {
             var corbelDriver;
             var corbelAdminDriver;
             var corbelRootDriver;
@@ -14,6 +14,8 @@ describe('In RESOURCES module', function() {
             var usersId;
             var groupId;
             var TEST_OBJECT;
+            var TEST_OBJECT_UPDATE;
+            var dataType;
 
             before(function(){
                 corbelRootDriver = corbelTest.drivers['ADMIN_USER'].clone();
@@ -25,9 +27,14 @@ describe('In RESOURCES module', function() {
                 random = Date.now();
                 usersId = [];
                 groupId = 'testGroup' + random;
+                dataType = {dataType: 'application/json'};
                 TEST_OBJECT = {
                     test: 'test' + random,
                     test2: 'test2' + random
+                };
+                TEST_OBJECT_UPDATE = {
+                    test: 'testUpdate' + random,
+                    test2: 'test2Update' + random
                 };
 
                 corbelTest.common.iam.createUsers(corbelAdminDriver, 1)
@@ -47,14 +54,6 @@ describe('In RESOURCES module', function() {
                         (corbelAdminDriver, adminUser.username, adminUser.password)
                     .should.be.eventually.fulfilled;
                 })
-                .then(function(){
-                    return corbelAdminDriver.resources.collection(COLLECTION_NAME)
-                        .add(TEST_OBJECT)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(id) {
-                    resourceId = id;
-                })
                 .should.notify(done);
             });
 
@@ -65,7 +64,7 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled
                 .then(function(){
                     return corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                        .delete()
+                        .delete(dataType)
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(){
@@ -80,66 +79,8 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            it('an error [401] is returned if the user only has WRITE permission', function(done) {
-               var ACL = {};
-                ACL['user:' + adminUser.id] = {
-                    permission : 'ADMIN'
-                };
-                ACL['user:' + user.id] = {
-                    permission : 'WRITE'
-                };
-
-                corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                .update(ACL, {dataType: 'application/corbel.acl+json'})
-                .should.be.eventually.fulfilled
-                .then(function() {
-                    return corbelTest.common.clients.loginUser
-                        (corbelDriver, user.username, user.password)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(){
-                    return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
-                        .delete()
-                    .should.be.eventually.rejected;
-                })
-                .then(function(e) {
-                    expect(e).to.have.property('status', 401);
-                    expect(e).to.have.deep.property('data.error', 'unauthorized');
-                })
-                .should.notify(done);
-            });
-
-            it('an error [401] is returned if the users group only has WRITE permission', function(done) {
+            it('an error 401 is returned if the user only has READ permission', function(done) {
                 var ACL = {};
-                ACL['user:' + adminUser.id] = {
-                    permission : 'ADMIN'
-                };
-                ACL['group:' + groupId] = {
-                    permission : 'WRITE'
-                };
-
-                corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                .update(ACL, {dataType: 'application/corbel.acl+json'})
-                .should.be.eventually.fulfilled
-                .then(function() {
-                    return corbelTest.common.clients.loginUser
-                        (corbelDriver, user.username, user.password)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(){
-                    return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
-                        .delete()
-                    .should.be.eventually.rejected;
-                })
-                .then(function(e) {
-                    expect(e).to.have.property('status', 401);
-                    expect(e).to.have.deep.property('data.error', 'unauthorized');
-                })
-                .should.notify(done);
-            });
-
-            it('an error [401] is returned if the user only has READ permission', function(done) {
-               var ACL = {};
                 ACL['user:' + adminUser.id] = {
                     permission : 'ADMIN'
                 };
@@ -147,27 +88,34 @@ describe('In RESOURCES module', function() {
                     permission : 'READ'
                 };
 
-                corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                .update(ACL, {dataType: 'application/corbel.acl+json'})
+                corbelAdminDriver.resources.collection(COLLECTION_NAME)
+                    .add(TEST_OBJECT)
                 .should.be.eventually.fulfilled
+                .then(function(id) {
+                    resourceId = id;
+
+                    return corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
+                        .update(ACL, {dataType: 'application/corbel.acl+json'})
+                    .should.be.eventually.fulfilled;
+                })
                 .then(function() {
                     return corbelTest.common.clients.loginUser
                         (corbelDriver, user.username, user.password)
                     .should.be.eventually.fulfilled;
                 })
-                .then(function(){
+                .then(function() {
                     return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
-                        .delete()
+                        .update(TEST_OBJECT_UPDATE)
                     .should.be.eventually.rejected;
                 })
-                .then(function(e) {
-                    expect(e).to.have.property('status', 401);
-                    expect(e).to.have.deep.property('data.error', 'unauthorized');
+                .then(function(response) {
+                    expect(response).to.have.property('status', 401);
+                    expect(response).to.have.deep.property('data.error', 'unauthorized');
                 })
                 .should.notify(done);
             });
 
-            it('an error [401] is returned if the users group only has READ permission', function(done) {
+            it('an error 401 is returned if the users group only has READ permission', function(done) {
                 var ACL = {};
                 ACL['user:' + adminUser.id] = {
                     permission : 'ADMIN'
@@ -176,22 +124,65 @@ describe('In RESOURCES module', function() {
                     permission : 'READ'
                 };
 
-                corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                .update(ACL, {dataType: 'application/corbel.acl+json'})
+                corbelAdminDriver.resources.collection(COLLECTION_NAME)
+                    .add(TEST_OBJECT)
                 .should.be.eventually.fulfilled
+                .then(function(id) {
+                    resourceId = id;
+
+                    return corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
+                        .update(ACL, {dataType: 'application/corbel.acl+json'})
+                    .should.be.eventually.fulfilled;
+                })
                 .then(function() {
                     return corbelTest.common.clients.loginUser
                         (corbelDriver, user.username, user.password)
                     .should.be.eventually.fulfilled;
                 })
-                .then(function(){
+                .then(function() {
                     return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
-                        .delete()
+                        .update(TEST_OBJECT_UPDATE)
                     .should.be.eventually.rejected;
                 })
-                .then(function(e) {
-                    expect(e).to.have.property('status', 401);
-                    expect(e).to.have.deep.property('data.error', 'unauthorized');
+                .then(function(response) {
+                    expect(response).to.have.property('status', 401);
+                    expect(response).to.have.deep.property('data.error', 'unauthorized');
+                })
+                .should.notify(done);
+            });
+
+            it('an error 401 is returned if ALL users have READ permission', function(done) {
+                var ACL = {};
+                ACL['user:' + adminUser.id] = {
+                    permission : 'ADMIN'
+                };
+                ACL.ALL = {
+                    permission : 'READ'
+                };
+
+                corbelAdminDriver.resources.collection(COLLECTION_NAME)
+                    .add(TEST_OBJECT)
+                .should.be.eventually.fulfilled
+                .then(function(id) {
+                    resourceId = id;
+
+                    return corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
+                        .update(ACL, {dataType: 'application/corbel.acl+json'})
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function() {
+                    return corbelTest.common.clients.loginUser
+                        (corbelDriver, user.username, user.password)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function() {
+                    return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
+                        .update(TEST_OBJECT_UPDATE)
+                    .should.be.eventually.rejected;
+                })
+                .then(function(response) {
+                    expect(response).to.have.property('status', 401);
+                    expect(response).to.have.deep.property('data.error', 'unauthorized');
                 })
                 .should.notify(done);
             });
