@@ -47,7 +47,7 @@ describe('In RESOURCES module, in TERRA MOCK,', function() {
             .should.notify(done);
         });
 
-        it('an error [404] is returned while trying to unsubscribe an subscription in process number', function(done) {
+        it('an error [404] is returned while trying to unsubscribe a subscription in process number', function(done) {
             corbelDriver.resources.resource(TERRA_COLLECTION, IN_PROCESS_REQUESTED_PIN_NUMBER.id)
             .delete({customQueryParams: {pin: IN_PROCESS_REQUESTED_PIN_NUMBER.pin}})
             .should.be.eventually.rejected
@@ -57,7 +57,7 @@ describe('In RESOURCES module, in TERRA MOCK,', function() {
             .should.notify(done);
         });
 
-        it('an error [404] is returned while trying to unsubscribe an renovating subscription number', function(done) {
+        it('an error [404] is returned while trying to unsubscribe a renovating subscription number', function(done) {
             corbelDriver.resources.resource(TERRA_COLLECTION, RENOVATING_REQUESTED_PIN_NUMBER.id)
             .delete({customQueryParams: {pin: RENOVATING_REQUESTED_PIN_NUMBER.pin}})
             .should.be.eventually.rejected
