@@ -107,20 +107,19 @@ describe('In RESOURCES module', function() {
                         }
                     });
                 }, MAX_RETRY, RETRY_PERIOD)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response) {
-                    var data = response.data;
                     params.aggregation = {
                         '$count': '*'
                     };
-                    data.forEach(function(entry) {
+                    response.data.forEach(function(entry) {
                         delete entry.links;
                     });
 
-                    expect(data.length).to.be.equal(3);
-                    expect(data).to.include(object1);
-                    expect(data).to.include(object2);
-                    expect(data).to.include(object3);
+                    expect(response).to.have.deep.property('data.length', 3);
+                    expect(response).to.have.property('data').and.to.include(object1);
+                    expect(response).to.have.property('data').and.to.include(object2);
+                    expect(response).to.have.property('data').and.to.include(object3);
 
                     return corbelDriver.resources.collection(COLLECTION)
                     .get(params)
@@ -149,7 +148,7 @@ describe('In RESOURCES module', function() {
                         }
                     });
                 }, MAX_RETRY, RETRY_PERIOD)
-                .should.eventually.be.fulfilled
+                .should.be.eventually.fulfilled
                 .then(function(response) {
                     var data = response.data;
                     data.forEach(function(entry) {

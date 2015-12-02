@@ -1,28 +1,21 @@
 'use strict';
-var q = require('q');
+function retry(retryFunction, maxRetries, retryPeriod, catches) {
+    return new Promise(function(resolve, reject){
+        catches = catches || [];
 
-function createDeferred() {
-    return q.defer();
-}
-
-function retry(retryFunction, maxRetries, retryPeriod, deferred, catches) {
-    deferred = deferred || createDeferred();
-    catches = catches || [];
-
-    if (maxRetries < 1) {
-        deferred.reject(catches);
-    } else {
-        retryFunction().then(function(response) {
-            deferred.resolve(response);
-        }).catch(function(err) {
-            catches.push(err);
-            setTimeout(function() {
-                retry(retryFunction, maxRetries - 1, retryPeriod, deferred, catches);
-            }, retryPeriod * 1000);
-        });
-    }
-
-    return deferred.promise;
+        if (maxRetries < 1) {
+            reject(catches);
+        } else {
+            retryFunction().then(function(response) {
+                resolve(response);
+            }).catch(function(err) {
+                catches.push(err);
+                setTimeout(function() {
+                    retry(retryFunction, maxRetries - 1, retryPeriod, catches);
+                }, retryPeriod * 1000);
+            });
+        }
+    });
 }
 
 function consultPlugins(url) {
@@ -35,6 +28,5 @@ function consultPlugins(url) {
 
 module.exports = {
     retry: retry,
-    createDeferred: createDeferred,
     consultPlugins: consultPlugins
 };
