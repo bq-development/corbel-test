@@ -1,13 +1,13 @@
 describe('In IAM module', function() {
-    var corbelDriver;
-    var corbelDefaultDriver;
-
-    before(function() {
-        corbelDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
-        corbelDefaultDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
-    });
 
     describe('when performing domain CRUD operations', function() {
+        var corbelDriver;
+        var corbelDefaultDriver;
+
+        before(function() {
+            corbelDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
+            corbelDefaultDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
+        });
 
         it('an error 422 is returned when try to create an empty domain', function(done) {
             corbelDriver.iam.domain()
@@ -21,7 +21,12 @@ describe('In IAM module', function() {
         });
 
         it('an error 409 is returned while trying to create an existent domain', function(done) {
-            var expectedDomain = corbelTest.common.iam.getDomain();
+            var expectedDomain = {
+                id: 'TestDomain_' + Date.now(),
+                description: 'anyDescription',
+                scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete', 'iam:user:me'],
+                publicScopes: []
+            };
 
             corbelDriver.iam.domain()
             .create(expectedDomain)
@@ -49,7 +54,12 @@ describe('In IAM module', function() {
 
         it('an error 422 is returned while trying to create a domain with : inside the id', function(done) {
             var expectedDomain = corbelTest.common.iam.getDomain();
-            expectedDomain.id = 'silkroad-qa:test';
+            var expectedDomain = {
+                id: 'TestDomain:' + Date.now(),
+                description: 'anyDescription',
+                scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete', 'iam:user:me'],
+                publicScopes: []
+            };
 
             corbelDriver.iam.domain()
             .create(expectedDomain)
@@ -62,8 +72,12 @@ describe('In IAM module', function() {
         });
 
         it('an error 401 is returned while trying to create a domain without authorization', function(done) {
-            var expectedDomain = corbelTest.common.iam.getDomain();
-            expectedDomain.id = 'silkroad-qa:test';
+            var expectedDomain = {
+                id: 'TestDomain_' + Date.now(),
+                description: 'anyDescription',
+                scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete', 'iam:user:me'],
+                publicScopes: []
+            };
 
             corbelDefaultDriver.iam.domain()
             .create(expectedDomain)
@@ -76,7 +90,12 @@ describe('In IAM module', function() {
         });
 
         it('an error 404 is returned while trying to modify the domain id', function(done) {
-            var expectedDomain = corbelTest.common.iam.getDomain();
+            var expectedDomain = {
+                id: 'TestDomain_' + Date.now(),
+                description: 'anyDescription',
+                scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete', 'iam:user:me'],
+                publicScopes: []
+            };
             var updateDomainId = 'anyDomain:test';
             var domainId;
 
@@ -120,7 +139,7 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('an error 401 is returned while trying to create a domain without authorization', function(done) {
+        it('an error 401 is returned while trying to get a domain without authorization', function(done) {
             var id = Date.now();
 
             corbelDefaultDriver.iam.domain(id)
@@ -155,9 +174,15 @@ describe('In IAM module', function() {
 
         it('an error 401 is returned while trying to update a domain without authorization', function(done) {
             var id = Date.now();
+            var expectedDomain = {
+                id: 'TestDomain_' + Date.now(),
+                description: 'anyDescription',
+                scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete', 'iam:user:me'],
+                publicScopes: []
+            };
 
             corbelDefaultDriver.iam.domain(id)
-            .update(corbelTest.common.iam.getDomain())
+            .update(expectedDomain)
             .should.be.eventually.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 401);
@@ -169,7 +194,7 @@ describe('In IAM module', function() {
         it('an error 422 is returned while trying to update a domain with malformed entity', function(done) {
             var id = Date.now();
 
-            corbelDriver.iam.domain('Pepe')
+            corbelDriver.iam.domain(id)
             .update('asdf')
             .should.be.eventually.rejected
             .then(function(e) {
