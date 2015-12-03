@@ -1,4 +1,5 @@
 'use strict';
+
 function retry(retryFunction, maxRetries, retryPeriod, catches) {
     return new Promise(function(resolve, reject){
         catches = catches || [];
@@ -26,7 +27,25 @@ function consultPlugins(url) {
     });
 }
 
+function joinObjects(obj1, obj2) {
+    var completeObject = {};
+    var args = Array.slice(arguments);
+    args.map(function(obj){
+        var key;
+        var keys = Object.keys(obj);
+        var n = keys.length;
+        while (n--) {
+          key = keys[n];
+          completeObject[key] = obj[key];
+        }
+    });
+
+    return completeObject;
+}
+
+
 module.exports = {
     retry: retry,
-    consultPlugins: consultPlugins
+    consultPlugins: consultPlugins,
+    joinObjects: joinObjects
 };
