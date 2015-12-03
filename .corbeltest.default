@@ -35,6 +35,16 @@
    },
   "COMMON": {
     "urlBase": "https://{{module}}-{{ENV}}.mydomain.com/v1.0/"
+    "endpoints": {
+             "resources": "https://{{module}}-{{ENV}}.mydomain.com/v1.0/",
+             "oauth": "https://{{module}}-{{ENV}}.mydomain.com/v1.0/",
+             "iam": "https://{{module}}-{{ENV}}.mydomain.com/v1.0/",
+             "evci": "https://{{module}}-{{ENV}}.mydomain.com/v1.0/",
+             "assets": "https://{{module}}-{{ENV}}.mydomain.com/v1.0/",
+             "notifications": "https://{{module}}-{{ENV}}.mydomain.com/v1.0/",
+             "webfs": "https://{{module}}-{{ENV}}.mydomain.com/v1.0/",
+             "scheduler": "https://{{module}}-{{ENV}}.mydomain.com/v1.0/",
+          }
   },
    "GLOBALS": {
      "defaultPageSize": 10,
