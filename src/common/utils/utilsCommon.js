@@ -12,7 +12,10 @@ function retry(retryFunction, maxRetries, retryPeriod, catches) {
             }).catch(function(err) {
                 catches.push(err);
                 setTimeout(function() {
-                    retry(retryFunction, maxRetries - 1, retryPeriod, catches);
+                    retry(retryFunction, maxRetries - 1, retryPeriod, catches)
+                    .then(function(response){
+                       resolve(response);
+                   }).catch(reject);
                 }, retryPeriod * 1000);
             });
         }
