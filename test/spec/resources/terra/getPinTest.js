@@ -27,6 +27,7 @@ describe('In RESOURCES module, in TERRA rem', function() {
             .update()
             .should.be.eventually.rejected
             .then(function(response){
+                console.log('Response status '+response.status);
                 expect(response).to.have.property('status', 404); 
             })
             .should.notify(done);

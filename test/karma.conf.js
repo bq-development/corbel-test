@@ -81,6 +81,7 @@ module.exports = function(config) {
         browserNoActivityTimeout: 95000,
 
         client: {
+            captureConsole: true,
             mocha: {
                 reporter: 'html' // change Karma's debug.html to the mocha web reporter
             }
