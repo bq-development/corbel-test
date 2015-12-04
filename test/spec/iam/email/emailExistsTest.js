@@ -1,62 +1,55 @@
 describe('In IAM module', function() {
     var corbelDriver;
-    var userId;
-    var email;
+    var user;
 
-    describe('when working with email endpoints', function() {
+    describe('while testing email endpoints', function() {
 
         before(function(done) {
             corbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
 
-            email = 'registerUser' + Date.now() + '@funkifake.com';
-
-            corbelTest.common.iam.createUser({
-                'firstName': 'registerUser',
-                'lastName': 'registerUser',
-                'email': email,
-                'username': email,
-                'password': 'passRegisterUser',
-                'oauthService': 'silkroad'
-            }, corbelDriver)
+            corbelTest.common.iam.createUsers(corbelDriver, 1)
             .should.be.eventually.fulfilled
-            .then(function(data){
-                userId = data.id;
+            .then(function(createdUser) {
+                user = createdUser[0];
             })
             .should.notify(done);
         });
 
         after(function(done){
-            corbelDriver.iam.user(userId)
-            .delete()
+            corbelDriver.iam.user(user.id)
+                .delete()
             .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        describe('in getting users id by email', function () {
-            it('should return users id if the email is in use', function(done) {
+        describe('when getting user id through email', function () {
+
+            it('user id is returned if the email is being used', function(done) {
                 corbelDriver.iam.email()
-                .getUserId(email)
+                    .getUserId(user.email)
                 .should.be.eventually.fulfilled
                 .then(function(response) {
-                    expect(response).to.have.deep.property('data.id',userId);
+                    expect(response).to.have.deep.property('data.id',user.id);
                 })
                 .should.notify(done);
             });
 
-            it('should respond with error 404 if the email is not in use', function(done) {
+            it('an error [404] is returned if the email is not being used', function(done) {
                 corbelDriver.iam.email()
-                .getUserId('test' + email)
+                    .getUserId(Date.now())
                 .should.be.eventually.rejected
                 .then(function(e) {
                     expect(e).to.have.property('status', 404);
+                    expect(e).to.have.deep.property('data.error', 'not_found');
                 })
                 .should.notify(done);
             });
         });
 
-        describe('in checking emails availability', function () {
-            it('should return false if the email is in use', function(done) {
+        describe('when checking email availability', function () {
+
+            it('false should be returned if the email is being used', function(done) {
                 corbelDriver.iam.email()
-                .availability(email)
+                    .availability(user.email)
                 .should.be.eventually.fulfilled
                 .then(function(availability) {
                     expect(availability).to.be.equals(false);
@@ -65,9 +58,9 @@ describe('In IAM module', function() {
             });
 
             if (window.chrome) {
-                it('should return true if the email is not in use', function(done) {
+                it('true should be returned if the email is not being used', function(done) {
                     corbelDriver.iam.email()
-                    .availability(Date.now()+email)
+                        .availability(Date.now())
                     .then(function(availability) {
                         expect(availability).to.be.equals(true);
                     })
