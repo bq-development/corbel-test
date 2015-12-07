@@ -68,8 +68,11 @@ corbelTest.getConfig = function(clientName) {
         }
     });
 
-    return _.extend(data, corbelTest.CONFIG[clientName]);
+    var clientConfig = clientName ? corbelTest.CONFIG[clientName] : {};
+    return _.extend(data, clientConfig);
 };
+
+
 
 corbelTest.localConfig = localConfig;
 corbelTest.common = common;
