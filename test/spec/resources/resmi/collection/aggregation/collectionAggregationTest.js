@@ -1,23 +1,19 @@
 describe('In RESOURCES module', function() {
-    var corbelDriver;
-
-    before(function() {
-      corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
-    });
 
     describe('In RESMI module, while testing collection aggregation,', function() {
+        var corbelDriver;
         var COLLECTION = 'test:CorbelJSObjectCollectionAggregation' + Date.now();
         var amount = 50;
         var sum = 25 * 155 / 3;
 
-        beforeEach(function(done) {
+        before(function(done) {
+            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
             corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION, amount)
             .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        afterEach(function(done) {
+        after(function(done) {
             corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
-            .should.be.eventually.fulfilled
             .should.be.eventually.fulfilled.and.notify(done);
         });
 
@@ -36,7 +32,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.count', amount);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('in histogram aggregation case, the number of occurrences of each value in a field are returned',
@@ -53,11 +49,11 @@ describe('In RESOURCES module', function() {
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 2);
                     response.data.map(function(resource){
-                        expect(resource).to.have.property('id').and.to.be.within(0,1);
+                        expect(resource).to.have.deep.property('values.distinctField');
                         expect(resource).to.have.property('count', amount/2);
                     });
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('in histogram aggregation case, if the field does not exists, the count is the number of resources',
@@ -78,7 +74,7 @@ describe('In RESOURCES module', function() {
                         expect(resource).to.have.property('count', amount);
                     });
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('in histogram aggregation case, the number of occurrences in a field that match the query are returned',
@@ -100,11 +96,11 @@ describe('In RESOURCES module', function() {
                 .then(function(response) {
                     expect(response).to.have.property('data').and.to.be.an('array');
                     response.data.map(function(resource){
-                        expect(resource).to.have.property('id').and.to.be.below(1000);
+                        expect(resource).to.have.deep.property('values.intField').and.to.be.below(1000);
                         expect(resource).to.have.property('count');
                     });
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('in histogram aggregation case, the number of occurrences that match the pagination are returned',
@@ -124,11 +120,12 @@ describe('In RESOURCES module', function() {
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.length', 5);
                     response.data.map(function(resource){
-                        expect(resource).to.have.property('id').and.to.contain('stringFieldContent');
+                        expect(resource).to.have.deep.property('values.stringField')
+                            .and.to.contain('stringFieldContent');
                         expect(resource).to.have.property('count');
                     });
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('in the min aggregation case, the match element is returned', function(done) {
@@ -181,7 +178,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.max', 1000);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('with min aggregation over a query, the match element is returned', function(done) {
@@ -202,7 +199,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.min', 1000);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('with count aggregation over a query, the elements that match the query are returned', function(done) {
@@ -223,7 +220,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.count', 1);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('with sum aggregation, the expected sum is returned', function(done) {
@@ -239,7 +236,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.sum').to.be.closeTo(sum, 0.000000000001);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('with sum aggregation applied on a non numeric field, 0 is returned', function(done) {
@@ -255,7 +252,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.sum', 0);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('with average aggregation, the expected average is returned', function(done) {
@@ -271,7 +268,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.average').to.be.closeTo(sum / amount, 0.000000000001);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('with average aggregation applied on a non numeric field, 0 is returned', function(done) {
@@ -287,7 +284,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.average', 0);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
 
             it('when the object is empty, an error is returned', function(done) {
@@ -300,7 +297,7 @@ describe('In RESOURCES module', function() {
                 .then(function(e) {
                     expect(e).to.have.property('status', 400);
                 })
-                .should.be.eventually.fulfilled.notify(done);
+                .should.notify(done);
             });
 
             it('when there are more than one operator, an error is returned', function(done) {
@@ -316,7 +313,7 @@ describe('In RESOURCES module', function() {
                 .then(function(e) {
                     expect(e).to.have.property('status', 400);
                 })
-                .should.be.eventually.fulfilled.notify(done);
+                .should.notify(done);
             });
 
             it('with agreggation, query and sorts, sort param is ignored', function(done) {
@@ -340,7 +337,7 @@ describe('In RESOURCES module', function() {
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.count', 1);
                 })
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.notify(done);
             });
         });
     });
