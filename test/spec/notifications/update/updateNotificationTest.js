@@ -111,25 +111,6 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('the id field in notification templates can not be removed', function(done) {
-            corbelDriver.notifications.notification(notificationId)
-                .update({id: null})
-            .should.be.eventually.fulfilled
-            .then(function() {
-                return corbelDriver.notifications.notification(notificationId)
-                    .get()
-                .should.be.eventually.fulfilled;
-            })
-            .then(function(response) {
-                expect(response).to.have.deep.property('data.id');
-                expect(response).to.have.deep.property('data.title');
-                expect(response).to.have.deep.property('data.text');
-                expect(response).to.have.deep.property('data.sender');
-                expect(response).to.have.deep.property('data.type');
-            })
-            .should.notify(done);
-        });
-
         it('the title field in notification templates can be updated', function(done) {
             corbelDriver.notifications.notification(notificationId)
                 .update({title: 'updated title'})
@@ -149,7 +130,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('the title field in notification templates can be removed', function(done) {
+        it('if the title field in notification templates is set to null, it is not updated', function(done) {
             corbelDriver.notifications.notification(notificationId)
                 .update({title: null})
             .should.be.eventually.fulfilled
@@ -159,7 +140,83 @@ describe('In NOTIFICATIONS module', function() {
                 .should.be.eventually.fulfilled;
             })
             .then(function(response) {
-                expect(response).not.to.have.deep.property('data.title');
+                expect(response).to.have.deep.property('data.title');
+                expect(response).to.have.deep.property('data.id');
+                expect(response).to.have.deep.property('data.text');
+                expect(response).to.have.deep.property('data.sender');
+                expect(response).to.have.deep.property('data.type');
+            })
+            .should.notify(done);
+        });
+
+        it('if the text field in notification templates is set to null, it is not updated', function(done) {
+            corbelDriver.notifications.notification(notificationId)
+                .update({text: null})
+            .should.be.eventually.fulfilled
+            .then(function() {
+                return corbelDriver.notifications.notification(notificationId)
+                    .get()
+                .should.be.eventually.fulfilled;
+            })
+            .then(function(response) {
+                expect(response).to.have.deep.property('data.title');
+                expect(response).to.have.deep.property('data.id');
+                expect(response).to.have.deep.property('data.text');
+                expect(response).to.have.deep.property('data.sender');
+                expect(response).to.have.deep.property('data.type');
+            })
+            .should.notify(done);
+        });
+
+        it('if the sender field in notification templates is set to null, it is not updated', function(done) {
+            corbelDriver.notifications.notification(notificationId)
+                .update({sender: null})
+            .should.be.eventually.fulfilled
+            .then(function() {
+                return corbelDriver.notifications.notification(notificationId)
+                    .get()
+                .should.be.eventually.fulfilled;
+            })
+            .then(function(response) {
+                expect(response).to.have.deep.property('data.title');
+                expect(response).to.have.deep.property('data.id');
+                expect(response).to.have.deep.property('data.text');
+                expect(response).to.have.deep.property('data.sender');
+                expect(response).to.have.deep.property('data.type');
+            })
+            .should.notify(done);
+        });
+
+        it('if the type field in notification templates is set to null, it is not updated', function(done) {
+            corbelDriver.notifications.notification(notificationId)
+                .update({type: null})
+            .should.be.eventually.fulfilled
+            .then(function() {
+                return corbelDriver.notifications.notification(notificationId)
+                    .get()
+                .should.be.eventually.fulfilled;
+            })
+            .then(function(response) {
+                expect(response).to.have.deep.property('data.title');
+                expect(response).to.have.deep.property('data.id');
+                expect(response).to.have.deep.property('data.text');
+                expect(response).to.have.deep.property('data.sender');
+                expect(response).to.have.deep.property('data.type');
+            })
+            .should.notify(done);
+        });
+
+        it('if the id field in notification templates is set to null, it is not updated', function(done) {
+            corbelDriver.notifications.notification(notificationId)
+                .update({id: null})
+            .should.be.eventually.fulfilled
+            .then(function() {
+                return corbelDriver.notifications.notification(notificationId)
+                    .get()
+                .should.be.eventually.fulfilled;
+            })
+            .then(function(response) {
+                expect(response).to.have.deep.property('data.title');
                 expect(response).to.have.deep.property('data.id');
                 expect(response).to.have.deep.property('data.text');
                 expect(response).to.have.deep.property('data.sender');
