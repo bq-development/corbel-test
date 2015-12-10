@@ -7,7 +7,6 @@ corbel-platform test suite
 
 ```
 npm install
-bower install
 ```
 
 ## Run tests
