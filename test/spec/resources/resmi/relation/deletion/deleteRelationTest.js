@@ -153,6 +153,53 @@ describe('In RESOURCES module', function() {
             .should.notify(done);
         });
 
+        it('all registries that satisfies a query in a relation are deleted', function(done) {
+            var amount = 7;
+            var idsResourecesInB;
+
+            corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION_B, amount)
+                .should.be.eventually.fulfilled
+                .then(function(ids) {
+                    idsResourecesInB = ids;
+
+                    return corbelTest.common.resources.createRelationFromSingleObjetToMultipleObject
+                            (corbelDriver, COLLECTION_A, idResourceA1, COLLECTION_B, idsResourecesInB)
+                        .should.be.eventually.fulfilled;
+                })
+                .then(function() {
+                    return corbelDriver.resources.relation(COLLECTION_A, idResourceA1, COLLECTION_B)
+                        .get()
+                        .should.be.eventually.fulfilled;
+                })
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', amount);
+                })
+                .then(function() {
+                    var params = {
+                        query: [{
+                            '$ne': {
+                                intCount: 300
+                            }
+                        }]
+                    };
+                    return corbelDriver.resources.relation(COLLECTION_A, idResourceA1, COLLECTION_B)
+                        .delete(undefined, params)
+                        .should.be.eventually.fulfilled;
+                })
+                .then(function() {
+                    return corbelDriver.resources.relation(COLLECTION_A, idResourceA1, COLLECTION_B)
+                        .get()
+                        .should.be.eventually.fulfilled;
+                })
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', 1);
+                    expect(response).to.have.deep.property('data[0].intCount', 300);
+                    return corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
+                        .should.be.eventually.fulfilled;
+                })
+                .should.notify(done);
+        });
+
         it('an element in all relations is deleted', function(done) {
             var amount = 7;
             var idsResourecesInB;
