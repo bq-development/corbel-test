@@ -15,7 +15,9 @@ describe('In RESOURCES module', function() {
 
         currentResourcesEndpoint = corbelTest.getConfig().localServices.indexOf('resources') !== -1 ? 
             corbelTest.getConfig().resourcesEndpoint :
-            corbelTest.getConfig().urlBase.replace('{{module}}', 'resources');
+            corbelTest.getConfig().urlBase.replace('{{module}}', 'resources'); 
+
+       // currentResourcesEndpoint = corbelTest.getConfig().urlBase.replace('{{module}}', 'resources');
 
         var scopeId = 'scopeId-' + random;
         var audience = 'http://resources.bqws.io';
