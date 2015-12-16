@@ -110,18 +110,18 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled
                 .then(function(resource) {
                     var reader = new FileReader();
-                    var dfd = corbelTest.common.utils.createDeferred();
-                    reader.onloadend = function() {
-                        var container = document.getElementById('mocha');
-                        container.insertAdjacentHTML(
-                            'beforeend',
-                            '<img id="test-image" src="' + reader.result + '" />');
-                        var image = document.getElementById('test-image');
-                        expect(image.clientWidth).to.be.equal(originalImageWidth);
-                        dfd.resolve();
-                    };
-                    reader.readAsDataURL(resource.data);
-                    return dfd.promise;
+                    return new Promise(function(resolve, reject) {
+                        reader.onloadend = function() {
+                            var container = document.getElementById('mocha');
+                            container.insertAdjacentHTML(
+                                'beforeend',
+                                '<img id="test-image" src="' + reader.result + '" />');
+                            var image = document.getElementById('test-image');
+                            expect(image.clientWidth).to.be.equal(originalImageWidth);
+                            resolve();
+                        };
+                        reader.readAsDataURL(resource.data);
+                    });
                 })
                 .should.notify(done);
             });
@@ -142,19 +142,19 @@ describe('In RESOURCES module', function() {
                 .then(function(resource) {
                     var expectedWidth = ((originalImageWidth * operationHeight) / originalImageHeigth);
                     var reader = new FileReader();
-                    var dfd = corbelTest.common.utils.createDeferred();
-                    reader.onloadend = function() {
-                        var container = document.getElementById('mocha');
-                        container.insertAdjacentHTML(
-                            'beforeend',
-                            '<img id="test-image" src="' + reader.result + '" />');
-                        var image = document.getElementById('test-image');
-                        expect(image).to.have.property('clientHeight', operationHeight);
-                        expect(image).to.have.property('clientWidth', expectedWidth);
-                        dfd.resolve();
-                    };
-                    reader.readAsDataURL(resource.data);
-                    return dfd.promise;
+                    return new Promise(function(resolve, reject) {
+                        reader.onloadend = function() {
+                            var container = document.getElementById('mocha');
+                            container.insertAdjacentHTML(
+                                'beforeend',
+                                '<img id="test-image" src="' + reader.result + '" />');
+                            var image = document.getElementById('test-image');
+                            expect(image).to.have.property('clientHeight', operationHeight);
+                            expect(image).to.have.property('clientWidth', expectedWidth);
+                            resolve();
+                        };
+                        reader.readAsDataURL(resource.data);
+                    });
                 })
                 .should.notify(done);
             });
@@ -176,19 +176,19 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled
                 .then(function(resource) {
                     var reader = new FileReader();
-                    var dfd = corbelTest.common.utils.createDeferred();
-                    reader.onloadend = function() {
-                        var container = document.getElementById('mocha');
-                        container.insertAdjacentHTML(
-                            'beforeend',
-                            '<img id="test-image" src="' + reader.result + '" />');
-                        var image = document.getElementById('test-image');
-                        expect(image.clientHeight).to.be.equal(resizeHeightValue);
-                        expect(image.clientWidth).to.be.equal(resizeWidthValue);
-                        dfd.resolve();
-                    };
-                    reader.readAsDataURL(resource.data);
-                    return dfd.promise;
+                    return new Promise(function(resolve, reject) {
+                        reader.onloadend = function() {
+                            var container = document.getElementById('mocha');
+                            container.insertAdjacentHTML(
+                                'beforeend',
+                                '<img id="test-image" src="' + reader.result + '" />');
+                            var image = document.getElementById('test-image');
+                            expect(image.clientHeight).to.be.equal(resizeHeightValue);
+                            expect(image.clientWidth).to.be.equal(resizeWidthValue);
+                            resolve();
+                        };
+                        reader.readAsDataURL(resource.data);
+                    });
                 })
                 .should.notify(done);
             });
