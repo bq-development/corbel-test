@@ -39,7 +39,7 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('user firsname is updated through updateMe', function(done) {
+        it('user firstname is updated through updateMe', function(done) {
             corbelDriver.iam.user()
             .updateMe({
                 'firstName': 'user Modified Me'
@@ -56,7 +56,7 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('user firsname is updated through user("me")', function(done) {
+        it('user firstname is updated through user("me")', function(done) {
             corbelDriver.iam.user('me')
             .update({
                 'firstName': 'user Modified Me'
@@ -73,7 +73,7 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('user firsname and lastname are updated through updateMe', function(done) {
+        it('user firstname and lastname are updated through updateMe', function(done) {
             corbelDriver.iam.user()
             .updateMe({
                 'firstName': 'user Modified Me',
@@ -92,7 +92,7 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('user firsname and lastname are updated through user("me")', function(done) {
+        it('user firstname and lastname are updated through user("me")', function(done) {
             corbelDriver.iam.user('me')
             .update({
                 'firstName': 'user Modified Me',
@@ -112,9 +112,10 @@ describe('In IAM module', function() {
         });
 
         it('user username is updated through updateMe', function(done) {
+            var random = Date.now();
             corbelDriver.iam.user()
             .updateMe({
-                'username': 'modified username'
+                'username': 'modified username-' + random
             })
             .should.be.eventually.fulfilled
             .then(function() {
@@ -123,15 +124,16 @@ describe('In IAM module', function() {
                 .should.be.eventually.fulfilled;
             })
             .then(function(response) {
-                expect(response).to.have.deep.property('data.username','modified username');
+                expect(response).to.have.deep.property('data.username','modified username-' + random);
             })
             .should.notify(done);
         });
 
         it('user username is updated through user("me")', function(done) {
+            var random = Date.now();
             corbelDriver.iam.user('me')
             .update({
-                'username': 'modified username'
+                'username': 'modified username-' + random
             })
             .should.be.eventually.fulfilled
             .then(function() {
@@ -140,7 +142,7 @@ describe('In IAM module', function() {
                 .should.be.eventually.fulfilled;
             })
             .then(function(response) {
-                expect(response).to.have.deep.property('data.username','modified username');
+                expect(response).to.have.deep.property('data.username','modified username-' + random);
             })
             .should.notify(done);
         });
