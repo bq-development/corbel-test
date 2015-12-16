@@ -15,6 +15,8 @@ module.exports = function(grunt) {
     CONFIG.tmp = CONFIG.tmp || '.tmp';
     CONFIG.test = CONFIG.test || 'test';
 
+
+
     // Define the configuration for all the tasks
     grunt.initConfig({
 
@@ -57,7 +59,7 @@ module.exports = function(grunt) {
         browserify: {
             dist: {
                 files: {
-                    '.tmp/bundle.js': [ 'src/main.js'],
+                    '.tmp/bundle.js': ['src/main.js'],
                 }
             }
         },
@@ -80,23 +82,30 @@ module.exports = function(grunt) {
             },
             serve: {
                 singleRun: false,
-                browsers: [
-                    'Chrome'
-                ]
+                background: true,
+                autoWatch: true,
+                browsers: [],
+                port: 8080
             }
         },
         express: {
             options: {
-              // Override defaults here
-              background: true,
-              port : 5454
+                // Override defaults here
+                background: true,
+                port: 5454
             },
             dev: {
-              options: {
-                script: 'express/server.js'
-              }
+                options: {
+                    script: 'express/server.js'
+                }
             }
+        },
+        open: {
+            server: {
+                path: 'http://localhost:<%= karma.serve.port %>/debug.html'
+            },
         }
+
     });
 
     grunt.registerTask('config', '', function() {
@@ -118,7 +127,9 @@ module.exports = function(grunt) {
 
     grunt.registerTask('serve:test', '', [
         'common',
-        'karma:serve'
+        'karma:serve',
+        'open',
+        'watch'
     ]);
     // deprecated
     grunt.registerTask('server:test', function() {

@@ -6,298 +6,289 @@ describe('In RESOURCES module', function() {
         var amount = 10;
         var count;
         var timeMargin = 10000;
+        var maxCreateAt;
 
-        beforeEach(function(done) {
+        var serverDateToLocal = function(stringDate, offset) {
+            offset = offset || 0;
+            var date = new Date(stringDate).getTime();
+            var utcOffset = new Date().getTimezoneOffset() * 60000;
+            return date - utcOffset + offset;
+        };
+
+        before(function(done) {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
             corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION, amount)
-            .should.be.eventually.fulfilled.and.notify(done);
+                .should.be.eventually.fulfilled
+                .then(function() {
+                    var params = {
+                        aggregation: {
+                            '$max': '_createdAt'
+                        }
+                    };
+                    return corbelDriver.resources.collection(COLLECTION)
+                        .get(params)
+                        .should.be.eventually.fulfilled;
+                })
+                .then(function(response) {
+                    maxCreateAt = serverDateToLocal(response.data.max, 1000);
+                })
+                .should.and.notify(done);
         });
 
-        afterEach(function(done) {
+        after(function(done) {
             corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
-            .should.be.eventually.fulfilled.and.notify(done);
+                .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        describe('when getting a collection using "greater than" query language', function(){
+        describe('when getting a collection using "greater than" query language', function() {
 
-            it('used timestamp parameter in the query applying to _updateAt field', function(done){
+            it('used timestamp parameter in the query applying to _updateAt field', function(done) {
                 var date;
-                var updateParams = { randomField : 'qwer' };
+                var updateParams = {
+                    randomField: 'qwer'
+                };
                 var queryParams;
                 var firstElementId;
 
                 corbelDriver.resources.collection(COLLECTION)
-                .get()
-                .should.be.eventually.fulfilled
-                .then(function(response){
-                    date = response.data[0]._updatedAt;
-                    queryParams = {
-                              query: [{
-                                  '$gt': {
-                                      _updatedAt : date
-                                  }
-                              }]
-                    };
-                    firstElementId = response.data[0].id;
+                    .get()
+                    .should.be.eventually.fulfilled
+                    .then(function(response) {
+                        date = response.data[0]._updatedAt;
+                        queryParams = {
+                            query: [{
+                                '$gt': {
+                                    _updatedAt: date
+                                }
+                            }]
+                        };
+                        firstElementId = response.data[0].id;
 
-                    return corbelDriver.resources.collection(COLLECTION)
-                    .get(queryParams)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(response){
-                    count = response.data.length;
-                    return corbelDriver.resources.resource(COLLECTION, firstElementId)
-                    .update(updateParams)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(){
-                    return corbelDriver.resources.collection(COLLECTION)
-                    .get(queryParams)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(response){
-                    expect(response).to.have.deep.property('data.length', count + 1);
-                })
-                .should.notify(done);
+                        return corbelDriver.resources.collection(COLLECTION)
+                            .get(queryParams)
+                            .should.be.eventually.fulfilled;
+                    })
+                    .then(function(response) {
+                        count = response.data.length;
+                        return corbelDriver.resources.resource(COLLECTION, firstElementId)
+                            .update(updateParams)
+                            .should.be.eventually.fulfilled;
+                    })
+                    .then(function() {
+                        return corbelDriver.resources.collection(COLLECTION)
+                            .get(queryParams)
+                            .should.be.eventually.fulfilled;
+                    })
+                    .then(function(response) {
+                        expect(response).to.have.deep.property('data.length', count + 1);
+                    })
+                    .should.notify(done);
             });
 
-            it('used ISODate parameter in the query applying to _updateAt field', function(done){
+            it('used ISODate parameter in the query applying to _updateAt field', function(done) {
                 var date;
-                var updateParams = { randomField : 'qwer' };
+                var updateParams = {
+                    randomField: 'qwer'
+                };
                 var queryParams;
                 var firstElementId;
 
                 corbelDriver.resources.collection(COLLECTION)
-                .get()
-                .should.be.eventually.fulfilled
-                .then(function(response){
-                    date = 'ISODate(' + new Date(response.data[0]._updatedAt).toISOString() + ')';
-                    queryParams = {
-                              query: [{
-                                  '$gt': {
-                                      _updatedAt : date
-                                  }
-                              }]
-                    };
-                    firstElementId = response.data[0].id;
+                    .get()
+                    .should.be.eventually.fulfilled
+                    .then(function(response) {
+                        date = 'ISODate(' + new Date(response.data[0]._updatedAt).toISOString() + ')';
+                        queryParams = {
+                            query: [{
+                                '$gt': {
+                                    _updatedAt: date
+                                }
+                            }]
+                        };
+                        firstElementId = response.data[0].id;
 
-                    return corbelDriver.resources.collection(COLLECTION)
-                    .get(queryParams)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(response){
-                    count = response.data.length;
-                    return corbelDriver.resources.resource(COLLECTION, firstElementId)
-                    .update(updateParams)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(){
-                    return corbelDriver.resources.collection(COLLECTION)
-                    .get(queryParams)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(response){
-                    expect(response).to.have.deep.property('data.length', count + 1);
-                })
-                .should.notify(done);
+                        return corbelDriver.resources.collection(COLLECTION)
+                            .get(queryParams)
+                            .should.be.eventually.fulfilled;
+                    })
+                    .then(function(response) {
+                        count = response.data.length;
+                        return corbelDriver.resources.resource(COLLECTION, firstElementId)
+                            .update(updateParams)
+                            .should.be.eventually.fulfilled;
+                    })
+                    .then(function() {
+                        return corbelDriver.resources.collection(COLLECTION)
+                            .get(queryParams)
+                            .should.be.eventually.fulfilled;
+                    })
+                    .then(function(response) {
+                        expect(response).to.have.deep.property('data.length', count + 1);
+                    })
+                    .should.notify(done);
             });
 
-            it('used ISODate parameter in the query applying to _createAt field', function(done){
+            it('used ISODate parameter in the query applying to _createAt field', function(done) {
                 var queryParams = {
-                              query: [{
-                                  '$gt': {
-                                      _createdAt : 'ISODate(' + new Date(Date.now() + timeMargin).toISOString() + ')'
-                                  }
-                              }]
-                };
-
-                corbelDriver.resources.collection(COLLECTION)
-                .get(queryParams)
-                .should.be.eventually.fulfilled
-                .then(function(response){
-                    expect(response).to.have.deep.property('data.length', 0);
-                })
-                .should.notify(done);
-            });
-
-            it('used timestamp parameter in the query applying to _createAt field', function(done){
-                var queryParams = {
-                              query: [{
-                                  '$gt': {
-                                      _createdAt : Date.now() + timeMargin
-                                  }
-                              }]
-                };
-
-                corbelDriver.resources.collection(COLLECTION)
-                .get(queryParams)
-                .should.be.eventually.fulfilled
-                .then(function(response){
-                    expect(response).to.have.deep.property('data.length', 0);
-                })
-                .should.notify(done);
-            });
-
-        });
-
-        describe('when getting a collection using "lower than" query language', function(){
-
-            it('does not exists a document with an _expireAt field that matches expected value', function(done) {
-                var expireAtCollection = 'test:ExpireAt';
-
-                var testObject = {
-                    test: 'test',
-                    _expireAt: Date.now() + 1000
-                };
-
-                var params = {
                     query: [{
-                        '$lt': {
-                            _expireAt: 'ISODate(' + (new Date(Date.now() + 10000 )).toISOString() + ')'
+                        '$gt': {
+                            _createdAt: 'ISODate(' + new Date(maxCreateAt).toISOString() + ')'
                         }
                     }]
                 };
 
-                corbelDriver.resources.collection(expireAtCollection)
-                .add(testObject)
-                .should.be.eventually.fulfilled
-                .then(function() {
-                    return corbelTest.common.utils.retry(function(){
-                        return corbelDriver.resources.collection(expireAtCollection)
-                        .get(params)
-                        .then(function(response) {
-                            if (response.data.length !== 0) {
-                                return Promise.reject();
-                            } else {
-                                return response;
-                            }
-                        });
-                    }, 10, 10)
+                corbelDriver.resources.collection(COLLECTION)
+                    .get(queryParams)
                     .should.be.eventually.fulfilled
                     .then(function(response) {
                         expect(response).to.have.deep.property('data.length', 0);
-                    });
-                })
-                .should.notify(done);
+                    })
+                    .should.notify(done);
             });
 
-            it('a timestamp parameter is used in the query and applied to _updateAt field', function(done){
+            it('used timestamp parameter in the query applying to _createAt field', function(done) {
+                var queryParams = {
+                    query: [{
+                        '$gt': {
+                            _createdAt: maxCreateAt
+                        }
+                    }]
+                };
+
+                corbelDriver.resources.collection(COLLECTION)
+                    .get(queryParams)
+                    .should.be.eventually.fulfilled
+                    .then(function(response) {
+                        expect(response).to.have.deep.property('data.length', 0);
+                    })
+                    .should.notify(done);
+            });
+
+        });
+
+        describe('when getting a collection using "lower than" query language', function() {
+
+            it('a timestamp parameter is used in the query and applied to _updateAt field', function(done) {
                 var date;
-                var updateParams = { randomField : 'qwer' };
+                var updateParams = {
+                    randomField: 'qwer'
+                };
                 var queryParams;
                 var firstElementId;
 
                 corbelDriver.resources.collection(COLLECTION)
-                .get()
-                .should.be.eventually.fulfilled
-                .then(function(response){
-                    date = response.data[0]._updatedAt;
-                    queryParams = {
-                              query: [{
-                                  '$lt': {
-                                      _updatedAt : date
-                                  }
-                              }]
-                    };
-                    firstElementId = response.data[0].id;
+                    .get()
+                    .should.be.eventually.fulfilled
+                    .then(function(response) {
+                        date = response.data[0]._updatedAt;
+                        queryParams = {
+                            query: [{
+                                '$lt': {
+                                    _updatedAt: date
+                                }
+                            }]
+                        };
+                        firstElementId = response.data[0].id;
 
-                    return corbelDriver.resources.collection(COLLECTION)
-                    .get(queryParams)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(response){
-                    count = response.data.length;
-                    return corbelDriver.resources.resource(COLLECTION, firstElementId)
-                    .update(updateParams)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(){
-                    return corbelDriver.resources.collection(COLLECTION)
-                    .get(queryParams)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(response){
-                    expect(response).to.have.deep.property('data.length', count);
-                })
-                .should.notify(done);
+                        return corbelDriver.resources.collection(COLLECTION)
+                            .get(queryParams)
+                            .should.be.eventually.fulfilled;
+                    })
+                    .then(function(response) {
+                        count = response.data.length;
+                        return corbelDriver.resources.resource(COLLECTION, firstElementId)
+                            .update(updateParams)
+                            .should.be.eventually.fulfilled;
+                    })
+                    .then(function() {
+                        return corbelDriver.resources.collection(COLLECTION)
+                            .get(queryParams)
+                            .should.be.eventually.fulfilled;
+                    })
+                    .then(function(response) {
+                        expect(response).to.have.deep.property('data.length', count);
+                    })
+                    .should.notify(done);
             });
 
-            it('used ISODate parameter in the query applying to _updateAt field', function(done){
+            it('used ISODate parameter in the query applying to _updateAt field', function(done) {
                 var date;
-                var updateParams = { randomField : 'qwer' };
+                var updateParams = {
+                    randomField: 'qwer'
+                };
                 var queryParams;
                 var count;
                 var firstElementId;
 
                 corbelDriver.resources.collection(COLLECTION)
-                .get()
-                .should.be.eventually.fulfilled
-                .then(function(response){
-                    date = 'ISODate(' + new Date(response.data[0]._updatedAt).toISOString() + ')';
-                    queryParams = {
-                              query: [{
-                                  '$lt': {
-                                      _updatedAt : date
-                                  }
-                              }]
-                    };
-                    firstElementId = response.data[0].id;
+                    .get()
+                    .should.be.eventually.fulfilled
+                    .then(function(response) {
+                        date = 'ISODate(' + new Date(response.data[0]._updatedAt).toISOString() + ')';
+                        queryParams = {
+                            query: [{
+                                '$lt': {
+                                    _updatedAt: date
+                                }
+                            }]
+                        };
+                        firstElementId = response.data[0].id;
 
-                    return corbelDriver.resources.collection(COLLECTION)
-                    .get(queryParams)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(response){
-                    count = response.data.length;
-                    return corbelDriver.resources.resource(COLLECTION, firstElementId)
-                    .update(updateParams)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(){
-                    return corbelDriver.resources.collection(COLLECTION)
-                    .get(queryParams)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(response){
-                    expect(response).to.have.deep.property('data.length', count);
-                })
-                .should.notify(done);
+                        return corbelDriver.resources.collection(COLLECTION)
+                            .get(queryParams)
+                            .should.be.eventually.fulfilled;
+                    })
+                    .then(function(response) {
+                        count = response.data.length;
+                        return corbelDriver.resources.resource(COLLECTION, firstElementId)
+                            .update(updateParams)
+                            .should.be.eventually.fulfilled;
+                    })
+                    .then(function() {
+                        return corbelDriver.resources.collection(COLLECTION)
+                            .get(queryParams)
+                            .should.be.eventually.fulfilled;
+                    })
+                    .then(function(response) {
+                        expect(response).to.have.deep.property('data.length', count);
+                    })
+                    .should.notify(done);
             });
 
-            it('used ISODate parameter in the query applying to _createAt field', function(done){
+            it('used ISODate parameter in the query applying to _createAt field', function(done) {
                 var queryParams = {
-                              query: [{
-                                  '$lt': {
-                                      _createdAt : 'ISODate(' + new Date(Date.now() + timeMargin).toISOString() + ')'
-                                  }
-                              }]
+                    query: [{
+                        '$lt': {
+                            _createdAt: 'ISODate(' + new Date(maxCreateAt).toISOString() + ')'
+                        }
+                    }]
                 };
 
                 corbelDriver.resources.collection(COLLECTION)
-                .get(queryParams)
-                .should.be.eventually.fulfilled
-                .then(function(response){
-                    expect(response).to.have.deep.property('data.length', amount);
-                })
-                .should.notify(done);
+                    .get(queryParams)
+                    .should.be.eventually.fulfilled
+                    .then(function(response) {
+                        expect(response).to.have.deep.property('data.length', amount);
+                    })
+                    .should.notify(done);
             });
 
-            it('used timestamp parameter in the query applying to _createAt field', function(done){
+            it('used timestamp parameter in the query applying to _createAt field', function(done) {
                 var queryParams = {
-                              query: [{
-                                  '$lt': {
-                                      _createdAt : Date.now() + timeMargin
-                                  }
-                              }]
+                    query: [{
+                        '$lt': {
+                            _createdAt: maxCreateAt
+                        }
+                    }]
                 };
 
                 corbelDriver.resources.collection(COLLECTION)
-                .get(queryParams)
-                .should.be.eventually.fulfilled
-                .then(function(response){
-                    expect(response).to.have.deep.property('data.length', amount);
-                })
-                .should.notify(done);
+                    .get(queryParams)
+                    .should.be.eventually.fulfilled
+                    .then(function(response) {
+                        expect(response).to.have.deep.property('data.length', amount);
+                    })
+                    .should.notify(done);
             });
 
         });
