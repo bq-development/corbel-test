@@ -112,14 +112,16 @@ function getProperty(obj, prop) {
     }
 }
 
-function createRelationFromSingleObjetToMultipleObject(driver, collectionA, idResourceInA, collectionB, idResourceInB) {
+function createRelationFromSingleObjetToMultipleObject(driver, collectionA, idResourceInA, collectionB,
+ idResourceInB, extraField) {
     var promises = [];
 
     idResourceInB.forEach(function(idB, count) {
         var jsonRelationData = {
-            intField: Date.now(),
-            intCount: 100 * count,
+            intField: 100 * count,
+            intCount: Date.now(),
             floatCount: 0.1 * count,
+            computableField: count + (1 / 3),
             booleanCount: true,
             stringField: 'stringContent' + count,
             specialCharacters: 'ñÑçáéíóúàèìòùâêîôû\'',
@@ -128,8 +130,12 @@ function createRelationFromSingleObjetToMultipleObject(driver, collectionA, idRe
             ObjectNumber: _.range(count + 1),
             distinctField: count % 2,
             distinctField2: count % 4,
-            distinctField3: count % 5
+            distinctField3: count % 5,
         };
+
+        if(extraField){
+            jsonRelationData.extra = extraField;
+        }
 
         var promise = driver.resources.relation(collectionA, idResourceInA, collectionB).add(idB, jsonRelationData);
         promises.push(promise);
