@@ -13,7 +13,7 @@ describe('In RESOURCES module', function() {
                 project: 'TES',
                 issueType: 'Bug',
                 summary: 'test summary'
-                
+
             };
             corbelDriver.resources.collection(FEEDBACK_COLLECTION)
                 .add(FEEDBACK_METADATA)
@@ -26,7 +26,7 @@ describe('In RESOURCES module', function() {
                 issueType: 'Bug',
                 summary: 'test summary',
                 components: ['composr']
-                
+
             };
             corbelDriver.resources.collection(FEEDBACK_COLLECTION)
                 .add(FEEDBACK_METADATA)
@@ -39,7 +39,7 @@ describe('In RESOURCES module', function() {
                 issueType: 'Bug',
                 summary: 'test summary',
                 labels: ['labelTest']
-                
+
             };
             corbelDriver.resources.collection(FEEDBACK_COLLECTION)
                 .add(FEEDBACK_METADATA)
@@ -52,7 +52,7 @@ describe('In RESOURCES module', function() {
                 issueType: 'Bug',
                 summary: 'test summary',
                 description: 'TES description'
-                
+
             };
             corbelDriver.resources.collection(FEEDBACK_COLLECTION)
                 .add(FEEDBACK_METADATA)
@@ -65,7 +65,7 @@ describe('In RESOURCES module', function() {
                 issueType: 'Bug',
                 summary: 'test summary',
                 description: 'áéíóúññññ\nabcdefg'
-                
+
             };
             corbelDriver.resources.collection(FEEDBACK_COLLECTION)
                 .add(FEEDBACK_METADATA)
@@ -79,8 +79,8 @@ describe('In RESOURCES module', function() {
                 summary: 'test summary',
                 components: ['composr'],
                 description: 'test description',
-                labels: ['test label']
-                
+                labels: ['test', 'label']
+
             };
             corbelDriver.resources.collection(FEEDBACK_COLLECTION)
                 .add(FEEDBACK_METADATA)
