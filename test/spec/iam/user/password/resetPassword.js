@@ -1,3 +1,4 @@
+/* jshint camelcase:false */
 describe('In IAM module', function() {
 
     describe('while trying reset your password', function() {
@@ -36,12 +37,23 @@ describe('In IAM module', function() {
             var emailAuthorization;
             var oneTimeToken;
             var corbelResetDriver;
+            var comingClaim;
+            var userId;
 
             corbelTest.common.mail.getRandomMail()
             .should.be.eventually.fulfilled
             .then(function(response){
                 user.email = response.emailData.email_addr; // jshint ignore:line
                 emailAuthorization = response.cookies.PHPSESSID;
+
+                var claims = {
+                  'type': 'TOKEN',
+                  'isOneUse': true,
+                  'userId': user.id,
+                  'clientId': corbelTest.CONFIG.DEFAULT_CLIENT.clientId,
+                  'domainId': corbelTest.CONFIG.DOMAIN
+                };
+                comingClaim = corbel.cryptography.rstr2b64(corbel.cryptography.str2rstr_utf8(JSON.stringify(claims)));
 
                 return corbelRootDriver.iam.user(user.id)
                 .update({email: user.email})
@@ -75,6 +87,8 @@ describe('In IAM module', function() {
             .then(function(mail) {
                 expect(mail).to.have.property('mail_body')
                     .and.to.contain('Click on the link to reset your password');
+                expect(mail).to.have.property('mail_body')
+                    .and.to.contain(comingClaim);
                 oneTimeToken = corbelTest.common.mail.getCodeFromMail(mail);
 
                 corbelResetDriver = corbel.getDriver({
