@@ -71,15 +71,14 @@ describe('In CorbelJS module', function(){
             or above, nginx returns '400 - Request Header Or Cookie Too Large'.
             Since nginx replies without including CORS headers in the response, the response is detected as
             an illegal one, our libraries refuses to reveal the real response and masks the problem with default
-            responses values ->  {data: "", status: 200, headers: undefined, xhr: XMLHttpRequest}.
+            responses values.
         */
         if (window.chrome) {
             it('server does not support 8192 bytes long request headers', function(done) {
                 requestAndVerifyWithCustomHeaderLength(8192).
-                should.be.eventually.fulfilled.
+                should.be.eventually.rejected.
                 then(function(response) {
-                    expect(response).to.have.property('status').and.equals(200);
-                    expect(response.data).not.to.include.keys('obj1');
+                    expect(response).to.have.property('status').and.equals(0);
                 }).
                 should.notify(done);
             });
