@@ -31,39 +31,39 @@ describe('In CorbelJS module', function(){
     });
 
     after(function(done){
-        return corbelDriver.resources.resource(COLLECTION, RESORUCE_NAME).delete().
-        should.eventually.be.fulfilled.and.notify(done);
+        return corbelDriver.resources.resource(COLLECTION, RESORUCE_NAME).delete()
+        .should.eventually.be.fulfilled.and.notify(done);
     });
 
     describe('when large headers are sent in the request', function(){
         it('server supports 1024 bytes long request headers', function(done) {
-            requestAndVerifyWithCustomHeaderLength(1024).
-            should.be.eventually.fulfilled.
-            then(function(response) {
-                expect(response).to.have.property('status').and.equals(200);
-                expect(response.data).to.include.keys('obj1');
-            }).
-            should.notify(done);
+            requestAndVerifyWithCustomHeaderLength(1024)
+            .should.be.eventually.fulfilled
+            .then(function(response) {
+                expect(response).to.have.property('status', 200);
+                expect(response).to.have.property('data').and.to.include.keys('obj1');
+            })
+            .should.notify(done);
         });
 
-        it('server supports 2048 bytes long request headers', function(done) {
-            requestAndVerifyWithCustomHeaderLength(2048).
-            should.be.eventually.fulfilled.
-            then(function(response) {
-                expect(response).to.have.property('status').and.equals(200);
-                expect(response.data).to.include.keys('obj1');
-            }).
-            should.notify(done);
+            it('server supports 2048 bytes long request headers', function(done) {
+              requestAndVerifyWithCustomHeaderLength(2048)
+              .should.be.eventually.fulfilled
+              .then(function(response) {
+                  expect(response).to.have.property('status', 200);
+                  expect(response).to.have.property('data').and.to.include.keys('obj1');
+              })
+              .should.notify(done);
         });
 
         it('server supports 4096 bytes long request headers', function(done) {
-            requestAndVerifyWithCustomHeaderLength(4096).
-            should.be.eventually.fulfilled.
-            then(function(response) {
-                expect(response).to.have.property('status').and.equals(200);
-                expect(response.data).to.include.keys('obj1');
-            }).
-            should.notify(done);
+            requestAndVerifyWithCustomHeaderLength(4096)
+            .should.be.eventually.fulfilled
+            .then(function(response) {
+                expect(response).to.have.property('status', 200);
+                expect(response).to.have.property('data').and.to.include.keys('obj1');
+            })
+            .should.notify(done);
         });
 
         /**
@@ -75,12 +75,12 @@ describe('In CorbelJS module', function(){
         */
         if (window.chrome) {
             it('server does not support 8192 bytes long request headers', function(done) {
-                requestAndVerifyWithCustomHeaderLength(8192).
-                should.be.eventually.rejected.
-                then(function(response) {
-                    expect(response).to.have.property('status').and.equals(0);
-                }).
-                should.notify(done);
+                requestAndVerifyWithCustomHeaderLength(8192)
+                .should.be.eventually.rejected
+                .then(function(response) {
+                    expect(response).to.have.property('status', 0);
+                })
+                .should.notify(done);
             });
         } else {
             it.skip('This (Chrome) browser is not supported!', function() {});
