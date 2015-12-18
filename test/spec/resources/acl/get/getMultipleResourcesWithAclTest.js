@@ -3,31 +3,49 @@ describe('In RESOURCES module', function() {
     describe('In ACL module', function() {
 
         describe('while trying to get multiple resources from a collection', function() {
-            var corbelAdminDriver;
             var corbelRootDriver;
+            var corbelAdminDriver;
+            var corbelDriver;
             var COLLECTION_NAME = 'test:testAcl' + Date.now();
+            var DOMAIN = 'silkroad-qa';
             var adminUser;
+            var user;
             var random;
             var usersId;
             var amount = 5;
 
-            before(function(){
-                corbelRootDriver = corbelTest.drivers['ADMIN_USER'].clone();
-            });
-
-            beforeEach(function(done) {
+            before(function(done) {
+                corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
                 corbelAdminDriver = corbelTest.drivers['DEFAULT_USER'].clone();
+                corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
                 random = Date.now();
                 usersId = [];
-
-                corbelTest.common.iam.createUsers(corbelAdminDriver, 1)
+                
+                corbelTest.common.resources.setManagedCollection(
+                    corbelRootDriver, DOMAIN, COLLECTION_NAME)
                 .should.be.eventually.fulfilled
+                .then(function() {
+                    return corbelTest.common.iam.createUsers(corbelAdminDriver, 1)
+                    .should.be.eventually.fulfilled;
+                })
                 .then(function(createdUser) {
                     adminUser = createdUser[0];
                     usersId.push(adminUser.id);
 
+                    return corbelTest.common.iam.createUsers(corbelDriver, 1)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function(createdUser) {
+                    user = createdUser[0];
+                    usersId.push(user.id);
+
                     return corbelTest.common.clients.loginUser
                         (corbelAdminDriver, adminUser.username, adminUser.password)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function(){
+                    return corbelTest.common.clients.loginUser
+                        (corbelDriver, user.username, user.password)
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(){
@@ -37,12 +55,12 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            afterEach(function(done) {
-                
-                corbelTest.common.clients.loginUser
-                    (corbelAdminDriver, adminUser.username, adminUser.password)
+            after(function(done) {
+
+                corbelTest.common.resources.unsetManagedCollection(
+                    corbelRootDriver, DOMAIN, COLLECTION_NAME)
                 .should.be.eventually.fulfilled
-                .then(function(){
+                .then(function() {
                     return corbelTest.common.resources.cleanResourcesQuery(corbelAdminDriver)
                     .should.be.eventually.fulfilled;
                 })
@@ -58,7 +76,7 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            it('if the user has ADMIN permission', function(done) {
+            it('the resources can be gotten if the user has ADMIN permission', function(done) {
 
                 corbelAdminDriver.resources.collection(COLLECTION_NAME)
                     .get()
@@ -73,8 +91,6 @@ describe('In RESOURCES module', function() {
             });
 
             it('the user can only access to the resources in which he has permissions', function(done) {
-                var corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
-                var user;
                 var resourceId;
                 var ACL = {};
                 var TEST_OBJECT = {
@@ -82,21 +98,9 @@ describe('In RESOURCES module', function() {
                     test2: 'test2' + random
                 };
 
-                corbelTest.common.iam.createUsers(corbelDriver, 1)
+                corbelDriver.resources.collection(COLLECTION_NAME)
+                    .add(TEST_OBJECT)
                 .should.be.eventually.fulfilled
-                .then(function(createdUser){
-                    user = createdUser[0];
-                    usersId.push(user.id);
-
-                    return corbelTest.common.clients.loginUser
-                        (corbelDriver, user.username, user.password)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(){
-                    return corbelDriver.resources.collection(COLLECTION_NAME)
-                        .add(TEST_OBJECT)
-                    .should.be.eventually.fulfilled;
-                })
                 .then(function(id) {
                     resourceId = id;
                     ACL['user:' + user.id] = {
@@ -107,12 +111,7 @@ describe('In RESOURCES module', function() {
                     };
 
                     return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
-                    .update(ACL, {dataType: 'application/corbel.acl+json'})
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(createdUser) {
-                    return corbelTest.common.clients.loginUser
-                        (corbelAdminDriver, adminUser.username, adminUser.password)
+                        .update(ACL, {dataType: 'application/corbel.acl+json'})
                     .should.be.eventually.fulfilled;
                 })
                 .then(function() {
@@ -126,11 +125,6 @@ describe('In RESOURCES module', function() {
                         expect(resource).to.have.property('_acl');
                     });
 
-                    return corbelTest.common.clients.loginUser
-                        (corbelDriver, user.username, user.password)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function() {
                     return corbelDriver.resources.collection(COLLECTION_NAME)
                         .get()
                     .should.be.eventually.fulfilled;
@@ -148,7 +142,7 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            it('if the user has ADMIN permission and uses a query', function(done) {
+            it('the resources can be gotten if the user has ADMIN permission and uses a query', function(done) {
                 var params = {
                     query: [{
                         '$eq': {

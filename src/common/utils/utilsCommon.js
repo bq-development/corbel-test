@@ -1,13 +1,14 @@
 'use strict';
 
 function retry(retryFunction, maxRetries, retryPeriod, catches) {
-    return new Promise(function(resolve, reject){
+    return new Promise(function(resolve, reject) {
         catches = catches || [];
 
         if (maxRetries < 1) {
             reject(catches);
         } else {
-            retryFunction().then(function(response) {
+            retryFunction()
+            .then(function(response) {
                 resolve(response);
             }).catch(function(err) {
                 catches.push(err);
@@ -15,6 +16,24 @@ function retry(retryFunction, maxRetries, retryPeriod, catches) {
                     retry(retryFunction, maxRetries - 1, retryPeriod, catches)
                     .then(resolve).catch(reject);
                 }, retryPeriod * 1000);
+            });
+        }
+    });
+}
+
+function retryFail(retryFunction, maxRetries, retryPeriod) {
+    return new Promise(function(resolve, reject) {
+        if (maxRetries < 1) {
+            reject();
+        } else {
+            retryFunction()
+            .then(function(response) {
+                setTimeout(function() {
+                    retryFail(retryFunction, maxRetries - 1, retryPeriod)
+                    .then(resolve).catch(reject);
+                }, retryPeriod * 1000);
+            }).catch(function(err) {
+                resolve(err);
             });
         }
     });
@@ -47,6 +66,7 @@ function joinObjects(obj1, obj2) {
 
 module.exports = {
     retry: retry,
+    retryFail: retryFail,
     consultPlugins: consultPlugins,
     joinObjects: joinObjects
 };

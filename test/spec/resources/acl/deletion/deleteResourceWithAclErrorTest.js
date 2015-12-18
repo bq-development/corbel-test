@@ -7,6 +7,7 @@ describe('In RESOURCES module', function() {
             var corbelAdminDriver;
             var corbelRootDriver;
             var COLLECTION_NAME = 'test:testAcl' + Date.now();
+            var DOMAIN = 'silkroad-qa';
             var user;
             var adminUser;
             var resourceId;
@@ -15,23 +16,20 @@ describe('In RESOURCES module', function() {
             var groupId;
             var TEST_OBJECT;
 
-            before(function(){
-                corbelRootDriver = corbelTest.drivers['ADMIN_USER'].clone();
-            });
-
-            beforeEach(function(done) {
+            before(function(done) {
+                corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
                 corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
                 corbelAdminDriver = corbelTest.drivers['DEFAULT_USER'].clone();
-                random = Date.now();
                 usersId = [];
-                groupId = 'testGroup' + random;
-                TEST_OBJECT = {
-                    test: 'test' + random,
-                    test2: 'test2' + random
-                };
-
-                corbelTest.common.iam.createUsers(corbelAdminDriver, 1)
+                groupId = 'testGroup' + Date.now();
+                
+                corbelTest.common.resources.setManagedCollection(
+                    corbelRootDriver, DOMAIN, COLLECTION_NAME)
                 .should.be.eventually.fulfilled
+                .then(function(){
+                    return corbelTest.common.iam.createUsers(corbelAdminDriver, 1)
+                    .should.be.eventually.fulfilled;
+                })
                 .then(function(createdUser) {
                     adminUser = createdUser[0];
                     usersId.push(adminUser.id);
@@ -48,10 +46,23 @@ describe('In RESOURCES module', function() {
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(){
-                    return corbelAdminDriver.resources.collection(COLLECTION_NAME)
-                        .add(TEST_OBJECT)
+                    return corbelTest.common.clients.loginUser
+                        (corbelDriver, user.username, user.password)
                     .should.be.eventually.fulfilled;
                 })
+                .should.notify(done);
+            });
+
+            beforeEach(function(done) {
+                random = Date.now();
+                TEST_OBJECT = {
+                    test: 'test' + random,
+                    test2: 'test2' + random
+                };
+
+                corbelAdminDriver.resources.collection(COLLECTION_NAME)
+                    .add(TEST_OBJECT)
+                .should.be.eventually.fulfilled
                 .then(function(id) {
                     resourceId = id;
                 })
@@ -60,14 +71,16 @@ describe('In RESOURCES module', function() {
 
             afterEach(function(done) {
                 
-                corbelTest.common.clients.loginUser
-                    (corbelAdminDriver, adminUser.username, adminUser.password)
+                corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
+                    .delete()
+                .should.be.eventually.fulfilled.and.notify(done);
+            });
+
+            after(function(done) {
+
+                corbelTest.common.resources.unsetManagedCollection(
+                    corbelRootDriver, DOMAIN, COLLECTION_NAME)
                 .should.be.eventually.fulfilled
-                .then(function(){
-                    return corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                        .delete()
-                    .should.be.eventually.fulfilled;
-                })
                 .then(function(){
                     var promises = usersId.map(function(userId){
                         return corbelRootDriver.iam.user(userId)
@@ -92,12 +105,8 @@ describe('In RESOURCES module', function() {
                 corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
                 .update(ACL, {dataType: 'application/corbel.acl+json'})
                 .should.be.eventually.fulfilled
-                .then(function() {
-                    return corbelTest.common.clients.loginUser
-                        (corbelDriver, user.username, user.password)
-                    .should.be.eventually.fulfilled;
-                })
                 .then(function(){
+
                     return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
                         .delete()
                     .should.be.eventually.rejected;
@@ -122,11 +131,6 @@ describe('In RESOURCES module', function() {
                 .update(ACL, {dataType: 'application/corbel.acl+json'})
                 .should.be.eventually.fulfilled
                 .then(function() {
-                    return corbelTest.common.clients.loginUser
-                        (corbelDriver, user.username, user.password)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(){
                     return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
                         .delete()
                     .should.be.eventually.rejected;
@@ -151,11 +155,6 @@ describe('In RESOURCES module', function() {
                 .update(ACL, {dataType: 'application/corbel.acl+json'})
                 .should.be.eventually.fulfilled
                 .then(function() {
-                    return corbelTest.common.clients.loginUser
-                        (corbelDriver, user.username, user.password)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(){
                     return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
                         .delete()
                     .should.be.eventually.rejected;
@@ -180,11 +179,6 @@ describe('In RESOURCES module', function() {
                 .update(ACL, {dataType: 'application/corbel.acl+json'})
                 .should.be.eventually.fulfilled
                 .then(function() {
-                    return corbelTest.common.clients.loginUser
-                        (corbelDriver, user.username, user.password)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(){
                     return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
                         .delete()
                     .should.be.eventually.rejected;

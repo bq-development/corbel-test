@@ -4,6 +4,9 @@ var _ = require('lodash');
 
 var createdQueryObject = [];
 var createdRelationObject = [];
+var ACL_ADMIN_COLLECTION = 'acl:Configuration';
+var MAX_RETRY = 30;
+var RETRY_PERIOD = 5;
 
 var successHandler = function(list, collection, id) {
     list.push({
@@ -209,6 +212,27 @@ function getRelation(driver, collectionA, idResource, collectionB, params) {
     .should.be.eventually.fulfilled;
 }
 
+function setManagedCollection(adminDriver, domain, collection) {
+    var collectionName = domain + ':' + collection;
+
+    return adminDriver.resources.collection(ACL_ADMIN_COLLECTION)
+        .add({
+            id: collectionName,
+            users: [],
+            groups: []
+        })
+    .should.be.eventually.fulfilled;
+}
+
+function unsetManagedCollection(adminDriver, domain, collection) {
+    var collectionName = domain + ':' + collection;
+
+    return adminDriver.resources.resource(ACL_ADMIN_COLLECTION, collectionName)
+        .delete()
+    .should.be.eventually.fulfilled;
+}
+
+
 module.exports = {
     getProperty: getProperty,
     checkSorting: checkSorting,
@@ -221,5 +245,7 @@ module.exports = {
     fastMove: fastMove,
     repeatMove: repeatMove,
     addResourcesUsingDataArray: addResourcesUsingDataArray,
-    getRelation: getRelation
+    getRelation: getRelation,
+    setManagedCollection: setManagedCollection,
+    unsetManagedCollection: unsetManagedCollection
 };
