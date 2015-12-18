@@ -6,9 +6,12 @@ describe('In RESOURCES module', function() {
             var corbelDriver;
             var corbelAdminDriver;
             var corbelRootDriver;
+            var corbelCreatorDriver;
             var COLLECTION_NAME = 'test:testAcl' + Date.now();
+            var DOMAIN = 'silkroad-qa';
             var user;
             var adminUser;
+            var creatorCollectionUser;
             var resourceId;
             var random;
             var usersId;
@@ -17,8 +20,25 @@ describe('In RESOURCES module', function() {
             var TEST_OBJECT_UPDATE;
             var dataType;
 
-            before(function(){
+            before(function(done) {
                 corbelRootDriver = corbelTest.drivers['ADMIN_USER'].clone();
+                corbelCreatorDriver = corbelTest.drivers['DEFAULT_USER'].clone();
+                
+                corbelTest.common.iam.createUsers(corbelRootDriver, 1)
+                .should.be.eventually.fulfilled
+                .then(function(createdUsers) {
+                    creatorCollectionUser = createdUsers[0];
+
+                    return corbelTest.common.clients
+                    .loginUser(corbelCreatorDriver, creatorCollectionUser.username, creatorCollectionUser.password)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function() {
+                    return corbelTest.common.resources.setManagedCollection(
+                        corbelRootDriver, corbelCreatorDriver, DOMAIN, COLLECTION_NAME)
+                    .should.be.eventually.fulfilled;
+                })
+                .should.notify(done);
             });
 
             beforeEach(function(done) {
@@ -75,6 +95,23 @@ describe('In RESOURCES module', function() {
                     });
 
                     return Promise.all(promises);
+                })
+                .should.notify(done);
+            });
+
+            after(function(done) {
+
+                corbelTest.common.clients
+                    .loginUser(corbelCreatorDriver, creatorCollectionUser.username, creatorCollectionUser.password)
+                .should.be.eventually.fulfilled
+                .then(function() {
+                    return corbelTest.common.resources.unsetAndDeleteManagedCollection(
+                        corbelRootDriver, corbelCreatorDriver, DOMAIN, COLLECTION_NAME)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function() {
+                    return corbelRootDriver.iam.user(creatorCollectionUser).delete()
+                    .should.be.eventually.fulfilled;
                 })
                 .should.notify(done);
             });
