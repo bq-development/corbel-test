@@ -80,8 +80,8 @@ describe('In RESOURCES module, in TERRA MOCK', function() {
             .update()
             .should.be.eventually.rejected
             .then(function(response){
-                console.info('Response status '+response.status);
                 expect(response).to.have.property('status', 404); 
+                expect(response).to.have.deep.property('data.error', 'not_found'); 
             })
             .should.notify(done);
         });
