@@ -6,14 +6,65 @@ describe('In RESOURCES module', function() {
             var corbelDriver;
             var corbelRootDriver;
             var COLLECTION_NAME = 'test:testAcl' + Date.now();
+            var DOMAIN = 'silkroad-qa';
             var user;
             var resourceId;
             var random;
             var usersId;
             var TEST_OBJECT;
 
-            before(function(){
+            before(function(done){
                 corbelRootDriver = corbelTest.drivers['ADMIN_USER'].clone();
+
+                var corbelUserDriver = corbelTest.drivers['DEFAULT_USER'].clone();
+                var user;
+                
+                corbelTest.common.iam.createUsers(corbelRootDriver, 1)
+                .should.be.eventually.fulfilled
+                .then(function(createdUsers) {
+                    user = createdUsers[0];
+
+                    return corbelTest.common.clients
+                    .loginUser(corbelUserDriver, user.username, user.password)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function() {
+                    return corbelTest.common.resources.setManagedCollection(
+                        corbelRootDriver, corbelUserDriver, corbelTest.common.utils.retryFail,
+                        DOMAIN, COLLECTION_NAME)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function() {
+                    return corbelRootDriver.iam.user(user).delete()
+                    .should.be.eventually.fulfilled;
+                })
+                .should.notify(done);
+            });
+
+            after(function(done) {
+                var corbelUserDriver = corbelTest.drivers['DEFAULT_USER'].clone();
+                var user;
+
+                corbelTest.common.iam.createUsers(corbelRootDriver, 1)
+                .should.be.eventually.fulfilled
+                .then(function(createdUsers) {
+                    user = createdUsers[0];
+
+                    return corbelTest.common.clients
+                    .loginUser(corbelUserDriver, user.username, user.password)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function() {
+                    return corbelTest.common.resources.unsetAndDeleteManagedCollection(
+                        corbelRootDriver, corbelUserDriver, corbelTest.common.utils.retry,
+                        DOMAIN, COLLECTION_NAME)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function() {
+                    return corbelRootDriver.iam.user(user).delete()
+                    .should.be.eventually.fulfilled;
+                })
+                .should.notify(done);
             });
 
             beforeEach(function(done) {
