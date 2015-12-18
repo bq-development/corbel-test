@@ -33,4 +33,22 @@ describe('In CORBELJS module', function() {
                 .should.notify(done);
         });
     });
+
+    describe('while making requests between servers in different domains (CORS) ', function() {
+
+        /*
+         * This test fails in PhantomJS. It returns 404 response status from the OPTIONS
+         * request instead of 0. This is a missbehaviour because it should return the
+         * status response from the GET, POST, PUT request, not from OPTIONS
+        **/
+        it('[UNSTABLE] 0 is returned while requesting something to an url that does not exist', function(done){
+            corbelDriver.resources.collection('COLLECTION')
+            .get()
+            .should.be.eventually.rejected
+            .then(function(e){
+                expect(e).to.have.property('status', 0);
+            })
+            .should.notify(done);
+        });
+    });
 });
