@@ -152,8 +152,8 @@ describe('In RESOURCES module', function() {
                 .then(function(response){
                     idRelationArray.push(response.data.id);
 
-                    expect(response.data).to.not.have.deep.property('data.myextrafield');
-                    expect(response.data).to.not.have.deep.property('data.secondField');
+                    expect(response).to.not.have.deep.property('data.myextrafield');
+                    expect(response).to.not.have.deep.property('data.secondField');
 
                     return corbelDriver.resources.relation(COLLECTION_A, resourceIdA, COLLECTION_B)
                     .get()
