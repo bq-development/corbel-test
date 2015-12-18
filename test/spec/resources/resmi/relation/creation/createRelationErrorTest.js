@@ -95,18 +95,18 @@ describe('In RESOURCES module', function() {
             .should.notify(done);
         });
 
-        it('[UNDER_DEVELOPMENT] [404] is returned while trying to relate unnexistent collections', function(done){
-            corbelDriver.resources.relation('not_exists', resourceIdA, COLLECTION_B)
+        it('an error [400] is returned while trying to relate non-existent collections', function(done){
+            corbelDriver.resources.relation('test:notExists', resourceIdA, COLLECTION_B)
             .add(resourceIdB)
             .should.be.eventually.rejected
             .then(function(e){
-                expect(e).to.have.property('status', 404);
-                expect(e).to.have.deep.property('data.error', 'not_found');
+                expect(e).to.have.property('status', 400);
+                expect(e).to.have.deep.property('data.error', 'bad_request');
             })
             .should.notify(done);
         });
 
-        it('an error [400] is returned while trying to create a relation with unnexistent resource', function(done) {
+        it('an error [400] is returned while trying to create a relation with non-existent resource', function(done) {
             corbelDriver.resources.relation(COLLECTION_A, 'notExistingId', COLLECTION_B)
             .add(resourceIdB)
             .should.be.eventually.rejected
@@ -128,7 +128,7 @@ describe('In RESOURCES module', function() {
             .should.notify(done);
         });
 
-        it('400 is returned creating a relation with unnexistent resource and no relationId', function(done) {
+        it('400 is returned creating a relation with non-existent resource and no relationId', function(done) {
             corbelDriver.resources.relation(COLLECTION_A, 'notExistingId', COLLECTION_B)
             .add(null)
             .should.be.eventually.rejected
