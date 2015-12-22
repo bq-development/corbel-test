@@ -57,8 +57,8 @@ describe('In RESOURCES module', function() {
                     .should.be.eventually.fulfilled;
                 })
                 .then(function() {
-                    return corbelTest.common.resources.unsetAndDeleteManagedCollection(
-                        corbelRootDriver, corbelDriver, DOMAIN, COLLECTION)
+                    return corbelTest.common.resources.unsetManagedCollection(
+                        corbelRootDriver, DOMAIN, COLLECTION)
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(){
@@ -79,7 +79,7 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled
                 .then(function() {
                     return corbelTest.common.resources.setManagedCollection(
-                        corbelRootDriver, corbelDriver, DOMAIN, COLLECTION)
+                        corbelRootDriver, DOMAIN, COLLECTION)
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(){
