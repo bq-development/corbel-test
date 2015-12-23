@@ -3,18 +3,13 @@ describe('In RESOURCES module', function() {
     describe('In ACL module', function() {
 
         describe('while testing create resources', function() {
-            var corbelDriver;
-            var corbelRootDriver;
-            var COLLECTION_NAME = 'test:testAcl' + Date.now();
-            var user;
-            var resourceId;
-            var random;
+            var corbelDriver, corbelRootDriver;
+            var DOMAIN = 'silkroad-qa';
+            var COLLECTION_NAME = 'test:testAcl_' + Date.now();
+            var user, resourceId, random;
 
-            before(function(){
-                corbelRootDriver = corbelTest.drivers['ADMIN_USER'].clone();
-            });
-
-            beforeEach(function(done) {
+            before(function(done) {
+                corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
                 corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
                 random = Date.now();
 
@@ -26,13 +21,23 @@ describe('In RESOURCES module', function() {
                     return corbelTest.common.clients.loginUser(corbelDriver, user.username, user.password)
                     .should.be.eventually.fulfilled;
                 })
+                .then(function() {
+                    return corbelTest.common.resources.setManagedCollection(
+                        corbelRootDriver, DOMAIN, COLLECTION_NAME)
+                    .should.be.eventually.fulfilled;
+                })
                 .should.notify(done);
             });
 
-            afterEach(function(done) {
-                corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
-                    .delete()
+            after(function(done) {
+                return corbelTest.common.resources.unsetManagedCollection(
+                    corbelRootDriver, DOMAIN, COLLECTION_NAME)
                 .should.be.eventually.fulfilled
+                .then(function() {
+                    return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
+                        .delete()
+                    .should.be.eventually.fulfilled;
+                })
                 .then(function() {
                     return corbelRootDriver.iam.user(user.id)
                     .delete()

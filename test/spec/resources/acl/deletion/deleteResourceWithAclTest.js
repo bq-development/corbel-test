@@ -6,14 +6,19 @@ describe('In RESOURCES module', function() {
             var corbelDriver;
             var corbelRootDriver;
             var COLLECTION_NAME = 'test:testAcl' + Date.now();
+            var DOMAIN = 'silkroad-qa';
             var user;
             var resourceId;
             var random;
             var usersId;
             var TEST_OBJECT;
 
-            before(function(){
-                corbelRootDriver = corbelTest.drivers['ADMIN_USER'].clone();
+            before(function(done){
+                corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
+                
+                corbelTest.common.resources.setManagedCollection(
+                    corbelRootDriver, DOMAIN, COLLECTION_NAME)
+                .should.be.eventually.fulfilled.and.notify(done);
             });
 
             beforeEach(function(done) {
@@ -46,6 +51,13 @@ describe('In RESOURCES module', function() {
 
                 Promise.all(promises)
                 .should.notify(done);
+            });
+
+            after(function(done) {
+
+                corbelTest.common.resources.unsetManagedCollection(
+                    corbelRootDriver, DOMAIN, COLLECTION_NAME)
+                .should.be.eventually.fulfilled.and.notify(done);
             });
 
             it('a resource with ACL can be deleted as ADMIN', function(done) {
@@ -101,11 +113,6 @@ describe('In RESOURCES module', function() {
                 .then(function(id) {
                     resourceId = id;
 
-                    return corbelTest.common.clients.loginUser
-                        (corbelDriver, user.username, user.password)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function() {
                     return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
                         .delete()
                     .should.be.eventually.rejected;
@@ -114,11 +121,6 @@ describe('In RESOURCES module', function() {
                     expect(e).to.have.property('status', 401);
                     expect(e).to.have.deep.property('data.error', 'unauthorized');
 
-                    return corbelTest.common.clients.loginUser
-                        (corbelAdminDriver, adminUser.username, adminUser.password)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function() {
                     var ACL = {
                         ALL:  {
                             permission : 'ADMIN'
@@ -134,11 +136,7 @@ describe('In RESOURCES module', function() {
                     .should.be.eventually.fulfilled;
                 }).
                 then(function() {
-                    return corbelTest.common.clients.loginUser(corbelDriver, user.username, user.password)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function() {
-                    return corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
+                    return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
                         .delete()
                     .should.be.eventually.fulfilled;
                 })
@@ -170,6 +168,7 @@ describe('In RESOURCES module', function() {
                 })
                 .then(function(response) {
                     expect(response).to.have.property('data', FILE_CONTENT);
+
                     return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
                         .delete({dataType: 'application/xml'})
                     .should.be.eventually.fulfilled;

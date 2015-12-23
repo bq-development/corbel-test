@@ -7,6 +7,7 @@ describe('In RESOURCES module', function() {
             var corbelAdminDriver;
             var corbelRootDriver;
             var COLLECTION_NAME = 'test:testAcl' + Date.now();
+            var DOMAIN = 'silkroad-qa';
             var user;
             var adminUser;
             var resourceId;
@@ -15,19 +16,14 @@ describe('In RESOURCES module', function() {
             var groupId;
             var TEST_OBJECT;
             var TEST_OBJECT_UPDATE;
-            var dataType;
 
-            before(function(){
-                corbelRootDriver = corbelTest.drivers['ADMIN_USER'].clone();
-            });
-
-            beforeEach(function(done) {
+            before(function(done) {
+                corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
                 corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
                 corbelAdminDriver = corbelTest.drivers['DEFAULT_USER'].clone();
                 random = Date.now();
                 usersId = [];
                 groupId = 'testGroup' + random;
-                dataType = {dataType: 'application/json'};
                 TEST_OBJECT = {
                     test: 'test' + random,
                     test2: 'test2' + random
@@ -36,9 +32,14 @@ describe('In RESOURCES module', function() {
                     test: 'testUpdate' + random,
                     test2: 'test2Update' + random
                 };
-
-                corbelTest.common.iam.createUsers(corbelAdminDriver, 1)
+                
+                corbelTest.common.resources.setManagedCollection(
+                    corbelRootDriver, DOMAIN, COLLECTION_NAME)
                 .should.be.eventually.fulfilled
+                .then(function() {
+                    return corbelTest.common.iam.createUsers(corbelAdminDriver, 1)
+                    .should.be.eventually.fulfilled;
+                })
                 .then(function(createdUser) {
                     adminUser = createdUser[0];
                     usersId.push(adminUser.id);
@@ -54,17 +55,31 @@ describe('In RESOURCES module', function() {
                         (corbelAdminDriver, adminUser.username, adminUser.password)
                     .should.be.eventually.fulfilled;
                 })
+                .then(function(){
+                    return corbelTest.common.clients.loginUser
+                        (corbelDriver, user.username, user.password)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function(){
+                    return corbelAdminDriver.resources.collection(COLLECTION_NAME)
+                        .add(TEST_OBJECT)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function(id) {
+                    resourceId = id;
+                })
                 .should.notify(done);
             });
 
-            afterEach(function(done) {
-                
-                corbelTest.common.clients.loginUser
-                    (corbelAdminDriver, adminUser.username, adminUser.password)
+
+            after(function(done) {
+
+                corbelTest.common.resources.unsetManagedCollection(
+                    corbelRootDriver, DOMAIN, COLLECTION_NAME)
                 .should.be.eventually.fulfilled
                 .then(function(){
                     return corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                        .delete(dataType)
+                        .delete()
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(){
@@ -88,21 +103,9 @@ describe('In RESOURCES module', function() {
                     permission : 'READ'
                 };
 
-                corbelAdminDriver.resources.collection(COLLECTION_NAME)
-                    .add(TEST_OBJECT)
+                corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
+                    .update(ACL, {dataType: 'application/corbel.acl+json'})
                 .should.be.eventually.fulfilled
-                .then(function(id) {
-                    resourceId = id;
-
-                    return corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                        .update(ACL, {dataType: 'application/corbel.acl+json'})
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function() {
-                    return corbelTest.common.clients.loginUser
-                        (corbelDriver, user.username, user.password)
-                    .should.be.eventually.fulfilled;
-                })
                 .then(function() {
                     return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
                         .update(TEST_OBJECT_UPDATE)
@@ -124,21 +127,9 @@ describe('In RESOURCES module', function() {
                     permission : 'READ'
                 };
 
-                corbelAdminDriver.resources.collection(COLLECTION_NAME)
-                    .add(TEST_OBJECT)
+                corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
+                    .update(ACL, {dataType: 'application/corbel.acl+json'})
                 .should.be.eventually.fulfilled
-                .then(function(id) {
-                    resourceId = id;
-
-                    return corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                        .update(ACL, {dataType: 'application/corbel.acl+json'})
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function() {
-                    return corbelTest.common.clients.loginUser
-                        (corbelDriver, user.username, user.password)
-                    .should.be.eventually.fulfilled;
-                })
                 .then(function() {
                     return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
                         .update(TEST_OBJECT_UPDATE)
@@ -160,21 +151,9 @@ describe('In RESOURCES module', function() {
                     permission : 'READ'
                 };
 
-                corbelAdminDriver.resources.collection(COLLECTION_NAME)
-                    .add(TEST_OBJECT)
+                corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
+                    .update(ACL, {dataType: 'application/corbel.acl+json'})
                 .should.be.eventually.fulfilled
-                .then(function(id) {
-                    resourceId = id;
-
-                    return corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                        .update(ACL, {dataType: 'application/corbel.acl+json'})
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function() {
-                    return corbelTest.common.clients.loginUser
-                        (corbelDriver, user.username, user.password)
-                    .should.be.eventually.fulfilled;
-                })
                 .then(function() {
                     return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
                         .update(TEST_OBJECT_UPDATE)

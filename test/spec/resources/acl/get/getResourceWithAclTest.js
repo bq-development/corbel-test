@@ -3,10 +3,11 @@ describe('In RESOURCES module', function() {
     describe('In ACL module', function() {
 
         describe('while trying to get a resource from a collection', function() {
-            var corbelDriver;
-            var corbelAdminDriver;
             var corbelRootDriver;
+            var corbelAdminDriver;
+            var corbelDriver;
             var COLLECTION_NAME = 'test:testAcl' + Date.now();
+            var DOMAIN = 'silkroad-qa';
             var user;
             var adminUser;
             var resourceId;
@@ -15,11 +16,8 @@ describe('In RESOURCES module', function() {
             var groupId;
             var TEST_OBJECT;
 
-            before(function(){
+            before(function(done) {
                 corbelRootDriver = corbelTest.drivers['ADMIN_USER'].clone();
-            });
-
-            beforeEach(function(done) {
                 corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
                 corbelAdminDriver = corbelTest.drivers['DEFAULT_USER'].clone();
                 random = Date.now();
@@ -29,9 +27,14 @@ describe('In RESOURCES module', function() {
                     test: 'test' + random,
                     test2: 'test2' + random
                 };
-
-                corbelTest.common.iam.createUsers(corbelAdminDriver, 1)
+                
+                corbelTest.common.resources.setManagedCollection(
+                    corbelRootDriver, DOMAIN, COLLECTION_NAME)
                 .should.be.eventually.fulfilled
+                .then(function(){
+                    return corbelTest.common.iam.createUsers(corbelAdminDriver, 1)
+                    .should.be.eventually.fulfilled;
+                })
                 .then(function(createdUser) {
                     adminUser = createdUser[0];
                     usersId.push(adminUser.id);
@@ -48,6 +51,11 @@ describe('In RESOURCES module', function() {
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(){
+                    return corbelTest.common.clients.loginUser
+                        (corbelDriver, user.username, user.password)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function(){
                     return corbelAdminDriver.resources.collection(COLLECTION_NAME)
                         .add(TEST_OBJECT)
                     .should.be.eventually.fulfilled;
@@ -58,10 +66,10 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            afterEach(function(done) {
-                
-                corbelTest.common.clients.loginUser
-                    (corbelAdminDriver, adminUser.username, adminUser.password)
+            after(function(done) {
+
+                return corbelTest.common.resources.unsetManagedCollection(
+                    corbelRootDriver, DOMAIN, COLLECTION_NAME)
                 .should.be.eventually.fulfilled
                 .then(function(){
                     return corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
@@ -80,7 +88,7 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            it('if the user has ADMIN permission', function(done) {
+            it('a resource can be gotten if the user has ADMIN permission', function(done) {
                 var ACL = {};
                 ACL['user:' + adminUser.id] = {
                     permission : 'ADMIN' 
@@ -90,7 +98,7 @@ describe('In RESOURCES module', function() {
                 };
 
                 corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                .update(ACL, {dataType: 'application/corbel.acl+json'})
+                    .update(ACL, {dataType: 'application/corbel.acl+json'})
                 .should.be.eventually.fulfilled
                 .then(function() {
                     return corbelTest.common.clients.loginUser
@@ -109,7 +117,7 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            it('if the user has WRITE permission', function(done) {
+            it('a resource can be gotten if the user has WRITE permission', function(done) {
                 var ACL = {};
                 ACL['user:' + adminUser.id] = {
                     permission : 'ADMIN' 
@@ -119,7 +127,7 @@ describe('In RESOURCES module', function() {
                 };
 
                 corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                .update(ACL, {dataType: 'application/corbel.acl+json'})
+                    .update(ACL, {dataType: 'application/corbel.acl+json'})
                 .should.be.eventually.fulfilled
                 .then(function() {
                     return corbelTest.common.clients.loginUser
@@ -138,7 +146,7 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            it('if the user has READ permission', function(done) {
+            it('a resource can be gotten if the user has READ permission', function(done) {
                 var ACL = {};
                 ACL['user:' + adminUser.id] = {
                     permission : 'ADMIN' 
@@ -148,7 +156,7 @@ describe('In RESOURCES module', function() {
                 };
 
                 corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                .update(ACL, {dataType: 'application/corbel.acl+json'})
+                    .update(ACL, {dataType: 'application/corbel.acl+json'})
                 .should.be.eventually.fulfilled
                 .then(function() {
                     return corbelTest.common.clients.loginUser
@@ -167,7 +175,7 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });                    
 
-            it('if the users group has ADMIN permission', function(done) {
+            it('a resource can be gotten if the users group has ADMIN permission', function(done) {
                 var ACL = {};
                 ACL['user:' + adminUser.id] = {
                     permission : 'ADMIN'
@@ -177,7 +185,7 @@ describe('In RESOURCES module', function() {
                 };
 
                 corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                .update(ACL, {dataType: 'application/corbel.acl+json'})
+                    .update(ACL, {dataType: 'application/corbel.acl+json'})
                 .should.be.eventually.fulfilled
                 .then(function() {
                     return corbelTest.common.clients.loginUser
@@ -196,7 +204,7 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            it('if the users group has WRITE permission', function(done) {
+            it('a resource can be gotten if the users group has WRITE permission', function(done) {
                 var ACL = {};
                 ACL['user:' + adminUser.id] = {
                     permission : 'ADMIN'
@@ -206,7 +214,7 @@ describe('In RESOURCES module', function() {
                 };
 
                 corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                .update(ACL, {dataType: 'application/corbel.acl+json'})
+                    .update(ACL, {dataType: 'application/corbel.acl+json'})
                 .should.be.eventually.fulfilled
                 .then(function() {
                     return corbelTest.common.clients.loginUser
@@ -225,7 +233,7 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            it('if the users group has READ permission', function(done) {
+            it('a resource can be gotten if the users group has READ permission', function(done) {
                 var ACL = {};
                 ACL['user:' + adminUser.id] = {
                     permission : 'ADMIN'
@@ -235,7 +243,7 @@ describe('In RESOURCES module', function() {
                 };
 
                 corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                .update(ACL, {dataType: 'application/corbel.acl+json'})
+                    .update(ACL, {dataType: 'application/corbel.acl+json'})
                 .should.be.eventually.fulfilled
                 .then(function() {
                     return corbelTest.common.clients.loginUser
@@ -265,7 +273,7 @@ describe('In RESOURCES module', function() {
                 };
 
                 corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                .update(ACL, {dataType: 'application/corbel.acl+json'})
+                    .update(ACL, {dataType: 'application/corbel.acl+json'})
                 .should.be.eventually.fulfilled
                 .then(function() {
                     return corbelTest.common.clients.loginUser
