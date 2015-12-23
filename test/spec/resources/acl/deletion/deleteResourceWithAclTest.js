@@ -14,7 +14,7 @@ describe('In RESOURCES module', function() {
             var TEST_OBJECT;
 
             before(function(done){
-                corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
+                corbelRootDriver = corbelTest.drivers['ADMIN_USER'].clone();
                 
                 corbelTest.common.resources.setManagedCollection(
                     corbelRootDriver, DOMAIN, COLLECTION_NAME)

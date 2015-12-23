@@ -17,7 +17,7 @@ describe('In RESOURCES module', function() {
             var TEST_OBJECT;
 
             before(function(done) {
-                corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
+                corbelRootDriver = corbelTest.drivers['ADMIN_USER'].clone();
                 corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
                 corbelAdminDriver = corbelTest.drivers['DEFAULT_USER'].clone();
                 usersId = [];
