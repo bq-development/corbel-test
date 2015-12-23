@@ -15,7 +15,7 @@ describe('In RESOURCES module', function() {
             var amount = 5;
 
             before(function(done) {
-                corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
+                corbelRootDriver = corbelTest.drivers['ADMIN_USER'].clone();
                 corbelAdminDriver = corbelTest.drivers['DEFAULT_USER'].clone();
                 corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
                 random = Date.now();

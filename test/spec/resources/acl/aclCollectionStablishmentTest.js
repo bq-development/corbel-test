@@ -54,6 +54,7 @@ describe('In RESOURCES module', function() {
 
             beforeEach(function(done) {
                 TEST_OBJECT = {
+                    _acl: {},
                     test: 'test' + random,
                     test2: 'test2' + random
                 };
@@ -110,7 +111,7 @@ describe('In RESOURCES module', function() {
                     expect(e).to.have.property('status', 401);
                     expect(e).to.have.deep.property('data.error', 'unauthorized');
 
-                    return corbelAdminDriver.resources.resource(ACL_ADMIN_COLLECTION, adminObjectId)
+                    return corbelRootDriver.resources.resource(ACL_ADMIN_COLLECTION, adminObjectId)
                         .update({
                             id: adminObjectId,
                             users: [adminUser.id, user.id],
@@ -119,8 +120,10 @@ describe('In RESOURCES module', function() {
                     .should.be.eventually.fulfilled;
                 })
                 .then(function() {
-                    return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
-                        .get()
+                    return corbelTest.common.utils.retry(function() {
+                        return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
+                            .get();
+                    }, MAX_RETRY, RETRY_PERIOD)
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(response) {
@@ -150,7 +153,7 @@ describe('In RESOURCES module', function() {
                     expect(e).to.have.property('status', 401);
                     expect(e).to.have.deep.property('data.error', 'unauthorized');
 
-                    return corbelAdminDriver.resources.resource(ACL_ADMIN_COLLECTION, adminObjectId)
+                    return corbelRootDriver.resources.resource(ACL_ADMIN_COLLECTION, adminObjectId)
                         .update({
                             id: adminObjectId,
                             users: [adminUser.id],
@@ -159,8 +162,10 @@ describe('In RESOURCES module', function() {
                     .should.be.eventually.fulfilled;
                 })
                 .then(function() {
-                    return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
-                        .get()
+                    return corbelTest.common.utils.retry(function() {
+                        return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
+                            .get();
+                    }, MAX_RETRY, RETRY_PERIOD)
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(response) {

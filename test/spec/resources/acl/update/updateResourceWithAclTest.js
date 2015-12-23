@@ -18,7 +18,7 @@ describe('In RESOURCES module', function() {
             var TEST_OBJECT_UPDATE;
 
             before(function(done) {
-                corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
+                corbelRootDriver = corbelTest.drivers['ADMIN_USER'].clone();
                 corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
                 corbelAdminDriver = corbelTest.drivers['DEFAULT_USER'].clone();
                 random = Date.now();
@@ -99,7 +99,8 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            it('a resource is created when update a non existent resource.', function(done) {
+            it('a resource is created when update a non existent resource and the user will have ADMIN permissions',
+                   function(done) {
                 var newResourceId = random;
 
                 corbelAdminDriver.resources.resource(COLLECTION_NAME, newResourceId)
@@ -297,7 +298,7 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            it('a resource not json can be updated with ACL.', function(done) {
+            it('a resource with a dataType different from json can be updated', function(done) {
                 var FILE_CONTENT = 'this Is My fileee!!! ññáaäéó' + random;
                 var FILE_CONTENT_UPDATE = 'this Is My fileee!!! ññáaäéó ---UPDATED' + random;
                 var dataType = {dataType: 'application/xml'};

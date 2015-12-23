@@ -14,7 +14,7 @@ describe('In RESOURCES module', function() {
             var TEST_OBJECT;
 
             before(function(done){
-                corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
+                corbelRootDriver = corbelTest.drivers['ADMIN_USER'].clone();
                 
                 corbelTest.common.resources.setManagedCollection(
                     corbelRootDriver, DOMAIN, COLLECTION_NAME)
@@ -153,7 +153,7 @@ describe('In RESOURCES module', function() {
             });
 
 
-            it('a not json resource with ACL can be deleted', function(done) {
+            it('an ACL resource with a different dataType from json can be deleted', function(done) {
                 var FILE_CONTENT = 'this Is My fileee!!! ññáaäéó' + random;
 
                 corbelDriver.resources.collection(COLLECTION_NAME)

@@ -3,65 +3,36 @@ describe('In RESOURCES module', function() {
     describe('In ACL module', function() {
 
         describe('while testing ACL permission validations', function() {
-            var corbelDriver;
             var corbelAdminDriver;
             var corbelRootDriver;
-            var corbelCreatorDriver;
             var COLLECTION_NAME = 'test:testAcl' + Date.now();
             var DOMAIN = 'silkroad-qa';
-            var user;
             var adminUser;
-            var creatorCollectionUser;
             var resourceId;
             var random;
             var usersId;
-            var groupId;
             var TEST_OBJECT;
 
             before(function(done) {
                 corbelRootDriver = corbelTest.drivers['ADMIN_USER'].clone();
-                corbelCreatorDriver = corbelTest.drivers['DEFAULT_USER'].clone();
-                
-                corbelTest.common.iam.createUsers(corbelRootDriver, 1)
-                .should.be.eventually.fulfilled
-                .then(function(createdUsers) {
-                    creatorCollectionUser = createdUsers[0];
-
-                    return corbelTest.common.clients
-                    .loginUser(corbelCreatorDriver, creatorCollectionUser.username, creatorCollectionUser.password)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function() {
-                    return corbelTest.common.resources.setManagedCollection(
-                        corbelRootDriver, corbelCreatorDriver, DOMAIN, COLLECTION_NAME)
-                    .should.be.eventually.fulfilled;
-                })
-                .should.notify(done);
-            });
-
-            beforeEach(function(done) {
-                corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
                 corbelAdminDriver = corbelTest.drivers['DEFAULT_USER'].clone();
                 random = Date.now();
                 usersId = [];
-                groupId = 'testGroup' + random;
                 TEST_OBJECT = {
                     test: 'test' + random,
                     test2: 'test2' + random
                 };
-
-                corbelTest.common.iam.createUsers(corbelAdminDriver, 1)
+                
+                corbelTest.common.resources.setManagedCollection(
+                    corbelRootDriver, DOMAIN, COLLECTION_NAME)
                 .should.be.eventually.fulfilled
+                .then(function(){
+                    return corbelTest.common.iam.createUsers(corbelAdminDriver, 1)
+                    .should.be.eventually.fulfilled;
+                })
                 .then(function(createdUser) {
                     adminUser = createdUser[0];
                     usersId.push(adminUser.id);
-
-                    return corbelTest.common.iam.createUsers(corbelDriver, 1, {'groups': [groupId]})
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function(createdUser){
-                    user = createdUser[0];
-                    usersId.push(user.id);
 
                     return corbelTest.common.clients.loginUser(
                         corbelAdminDriver, adminUser.username, adminUser.password)
@@ -78,10 +49,10 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            afterEach(function(done) {
-                
-                corbelTest.common.clients.loginUser(
-                    corbelAdminDriver, adminUser.username, adminUser.password)
+            after(function(done) {
+
+                corbelTest.common.resources.unsetManagedCollection(
+                    corbelRootDriver, DOMAIN, COLLECTION_NAME)
                 .should.be.eventually.fulfilled
                 .then(function(){
                     return corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
@@ -96,183 +67,6 @@ describe('In RESOURCES module', function() {
                     });
 
                     return Promise.all(promises);
-                })
-                .should.notify(done);
-            });
-
-            after(function(done) {
-
-                corbelTest.common.clients
-                    .loginUser(corbelCreatorDriver, creatorCollectionUser.username, creatorCollectionUser.password)
-                .should.be.eventually.fulfilled
-                .then(function() {
-                    return corbelTest.common.resources.unsetAndDeleteManagedCollection(
-                        corbelRootDriver, corbelCreatorDriver, DOMAIN, COLLECTION_NAME)
-                    .should.be.eventually.fulfilled;
-                })
-                .then(function() {
-                    return corbelRootDriver.iam.user(creatorCollectionUser).delete()
-                    .should.be.eventually.fulfilled;
-                })
-                .should.notify(done);
-            });
-
-            it('an ACL resource can not be updated if the admin user is not in the ACL', function(done) {
-                var ACL = {};
-                ACL['user:' + user.id] = {
-                    permission : 'ADMIN'
-                };
-
-                corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                    .update(ACL, {dataType: 'application/corbel.acl+json'})
-                .should.be.eventually.rejected
-                .then(function(e) {
-                    expect(e).to.have.property('status', 400);
-                    expect(e).to.have.deep.property('data.error', 'bad_request');
-                })
-                .should.notify(done);
-            });
-
-            it('an ACL resource can not be updated if the admin is in the ACL with WRITE permission', function(done) {
-                var ACL = {};
-                ACL['user:' + adminUser.id] = {
-                    permission : 'WRITE'
-                };
-                ACL['user:' + user.id] = {
-                    permission : 'ADMIN'
-                };
-
-                corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                    .update(ACL, {dataType: 'application/corbel.acl+json'})
-                .should.be.eventually.rejected
-                .then(function(e) {
-                    expect(e).to.have.property('status', 400);
-                    expect(e).to.have.deep.property('data.error', 'bad_request');
-                })
-                .should.notify(done);
-            });
-
-            it('an ACL resource can not be updated if the admin is in the ACL with READ permission', function(done) {
-                var ACL = {};
-                ACL['user:' + adminUser.id] = {
-                    permission : 'READ'
-                };
-                ACL['user:' + user.id] = {
-                    permission : 'ADMIN'
-                };
-
-                corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                    .update(ACL, {dataType: 'application/corbel.acl+json'})
-                .should.be.eventually.rejected
-                .then(function(e) {
-                    expect(e).to.have.property('status', 400);
-                    expect(e).to.have.deep.property('data.error', 'bad_request');
-                })
-                .should.notify(done);
-            });
-
-            it('an ACL resource can not be updated for all users with READ permission if the admin is not in the ACL',
-                    function(done) {
-
-                var ACL = {};
-                ACL.ALL = {
-                    permission : 'READ'
-                };
-
-                corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                    .update(ACL, {dataType: 'application/corbel.acl+json'})
-                .should.be.eventually.rejected
-                .then(function(e) {
-                    expect(e).to.have.property('status', 400);
-                    expect(e).to.have.deep.property('data.error', 'bad_request');
-                })
-                .should.notify(done);
-            });
-
-            it('an ACL resource can not be updated for all users with WRITE permission if the admin is not in the ACL',
-                    function(done) {
-                var ACL = {};
-                ACL.ALL = {
-                    permission : 'WRITE'
-                };
-
-                corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                    .update(ACL, {dataType: 'application/corbel.acl+json'})
-                .should.be.eventually.rejected
-                .then(function(e) {
-                    expect(e).to.have.property('status', 400);
-                    expect(e).to.have.deep.property('data.error', 'bad_request');
-                })
-                .should.notify(done);
-            });
-
-            it('an ACL resource can not be updated for a group with READ permission if the admin is not in the ACL',
-                    function(done) {
-
-                var ACL = {};
-                ACL['group:' + groupId] = {
-                    permission : 'READ'
-                };
-
-                corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                    .update(ACL, {dataType: 'application/corbel.acl+json'})
-                .should.be.eventually.rejected
-                .then(function(e) {
-                    expect(e).to.have.property('status', 400);
-                    expect(e).to.have.deep.property('data.error', 'bad_request');
-                })
-                .should.notify(done);
-            });
-
-            it('an ACL resource can not be updated for a group with WRITE permission if the admin is not in the ACL',
-                    function(done) {
-                var ACL = {};
-                ACL['group:' + groupId] = {
-                    permission : 'WRITE'
-                };
-
-                corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                    .update(ACL, {dataType: 'application/corbel.acl+json'})
-                .should.be.eventually.rejected
-                .then(function(e) {
-                    expect(e).to.have.property('status', 400);
-                    expect(e).to.have.deep.property('data.error', 'bad_request');
-                })
-                .should.notify(done);
-            });
-
-            it('an ACL resource can not be updated for a group with ADMIN permission if the admin is not in the ACL',
-                    function(done) {
-                var ACL = {};
-                ACL['group:' + groupId] = {
-                    permission : 'ADMIN'
-                };
-
-                corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)
-                    .update(ACL, {dataType: 'application/corbel.acl+json'})
-                .should.be.eventually.rejected
-                .then(function(e) {
-                    expect(e).to.have.property('status', 400);
-                    expect(e).to.have.deep.property('data.error', 'bad_request');
-                })
-                .should.notify(done);
-            });
-
-            it('an error 404 is returned when trying to update a non existent ACL resource', function(done) {
-                var ACL = {};
-                ACL['user:' + adminUser.id] = {
-                    permission : 'ADMIN'
-                };
-                ACL['user:' + user.id] = {
-                    permission : 'ADMIN'
-                };
-
-                corbelAdminDriver.resources.resource(COLLECTION_NAME, 'nonExistent')
-                    .update(ACL, {dataType: 'application/corbel.acl+json'})
-                .should.be.eventually.rejected
-                .then(function(e) {
-                    expect(e).to.have.property('status', 404);
-                    expect(e).to.have.deep.property('data.error', 'not_found');
                 })
                 .should.notify(done);
             });
