@@ -1,0 +1,5 @@
+[submodule "test/spec/private"]
+	path = test/spec/private
+	url = ../corbel-test-private/
+	branch = master
+	ignore = all
