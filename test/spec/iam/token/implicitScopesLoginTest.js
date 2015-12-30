@@ -52,7 +52,7 @@ describe('In IAM module, while using implicit scopes', function() {
     });
 
     it('when request an access token through a domain request without scopes', function(done) {
-        var claimsClientDriver = _.cloneDeep(corbelTest.CONFIG['EC_CLIENT']);
+        var claimsClientDriver = _.cloneDeep(corbelTest.CONFIG['DEFAULT_CLIENT']);
         var version = _.cloneDeep(corbelTest.CONFIG['VERSION']);
         var aud = 'http://iam.bqws.io';
         var jwtAlgorithm = 'HS256';
