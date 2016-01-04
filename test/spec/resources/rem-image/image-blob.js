@@ -32,7 +32,7 @@ describe('In RESOURCES module', function() {
             corbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
         });
 
-        describe('when using blob type images', function() {
+        describe('when using image/png dataType', function() {
 
             if (window.chrome) { // will be fixed in phantom 2.0
 
@@ -191,6 +191,130 @@ describe('In RESOURCES module', function() {
                     });
                 })
                 .should.notify(done);
+            });
+        } else {
+            it.skip('there is a problem executing these test with phantom ' +
+            '< 2.0.0, please update this when 2.0.0 releases', function() {});
+        }
+        });
+
+        describe('when using application/blob dataType', function() {
+
+            if (window.chrome) { // will be fixed in phantom 2.0
+
+            var dataImage;
+            var originalImageWidth, originalImageHeigth;
+            var FILENAME;
+
+            before(function(done) {
+
+                canvasContainer = document.getElementById('mocha');
+                canvasContainer.insertAdjacentHTML(
+                    'beforeend',
+                    '<canvas id="myCanvas" width="626" height="626"></canvas>');
+                var canvas = document.getElementById('myCanvas');
+                var context = canvas.getContext('2d');
+                var imageObj = new Image();
+
+                imageObj.onload = function() {
+                    context.drawImage(imageObj, 0, 0);
+                    dataImage = dataURItoBlob(canvas.toDataURL());
+                    originalImageWidth = this.width;
+                    originalImageHeigth = this.height;
+                    done();
+                };
+
+                imageObj.src = 'base/src/common/utils/img/logo.png';
+
+            });
+
+            after(function(done) {
+
+                corbelDriver.resources.resource(FOLDER_NAME, FILENAME)
+                    .delete({dataType: 'application/blob'})
+                .should.be.eventually.fulfilled.and.notify(done);
+            });
+
+            it('a blob image can be uploaded and retrieved', function(done) {
+                FILENAME = 'RestorFileName' + Date.now();
+
+                corbelDriver.resources.resource(FOLDER_NAME, FILENAME)
+                    .update(dataImage, {dataType: 'application/blob'})
+                .should.be.eventually.fulfilled
+                .then(function(){
+                    return corbelDriver.resources.resource(FOLDER_NAME, FILENAME)
+                        .get({dataType: 'application/blob'})
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function(response){
+                    expect(response).to.have.deep.property('data.length').and.to.be.above(0);
+                })
+                .should.notify(done);
+
+            });
+        } else {
+            it.skip('there is a problem executing these test with phantom ' +
+            '< 2.0.0, please update this when 2.0.0 releases', function() {});
+        }
+        });
+
+        describe('when using application/stream dataType', function() {
+
+            if (window.chrome) { // will be fixed in phantom 2.0
+
+            var dataImage;
+            var originalImageWidth, originalImageHeigth;
+            var FILENAME;
+            var byteImage = [];
+
+            before(function(done) {
+
+                canvasContainer = document.getElementById('mocha');
+                canvasContainer.insertAdjacentHTML(
+                    'beforeend',
+                    '<canvas id="myCanvas" width="626" height="626"></canvas>');
+                var canvas = document.getElementById('myCanvas');
+                var context = canvas.getContext('2d');
+                var imageObj = new Image();
+
+                imageObj.onload = function() {
+                    context.drawImage(imageObj, 0, 0);
+                    dataImage = canvas.toDataURL();
+                    originalImageWidth = this.width;
+                    originalImageHeigth = this.height;
+                    done();
+                };
+
+                imageObj.src = 'base/src/common/utils/img/logo.png';
+
+            });
+
+            after(function(done) {
+
+                corbelDriver.resources.resource(FOLDER_NAME, FILENAME)
+                    .delete({dataType: 'application/stream'})
+                .should.be.eventually.fulfilled.and.notify(done);
+            });
+
+            it('an stream image can be uploaded and retrieved', function(done) {
+                FILENAME = 'RestorFileName' + Date.now();
+                for(var i = 0; i < dataImage.length; i++){
+                  byteImage.push(dataImage.charCodeAt(i));
+                }
+
+                corbelDriver.resources.resource(FOLDER_NAME, FILENAME)
+                    .update(byteImage, {dataType: 'application/stream'})
+                .should.be.eventually.fulfilled
+                .then(function(){
+                    return corbelDriver.resources.resource(FOLDER_NAME, FILENAME)
+                        .get({dataType: 'application/stream'})
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function(response){
+                    expect(response).to.have.deep.property('data.length').and.to.be.above(0);
+                })
+                .should.notify(done);
+
             });
         } else {
             it.skip('there is a problem executing these test with phantom ' +
