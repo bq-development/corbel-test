@@ -20,7 +20,7 @@ describe('In NOTIFICATIONS module', function() {
             .then(function(userData) {
                 user = userData[0];
 
-                return corbelTest.common.mail.getRandomMail()
+                return corbelTest.common.mail.random.getRandomMail()
                 .should.be.eventually.fulfilled;
             })
             .then(function(response){
@@ -56,7 +56,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.be.eventually.fulfilled
             .then(function() {
                 return corbelTest.common.utils.retry(function() {
-                        return corbelTest.common.mail.checkMail(emailAuthorization)
+                        return corbelTest.common.mail.random.checkMail(emailAuthorization)
                             .then(function(response) {
                                 if (response.emailList.list.length === 0) {
                                     return Promise.reject();
@@ -71,7 +71,7 @@ describe('In NOTIFICATIONS module', function() {
                 emailAuthorization = response.cookies.PHPSESSID;
                 var emailId = response.emailList.list[0].mail_id; //jshint ignore:line
 
-                return corbelTest.common.mail.getMail(emailAuthorization, emailId)
+                return corbelTest.common.mail.random.getMail(emailAuthorization, emailId)
                 .should.be.eventually.fulfilled;
             })
             .then(function(mail) {
@@ -96,7 +96,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.be.eventually.fulfilled
             .then(function() {
                 return corbelTest.common.utils.retry(function() {
-                        return corbelTest.common.mail.checkMail(emailAuthorization)
+                        return corbelTest.common.mail.random.checkMail(emailAuthorization)
                             .then(function(response) {
                                 if (response.emailList.list.length === 0) {
                                     return Promise.reject();
@@ -111,7 +111,7 @@ describe('In NOTIFICATIONS module', function() {
                 emailAuthorization = response.cookies.PHPSESSID;
                 var emailId = response.emailList.list[0].mail_id; //jshint ignore:line
 
-                return corbelTest.common.mail.getMail(emailAuthorization, emailId)
+                return corbelTest.common.mail.random.getMail(emailAuthorization, emailId)
                 .should.be.eventually.fulfilled;
             })
             .then(function(mail) {
@@ -132,7 +132,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.be.eventually.fulfilled
             .then(function() {
                 return corbelTest.common.utils.retry(function() {
-                        return corbelTest.common.mail.checkMail(emailAuthorization)
+                        return corbelTest.common.mail.random.checkMail(emailAuthorization)
                             .then(function(response) {
                                 if (response.emailList.list.length === 0) {
                                     return Promise.reject();
@@ -147,7 +147,7 @@ describe('In NOTIFICATIONS module', function() {
                 emailAuthorization = response.cookies.PHPSESSID;
                 var emailId = response.emailList.list[0].mail_id; //jshint ignore:line
 
-                return corbelTest.common.mail.getMail(emailAuthorization, emailId)
+                return corbelTest.common.mail.random.getMail(emailAuthorization, emailId)
                 .should.be.eventually.fulfilled;
             })
             .then(function(mail) {
@@ -172,7 +172,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.be.eventually.fulfilled
             .then(function() {
                 return corbelTest.common.utils.retry(function() {
-                        return corbelTest.common.mail.checkMail(emailAuthorization)
+                        return corbelTest.common.mail.random.checkMail(emailAuthorization)
                             .then(function(response) {
                                 if (response.emailList.list.length === 0) {
                                     return Promise.reject();
@@ -187,7 +187,7 @@ describe('In NOTIFICATIONS module', function() {
                 emailAuthorization = response.cookies.PHPSESSID;
                 var emailId = response.emailList.list[0].mail_id; //jshint ignore:line
 
-                return corbelTest.common.mail.getMail(emailAuthorization, emailId)
+                return corbelTest.common.mail.random.getMail(emailAuthorization, emailId)
                 .should.be.eventually.fulfilled;
             })
             .then(function(mail) {
@@ -212,7 +212,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.be.eventually.fulfilled
             .then(function() {
                 return corbelTest.common.utils.retry(function() {
-                        return corbelTest.common.mail.checkMail(emailAuthorization)
+                        return corbelTest.common.mail.random.checkMail(emailAuthorization)
                             .then(function(response) {
                                 if (response.emailList.list.length === 0) {
                                     return Promise.reject();
@@ -227,7 +227,7 @@ describe('In NOTIFICATIONS module', function() {
                 emailAuthorization = response.cookies.PHPSESSID;
                 var emailId = response.emailList.list[0].mail_id; //jshint ignore:line
 
-                return corbelTest.common.mail.getMail(emailAuthorization, emailId)
+                return corbelTest.common.mail.random.getMail(emailAuthorization, emailId)
                 .should.be.eventually.fulfilled;
             })
             .then(function(mail) {
