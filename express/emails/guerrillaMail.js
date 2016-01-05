@@ -8,7 +8,7 @@ module.exports = function setup(app) {
     var API_CHECK_EMAIL_SUFFIX = 'f=check_email&seq=1';
     var API_GET_EMAIL_SUFFIX = 'f=fetch_email';
 
-    app.get('/email/randomemail', function(req, res){
+    app.get('/guerrillamail/randomemail', function(req, res){
         request(API_EMAIL_ENDPOINT + '?' + API_RANDOM_EMAIL_SUFFIX, function (error, response, body) {
             var cookiesHeader = {};
             if (!error && response.statusCode === 200) {
@@ -26,7 +26,7 @@ module.exports = function setup(app) {
         });
     });
 
-    app.get('/email/setemail', function(req, res){
+    app.get('/guerrillamail/setemail', function(req, res){
         var credentials = req.query.token;
         var userEmail = req.query.userEmail;
         var url = API_EMAIL_ENDPOINT + '?' + API_SET_EMAIL_SUFFIX + '&email_user=' + userEmail;
@@ -54,7 +54,7 @@ module.exports = function setup(app) {
         });
     });
 
-    app.get('/email/checkemail', function(req, res){
+    app.get('/guerrillamail/checkemail', function(req, res){
         var credentials = req.query.token;
         var url = API_EMAIL_ENDPOINT + '?' + API_CHECK_EMAIL_SUFFIX;
         var options = {
@@ -82,7 +82,7 @@ module.exports = function setup(app) {
         });
     });
 
-    app.get('/email/getemail', function(req, res){
+    app.get('/guerrillamail/getemail', function(req, res){
         var credentials = req.query.token;
         var emailId = req.query.emailId;
         var url = API_EMAIL_ENDPOINT + '?' + API_GET_EMAIL_SUFFIX + '&email_id=' + emailId;

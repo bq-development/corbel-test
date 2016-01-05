@@ -33,7 +33,7 @@ describe('In RESOURCES module', function() {
             beforeEach(function(done) {
                 orderIdentifier = 'order-'+Date.now();
 
-                corbelTest.common.mail.getRandomMail()
+                corbelTest.common.mail.random.getRandomMail()
                 .should.be.eventually.fulfilled
                 .then(function(response){
                     email = response.emailData.email_addr; // jshint ignore:line
@@ -95,7 +95,7 @@ describe('In RESOURCES module', function() {
                     expect(response).to.have.deep.property('data.id', email);
 
                     return corbelTest.common.utils.retry(function() {
-                        return corbelTest.common.mail.checkMail(emailAuthorization)
+                        return corbelTest.common.mail.random.checkMail(emailAuthorization)
                             .then(function(response) {
                                 if (response.emailList.list.length === 0) {
                                     return Promise.reject();
@@ -110,7 +110,7 @@ describe('In RESOURCES module', function() {
                     emailAuthorization = response.cookies.PHPSESSID;
                     var emailId = response.emailList.list[0].mail_id; //jshint ignore:line
 
-                    return corbelTest.common.mail.getMail(emailAuthorization, emailId)
+                    return corbelTest.common.mail.random.getMail(emailAuthorization, emailId)
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(mail) {
@@ -156,7 +156,7 @@ describe('In RESOURCES module', function() {
                     expect(response).to.have.deep.property('data.id', email);
 
                     return corbelTest.common.utils.retry(function() {
-                        return corbelTest.common.mail.checkMail(emailAuthorization)
+                        return corbelTest.common.mail.random.checkMail(emailAuthorization)
                             .then(function(response) {
                                 if (response.emailList.list.length === 0) {
                                     return Promise.reject();
@@ -171,7 +171,7 @@ describe('In RESOURCES module', function() {
                     emailAuthorization = response.cookies.PHPSESSID;
                     var emailId = response.emailList.list[0].mail_id; //jshint ignore:line
 
-                    return corbelTest.common.mail.getMail(emailAuthorization, emailId)
+                    return corbelTest.common.mail.random.getMail(emailAuthorization, emailId)
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(mail) {
@@ -218,7 +218,7 @@ describe('In RESOURCES module', function() {
                     expect(response).to.have.deep.property('data.id', email);
 
                     return corbelTest.common.utils.retry(function() {
-                        return corbelTest.common.mail.checkMail(emailAuthorization)
+                        return corbelTest.common.mail.random.checkMail(emailAuthorization)
                             .then(function(response) {
                                 if (response.emailList.list.length === 0) {
                                     return Promise.reject();
@@ -233,7 +233,7 @@ describe('In RESOURCES module', function() {
                     emailAuthorization = response.cookies.PHPSESSID;
                     var emailId = response.emailList.list[0].mail_id; //jshint ignore:line
 
-                    return corbelTest.common.mail.getMail(emailAuthorization, emailId)
+                    return corbelTest.common.mail.random.getMail(emailAuthorization, emailId)
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(mail) {
