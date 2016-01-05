@@ -8,7 +8,7 @@
 */
 function getRandomMail(){
     var xhttp = new XMLHttpRequest();
-    var url = 'http://localhost:5454/email/randomemail';
+    var url = 'http://localhost:5454/random/randomemail';
 
     return new Promise(function(resolve, reject){
         xhttp.onreadystatechange = function() {
@@ -25,7 +25,7 @@ function getRandomMail(){
 /* userEmail must be the data before @ */
 function setMail(token, userEmail){
     var xhttp = new XMLHttpRequest();
-    var url = 'http://localhost:5454/email/setemail?token=' + token + '&userEmail=' + userEmail;
+    var url = 'http://localhost:5454/random/setemail?token=' + token + '&userEmail=' + userEmail;
 
     return new Promise(function(resolve, reject){
         xhttp.onreadystatechange = function() {
@@ -53,7 +53,7 @@ function setMail(token, userEmail){
 */
 function checkMail(token){
     var xhttp = new XMLHttpRequest();
-    var url = 'http://localhost:5454/email/checkemail?token=' + token;
+    var url = 'http://localhost:5454/random/checkemail?token=' + token;
 
     return new Promise(function(resolve, reject){
         xhttp.onreadystatechange = function() {
@@ -78,7 +78,7 @@ function checkMail(token){
 */
 function getMail(token, emailId){
     var xhttp = new XMLHttpRequest();
-    var url = 'http://localhost:5454/email/getemail?token=' + token + '&emailId=' + emailId;
+    var url = 'http://localhost:5454/random/getemail?token=' + token + '&emailId=' + emailId;
 
     return new Promise(function(resolve, reject){
         xhttp.onreadystatechange = function() {
