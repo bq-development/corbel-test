@@ -5,6 +5,9 @@ describe('In IAM module, when a user which belongs to a group is created and log
     var corbelGroupDriver;
     var resourceId;
 
+    var jsonDriverUrl = {};
+    var jsonDriver;
+
     var domain = {
         id: 'domainId-' + Date.now(),
         description: 'New domain',
@@ -58,8 +61,13 @@ describe('In IAM module, when a user which belongs to a group is created and log
     };
 
     before(function(done) {
-
         corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
+
+        var endpointStringArray = corbelTest.common.utils.generateEndpointArrayFromCorbelTest();
+        
+        jsonDriverUrl = corbelTest.common.utils
+            .createObjectFromDriverConfigEndpoints(endpointStringArray);
+  
         corbelRootDriver.iam.domain().create(domain)
             .should.be.eventually.fulfilled
             .then(function(id) {
@@ -77,12 +85,15 @@ describe('In IAM module, when a user which belongs to a group is created and log
             .then(function(response) {
                 client = response.data;
                 client.clientSecret = client.key;
-                corbelNewClientDriver = corbel.getDriver({
+
+                jsonDriver = corbelTest.common.utils.extendJsonObject({
                     'clientId': client.id,
                     'clientSecret': client.key,
-                    'urlBase': corbelTest.CONFIG.COMMON.urlBase,
+                    'urlBase': corbelTest.CONFIG.COMMON.urlBase, 
                     'scopes': client.scopes.join(' ')
-                });
+                }, jsonDriverUrl);
+
+                corbelNewClientDriver = corbel.getDriver(jsonDriver);
 
                 return corbelNewClientDriver.iam.token()
                     .create()
@@ -138,10 +149,13 @@ describe('In IAM module, when a user which belongs to a group is created and log
             'scope': client.scopes,
             'version': version,
         };
-        corbelNewClientDriver = corbel.getDriver({
+
+        jsonDriver = corbelTest.common.utils.extendJsonObject({
             domain: domain.id,
             urlBase: corbelTest.CONFIG.COMMON.urlBase
-        });
+        }, jsonDriverUrl);
+
+        corbelNewClientDriver = corbel.getDriver(jsonDriver);
 
         corbelNewClientDriver.iam
             .token()
@@ -162,12 +176,15 @@ describe('In IAM module, when a user which belongs to a group is created and log
             .then(function(e) {
                 expect(e).to.have.property('status', 401);
                 expect(e).to.have.deep.property('data.error', 'invalid_token');
-                corbelNewClientDriver = corbel.getDriver({
+
+                jsonDriver = corbelTest.common.utils.extendJsonObject({
                     'clientId': client.id,
                     'clientSecret': client.key,
-                    'urlBase': corbelTest.CONFIG.COMMON.urlBase,
+                    'urlBase': corbelTest.CONFIG.COMMON.urlBase, 
                     'scopes': client.scopes.join(' ')
-                });
+                }, jsonDriverUrl);
+
+                corbelNewClientDriver = corbel.getDriver(jsonDriver);
 
                 return corbelNewClientDriver.iam.token()
                     .create()
@@ -204,12 +221,15 @@ describe('In IAM module, when a user which belongs to a group is created and log
             .then(function(response) {
                 clientGroup = response.data;
                 clientGroup.clientSecret = clientGroup.key;
-                corbelGroupDriver = corbel.getDriver({
+
+                jsonDriver = corbelTest.common.utils.extendJsonObject({
                     'clientId': clientGroup.id,
                     'clientSecret': clientGroup.key,
                     'urlBase': corbelTest.CONFIG.COMMON.urlBase,
                     'scopes': clientGroup.scopes.join(' ')
-                });
+                }, jsonDriverUrl);
+
+                corbelGroupDriver = corbel.getDriver(jsonDriver);
 
                 return corbelGroupDriver.iam.token()
                     .create()
