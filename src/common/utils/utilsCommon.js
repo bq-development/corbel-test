@@ -72,11 +72,47 @@ function joinObjects(obj1, obj2) {
     return completeObject;
 }
 
+function generateEndpointArrayFromCorbelTest () {
+    var endpointsJson = corbelTest.CONFIG.COMMON.endpoints;
+    var endpointStringArray = [];
+
+    for(var key in endpointsJson) {
+        if(endpointsJson.hasOwnProperty(key)) {
+            endpointStringArray.push(key+'Endpoint');
+        }
+    }
+
+    return endpointStringArray;
+}
+
+function extendJsonObject (a, b) {
+    for(var key in b) {
+        if(b.hasOwnProperty(key)) {
+            a[key] = b[key];
+        }
+    }
+    return a;
+}
+
+function createObjectFromDriverConfigEndpoints (endpointStringArray, configJson) {
+    var jsonDriverUrl = {};
+
+    endpointStringArray.forEach(function(element) {
+        if(configJson.get(element, null)){
+            jsonDriverUrl[element] = configJson.get(element);
+        }
+    });
+
+    return jsonDriverUrl;
+}
 
 module.exports = {
     waitFor: waitFor,
     retry: retry,
     retryFail: retryFail,
     consultPlugins: consultPlugins,
-    joinObjects: joinObjects
+    joinObjects: joinObjects,
+    generateEndpointArrayFromCorbelTest: generateEndpointArrayFromCorbelTest,
+    extendJsonObject: extendJsonObject,
+    createObjectFromDriverConfigEndpoints: createObjectFromDriverConfigEndpoints
 };
