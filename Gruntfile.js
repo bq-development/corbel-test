@@ -57,7 +57,7 @@ module.exports = function(grunt) {
         browserify: {
             dist: {
                 files: {
-                    '.tmp/bundle.js': [ 'src/main.js'],
+                    '.tmp/bundle.js': ['src/main.js'],
                 }
             }
         },
@@ -87,16 +87,23 @@ module.exports = function(grunt) {
         },
         express: {
             options: {
-              // Override defaults here
-              background: true,
-              port : 5454
+                // Override defaults here
+                background: true,
+                port: 5454
             },
             dev: {
-              options: {
-                script: 'express/server.js'
-              }
+                options: {
+                    script: 'express/server.js'
+                }
+            }
+        },
+
+        versioncheck: {
+            options: {
+                hideUpToDate: true
             }
         }
+
     });
 
     grunt.registerTask('config', '', function() {
@@ -109,6 +116,7 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask('common', '', [
+        'versioncheck',
         'clean',
         'jshint',
         'config',
