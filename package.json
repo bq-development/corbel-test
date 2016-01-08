@@ -47,8 +47,10 @@
   },
   "dependencies": {
     "express": "^4.13.3",
+    "imap": "0.8.16",
     "grunt-browserify": "^4.0.0",
-    "lodash": "^3.10.1",
+    "mailparser": "0.4.1",
+     "lodash": "^3.10.1",
     "request": "^2.65.0"
   }
 }

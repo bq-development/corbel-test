@@ -1,3 +1,6 @@
 'use strict';
 
-module.exports  =  require('./mailCommon');
+module.exports 	= {
+	random: require('./randomMail'),
+	imap: require('./imapMail')
+};

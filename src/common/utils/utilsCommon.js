@@ -1,5 +1,14 @@
 'use strict';
 
+function waitFor (seconds) {
+    var promise = new Promise(function(resolve, reject){
+        setTimeout(function() {
+            resolve();
+        }, seconds * 1000);
+    });
+    return promise;
+}
+
 function retry(retryFunction, maxRetries, retryPeriod, catches) {
     return new Promise(function(resolve, reject) {
         catches = catches || [];
@@ -65,6 +74,7 @@ function joinObjects(obj1, obj2) {
 
 
 module.exports = {
+    waitFor: waitFor,
     retry: retry,
     retryFail: retryFail,
     consultPlugins: consultPlugins,

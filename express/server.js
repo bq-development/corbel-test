@@ -23,7 +23,8 @@ app.listen(process.env.PORT || 3000);
 console.log('server started');
 
 [
-  './emails/routes.js'
+  './emails/random.js',
+  './emails/imap.js'
 ].forEach(function(routePath){
     require(routePath)(app);
 });
