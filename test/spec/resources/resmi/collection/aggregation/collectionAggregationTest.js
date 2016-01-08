@@ -160,6 +160,22 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
+            it('in the max aggregation case, if the field doesn\'t exist, null max is returned', function(done) {
+                var params = {
+                    aggregation: {
+                        '$max': 'failField'
+                    }
+                };
+
+                corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.max', null);
+                })
+                .should.notify(done);
+            });
+
             it('with max aggregation over a query, the match element is returned', function(done) {
                 var params = {
                     aggregation: {
