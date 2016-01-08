@@ -58,7 +58,7 @@ function consultPlugins(url) {
 
 function joinObjects(obj1, obj2) {
     var completeObject = {};
-    var args = Array.prototype.slice(arguments);
+    var args = Array.prototype.slice.call(arguments, 0);
     args.map(function(obj){
         var key;
         var keys = Object.keys(obj);
