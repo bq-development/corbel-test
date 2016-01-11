@@ -176,6 +176,22 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
+            it('in the min aggregation case, if the field does not exist, null min is returned', function(done) {
+                var params = {
+                    aggregation: {
+                        '$min': 'failField'
+                    }
+                };
+
+                corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.min', null);
+                })
+                .should.notify(done);
+            });
+
             it('with max aggregation over a query, the match element is returned', function(done) {
                 var params = {
                     aggregation: {
