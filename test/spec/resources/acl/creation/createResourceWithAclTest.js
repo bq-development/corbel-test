@@ -9,7 +9,7 @@ describe('In RESOURCES module', function() {
             var user, resourceId, random;
 
             before(function(done) {
-                corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
+                corbelRootDriver = corbelTest.drivers['ADMIN_USER'].clone();
                 corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
                 random = Date.now();
 
@@ -46,7 +46,7 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            it('a resource can be created with ACL', function(done) {
+            it('when a user adds a resource, this user has ADMIN rigths over the resource', function(done) {
                 var TEST_OBJECT = {
                     test: 'test' + random,
                     test2: 'test2' + random

@@ -220,22 +220,126 @@ function getRelation(driver, collectionA, idResource, collectionB, params) {
 
 function setManagedCollection(adminDriver, domain, collection) {
     var collectionName = domain + ':' + collection;
+    var TEST_OBJECT = {
+        id: 'testObjectId' + Date.now(),
+        _acl: {},
+        test: 'test' + Date.now()
+    };
+    var userDriver = corbelTest.drivers['DEFAULT_USER'].clone();
+    var user;
 
-    return adminDriver.resources.collection(ACL_ADMIN_COLLECTION)
+    return corbelTest.common.iam.createUsers(adminDriver, 1)
+    .should.be.eventually.fulfilled
+    .then(function(createdUsers) {
+        user = createdUsers[0];
+
+        return corbelTest.common.clients
+        .loginUser(userDriver, user.username, user.password)
+        .should.be.eventually.fulfilled;
+    })
+    .then(function() {
+        return adminDriver.resources.resource(collection, TEST_OBJECT.id)
+            .update(TEST_OBJECT)
+        .should.be.eventually.fulfilled;
+    })
+    .then(function() {
+        return adminDriver.iam.user('me').get()
+        .should.be.eventually.fulfilled;
+    })
+    .then(function(response) {
+        return adminDriver.resources.collection(ACL_ADMIN_COLLECTION)
         .add({
+            id: collectionName,
+            users: [response.data.id],
+            groups: []
+        })
+        .should.be.eventually.fulfilled;
+    })
+    .then(function() {
+        return corbelTest.common.utils.retryFail(function() {
+            return userDriver.resources.resource(collection, TEST_OBJECT.id)
+            .update(TEST_OBJECT);
+        }, MAX_RETRY, RETRY_PERIOD)
+        .should.be.eventually.fulfilled;
+    })
+    .then(function(e) {
+        expect(e).to.have.property('status', 401);
+        expect(e).to.have.deep.property('data.error', 'unauthorized');
+
+        return adminDriver.resources.resource(collection, TEST_OBJECT.id)
+        .delete()
+        .should.be.eventually.fulfilled;
+    })
+    .then(function() {
+        return adminDriver.resources.resource(ACL_ADMIN_COLLECTION, collectionName)
+        .update({
             id: collectionName,
             users: [],
             groups: []
         })
-    .should.be.eventually.fulfilled;
+        .should.be.eventually.fulfilled;
+    });
 }
 
 function unsetManagedCollection(adminDriver, domain, collection) {
     var collectionName = domain + ':' + collection;
+    var TEST_OBJECT = {
+        id: 'testObjectId' + Date.now(),
+        _acl: {},
+        test: 'test' + Date.now()
+    };
+    var userDriver = corbelTest.drivers['DEFAULT_USER'].clone();
+    var user;
 
-    return adminDriver.resources.resource(ACL_ADMIN_COLLECTION, collectionName)
+    return corbelTest.common.iam.createUsers(adminDriver, 1)
+    .should.be.eventually.fulfilled
+    .then(function(createdUsers) {
+        user = createdUsers[0];
+
+        return corbelTest.common.clients
+        .loginUser(userDriver, user.username, user.password)
+        .should.be.eventually.fulfilled;
+    })
+    .then(function() {
+        return adminDriver.iam.user('me').get()
+        .should.be.eventually.fulfilled;
+    })
+    .then(function(response) {
+        return adminDriver.resources.resource(ACL_ADMIN_COLLECTION, collectionName)
+        .update({
+            id: collectionName,
+            users: [response.data.id],
+            groups: []
+        })
+        .should.be.eventually.fulfilled;
+    })
+    .then(function() {
+        return adminDriver.resources.resource(collection, TEST_OBJECT.id)
+        .update(TEST_OBJECT)
+        .should.be.eventually.fulfilled;
+    })
+    .then(function() {
+        return adminDriver.resources.resource(ACL_ADMIN_COLLECTION, collectionName)
         .delete()
-    .should.be.eventually.fulfilled;
+        .should.be.eventually.fulfilled;
+    })
+    .then(function() {
+        return corbelTest.common.utils.retry(function() {
+            return userDriver.resources.resource(collection, TEST_OBJECT.id)
+            .update(TEST_OBJECT);
+        }, MAX_RETRY, RETRY_PERIOD)
+        .should.be.eventually.fulfilled;
+    })
+    .then(function() {
+        return adminDriver.resources.resource(collection, TEST_OBJECT.id)
+        .delete()
+        .should.be.eventually.fulfilled;
+    })
+    .then(function() {
+        return adminDriver.iam.user(user.id)
+        .delete()
+        .should.be.eventually.fulfilled;
+    });
 }
 
 
