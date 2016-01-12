@@ -102,12 +102,12 @@ describe('In RESOURCES module', function() {
             .should.notify(done);
         });
 
-        it('[UNDER_DEVELOPMENT] relations where destination id is resourceIdB1 are returned', function(done) {
+        it('relations where destination id is resourceIdB1 are returned', function(done) {
             corbelDriver.resources.relation(COLLECTION_A, '_', COLLECTION_B)
             .get(resourceIdB1)
             .should.be.eventually.fulfilled
             .then(function(response) {
-                expect(response).to.have.deep.property('data.id', resourceIdA);
+                expect(response).to.have.deep.property('data._src_id', resourceIdA);
                 expect(response).to.have.deep.property('data.stringField', jsonRelationData.stringField);
             })
             .should.notify(done);
