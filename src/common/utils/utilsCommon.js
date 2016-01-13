@@ -72,11 +72,18 @@ function joinObjects(obj1, obj2) {
     return completeObject;
 }
 
+function replaceUriForProxyUse(driver, module) {
+    driver.config.config.urlBase = 
+        driver.config.get('urlBase')
+          .replace('bqws.io/', 'bqws.io/' + module + '/').replace('{{module}}', 'proxy');
+}
+
 
 module.exports = {
     waitFor: waitFor,
     retry: retry,
     retryFail: retryFail,
     consultPlugins: consultPlugins,
-    joinObjects: joinObjects
+    joinObjects: joinObjects,
+    replaceUriForProxyUse: replaceUriForProxyUse
 };
