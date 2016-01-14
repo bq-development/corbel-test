@@ -67,7 +67,17 @@ function getScope(id, audience, rules, parameters) {
         id: id,
         audience: audience ? audience : 'testAudience',
         rules: rules ? rules : [{ testRule: 'this is a rule' }],
-        parameters: parameters ? parameters : { a: Date.now() } 
+        parameters: parameters ? parameters : { a: Date.now() }
+    };
+}
+
+function getCompositeScope(id, audience, rules, parameters) {
+    return {
+        id: id ? id : 'compositeScopeTest_' + Date.now(),
+        type: 'composite_scope',
+        audience: audience ? audience : 'testAudience',
+        rules: rules ? rules : [{ testRule: 'this is a rule' }],
+        parameters: parameters ? parameters : { a: Date.now() }
     };
 }
 
@@ -77,5 +87,6 @@ module.exports = {
     createUser: createUser,
     getDomain: getDomain,
     getClient: getClient,
-    getScope: getScope
+    getScope: getScope,
+    getCompositeScope: getCompositeScope
 };
