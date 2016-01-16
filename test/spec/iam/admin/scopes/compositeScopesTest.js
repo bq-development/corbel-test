@@ -21,7 +21,7 @@ describe('In IAM module', function() {
                 .should.notify(done);
         });
 
-        it('a composite scope can be readed', function(done) {
+        it('a composite scope can be read', function(done) {
             var compositeScopeProps = corbelTest.common.iam.getCompositeScope();
 
             corbelDriver.iam.scope()
