@@ -51,6 +51,33 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
         });
 
+        it('the collection elements with new calculated field, with sum operator, are retrieved', function(done) {
+            var params = {
+                aggregation: {
+                    '$combine': {
+                        calculatedField: 'intField + computableField'
+                    }
+                }
+            };
+
+            corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+
+                    expect(response).to.have.deep.property('data.length', amount);
+
+                    response.data.forEach(function(element) {
+                        expect(element).to.have.property('intField');
+                        expect(element).to.have.property('computableField');
+                        var calculatedFieldValue = element.intField + element.computableField;
+                        expect(element).to.have.property('calculatedField', calculatedFieldValue);
+                    });
+
+                })
+                .should.notify(done);
+        });
+
         it('the collection elements with new calculated field using map fields are retrieved', function(done) {
             var params = {
                 aggregation: {
@@ -219,6 +246,8 @@ describe('In RESOURCES module', function() {
                 })
                 .should.notify(done);
         });
+
+
 
     });
 
