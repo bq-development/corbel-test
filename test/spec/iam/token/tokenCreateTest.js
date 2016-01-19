@@ -20,9 +20,8 @@ describe('In IAM module', function() {
                 'scope': claimAdmin.scopes,
                 'version': version
             };
-            corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+            corbelDriver = corbelTest.getCustomDriver({
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelDriver.iam.token()
@@ -51,9 +50,8 @@ describe('In IAM module', function() {
             };
             var userData;
             var corbelAdminDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
-            corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+            corbelDriver = corbelTest.getCustomDriver({
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelTest.common.iam.createUsers(corbelAdminDriver, 1)
@@ -99,9 +97,8 @@ describe('In IAM module', function() {
                 'prn': null
             };
 
-            corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+            corbelDriver = corbelTest.getCustomDriver({
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelDriver.iam.token()

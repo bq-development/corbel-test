@@ -78,10 +78,9 @@ describe('In IAM module', function() {
                     }).then(function(response) {
                         client = response.data;
 
-                        corbelDefaultDriver = corbel.getDriver({
+                        corbelDefaultDriver = corbelTest.getCustomDriver({
                             'clientId': client.id,
                             'clientSecret': client.key,
-                            'urlBase': corbelTest.CONFIG.COMMON.urlBase,
                             'scopes': client.scopes.join(' ')
                         });
 

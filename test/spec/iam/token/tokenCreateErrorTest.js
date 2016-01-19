@@ -65,9 +65,8 @@ describe('In IAM module', function() {
                 'prn': 'userexampleorg'
             };
 
-            corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+            corbelDriver = corbelTest.getCustomDriver({
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelDriver.iam.token()
@@ -96,9 +95,8 @@ describe('In IAM module', function() {
                 'prn': ''
             };
 
-            corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+            corbelDriver = corbelTest.getCustomDriver({
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelDriver.iam.token()
@@ -127,9 +125,8 @@ describe('In IAM module', function() {
                 'version': version
             };
 
-            corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+            corbelDriver = corbelTest.getCustomDriver({
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelDriver.iam
@@ -158,9 +155,8 @@ describe('In IAM module', function() {
                 'version': version
             };
 
-            corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+            corbelDriver = corbelTest.getCustomDriver({
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelDriver.iam.token()
@@ -190,9 +186,8 @@ describe('In IAM module', function() {
                 'exp': getExpPlus
             };
 
-            corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+            corbelDriver = corbelTest.getCustomDriver({
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelDriver.iam.token()
@@ -221,9 +216,8 @@ describe('In IAM module', function() {
                 'exp': 10
             };
 
-            corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+            corbelDriver = corbelTest.getCustomDriver({
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelDriver.iam.token()
@@ -252,9 +246,8 @@ describe('In IAM module', function() {
                 'version': version
             };
 
-            corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+            corbelDriver = corbelTest.getCustomDriver({
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelDriver.iam.token()
@@ -283,9 +276,8 @@ describe('In IAM module', function() {
                 'version': version
             };
 
-            corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+            corbelDriver = corbelTest.getCustomDriver({
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelDriver.iam.token()
@@ -311,9 +303,8 @@ describe('In IAM module', function() {
                 'scope': claimAdmin.scopes,
                 'version': version
             };
-            corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+            corbelDriver = corbelTest.getCustomDriver({
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelDriver.iam.token()
@@ -478,9 +469,8 @@ describe('In IAM module', function() {
             };
             var clientSecretInvalid = 'bsvyidwerfheyythjrtyrtkhfgeasehthtarethoeabnvuwqyeqwnpqewerdwr';
 
-            corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+            corbelDriver = corbelTest.getCustomDriver({
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelDriver.iam.token()

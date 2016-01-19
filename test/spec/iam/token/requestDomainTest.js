@@ -10,9 +10,7 @@ describe('In IAM module when requests an access token', function() {
     var clientId;
     var clientSecret;
 
-    var testDriver = corbel.getDriver({
-        urlBase: corbelTest.CONFIG.COMMON.urlBase.replace('{{ENV}}', 'int')
-    });
+    var testDriver = corbelTest.getCustomDriver();
 
     before(function() {
         driverRootClient = corbelTest.drivers['ROOT_CLIENT'].clone();

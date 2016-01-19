@@ -48,9 +48,8 @@ describe('In IAM module', function() {
             'prn': userData.email
         };
 
-        corbelNewDriver = corbel.getDriver({
-            domain: corbelTest.CONFIG.DOMAIN,
-            urlBase: corbelTest.CONFIG.COMMON.urlBase
+        corbelNewDriver = corbelTest.getCustomDriver({
+            domain: corbelTest.CONFIG.DOMAIN
         });
 
         corbelNewDriver.iam
