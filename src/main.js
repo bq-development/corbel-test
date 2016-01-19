@@ -57,7 +57,14 @@ corbelTest.CONFIG.COMMON.urlBase = config.COMMON.urlBase.replace('{{ENV}}', envi
 saveLocalConfig(environment, localServices);
 setupBrowser(karma, localServices, environment);
 
-corbelTest.getConfig = function(clientName) {
+corbelTest.getCustomDriver = function(driverData) {
+    var driverConfig = corbelTest.getConfig(undefined, driverData);
+    var driver = corbel.getDriver(driverConfig);
+    return driver;
+};
+
+corbelTest.getConfig = function(clientName, clientData) {
+    clientData = clientData || {};
     var data = {
         urlBase: corbelTest.CONFIG.COMMON.urlBase,
         localServices: localServices
@@ -68,7 +75,7 @@ corbelTest.getConfig = function(clientName) {
         }
     });
 
-    var clientConfig = clientName ? corbelTest.CONFIG[clientName] : {};
+    var clientConfig = clientName ? corbelTest.CONFIG[clientName] : clientData;
     return _.extend(data, clientConfig);
 };
 
