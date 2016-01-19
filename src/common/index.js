@@ -6,6 +6,5 @@ module.exports = {
     mail : require('./mail'),
     utils : require('./utils'),
     clients : require('./clients'),
-    assets : require('./assets'),
-    notifications : require('./notifications')
+    assets : require('./assets')
 };
