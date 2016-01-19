@@ -80,3 +80,5 @@ corbelTest.fixtures = fixtures;
 corbelTest.drivers = common.clients.drivers;
 
 window.corbelTest = corbelTest;
+
+module.exports = corbelTest;
