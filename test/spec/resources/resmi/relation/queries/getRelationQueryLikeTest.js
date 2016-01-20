@@ -113,15 +113,17 @@ describe('In RESOURCES module', function() {
                 var params = {
                     query: [{
                         '$like': {
-                            stringField: '[0-9]++'
+                            stringField: '[0-9]+++'
                         }
                     }]
                 };
 
-                corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
-                    idResourceInA, COLLECTION_B, params)
-                .then(function(response) {
-                    expect(response).to.have.deep.property('data.length', 0);
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null, params)
+                .should.be.eventually.rejected
+                .then(function(e) {
+                    expect(e).to.have.property('status', 400);
+                    expect(e).to.have.deep.property('data.error', 'bad_request');
                 })
                 .should.notify(done);
             });
