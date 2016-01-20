@@ -163,7 +163,7 @@ describe('In RESOURCES module', function() {
                 var resizeWidthValue = 240;
                 var resizeHeightValue = 190;
                 var operationQuery =
-                    'resizeAndFill=(240,FF00FF);+cropFromCenter=(' +
+                    'resizeAndFill=(240,FF00FF);cropFromCenter=(' +
                     resizeWidthValue + ',' + resizeHeightValue + ')';
 
                 corbelDriver.resources.resource(FOLDER_NAME, FILENAME).get({
