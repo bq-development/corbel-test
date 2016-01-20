@@ -342,6 +342,50 @@ function unsetManagedCollection(adminDriver, domain, collection) {
     });
 }
 
+function createBooqsNubicoDemoDriver(corbelRootDriver) {
+    var domainId = 'booqs:nubico:demo';
+
+    var client = {
+        name: 'testClient_' + Date.now(),
+        signatureAlgorithm: 'HS256',
+        domain: domainId,
+        scopes: ['booqs:resources:test']
+    };
+
+    var corbelBooqsNubicoDemoDriver, clientId;
+
+    return corbelRootDriver.iam.client(domainId)
+        .create(client)
+        .should.be.eventually.fulfilled
+        .then(function(responseClientId) {
+            clientId = responseClientId;
+            return corbelRootDriver.iam.client(domainId, clientId)
+                .get()
+                .should.be.eventually.fulfilled;
+        })
+        .then(function(response) {
+            var createdClient = response.data;
+            var confCreatedClient = corbelTest.getConfig();
+            confCreatedClient.clientId = createdClient.id;
+            confCreatedClient.clientSecret = createdClient.key;
+            confCreatedClient.scopes = createdClient.scopes.join(' ');
+            corbelBooqsNubicoDemoDriver = corbel.getDriver(confCreatedClient);
+
+            return corbelBooqsNubicoDemoDriver.iam.token().create();
+        })
+        .then(function() {
+            return {
+                corbelBooqsNubicoDemoDriver: corbelBooqsNubicoDemoDriver,
+                corbelBooqsNubicoDemoClientId: clientId
+            };
+        });
+}
+
+function deleteBooqsNubicoDemoDriver(corbelRootDriver, clientId) {
+    var domainId = 'booqs:nubico:demo';
+
+    return corbelRootDriver.iam.client(domainId, clientId).remove();
+}
 
 module.exports = {
     getProperty: getProperty,
@@ -357,5 +401,7 @@ module.exports = {
     addResourcesUsingDataArray: addResourcesUsingDataArray,
     getRelation: getRelation,
     setManagedCollection: setManagedCollection,
-    unsetManagedCollection: unsetManagedCollection
+    unsetManagedCollection: unsetManagedCollection,
+    createBooqsNubicoDemoDriver: createBooqsNubicoDemoDriver,
+    deleteBooqsNubicoDemoDriver: deleteBooqsNubicoDemoDriver
 };
