@@ -13,7 +13,7 @@ describe('In RESOURCES module', function() {
 
         corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
 
-        currentResourcesEndpoint = corbelTest.CONFIG.COMMON.urlBase.replace('{{module}}', corbel.Resources.moduleName);
+        currentResourcesEndpoint = corbelRootDriver.config.getCurrentEndpoint('resources');
 
         var scopeId = 'scopeId-' + random;
         var audience = 'http://resources.bqws.io';
@@ -74,7 +74,7 @@ describe('In RESOURCES module', function() {
                     confCreatedClient.clientId = createdClient.id;
                     confCreatedClient.clientSecret = createdClient.key;
                     confCreatedClient.scopes = createdClient.scopes.join(' ');
-                    corbelDriver = corbel.getDriver(confCreatedClient);
+                    corbelDriver = corbelTest.getCustomDriver(confCreatedClient);
 
                     return corbelDriver.iam.token()
                         .create();
