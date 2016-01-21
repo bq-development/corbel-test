@@ -91,12 +91,11 @@ describe('In IAM module', function() {
                     .and.to.contain(comingClaim);
                 oneTimeToken = corbelTest.common.mail.random.getCodeFromMail(mail);
 
-                corbelResetDriver = corbel.getDriver({
+                corbelResetDriver = corbelTest.getCustomDriver({
                     iamToken: { 
                         accessToken: ''
                     },
-                    domain: corbelTest.CONFIG.DOMAIN,
-                    urlBase: corbelTest.CONFIG.COMMON.urlBase
+                    domain: corbelTest.CONFIG.DOMAIN
                 });
 
 
@@ -110,12 +109,11 @@ describe('In IAM module', function() {
                 expect(e).to.have.property('status', 401);
                 expect(e).to.have.deep.property('data.error', 'invalid_token');
 
-                corbelResetDriver = corbel.getDriver({
+                corbelResetDriver = corbelTest.getCustomDriver({
                     iamToken: { 
                         accessToken: oneTimeToken
                     },
-                    domain: corbelTest.CONFIG.DOMAIN,
-                    urlBase: corbelTest.CONFIG.COMMON.urlBase
+                    domain: corbelTest.CONFIG.DOMAIN
                 });
 
                 return corbelResetDriver.iam.user('me')
@@ -185,12 +183,11 @@ describe('In IAM module', function() {
                     .and.to.contain('Click on the link to reset your password');
                 oneTimeToken = corbelTest.common.mail.random.getCodeFromMail(mail);
 
-                corbelResetDriver = corbel.getDriver({
+                corbelResetDriver = corbelTest.getCustomDriver({
                     iamToken: { 
                         accessToken: oneTimeToken
                     },
-                    domain: corbelTest.CONFIG.DOMAIN,
-                    urlBase: corbelTest.CONFIG.COMMON.urlBase
+                    domain: corbelTest.CONFIG.DOMAIN
                 });
 
                 return corbelResetDriver.iam.user('me')

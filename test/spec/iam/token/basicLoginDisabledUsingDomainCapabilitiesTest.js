@@ -41,10 +41,9 @@ describe('In IAM module, with a domain', function() {
             }).then(function(response) {
                 client = response.data;
                 client.clientSecret = client.key;
-                corbelDefaultDriver = corbel.getDriver({
+                corbelDefaultDriver = corbelTest.getCustomDriver({
                     'clientId': client.id,
                     'clientSecret': client.key,
-                    'urlBase': corbelTest.CONFIG.COMMON.urlBase,
                     'scopes': client.scopes.join(' ')
                 });
 

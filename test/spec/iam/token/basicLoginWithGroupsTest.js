@@ -77,10 +77,9 @@ describe('In IAM module, when a user which belongs to a group is created and log
             .then(function(response) {
                 client = response.data;
                 client.clientSecret = client.key;
-                corbelNewClientDriver = corbel.getDriver({
+                corbelNewClientDriver = corbelTest.getCustomDriver({
                     'clientId': client.id,
                     'clientSecret': client.key,
-                    'urlBase': corbelTest.CONFIG.COMMON.urlBase,
                     'scopes': client.scopes.join(' ')
                 });
 
@@ -138,9 +137,8 @@ describe('In IAM module, when a user which belongs to a group is created and log
             'scope': client.scopes,
             'version': version,
         };
-        corbelNewClientDriver = corbel.getDriver({
-            domain: domain.id,
-            urlBase: corbelTest.CONFIG.COMMON.urlBase
+        corbelNewClientDriver = corbelTest.getCustomDriver({
+            domain: domain.id
         });
 
         corbelNewClientDriver.iam
@@ -162,10 +160,9 @@ describe('In IAM module, when a user which belongs to a group is created and log
             .then(function(e) {
                 expect(e).to.have.property('status', 401);
                 expect(e).to.have.deep.property('data.error', 'invalid_token');
-                corbelNewClientDriver = corbel.getDriver({
+                corbelNewClientDriver = corbelTest.getCustomDriver({
                     'clientId': client.id,
                     'clientSecret': client.key,
-                    'urlBase': corbelTest.CONFIG.COMMON.urlBase,
                     'scopes': client.scopes.join(' ')
                 });
 
@@ -204,10 +201,9 @@ describe('In IAM module, when a user which belongs to a group is created and log
             .then(function(response) {
                 clientGroup = response.data;
                 clientGroup.clientSecret = clientGroup.key;
-                corbelGroupDriver = corbel.getDriver({
+                corbelGroupDriver = corbelTest.getCustomDriver({
                     'clientId': clientGroup.id,
                     'clientSecret': clientGroup.key,
-                    'urlBase': corbelTest.CONFIG.COMMON.urlBase,
                     'scopes': clientGroup.scopes.join(' ')
                 });
 
