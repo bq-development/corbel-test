@@ -1,5 +1,4 @@
 var express = require('express');
-var request = require('request');
 
 var API_EMAIL_ENDPOINT = 'http://api.guerrillamail.com/ajax.php';
 var API_RANDOM_EMAIL_SUFFIX = 'f=get_email_address';
@@ -24,7 +23,9 @@ console.log('server started');
 
 [
   './emails/random.js',
-  './emails/imap.js'
+  './emails/imap.js',
+  './binaries/epubGenerator.js',
+  './cryptography/crypto.js'
 ].forEach(function(routePath){
     require(routePath)(app);
 });
