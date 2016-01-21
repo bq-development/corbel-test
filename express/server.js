@@ -1,13 +1,11 @@
 var express = require('express');
-var request = require('request');
+var bodyParser = require('body-parser');
 
-var API_EMAIL_ENDPOINT = 'http://api.guerrillamail.com/ajax.php';
-var API_RANDOM_EMAIL_SUFFIX = 'f=get_email_address';
-var API_SET_EMAIL_SUFFIX = 'f=set_email_user';
-var API_CHECK_EMAIL_SUFFIX = 'f=check_email&seq=1';
-var API_GET_EMAIL_SUFFIX = 'f=fetch_email';
 // Set up the express server
 var app = express();
+
+// parse application/json
+app.use(bodyParser.json());
 
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
@@ -24,7 +22,8 @@ console.log('server started');
 
 [
   './emails/random.js',
-  './emails/imap.js'
+  './emails/imap.js',
+  './binaries/epubGenerator.js'
 ].forEach(function(routePath){
     require(routePath)(app);
 });
