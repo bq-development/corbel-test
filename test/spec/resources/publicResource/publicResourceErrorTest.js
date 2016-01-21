@@ -6,8 +6,7 @@ describe('In RESOURCES module, while using public public resources', function() 
     var scopes;
     var random;
     var publicResourceTestCollection = 'test:PublicResource';
-    var currentResourcesEndpoint = corbelTest.CONFIG.COMMON.urlBase
-        .replace('{{module}}', corbel.Resources.moduleName);
+    var currentResourcesEndpoint;
 
     var createPublicResource = function(scopes, publicScopes) {
 
@@ -39,7 +38,7 @@ describe('In RESOURCES module, while using public public resources', function() 
             confCreatedClient.clientId = createdClient.id;
             confCreatedClient.clientSecret = createdClient.key;
             confCreatedClient.scopes = createdClient.scopes.join(' ');
-            corbelDriver = corbel.getDriver(confCreatedClient);
+            corbelDriver = corbelTest.getCustomDriver(confCreatedClient);
 
             return corbelDriver.iam.token().create();
         })
@@ -55,6 +54,7 @@ describe('In RESOURCES module, while using public public resources', function() 
 
     before(function() {
         corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
+        currentResourcesEndpoint = corbelRootDriver.config.getCurrentEndpoint('resources');
     });
 
     after(function(done) {

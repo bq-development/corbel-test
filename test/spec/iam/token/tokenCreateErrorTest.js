@@ -9,13 +9,17 @@ describe('In IAM module', function() {
         var aud = 'http://iam.bqws.io';
         var jwtAlgorithm = 'HS256';
         var requestDomain = 'silkroad-qa';
+        var currentIamEndpoint;
+
+        before(function(){
+            currentIamEndpoint = corbelTest.getCurrentEndpoint('iam');
+        });
 
         var buildUri = function(uri) {
-            var urlBase = corbelTest.CONFIG.COMMON.urlBase.replace('{{module}}', corbel.Iam.moduleName);
-            return urlBase + uri;
+            return currentIamEndpoint + uri;
         };
 
-        it('an error [401] is returned if the user does not have propper permissions', function(done) {
+        it('an error [401] is returned if the assertion is invalid', function(done) {
             var args = {
                 url: buildUri('oauth/token'),
                 method: corbel.request.method.POST,
@@ -31,17 +35,17 @@ describe('In IAM module', function() {
                 .then(function(e) {
                     expect(e).to.have.property('status', 401);
                     expect(e).to.have.deep.property('data.error', 'unauthorized');
+                    expect(e).to.have.deep.property('data.errorDescription', 'Invalid assertion');
                 })
                 .should.notify(done);
         });
 
-        it('an error [400] is returned if the grant type is invalid', function(done) {
+        it('an error [400] is returned if the assertion is missing', function(done) {
             var args = {
                 url: buildUri('oauth/token'),
                 method: corbel.request.method.POST,
                 data: {
                     'grant_type': corbel.Iam.GRANT_TYPE
-                        //missing assertion
                 },
                 contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
                 withCredentials: true
@@ -51,6 +55,7 @@ describe('In IAM module', function() {
                 .then(function(e) {
                     expect(e).to.have.property('status', 400);
                     expect(e).to.have.deep.property('data.error', 'invalid_grant');
+                    expect(e).to.have.deep.property('data.errorDescription', 'Missing assertion');
                 })
                 .should.notify(done);
         });
@@ -175,7 +180,7 @@ describe('In IAM module', function() {
                 .should.notify(done);
         });
 
-        it('an error [401] is returned if the expired field is greater than maximun', function(done) {
+        it('an error [401] is returned if the expired field is greater than the maximum', function(done) {
             var getExpPlus = Math.round((new Date().getTime() / 1000)) + 3700;
             var claims = {
                 'iss': claimAdmin.clientId,
@@ -358,7 +363,7 @@ describe('In IAM module', function() {
                 .should.notify(done);
         });
 
-        it('an error [400] is returned if the grant type has incorrect oauth', function(done) {
+        it('an error [400] is returned if the grant type is incorrect', function(done) {
             var claims = {
                 'iss': claimAdmin.clientId,
                 'request_domain': requestDomain,
@@ -366,18 +371,14 @@ describe('In IAM module', function() {
                 'scope': claimAdmin.scopes,
                 'version': version
             };
-            var assertion = {
-                jwt: corbel.jwt.generate(
-                    claims,
-                    claimAdmin.clientSecret,
-                    jwtAlgorithm)
-            };
+            var assertion = corbel.jwt.generate(claims, claimAdmin.clientSecret, jwtAlgorithm);
+            var badGrantType = 'urn:ietf:params:oauth:gtype:jwt-bearer';
             var args = {
                 url: buildUri('oauth/token'),
                 method: corbel.request.method.POST,
                 data: {
                     'assertion': assertion,
-                    'grant_type': 'urn:ietf:params:oauth:gtype:jwt-bearer'
+                    'grant_type': badGrantType
                 },
                 contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
                 withCredentials: true
@@ -388,6 +389,7 @@ describe('In IAM module', function() {
                 .then(function(e) {
                     expect(e).to.have.property('status', 400);
                     expect(e).to.have.deep.property('data.error', 'invalid_grant');
+                    expect(e).to.have.deep.property('data.errorDescription').and.to.contain(badGrantType);
                 })
                 .should.notify(done);
         });
