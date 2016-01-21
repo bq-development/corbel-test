@@ -11,7 +11,7 @@ describe('In IAM module', function() {
         var requestDomain = 'silkroad-qa';
 
         var buildUri = function(uri) {
-            var urlBase = corbelTest.CONFIG.COMMON.urlBase.replace('{{module}}', corbel.Iam.moduleName);
+            var urlBase = corbelTest.getCurrentEndpoint('oauth');
             return urlBase + uri;
         };
 
@@ -66,8 +66,7 @@ describe('In IAM module', function() {
             };
 
             corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelDriver.iam.token()
@@ -97,8 +96,7 @@ describe('In IAM module', function() {
             };
 
             corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelDriver.iam.token()
@@ -128,8 +126,7 @@ describe('In IAM module', function() {
             };
 
             corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelDriver.iam
@@ -159,8 +156,7 @@ describe('In IAM module', function() {
             };
 
             corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelDriver.iam.token()
@@ -191,8 +187,7 @@ describe('In IAM module', function() {
             };
 
             corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelDriver.iam.token()
@@ -222,8 +217,7 @@ describe('In IAM module', function() {
             };
 
             corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelDriver.iam.token()
@@ -253,8 +247,7 @@ describe('In IAM module', function() {
             };
 
             corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelDriver.iam.token()
@@ -284,8 +277,7 @@ describe('In IAM module', function() {
             };
 
             corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelDriver.iam.token()
@@ -312,8 +304,7 @@ describe('In IAM module', function() {
                 'version': version
             };
             corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelDriver.iam.token()
@@ -479,8 +470,7 @@ describe('In IAM module', function() {
             var clientSecretInvalid = 'bsvyidwerfheyythjrtyrtkhfgeasehthtarethoeabnvuwqyeqwnpqewerdwr';
 
             corbelDriver = corbel.getDriver({
-                domain: corbelTest.CONFIG.DOMAIN,
-                urlBase: corbelTest.CONFIG.COMMON.urlBase
+                domain: corbelTest.CONFIG.DOMAIN
             });
 
             corbelDriver.iam.token()

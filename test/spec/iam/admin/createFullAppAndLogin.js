@@ -155,10 +155,9 @@ describe('In IAM module', function() {
                 client.clientsecret = response.data.key;
                 expect(response).to.have.deep.property('data.id', client.id);
 
-                corbelUserDriver = corbel.getDriver({
+                corbelUserDriver = corbelTest.getCustomDriver({
                     'clientId': client.id,
                     'clientSecret': client.clientsecret,
-                    'urlBase': corbelTest.CONFIG.COMMON.urlBase,
                     'scopes': client.scopes.join(' ')
                 });
 

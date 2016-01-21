@@ -2,10 +2,9 @@ describe('In IAM module, while using implicit scopes', function() {
 
     it('when request client login without scopes, an access token is returned', function(done) {
         var claimsAdmin = _.cloneDeep(corbelTest.CONFIG['ADMIN_CLIENT']);
-        var corbelNewDriver = corbel.getDriver({
+        var corbelNewDriver = corbelTest.getCustomDriver({
             'clientId': claimsAdmin.clientId,
-            'clientSecret': claimsAdmin.clientSecret,
-            'urlBase': corbelTest.CONFIG.COMMON.urlBase,
+            'clientSecret': claimsAdmin.clientSecret
             'scopes': []
         });
 
@@ -65,9 +64,8 @@ describe('In IAM module, while using implicit scopes', function() {
             'scope': [],
             'version': version
         };
-        var corbelNewDriver = corbel.getDriver({
-            domain: corbelTest.CONFIG.DOMAIN,
-            urlBase: corbelTest.CONFIG.COMMON.urlBase
+        var corbelNewDriver = corbelTest.getCustomDriver({
+            domain: corbelTest.CONFIG.DOMAIN
         });
 
         corbelNewDriver.iam

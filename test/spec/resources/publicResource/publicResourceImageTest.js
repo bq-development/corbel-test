@@ -20,8 +20,7 @@ describe('In RESOURCES module', function() {
 
             corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
 
-            currentResourcesEndpoint = corbelTest.CONFIG.COMMON.urlBase
-                .replace('{{module}}', corbel.Resources.moduleName);
+            currentResourcesEndpoint = corbelRootDriver.config.getCurrentEndpoint('resources');
 
             var scopeId = 'scopeId-' + random;
             var audience = 'http://resources.bqws.io';

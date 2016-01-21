@@ -79,7 +79,10 @@ corbelTest.getConfig = function(clientName, clientData) {
     return _.extend(data, clientConfig);
 };
 
-
+corbelTest.getCurrentEndpoint = function(moduleName) {
+    var driver = this.getCustomDriver({});
+    return driver.config.getCurrentEndpoint(moduleName);
+};
 
 corbelTest.localConfig = localConfig;
 corbelTest.common = common;

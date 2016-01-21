@@ -54,7 +54,7 @@ describe('In RESOURCES module', function() {
             .then(function(response) {
                 var relation = response.data[0];
                 var link = relation.links[0];
-                var urlBase = corbelDriver.config.get('urlBase').replace('{{module}}', 'resources');
+                var urlBase = corbelDriver.config.getCurrentEndpoint('resources');
                 var expectedUrl = urlBase +corbelTest.CONFIG.DOMAIN+'/resource/' + COLLECTION_B + '/' + idResourceB;
 
                 expect(link.href).to.be.equal(expectedUrl);

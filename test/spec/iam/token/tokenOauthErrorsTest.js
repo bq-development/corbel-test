@@ -1,8 +1,6 @@
 describe('In IAM module, When try to get token with', function() {
 
-    var testDriver = corbel.getDriver({
-        urlBase: corbelTest.CONFIG.COMMON.urlBase.replace('{{ENV}}', 'int')
-    });
+    var testDriver = corbelTest.getCurrentEndpoint('iam');
 
     var jwtAlgorithm = 'HS256';
     var aud = 'http://iam.bqws.io';

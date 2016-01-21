@@ -95,8 +95,7 @@ describe('In IAM module', function() {
                     iamToken: { 
                         accessToken: ''
                     },
-                    domain: corbelTest.CONFIG.DOMAIN,
-                    urlBase: corbelTest.CONFIG.COMMON.urlBase
+                    domain: corbelTest.CONFIG.DOMAIN
                 });
 
 
@@ -114,8 +113,7 @@ describe('In IAM module', function() {
                     iamToken: { 
                         accessToken: oneTimeToken
                     },
-                    domain: corbelTest.CONFIG.DOMAIN,
-                    urlBase: corbelTest.CONFIG.COMMON.urlBase
+                    domain: corbelTest.CONFIG.DOMAIN
                 });
 
                 return corbelResetDriver.iam.user('me')
@@ -189,8 +187,7 @@ describe('In IAM module', function() {
                     iamToken: { 
                         accessToken: oneTimeToken
                     },
-                    domain: corbelTest.CONFIG.DOMAIN,
-                    urlBase: corbelTest.CONFIG.COMMON.urlBase
+                    domain: corbelTest.CONFIG.DOMAIN
                 });
 
                 return corbelResetDriver.iam.user('me')
