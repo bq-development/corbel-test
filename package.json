@@ -51,6 +51,7 @@
     "grunt-browserify": "^4.0.0",
     "mailparser": "0.4.1",
      "lodash": "^3.10.1",
+    "epub-generator": "=1.0.0",
     "request": "^2.65.0"
   }
 }
