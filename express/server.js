@@ -24,7 +24,8 @@ console.log('server started');
 
 [
   './emails/random.js',
-  './emails/imap.js'
+  './emails/imap.js',
+  './binaries/epubGenerator.js'
 ].forEach(function(routePath){
     require(routePath)(app);
 });
