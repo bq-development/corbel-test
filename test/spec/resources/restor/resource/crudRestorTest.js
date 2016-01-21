@@ -74,7 +74,7 @@ describe('In RESOURCES module', function() {
             .should.notify(done);
         });
 
-        it('should make a complet flow for a file in RESTOR in XML', function(done) {
+        it('should make a complete flow for a file in RESTOR in XML', function(done) {
             var FILENAME = 'RestorXMLName' + Date.now();
             var XML_CONTENT = '<test><date>' + Date.now() + '</date></test>';
 
