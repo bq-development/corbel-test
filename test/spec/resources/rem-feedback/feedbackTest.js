@@ -1,6 +1,6 @@
 describe('In RESOURCES module', function() {
 
-    describe('In FEEDBACK module', function() {
+    describe.only('In FEEDBACK module', function() {
         var corbelDriver;
         var FEEDBACK_COLLECTION = 'feedback:Jira';
 
@@ -15,6 +15,23 @@ describe('In RESOURCES module', function() {
                 summary: 'test summary'
             };
 
+            corbelDriver.resources.collection(FEEDBACK_COLLECTION)
+                .add(FEEDBACK_METADATA)
+                .should.be.eventually.fulfilled.and.notify(done);
+        });
+
+        it('an issue with attachment can be added', function(done) {
+            var imagen = 'Qk2eAAAAAAAAAHoAAABsAAAAAwAAAAMAAAABABgAAAAAACQAAAATCwAAEwsAAAAAAAAAAAAAQkdScwAAAAAAAA'+
+                'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAD//wD/AP//'+
+                  'AAAAAABmZmYA/wAAAH8AAAAAAP9/AAAA//8AAAA=';
+            var FEEDBACK_METADATA = {
+                project: 'TES',
+                issueType: 'Bug',
+                summary: 'test summaryWoW',
+                contentattachment: imagen,
+                nameattachment: 'pre.tt.y.bmp'
+            };
+            
             corbelDriver.resources.collection(FEEDBACK_COLLECTION)
                 .add(FEEDBACK_METADATA)
                 .should.be.eventually.fulfilled.and.notify(done);
@@ -86,6 +103,6 @@ describe('In RESOURCES module', function() {
                 .add(FEEDBACK_METADATA)
                 .should.be.eventually.fulfilled.and.notify(done);
         });
-        
+
     });
 });
