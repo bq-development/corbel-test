@@ -38,6 +38,7 @@ describe('In RESOURCES module', function() {
                     return corbelDriver.resources.relation(COLLECTION_A, random + '1', COLLECTION_B)
                         .add(random + '3', {
                             field3: 'teSt' + random,
+                            field2: 'test' + random,
                             notIndexedField: 12345,
                             description: 'And this is the third resource'
                         })
@@ -109,6 +110,37 @@ describe('In RESOURCES module', function() {
                         expect(result.data).to.have.property('count').to.be.equal(3);
                     })
                     .should.be.eventually.fulfilled.notify(done);
+            });
+
+            it('returns elements paginated, respecting the elasticsearch order', function(done) {
+                var params = {
+                    search: 'test' + random,
+                    pagination: {
+                        pageSize: 2 
+                    }
+                };
+                var timeout = 5000;
+                
+                setTimeout(function(){
+                    corbelTest.common.utils.retry(function() {
+                        return corbelDriver.resources.relation(COLLECTION_A, random + '1', COLLECTION_B)
+                        .get(null, params)
+                        .should.be.eventually.fulfilled;
+                    }, MAX_RETRY, RETRY_PERIOD)
+                    .should.be.eventually.fulfilled
+                    .then(function(response) {
+                        expect(response).to.have.deep.property('data.length', 2);
+                        expect(response).to.have.deep.property('data[0].id', COLLECTION_B + '/' + random + '3');
+                        params.pagination.page = 1;
+                        return corbelDriver.resources.relation(COLLECTION_A, random + '1', COLLECTION_B)
+                        .get(null, params)
+                        .should.be.eventually.fulfilled;
+                    })
+                    .then(function(response) {
+                        expect(response).to.have.deep.property('data.length', 1);
+                    })
+                    .should.notify(done);
+                },timeout);
             });
 
             it('successes returning satisfying the incomplete chain of search',

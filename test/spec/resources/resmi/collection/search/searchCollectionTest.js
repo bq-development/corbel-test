@@ -75,6 +75,7 @@ describe('In RESOURCES module', function() {
                     return corbelDriver.resources.resource(COLLECTION, random + ':3')
                     .update({
                         field3: 'teSt' + random,
+                        field2: 'test' + random,
                         notIndexedField: 12345,
                         description: 'And this is the third resource',
                         sortField: 'peach',
@@ -166,8 +167,7 @@ describe('In RESOURCES module', function() {
                     search: 'test' + random,
                     sort: {
                         sortField: 'asc'
-                    },
-                    binded: true
+                    }
                 };
                 var timeout = 5000;
                 
@@ -183,6 +183,37 @@ describe('In RESOURCES module', function() {
                         expect(response).to.have.deep.property('data[0].sortField','peach');
                         expect(response).to.have.deep.property('data[1].sortField', 'péché');
                         expect(response).to.have.deep.property('data[2].sortField', 'pêche');
+                    })
+                    .should.notify(done);
+                },timeout);
+            });
+
+            it('returns elements paginated, respecting the elasticsearch order', function(done) {
+                var params = {
+                    search: 'test' + random,
+                    pagination: {
+                        pageSize: 2 
+                    }
+                };
+                var timeout = 5000;
+                
+                setTimeout(function(){
+                    corbelTest.common.utils.retry(function() {
+                        return corbelDriver.resources.collection(COLLECTION)
+                        .get(params)
+                        .should.be.eventually.fulfilled;
+                    }, MAX_RETRY, RETRY_PERIOD)
+                    .should.be.eventually.fulfilled
+                    .then(function(response) {
+                        expect(response).to.have.deep.property('data.length', 2);
+                        expect(response).to.have.deep.property('data[0].id', random + ':3');
+                        params.pagination.page = 1;
+                        return corbelDriver.resources.collection(COLLECTION)
+                        .get(params)
+                        .should.be.eventually.fulfilled;
+                    })
+                    .then(function(response) {
+                        expect(response).to.have.deep.property('data.length', 1);
                     })
                     .should.notify(done);
                 },timeout);
