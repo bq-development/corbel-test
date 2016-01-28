@@ -75,10 +75,7 @@ function getCompositeScope(id, scopes) {
     return {
         id: id ? id : 'compositeScopeTest_' + Date.now(),
         type: 'composite_scope',
-        scopes: scopes ? scopes : ['iam:user:create', 'iam:user:read', 'iam:user:delete',
-            'iam:user:me'],
-        audience : 'testAudience',
-        rules : [{ testRule: 'this is a rule' }]
+        scopes: scopes ? scopes : ['iam:user:create', 'iam:user:read', 'iam:user:delete', 'iam:user:me']
     };
 }
 
