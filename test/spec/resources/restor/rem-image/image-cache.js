@@ -13,7 +13,7 @@ describe('In RESOURCES module', function() {
 	        '6ObCu5EuxwFcqCqkUwePvS1leCqk+MtKPUS66iX8vUhDj6mAS7/PdR08FjILjKRuzG9vDnwxpI/bFWr+NdcPjJuTxWaE'+
 	        '8ccAAAAASUVORK5CYII=';
 			var corbelDriver;
-	        var FOLDER_NAME = 'test:Restor';
+      var FOLDER_NAME = 'test:Restor';
 
 			before(function() {
 	            corbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
