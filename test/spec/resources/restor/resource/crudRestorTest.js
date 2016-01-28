@@ -2,107 +2,87 @@ describe('In RESOURCES module', function() {
 
     describe('In RESTOR module, while testing CRUD operations', function() {
         var corbelDriver;
-        var FOLDER_NAME = 'test:Restor';
 
         before(function() {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
         });
 
-        it('should make a complet flow for a file in RESTOR in octet-stream sending a binary', function(done) {
-            var FILENAME = 'RestorFileName' + Date.now();
-            var FILE_CONTENT = 'this Is My binary fileee!!! ññáaäéó' + Date.now();
-            var BYTE_CONTENT = [];
-            for(var i = 0; i < FILE_CONTENT.length; i++){
-              BYTE_CONTENT.push(FILE_CONTENT.charCodeAt(i));
+        var createGetAndDeleteRestorFlow = function(fileName, data, type) {
+            var folder = 'test:Restor';
+            var fileId = fileName;
+
+            return corbelDriver.resources.resource(folder, fileId)
+            .update(data, {dataType: type})
+            .should.be.eventually.fulfilled
+            .then(function() {
+                return corbelDriver.resources.resource(folder, fileId)
+                .get({dataType: type})
+                .should.be.eventually.fulfilled;
+            })
+            .then(function(resource) {
+                expect(resource).to.have.property('data', data.toString());
+
+                return corbelDriver.resources.resource(folder, fileId)
+                .delete({dataType: type})
+                .should.be.eventually.fulfilled;
+            })
+            .then(function() {
+                return corbelDriver.resources.resource(folder, fileId)
+                .get({dataType: type})
+                .should.be.eventually.rejected;
+            })
+            .then(function(e) {
+                expect(e).to.have.property('status', 404);
+                expect(e).to.have.deep.property('data.error', 'not_found');
+            });
+        };
+
+        it('should make an entire flow for a file in RESTOR in octet-stream sending a binary array', function(done) {
+            var fileName = 'RestorFileName' + Date.now();
+            var fileContent = 'this Is My binary fileee!!! ññáaäéó' + Date.now();
+            var byteContent = [];
+            for(var i = 0; i < fileContent.length; i++){
+              byteContent.push(fileContent.charCodeAt(i));
             }
 
-            corbelDriver.resources.resource(FOLDER_NAME, FILENAME)
-            .update(BYTE_CONTENT, {dataType: 'application/octet-stream'})
-            .should.be.eventually.fulfilled
-            .then(function() {
-                return corbelDriver.resources.resource(FOLDER_NAME, FILENAME)
-                .get({dataType: 'application/octet-stream'})
-                .should.be.eventually.fulfilled;
-            })
-            .then(function(resource) {
-                expect(resource).to.have.property('data', FILE_CONTENT);
-
-                return corbelDriver.resources.resource(FOLDER_NAME, FILENAME)
-                .delete({dataType: 'application/octet-stream'})
-                .should.be.eventually.fulfilled;
-            })
-            .then(function() {
-                return corbelDriver.resources.resource(FOLDER_NAME, FILENAME)
-                .get({dataType: 'application/octet-stream'})
-                .should.be.eventually.rejected;
-            })
-            .then(function(e) {
-                expect(e).to.have.property('status', 404);
-                expect(e).to.have.deep.property('data.error', 'not_found');
-            })
-            .should.notify(done);
+            createGetAndDeleteRestorFlow(fileName, byteContent, 'application/octet-stream')
+            .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        it('should make a complet flow for a file in RESTOR in octet-stream sending a string', function(done) {
-            var FILENAME = 'RestorFileName' + Date.now();
-            var FILE_CONTENT = 'this Is My string fileee!!! ññáaäéó' + Date.now();
+        it('should make an entire flow for a file in RESTOR in octet-stream sending a string', function(done) {
+            var fileName = 'RestorFileName' + Date.now();
+            var fileContent = 'this Is My string fileee!!! ññáaäéó' + Date.now();
 
-            corbelDriver.resources.resource(FOLDER_NAME, FILENAME)
-            .update(FILE_CONTENT, {dataType: 'application/octet-stream'})
-            .should.be.eventually.fulfilled
-            .then(function() {
-                return corbelDriver.resources.resource(FOLDER_NAME, FILENAME)
-                .get({dataType: 'application/octet-stream'})
-                .should.be.eventually.fulfilled;
-            })
-            .then(function(resource) {
-                expect(resource).to.have.property('data', FILE_CONTENT);
-
-                return corbelDriver.resources.resource(FOLDER_NAME, FILENAME)
-                .delete({dataType: 'application/octet-stream'})
-                .should.be.eventually.fulfilled;
-            })
-            .then(function() {
-                return corbelDriver.resources.resource(FOLDER_NAME, FILENAME)
-                .get({dataType: 'application/octet-stream'})
-                .should.be.eventually.rejected;
-            })
-            .then(function(e) {
-                expect(e).to.have.property('status', 404);
-                expect(e).to.have.deep.property('data.error', 'not_found');
-            })
-            .should.notify(done);
+            createGetAndDeleteRestorFlow(fileName, fileContent, 'application/octet-stream')
+            .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        it('should make a complete flow for a file in RESTOR in XML', function(done) {
-            var FILENAME = 'RestorXMLName' + Date.now();
+        it('should make an entire flow for a file in RESTOR in blob sending a binary array', function(done) {
+            var fileName = 'RestorFileName' + Date.now();
+            var fileContent = 'this Is My binary fileee!!! ññáaäéó' + Date.now();
+            var byteContent = [];
+            for(var i = 0; i < fileContent.length; i++){
+              byteContent.push(fileContent.charCodeAt(i));
+            }
+
+            createGetAndDeleteRestorFlow(fileName, byteContent, 'application/blob')
+            .should.be.eventually.fulfilled.and.notify(done);
+        });
+
+        it('should make an entire flow for a file in RESTOR in blob sending a string', function(done) {
+            var fileName = 'RestorFileName' + Date.now();
+            var fileContent = 'this Is My string fileee!!! ññáaäéó' + Date.now();
+
+            createGetAndDeleteRestorFlow(fileName, fileContent, 'application/blob')
+            .should.be.eventually.fulfilled.and.notify(done);
+        });
+
+        it('should make an entire flow for a file in RESTOR in XML', function(done) {
+            var fileName = 'RestorXMLName' + Date.now();
             var XML_CONTENT = '<test><date>' + Date.now() + '</date></test>';
 
-            corbelDriver.resources.resource(FOLDER_NAME, FILENAME)
-            .update(XML_CONTENT, {dataType: 'application/xml'})
-            .should.be.eventually.fulfilled
-            .then(function() {
-                return corbelDriver.resources.resource(FOLDER_NAME, FILENAME)
-                .get({dataType: 'application/xml'})
-                .should.be.eventually.fulfilled;
-            })
-            .then(function(resource) {
-                expect(resource).to.have.property('data', XML_CONTENT);
-
-                return corbelDriver.resources.resource(FOLDER_NAME, FILENAME)
-                .delete({dataType: 'application/xml'})
-                .should.be.eventually.fulfilled;
-            })
-            .then(function() {
-                return corbelDriver.resources.resource(FOLDER_NAME, FILENAME)
-                .get({dataType: 'application/xml'})
-                .should.be.eventually.rejected;
-            })
-            .then(function(e) {
-                expect(e).to.have.property('status', 404);
-                expect(e).to.have.deep.property('data.error', 'not_found');
-            })
-            .should.notify(done);
+            createGetAndDeleteRestorFlow(fileName, XML_CONTENT, 'application/xml')
+            .should.be.eventually.fulfilled.and.notify(done);
         });
     });
 });
