@@ -218,7 +218,7 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.rejected
                 .then(function(response) {
                     expect(response).to.have.property('status', 400);
-                    expect(response).to.have.deep.property('data.error', 'invalid_aggregation');
+                    expect(response).to.have.deep.property('data.error', 'bad_request');
                 })
                 .should.notify(done);
         });
