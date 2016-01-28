@@ -9,20 +9,19 @@ describe('In IAM module', function() {
         });
 
         describe('while testing composite scope creation', function() {
-            compositeScope = {
-                id: 'compositeScopeTest_' + Date.now(),
-                type: 'composite_scope',
-                scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete', 'iam:user:me'],
-                audience : 'testAudience',
-                rules : [{ testRule: 'this is a rule' }]
-            };
-
+            
             after(function(done) {
                 corbelDriver.iam.scope(compositeScope.id).remove()
                     .should.be.eventually.fulfilled.and.notify(done);
             });
 
             it('a composite scope can be created', function(done){
+                compositeScope = {
+                    id: 'compositeScopeTest_' + Date.now(),
+                    type: 'composite_scope',
+                    scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete', 'iam:user:me']
+                };
+
                 corbelDriver.iam.scope().create(compositeScope)
                     .should.be.eventually.fulfilled
                     .then(function (id){
