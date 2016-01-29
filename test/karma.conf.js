@@ -38,7 +38,11 @@ module.exports = function(config) {
         ],
 
         // list of files / patterns to exclude
-        exclude: ['express/server.js', 'test/spec/private/utils/**/*.js'],
+        exclude: [
+            'express/server.js', 
+            'test/spec/private/utils/**/*.js', 
+            'test/spec/private/express/**/*.js'
+        ],
 
         // web server port
         port: 9080,
