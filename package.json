@@ -49,6 +49,7 @@
     "body-parser": "^1.14.2",
     "crypto-js": "^3.1.6",
     "epub-generator": "^1.0.1",
+    "glob": "^6.0.4",
     "express": "^4.13.3",
     "grunt-browserify": "^4.0.0",
     "imap": "0.8.16",

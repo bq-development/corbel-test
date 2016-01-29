@@ -40,7 +40,11 @@ module.exports = function(config) {
         ],
 
         // list of files / patterns to exclude
-        exclude: ['express/server.js', 'test/spec/private/utils/**/*.js', 'test/ports.conf.js'],
+        exclude: [
+            'express/server.js',
+            'test/spec/private/!(modules)/**/*.js',
+            'test/ports.conf.js'
+        ],
 
         // web server port
         port: PORTS.KARMA,
