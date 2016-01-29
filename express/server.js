@@ -1,32 +1,44 @@
 var express = require('express');
-var request = require('request');
+var fs = require('fs');
+var _ = require('lodash');
 
-var API_EMAIL_ENDPOINT = 'http://api.guerrillamail.com/ajax.php';
-var API_RANDOM_EMAIL_SUFFIX = 'f=get_email_address';
-var API_SET_EMAIL_SUFFIX = 'f=set_email_user';
-var API_CHECK_EMAIL_SUFFIX = 'f=check_email&seq=1';
-var API_GET_EMAIL_SUFFIX = 'f=fetch_email';
 // Set up the express server
 var app = express();
 
+//Middlewares
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
 
+//Routes initializations
 app.get('/', function(req, res) {
     res.send('Corbel-js express server');
 });
 
+//Corbel opensource services test
+var publicRoutes = [
+  './emails/random.js',
+  './emails/imap.js'
+];
+
+//Only available for non-opensource resources
+var privateRoutes = [
+  '../test/spec/private/express/cryptography/crypto.js'
+];
+
+function addToServer(path){
+  require(path)(app);
+}
+
+_.union(publicRoutes, privateRoutes)
+  .filter(fs.existsSync)
+  .forEach(addToServer);
+
+
 app.listen(process.env.PORT || 3000);
 console.log('server started');
 
-[
-  './emails/random.js',
-  './emails/imap.js'
-].forEach(function(routePath){
-    require(routePath)(app);
-});
 
 module.exports = app;
