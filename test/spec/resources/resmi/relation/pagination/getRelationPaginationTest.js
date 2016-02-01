@@ -44,7 +44,7 @@ describe('In RESOURCES module', function() {
         });
 
         it('elems on default page (0) are returned when getting a relation without pagination defined', function(done) {
-            
+
             corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
             .get(null)
             .should.be.eventually.fulfilled
@@ -54,7 +54,7 @@ describe('In RESOURCES module', function() {
             .should.notify(done);
         });
 
-        it('default page size number of elements on a page are returned', function(done) { 
+        it('default page size number of elements on a page are returned', function(done) {
             var params = {
                 pagination: {
                     page: 4
@@ -70,7 +70,7 @@ describe('In RESOURCES module', function() {
             .should.notify(done);
         });
 
-        it('correct number of elements on a page different from default size are returned', function(done) { 
+        it('correct number of elements on a page different from default size are returned', function(done) {
             var params = {
                 pagination: {
                     page: 5

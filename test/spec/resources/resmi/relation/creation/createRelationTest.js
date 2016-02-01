@@ -119,8 +119,8 @@ describe('In RESOURCES module', function() {
                     response.data.forEach(function(element, i) {
                         expect(element).to.have.property('id',idRelationArray[i]);
                     });
-                })                 
-                .should.notify(done);           
+                })
+                .should.notify(done);
             });
 
             it('a relation with extra fields can be created & collection resources are not changed', function(done) {
@@ -178,8 +178,8 @@ describe('In RESOURCES module', function() {
                         expect(element).to.not.contain.key('myextrafield');
                         expect(element).to.not.contain.key('secondField');
                     });
-                })            
-                .should.notify(done);           
+                })
+                .should.notify(done);
             });
 
             it('a relation with no extra fields can be created and updated with extra data', function(done) {
@@ -300,8 +300,8 @@ describe('In RESOURCES module', function() {
                 .then(function(response){
                     expect(response).to.have.property('data');
                     expect(response.data.size).to.be.equal(allResourcesFromCollectionB.size);
-                })                
-                .should.notify(done);           
+                })
+                .should.notify(done);
             });
 
             it('a relation with extra fields can be created & collection resources are not changed', function(done) {
@@ -342,8 +342,8 @@ describe('In RESOURCES module', function() {
                         expect(element).to.not.contain.key('myextrafield');
                         expect(element).to.not.contain.key('secondField');
                     });
-                })              
-                .should.notify(done);           
+                })
+                .should.notify(done);
             });
         });
     });
