@@ -6,6 +6,8 @@
 module.exports = function(config) {
     'use strict';
 
+    var PORTS = require('./ports.conf.js');
+
     config.set({
         // enable / disable watching file and executing tests whenever any file changes
         autoWatch: true,
@@ -41,7 +43,7 @@ module.exports = function(config) {
         exclude: ['express/server.js', 'test/spec/private/utils/**/*.js'],
 
         // web server port
-        port: 9080,
+        port: PORTS.KARMA,
 
         // Start these browsers, currently available:
         // - Chrome

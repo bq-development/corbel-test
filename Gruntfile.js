@@ -10,6 +10,7 @@ module.exports = function(grunt) {
 
     var _ = require('lodash');
     var PKG = require('./package.json');
+    var PORTS = require('./test/ports.conf.js');
     var CONFIG = PKG.config || {};
     CONFIG.src = CONFIG.src || 'src';
     CONFIG.tmp = CONFIG.tmp || '.tmp';
@@ -89,7 +90,7 @@ module.exports = function(grunt) {
             options: {
                 // Override defaults here
                 background: true,
-                port: 5454
+                port: PORTS.EXPRESS
             },
             dev: {
                 options: {
