@@ -1,5 +1,6 @@
 var express = require('express');
 var request = require('request');
+var ports = require('../test/ports.conf.js');
 
 var API_EMAIL_ENDPOINT = 'http://api.guerrillamail.com/ajax.php';
 var API_RANDOM_EMAIL_SUFFIX = 'f=get_email_address';
@@ -10,8 +11,9 @@ var API_GET_EMAIL_SUFFIX = 'f=fetch_email';
 var app = express();
 
 app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:'+ (process.env.PORT || 3000));
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
   next();
 });
 
@@ -24,7 +26,8 @@ console.log('server started');
 
 [
   './emails/random.js',
-  './emails/imap.js'
+  './emails/imap.js',
+  './requestinfo/requestinfo.js'
 ].forEach(function(routePath){
     require(routePath)(app);
 });
