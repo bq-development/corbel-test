@@ -11,7 +11,7 @@ var API_GET_EMAIL_SUFFIX = 'f=fetch_email';
 var app = express();
 
 app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:'+ (process.env.PORT || 3000));
+  res.header('Access-Control-Allow-Origin', 'http://localhost:'+ (ports.KARMA || 3000));
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   res.header('Access-Control-Allow-Credentials', 'true');
   next();
