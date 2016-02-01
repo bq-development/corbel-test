@@ -65,34 +65,34 @@ describe('In RESOURCES module', function() {
             var firstRelationObject, finalRelationObject;
 
             corbelDriver.resources.relation(COLLECTION_A, resourceIdA, COLLECTION_B)
-            .add(resourceIdB)
-            .should.be.eventually.fulfilled
-            .then(function(){
-                return corbelDriver.resources.relation(COLLECTION_A, resourceIdA, COLLECTION_B)
-                .get(resourceIdB)
-                .should.be.eventually.fulfilled;
-            })
-            .then(function(response){
-                firstRelationObject = response.data;
+                .add(resourceIdB)
+                .should.be.eventually.fulfilled
+                .then(function(){
+                    return corbelDriver.resources.relation(COLLECTION_A, resourceIdA, COLLECTION_B)
+                        .get(resourceIdB)
+                        .should.be.eventually.fulfilled;
+                })
+                .then(function(response){
+                    firstRelationObject = response.data;
 
-                return corbelDriver.resources.relation(COLLECTION_A, resourceIdA, COLLECTION_B)
-                .add(resourceIdB, 'malformed')
-                .should.be.eventually.rejected;
-            })
-            .then(function(e){
-                expect(e).to.have.property('status', 422);
-                expect(e).to.have.deep.property('data.error', 'invalid_entity');
+                    return corbelDriver.resources.relation(COLLECTION_A, resourceIdA, COLLECTION_B)
+                        .add(resourceIdB, 'malformed')
+                        .should.be.eventually.rejected;
+                })
+                .then(function(e){
+                    expect(e).to.have.property('status', 422);
+                    expect(e).to.have.deep.property('data.error', 'invalid_entity');
 
-                return corbelDriver.resources.relation(COLLECTION_A, resourceIdA, COLLECTION_B)
-                .get(resourceIdB)
-                .should.be.eventually.fulfilled;
-            })
-            .then(function(response){
-                var finalRelationObject = response.data;
+                    return corbelDriver.resources.relation(COLLECTION_A, resourceIdA, COLLECTION_B)
+                        .get(resourceIdB)
+                        .should.be.eventually.fulfilled;
+                })
+                .then(function(response){
+                    var finalRelationObject = response.data;
 
-                expect(firstRelationObject).to.be.deep.equal(finalRelationObject);
-            })
-            .should.notify(done);
+                    expect(firstRelationObject).to.be.deep.equal(finalRelationObject);
+                })
+                .should.notify(done);
         });
 
         it('an error [400] is returned while trying to relate non-existent collections', function(done){

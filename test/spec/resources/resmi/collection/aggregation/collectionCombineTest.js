@@ -24,6 +24,7 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled.and.notify(done);
         });
 
+
         it('the collection elements with new calculated field are retrieved', function(done) {
             var params = {
                 aggregation: {
@@ -150,6 +151,31 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
         });
 
+          it('elemens with the calculated field,if its part of the operation,is returned unchanged', function(done) {
+            var params = {
+                aggregation: {
+                    '$combine': {
+                        intField: 'intField * computableField'
+                    }
+                }
+            };
+
+            corbelDriver.resources.collection(COLLECTION)
+                .get(params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+
+                    response.data.forEach(function(element) {
+                        expect(element).to.have.property('intField');
+                        expect(element).to.have.property('computableField');
+                        var calculatedFieldValue = element.intField;
+                        expect(element).to.have.property('intField', calculatedFieldValue);
+                    });
+
+                })
+                .should.notify(done);
+        });
+
 
         it('elems ordered asc where intField is in [300, 500] are returned with a calculated field', function(done) {
             var params = {
@@ -246,8 +272,6 @@ describe('In RESOURCES module', function() {
                 })
                 .should.notify(done);
         });
-
-
 
     });
 

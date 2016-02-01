@@ -13,7 +13,7 @@ describe('In RESOURCES module ', function() {
 
             var calculeSum = function(data) {
                 var calculatedSum = data.reduce(function(sum, data) {
-                    return sum + data.intField; 
+                    return sum + data.intField;
                 }, 0);
 
                 return calculatedSum;
@@ -187,7 +187,7 @@ describe('In RESOURCES module ', function() {
                 .should.be.eventually.fulfilled
                 .then(function(response) {
                     totalSum = calculeSum(response.data);
-                
+
                     return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                     .get(null, params)
                     .should.be.eventually.fulfilled;
@@ -197,7 +197,7 @@ describe('In RESOURCES module ', function() {
                         .to.be.closeTo(totalSum / amount, 0.000000000001);
                 })
                 .should.notify(done);
-            }); 
+            });
 
             it('with sum aggregation, expected sum value is returned.', function(done) {
                 var params = {
@@ -213,7 +213,7 @@ describe('In RESOURCES module ', function() {
                 .should.be.eventually.fulfilled
                 .then(function(response) {
                     totalSum = calculeSum(response.data);
-                
+
                     return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                     .get(null, params)
                     .should.be.eventually.fulfilled;
@@ -224,20 +224,26 @@ describe('In RESOURCES module ', function() {
                 .should.notify(done);
             });
 
-            it('with sum aggregation applied on a non numeric field, 0 is returned.', function(done) {
+            it('in the sum aggregation case, if the field does not exist, null sum is returned', function(done) {
+
                 var params = {
                     aggregation: {
-                        '$sum': 'stringSortCut'
+                        '$sum': 'failField'
                     }
                 };
 
                 corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-                .get(null, params)
-                .should.be.eventually.fulfilled
-                .then(function(response) {
-                    expect(response).to.have.deep.property('data.sum', 0);
-                })
-                .should.notify(done);
+                    .get()
+                    .should.be.eventually.fulfilled
+                    .then(function() {
+                        return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                            .get(null, params)
+                            .should.be.eventually.fulfilled;
+                    })
+                    .then(function(response) {
+                        expect(response).to.have.deep.property('data.sum', null);
+                    })
+                    .should.notify(done);
             });
 
             it('in the min aggregation case, expected match element is returned.', function(done) {
