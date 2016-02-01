@@ -12,7 +12,7 @@ describe('In RESOURCES module', function() {
 
         before(function(done) {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
-            
+
             corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION_A, 1)
             .should.be.eventually.fulfilled
             .then(function(id) {
@@ -56,11 +56,13 @@ describe('In RESOURCES module', function() {
                 corbelTest.common.resources.getRelation(corbelDriver, COLLECTION_A,
                     idResourceInA, COLLECTION_B, params)
                 .then(function(response) {
-                    expect(response).to.have.deep.property('data.length', 1);
-                    expect(response).to.have.deep.property('data[0].id', COLLECTION_B + '/' +
-                        idsResourcesInB[amount - 1]);
+                    return response.data.forEach(function(element){
+                        element.ObjectNumber.forEach(function(dataElement,i){
+                            expect(dataElement).to.be.equals(i);
+                        });
+                    });
                 })
-                .should.notify(done);                
+                .should.notify(done);
             });
         });
     });

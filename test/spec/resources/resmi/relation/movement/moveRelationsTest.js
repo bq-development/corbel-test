@@ -51,7 +51,7 @@ describe('In RESOURCES module', function() {
 
             it('is moved one position', function(done) {
                 var idResource3;
-                
+
                 corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                 .get(null)
                 .should.be.eventually.fulfilled
@@ -112,7 +112,7 @@ describe('In RESOURCES module', function() {
                     expect(e).to.have.deep.property('data.error', 'bad_request');
                 })
                 .should.notify(done);
-            }); 
+            });
 
             it('move request returns a 400 error if position number is -1', function(done) {
                 var idResource;
@@ -132,7 +132,7 @@ describe('In RESOURCES module', function() {
                     expect(e).to.have.deep.property('data.error', 'bad_request');
                 })
                 .should.notify(done);
-            });  
+            });
 
             it('move request returns a 400 error if position number is a string', function(done) {
                 var idResource;
@@ -152,14 +152,14 @@ describe('In RESOURCES module', function() {
                     expect(e).to.have.deep.property('data.error', 'bad_request');
                 })
                 .should.notify(done);
-            });  
+            });
         });
 
         describe('a relation that has parameters', function() {
 
             it('is moved one position', function(done) {
                 var idResource3;
-                
+
                 corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                 .get(null, params)
                 .should.be.eventually.fulfilled
@@ -280,7 +280,7 @@ describe('In RESOURCES module', function() {
                     expect(e).to.have.deep.property('data.error', 'bad_request');
                 })
                 .should.notify(done);
-            });  
+            });
 
             it('move request returns a 400 error if position number is -1', function(done) {
                 var idResource;
@@ -302,7 +302,7 @@ describe('In RESOURCES module', function() {
                     expect(e).to.have.deep.property('data.error', 'bad_request');
                 })
                 .should.notify(done);
-            }); 
+            });
 
             it('move request returns a 400 error if position number is a string', function(done) {
                 var idResource;
@@ -327,7 +327,7 @@ describe('In RESOURCES module', function() {
             });
 
             it('move relation from the last position to specific postion over 200 times', function(done) {
-                
+
                 corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
                 .get(null, params)
                 .should.be.eventually.fulfilled

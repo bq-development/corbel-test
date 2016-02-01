@@ -5,7 +5,6 @@ describe('In RESOURCES module', function() {
         var COLLECTION_A = 'test:CorbelJSObjectQueryA' + Date.now();
         var COLLECTION_B = 'test:CorbelJSObjectQueryB' + Date.now();
         var amount = 10;
-        var count;
         var idResourceInA;
         var idsResourecesInB;
 
