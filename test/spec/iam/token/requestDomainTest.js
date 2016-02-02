@@ -16,8 +16,6 @@ describe('In IAM module when requests an access token', function() {
         driverRootClient = corbelTest.drivers['ROOT_CLIENT'].clone();
     });
 
-
-
     it('and the requested domain not exists, it fails returning error UNAUTHORIZED(401)', function(done) {
 
         var claims = {
