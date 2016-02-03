@@ -22,7 +22,7 @@ describe('In RESOURCES module', function() {
             beforeEach(function() {
                 FILENAME = 'RestorFileName' + Date.now();
 
-                cacheResourceName = FILENAME + '.' + FOLDER_NAME + '.' + IMAGE_OPS;
+                cacheResourceName = FOLDER_NAME + '.' + FILENAME + '.' + IMAGE_OPS;
                 customQueryParamsResourceObj = {
                     'resource:encoding': 'base64',
                     'resource:length': ((base64Image.length * 3 / 4) - base64Image.split('=').length + 1)
