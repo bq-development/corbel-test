@@ -1,5 +1,4 @@
 var express = require('express');
-var fs = require('fs');
 var bodyParser = require('body-parser');
 var _ = require('lodash');
 var glob = require('glob');
@@ -34,16 +33,14 @@ var publicRoutes = [
 ];
 
 //Only available for non-opensource resources
-var privateRoutes = glob.sync('../test/spec/private/express/**/*.js');
+var privateRoutes = glob.sync('../test/spec/private/**/*.express.js');
 
 function addToServer(path){
   require(path)(app);
 }
 
 _.union(publicRoutes, privateRoutes)
-  .filter(fs.existsSync)
   .forEach(addToServer);
-
 
 app.listen(process.env.PORT || 3000);
 console.log('server started');
