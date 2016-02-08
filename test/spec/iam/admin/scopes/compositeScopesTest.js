@@ -9,7 +9,7 @@ describe('In IAM module', function() {
         });
 
         describe('while testing composite scope creation', function() {
-            
+
             after(function(done) {
                 corbelDriver.iam.scope(compositeScope.id).remove()
                     .should.be.eventually.fulfilled.and.notify(done);
@@ -70,7 +70,8 @@ describe('In IAM module', function() {
             });
 
             it('a composite scope can be updated', function (done) {
-                compositeScope.rules.push({test : 'testRule'});
+                compositeScope.scopes = ['my:scope'+Date.now()];
+
 
                 corbelDriver.iam.scope().create(compositeScope)
                     .should.be.eventually.fulfilled
@@ -81,7 +82,7 @@ describe('In IAM module', function() {
                                 .should.be.eventually.fulfilled;
                     }).then(function(response){
                         expect(response).to.have.deep.property('data.id', compositeScope.id);
-                        expect(compositeScope.rules).to.contains({test : 'testRule'});
+                        expect(response.data.scopes).to.include.members(compositeScope.scopes);
                     })
                     .should.notify(done);
             });
