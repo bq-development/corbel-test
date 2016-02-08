@@ -1,6 +1,6 @@
 describe('In RESOURCES module', function() {
 
-    describe('in RESMI module', function() {
+    describe('In RESMI module', function() {
         var corbelDriver;
         var COLLECTION = 'test:searchableCollection';
         var MAX_RETRY = 30;
@@ -170,7 +170,7 @@ describe('In RESOURCES module', function() {
                     }
                 };
                 var timeout = 5000;
-                
+
                 setTimeout(function(){
                     corbelTest.common.utils.retry(function() {
                         return corbelDriver.resources.collection(COLLECTION)
@@ -192,11 +192,11 @@ describe('In RESOURCES module', function() {
                 var params = {
                     search: 'test' + random,
                     pagination: {
-                        pageSize: 2 
+                        pageSize: 2
                     }
                 };
                 var timeout = 5000;
-                
+
                 setTimeout(function(){
                     corbelTest.common.utils.retry(function() {
                         return corbelDriver.resources.collection(COLLECTION)
@@ -226,7 +226,7 @@ describe('In RESOURCES module', function() {
                         unexistent: 'asc'
                     }
                 };
-                
+
                 corbelTest.common.utils.retry(function() {
                     return corbelDriver.resources.collection(COLLECTION)
                     .get(params)

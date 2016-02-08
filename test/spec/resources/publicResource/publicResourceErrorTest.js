@@ -1,4 +1,4 @@
-describe('In RESOURCES module, while using public public resources', function() {
+describe('In RESOURCES module, while using public resources', function() {
     var corbelRootDriver;
     var corbelDriver;
     var domainId;

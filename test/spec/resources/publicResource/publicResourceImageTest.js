@@ -1,4 +1,4 @@
-describe('In RESOURCES module', function() {
+describe('In RESOURCES module, while using public resources', function() {
     var corbelRootDriver;
     var corbelDriver;
 
@@ -10,7 +10,7 @@ describe('In RESOURCES module', function() {
     var TEST_IMAGE_SIZE = 158;
     var TEST_IMAGE = 'R0lGODlhAwADAPMAAP8AAAAAf///AGZmZgD/AH8AAAD///8A/wAA/wAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
     'CH5BAAAAAAAIf8LSW1hZ2VNYWdpY2sHZ2FtbWE9MAAsAAAAAAMAAwAABAcQBDFIMQdFADs=';
-    
+
     describe('when retrieving a public image', function(){
         before(function(done) {
             var domain;

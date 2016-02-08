@@ -1,6 +1,6 @@
 describe('In RESOURCES module', function() {
 
-    describe('In RESMI module using combine operation', function() {
+    describe('In RESMI module, using combine operation', function() {
 
         var COLLECTION = 'test:CombineCollection' + Date.now();
         var corbelDriver;
