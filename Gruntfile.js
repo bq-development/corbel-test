@@ -77,13 +77,20 @@ module.exports = function(grunt) {
                 }
             },
             unit: {
-                singleRun: true
+                singleRun: true,
+                browsers: [
+                    'PhantomJS'
+                ]
             },
             serve: {
                 singleRun: false,
-                browsers: [
-                    'Chrome'
-                ]
+                reporters: ['mocha'],
+                background: true,
+                client: {
+                    mocha: {
+                        reporter: 'html'
+                    }
+                }
             }
         },
         express: {
@@ -103,7 +110,26 @@ module.exports = function(grunt) {
             options: {
                 hideUpToDate: true
             }
-        }
+        },
+        waitServer: {
+            server: {
+                options: {
+                    req: 'http://localhost:' + PORTS.KARMA,
+                    fail: function() {
+                        console.error('the server had not start');
+                    },
+                    timeout: 20 * 1000,
+                    isforce: true,
+                    interval: 200,
+                    print: false
+                }
+            },
+        },
+        open: {
+            test: {
+                path: 'http://localhost:' + PORTS.KARMA + '/debug.html'
+            }
+        },
 
     });
 
@@ -127,7 +153,10 @@ module.exports = function(grunt) {
 
     grunt.registerTask('serve:test', '', [
         'common',
-        'karma:serve'
+        'karma:serve',
+        'waitServer',
+        'open:test',
+        'watch'
     ]);
     // deprecated
     grunt.registerTask('server:test', function() {

@@ -16,7 +16,7 @@ module.exports = function(config) {
         basePath: '../',
 
         // testing framework to use (jasmine/mocha/qunit/...)
-        frameworks: ['mocha-debug', 'mocha', 'chai', 'chai-as-promised', 'sinon'],
+        frameworks: ['mocha', 'chai', 'chai-as-promised', 'sinon'],
 
         // list of files / patterns to load in the browser
         files: [
@@ -49,28 +49,10 @@ module.exports = function(config) {
         // web server port
         port: PORTS.KARMA,
 
-        // Start these browsers, currently available:
-        // - Chrome
-        // - ChromeCanary
-        // - Firefox
-        // - Opera
-        // - Safari (only Mac)
-        // - PhantomJS
-        // - IE (only Windows)
-        browsers: [
-            'PhantomJS'
-        ],
 
         // Which plugins to enable
         plugins: [
-            'karma-phantomjs-launcher',
-            'karma-chrome-launcher',
-            'karma-mocha',
-            'karma-mocha-debug',
-            'karma-mocha-reporter',
-            'karma-chai-plugins',
-            'karma-sinon',
-            'karma-tap-reporter'
+            'karma-*'
         ],
         phantomjsLauncher: {
             flags: [
@@ -87,12 +69,7 @@ module.exports = function(config) {
 
         browserNoActivityTimeout: 95000,
 
-        client: {
-            captureConsole: true,
-            mocha: {
-                reporter: 'html' // change Karma's debug.html to the mocha web reporter
-            }
-        },
+
 
         // test results reporter to use
         // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
