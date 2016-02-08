@@ -1,4 +1,4 @@
-describe('In CorbelJS module', function(){
+describe('In CORBELJS module', function(){
 
     var corbelDriver;
     var COLLECTION = 'test:largeRequest    ';
