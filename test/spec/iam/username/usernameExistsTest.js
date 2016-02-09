@@ -51,7 +51,7 @@ describe('In IAM module, testing username endpoint ', function() {
         });
     });
 
-    describe('in checking username\'s availability', function () {
+    describe('in checking username availability', function () {
         it('should return false if the username is in use', function(done) {
             corbelDriver.iam.username()
             .availability(username)
@@ -62,19 +62,14 @@ describe('In IAM module, testing username endpoint ', function() {
             .should.notify(done);
         });
 
-        //TODO FIX TEST PHANTOMJS
-        if (window.chrome) {
-            it('should return true if the username is not in use', function(done) {
-                corbelDriver.iam.username()
-                .availability('test' + username)
-                .should.be.eventually.fulfilled
-                .then(function(availability) {
-                    expect(availability).to.be.equals(true);
-                })
-                .should.notify(done);
-            });
-        } else {
-            it.skip('should return false (PHANTOM HEAD PROBLEM) if the username is in use', function() {});
-        }
+        it('should return true if the username is not in use', function(done) {
+            corbelDriver.iam.username()
+            .availability('test' + username)
+            .should.be.eventually.fulfilled
+            .then(function(availability) {
+                expect(availability).to.be.equals(true);
+            })
+            .should.notify(done);
+        });
     });
 });

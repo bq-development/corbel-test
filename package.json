@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "description": "corbel-platform test suite",
   "authors": [
-    "bq"
+    "BQ <dev@corbel.io>",
+    "corbel-team <corbel-dev@bq.com>",
+    "Devialab <dev@devialab.com"
   ],
   "repository": {
     "type": "git",
@@ -14,14 +16,14 @@
     "start": "grunt server:test"
   },
   "engines": {
-    "node": "~0.12.0"
+    "node": "~4.2.3"
   },
   "devDependencies": {
     "chai": "^3.0.0",
     "corbel-js": "^0.3.6",
     "grunt": "^0.4.5",
     "grunt-contrib-clean": "^0.7.0",
-    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-contrib-jshint": "0.12.0",
     "grunt-express-server": "^0.5.1",
     "grunt-karma": "^0.12.1",
     "grunt-version-check": "^0.3.2",
@@ -33,7 +35,7 @@
     "karma-mocha-reporter": "^1.0.2",
     "karma-phantomjs-launcher": "^1.0.0",
     "grunt-open": "^0.2.3",
-    "grunt-contrib-watch": "^0.5.3",
+    "grunt-contrib-watch": "0.6.1",
     "grunt-wait-server" : "^0.2.1",
     "karma-sinon": "^1.0.4",
     "karma-tap-reporter": "0.0.6",
@@ -55,7 +57,7 @@
     "grunt-browserify": "^4.0.0",
     "imap": "0.8.16",
     "lodash": "^3.10.1",
-    "mailparser": "0.4.1",
+    "mailparser": "0.5.3",
     "request": "^2.65.0"
   }
 }
