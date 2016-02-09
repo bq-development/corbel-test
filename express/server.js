@@ -13,8 +13,9 @@ app.use(bodyParser.json());
 
 //Middlewares
 app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:'+ (ports.KARMA || 3000));
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:'+ (ports.KARMA || 3000));
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, ' +
+      'Set-Cookie');
   res.header('Access-Control-Allow-Credentials', 'true');
   next();
 });
