@@ -21,6 +21,11 @@ describe('In ASSETS module', function() {
             return Date.now() + 100000;
         };
 
+        var createAssetForUser = function(driver, asset) {
+            return userCorbelDriver.assets.asset().create(asset)
+            .should.be.eventually.fulfilled;
+        };
+
         var createAssetForUserAndLoginUser = function(driver, asset) {
             return corbelTest.common.iam.createUsers(clientCorbelDriver, 1)
             .should.be.eventually.fulfilled
@@ -35,11 +40,6 @@ describe('In ASSETS module', function() {
                 return corbelTest.common.clients.loginUser( clientCorbelDriver, user.username, user.password)
                 .should.be.eventually.fulfilled;
             });
-        };
-
-        var createAssetForUser = function(driver, asset) {
-            return userCorbelDriver.assets.asset().create(asset)
-            .should.be.eventually.fulfilled;
         };
 
         describe('when setting wrong custom parameters', function() {
