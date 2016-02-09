@@ -57,18 +57,14 @@ describe('In IAM module', function() {
                 .should.notify(done);
             });
 
-            if (window.chrome) {
-                it('true should be returned if the email is not being used', function(done) {
-                    corbelDriver.iam.email()
-                        .availability(Date.now())
-                    .then(function(availability) {
-                        expect(availability).to.be.equals(true);
-                    })
-                    .should.notify(done);
-                });
-            } else {
-                it.skip('should return false (PHANTOM HEAD PROBLEM) if the email is in use', function() {});
-            }
+            it('true should be returned if the email is not being used', function(done) {
+                corbelDriver.iam.email()
+                    .availability(Date.now())
+                .then(function(availability) {
+                    expect(availability).to.be.equals(true);
+                })
+                .should.notify(done);
+            });
         });
     });
 });
