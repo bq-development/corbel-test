@@ -41,6 +41,7 @@ describe('In RESOURCES module', function() {
             var cleanUpResponseData = function(data){
                 data.forEach(function(entry) {
                     delete entry.links;
+                    delete entry._src_id;
                     delete entry._createdAt;
                     delete entry._order;
                     delete entry._updatedAt;
@@ -62,6 +63,10 @@ describe('In RESOURCES module', function() {
                     .should.be.eventually.fulfilled;       
                 })
                 .then(function() {
+                    delete object1['notIndexedField'];
+                    delete object2['notIndexedField'];
+                    delete object3['notIndexedField'];
+
                     object1.id = COLLECTION_B + '/' + random + '1';
                     object2.id = COLLECTION_B + '/' + random + '2';
                     object3.id = COLLECTION_B + '/' + random + '3';
@@ -110,7 +115,7 @@ describe('In RESOURCES module', function() {
             });
 
             it('correct elements are returned querying for an incomplete string', function(done) {
-                var incompleteChain = 'reso'; //incomplete chain "resource"
+                var incompleteChain = 'reso';
                 var params = {
                     search: incompleteChain,
                     indexFieldsOnly: true
