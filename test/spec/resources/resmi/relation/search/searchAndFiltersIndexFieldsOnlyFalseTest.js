@@ -18,21 +18,21 @@ describe('In RESOURCES module', function() {
             var object1 = {
                 field1: 'Test' + random,
                 description: 'And this is the first resource',
-                sortField: 10
+                sortIntegerField: 10
             };
             
             var object2 = {
                 field2: 'tEst' + random,
                 description: 'And this is the second resource',
                 punctuationTest: specialCharacters + random,
-                sortField: 9
+                sortIntegerField: 9
             };
             
             var object3 = {
                 field3: 'teSt' + random,
                 description: 'And this is the third resource',
                 punctuationTest: punctText + random,
-                sortField: 6
+                sortIntegerField: 6
             };
 
             before(function(done) {
@@ -67,7 +67,7 @@ describe('In RESOURCES module', function() {
                 var params = {
                     search: 'test' + random,
                     sort: {
-                        sortField: 'asc'
+                        sortIntegerField: 'asc'
                     },
                     indexFieldsOnly: false
                 };
@@ -81,9 +81,9 @@ describe('In RESOURCES module', function() {
                     .should.be.eventually.fulfilled
                     .then(function(response) {
                         expect(response).to.have.deep.property('data.length', 3);
-                        expect(response).to.have.deep.property('data[0].sortField', 6);
-                        expect(response).to.have.deep.property('data[1].sortField', 9);
-                        expect(response).to.have.deep.property('data[2].sortField', 10);
+                        expect(response).to.have.deep.property('data[0].sortIntegerField', 6);
+                        expect(response).to.have.deep.property('data[1].sortIntegerField', 9);
+                        expect(response).to.have.deep.property('data[2].sortIntegerField', 10);
                     })
                     .should.notify(done);
                 },timeout);
@@ -117,7 +117,7 @@ describe('In RESOURCES module', function() {
                     search: 'test' + random,
                     query: [{
                         '$gt': {
-                            sortField: 9
+                            sortIntegerField: 9
                         }
                     }],
                     indexFieldsOnly: false
@@ -132,7 +132,7 @@ describe('In RESOURCES module', function() {
                     .should.be.eventually.fulfilled
                     .then(function(response) {
                         expect(response).to.have.deep.property('data.length', 1);
-                        expect(response).to.have.deep.property('data[0].sortField').and.to.be.above(9);
+                        expect(response).to.have.deep.property('data[0].sortIntegerField').and.to.be.above(9);
                     })
                     .should.notify(done);
                 },timeout);
@@ -143,7 +143,7 @@ describe('In RESOURCES module', function() {
                     search: 'test' + random,
                     query: [{
                         '$gte': {
-                            sortField: 9
+                            sortIntegerField: 9
                         }
                     }],
                     indexFieldsOnly: false
@@ -160,7 +160,7 @@ describe('In RESOURCES module', function() {
                         expect(response).to.have.deep.property('data.length', 2);
 
                         response.data.forEach(function(element) {
-                            expect(element).to.have.deep.property('sortField').and.to.be.at.least(9);
+                            expect(element).to.have.deep.property('sortIntegerField').and.to.be.at.least(9);
                         });
                     })
                     .should.notify(done);
@@ -172,7 +172,7 @@ describe('In RESOURCES module', function() {
                     search: 'test' + random,
                     query: [{
                         '$lt': {
-                            sortField: 9
+                            sortIntegerField: 9
                         }
                     }],
                     indexFieldsOnly: false
@@ -187,7 +187,7 @@ describe('In RESOURCES module', function() {
                     .should.be.eventually.fulfilled
                     .then(function(response) {
                         expect(response).to.have.deep.property('data.length', 1);
-                        expect(response).to.have.deep.property('data[0].sortField').and.to.be.below(9);
+                        expect(response).to.have.deep.property('data[0].sortIntegerField').and.to.be.below(9);
                     })
                     .should.notify(done);
                 },timeout);
@@ -198,7 +198,7 @@ describe('In RESOURCES module', function() {
                     search: 'test' + random,
                     query: [{
                         '$lte': {
-                            sortField: 9
+                            sortIntegerField: 9
                         }
                     }],
                     indexFieldsOnly: false
@@ -215,7 +215,7 @@ describe('In RESOURCES module', function() {
                         expect(response).to.have.deep.property('data.length', 2);
 
                         response.data.forEach(function(element) {
-                            expect(element).to.have.deep.property('sortField').and.to.be.below(10);
+                            expect(element).to.have.deep.property('sortIntegerField').and.to.be.below(10);
                         });
                     })
                     .should.notify(done);
@@ -227,7 +227,7 @@ describe('In RESOURCES module', function() {
                     search: 'Test' + random,
                     query: [{
                         '$eq': {
-                            sortField: '6'
+                            sortIntegerField: '6'
                         }
                     }],
                     indexFieldsOnly: false
@@ -242,7 +242,7 @@ describe('In RESOURCES module', function() {
                     .should.be.eventually.fulfilled
                     .then(function(response) {
                         expect(response).to.have.deep.property('data.length', 1);
-                        expect(response).to.have.deep.property('data[0].description', 'And this is the first resource');
+                        expect(response).to.have.deep.property('data[0].description', 'And this is the third resource');
                     })
                     .should.notify(done);
                 },timeout);
@@ -253,7 +253,7 @@ describe('In RESOURCES module', function() {
                     search: 'test' + random,
                     query: [{
                         '$ne': {
-                            sortField: '6'
+                            sortIntegerField: '6'
                         }
                     }],
                     indexFieldsOnly: false
@@ -271,7 +271,7 @@ describe('In RESOURCES module', function() {
 
                         response.data.forEach(function(element) {
                             expect(element).to.have.deep.property('description')
-                            .and.not.equal('And this is the first resource');
+                            .and.not.equal('And this is the third resource');
                         });
 
                         
@@ -312,7 +312,7 @@ describe('In RESOURCES module', function() {
                     search: 'test' + random,
                     query: [{
                         '$in': {
-                            sortField: [9]
+                            sortIntegerField: [9]
                         }
                     }],
                     indexFieldsOnly: false
@@ -327,7 +327,7 @@ describe('In RESOURCES module', function() {
                     .should.be.eventually.fulfilled
                     .then(function(response) {
                         expect(response).to.have.deep.property('data.length', 1);
-                        expect(response).to.have.deep.property('data[0].sortField', 9);
+                        expect(response).to.have.deep.property('data[0].sortIntegerField', 9);
                     })
                     .should.notify(done);
                 },timeout);
@@ -338,7 +338,7 @@ describe('In RESOURCES module', function() {
                     search: 'test' + random,
                     query: [{
                         '$nin': {
-                            sortField: [9, 10]
+                            sortIntegerField: [9, 10]
                         }
                     }],
                     indexFieldsOnly: false
@@ -353,7 +353,7 @@ describe('In RESOURCES module', function() {
                     .should.be.eventually.fulfilled
                     .then(function(response) {
                         expect(response).to.have.deep.property('data.length', 1);
-                        expect(response).to.have.deep.property('data[0].sortField', 6);
+                        expect(response).to.have.deep.property('data[0].sortIntegerField', 6);
                     })
                     .should.notify(done);
                 },timeout);

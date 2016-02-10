@@ -1,3 +1,4 @@
+/* jshint camelcase:false */
 describe('In RESOURCES module', function() {
     this.timeout(90000);
 
@@ -38,6 +39,7 @@ describe('In RESOURCES module', function() {
             var cleanUpResponseData = function(data){
                 data.forEach(function(entry) {
                     delete entry.links;
+                    delete entry._src_id;
                     delete entry._createdAt;
                     delete entry._order;
                     delete entry._updatedAt;
@@ -97,7 +99,7 @@ describe('In RESOURCES module', function() {
                     .get(null, params)
                     .then(function(response) {
                         if (response.data.length !== 3) {
-                            return q.reject();
+                            return Promise.reject();
                         } else {
                             return response;
                         }
@@ -116,10 +118,9 @@ describe('In RESOURCES module', function() {
             });
 
             it('correct elements are returned querying for an incomplete string', function(done) {
-                var incompleteChain = 'reso'; //incomplete chain "resource"
+                var incompleteChain = 'reso';
                 var params = {
                     search: incompleteChain,
-                    indexFieldsOnly: false
                 };
 
                 corbelTest.common.utils.retry(function() {
@@ -127,7 +128,7 @@ describe('In RESOURCES module', function() {
                     .get(null, params)
                     .then(function(response) {
                         if (response.data.length === 0) {
-                            return q.reject();
+                            return Promise.reject();
                         } else {
                             return response;
                         }
@@ -210,7 +211,7 @@ describe('In RESOURCES module', function() {
                     .get(null, params)
                     .then(function(response) {
                         if (response.data.length !== 3) {
-                            return q.reject();
+                            return Promise.reject();
                         } else {
                             return response;
                         }

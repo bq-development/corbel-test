@@ -1,6 +1,6 @@
 describe('In RESOURCES module', function() {
 
-    describe('In RESMI module, testing search', function() {
+    describe('In RESMI module, when testing search over collections', function() {
         var corbelDriver;
         var COLLECTION = 'test:searchableCollection';
         var MAX_RETRY = 30;
@@ -10,9 +10,7 @@ describe('In RESOURCES module', function() {
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
         });
 
-        it('CRUD in collection update search index and' +
-            ' returns elements satisfying the chain of search',
-            function(done) {
+        it('a search retrieves expected results after a collection gets updated', function(done) {
                 var createdResourceId;
                 var random = Date.now();
 
@@ -32,7 +30,7 @@ describe('In RESOURCES module', function() {
                         .get(params)
                         .then(function(response) {
                             if (response.data.length !== 1) {
-                                return q.reject();
+                                return Promise.reject();
                             } else {
                                 return response;
                             }
@@ -52,7 +50,7 @@ describe('In RESOURCES module', function() {
                 })
                 .then(function() {
                     var params = {
-                        search: 'Test' + random
+                        search: 'othertest' + random
                     };
 
                     return corbelTest.common.utils.retry(function() {
@@ -60,7 +58,7 @@ describe('In RESOURCES module', function() {
                             .get(params)
                             .then(function(response) {
                                 if (response.data.length !== 1) {
-                                    return q.reject();
+                                    return Promise.reject();
                                 } else {
                                     return response;
                                 }
@@ -69,7 +67,7 @@ describe('In RESOURCES module', function() {
                     .should.eventually.be.fulfilled;
                 })
                 .then(function(response) {
-                    expect(response.data[0]).to.have.property('field1').to.be.equal('Test' + random);
+                    expect(response.data[0]).to.have.property('field1').to.be.equal('OtherTest' + random);
                     expect(response.data[0]).to.have.property('id').to.be.equal(createdResourceId);
 
                     return corbelDriver.resources.resource(COLLECTION, createdResourceId)
@@ -81,9 +79,18 @@ describe('In RESOURCES module', function() {
                         search: 'othertest' + random
                     };
 
-                    return corbelDriver.resources.collection(COLLECTION)
-                    .get(params)
-                    .should.be.eventually.fulfilled;
+                    return corbelTest.common.utils.retry(function() {
+                        return corbelDriver.resources.collection(COLLECTION)
+                        .get(params)
+                        .then(function(response) {
+                            if (response.data.length !== 0) {
+                                return Promise.reject();
+                            } else {
+                                return response;
+                            }
+                        });
+                    }, MAX_RETRY, RETRY_PERIOD)
+                    .should.eventually.be.fulfilled;
                 })
                 .then(function(response) {
                     expect(response.data.length).to.be.equal(0);
