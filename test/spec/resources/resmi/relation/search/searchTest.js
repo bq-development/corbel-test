@@ -1,3 +1,4 @@
+/* jshint camelcase:false */
 describe('In RESOURCES module', function() {
     this.timeout(90000);
 
@@ -62,7 +63,8 @@ describe('In RESOURCES module', function() {
 
             it('successes returning elements satisfying the chain of search', function(done) {
                 var params = {
-                    search: 'test' + random
+                    search: 'test' + random,
+                    indexFieldsOnly: true
                 };
 
                 return corbelTest.common.utils.retry(function() {
@@ -70,7 +72,7 @@ describe('In RESOURCES module', function() {
                             .get(null, params)
                             .then(function(response) {
                                 if (response.data.length !== 3) {
-                                    return q.reject();
+                                    return Promise.reject();
                                 } else {
                                     return response;
                                 }
@@ -81,8 +83,9 @@ describe('In RESOURCES module', function() {
                         expect(response.data.length).to.be.equal(3);
                         response.data.forEach(function(entry) {
                             delete entry.links;
+                            delete entry._src_id;
                         });
-                        expect(response.data).to.include({
+                        expect(response).to.have.property('data').and.to.include({
                             'id': COLLECTION_B + '/' + random + '1',
                             field1: 'Test' + random,
                             description: 'And this is the first resource'
@@ -94,6 +97,7 @@ describe('In RESOURCES module', function() {
                         });
                         expect(response.data).to.include({
                             'id': COLLECTION_B + '/' + random + '3',
+                            field2: 'test' + random,
                             field3: 'teSt' + random,
                             description: 'And this is the third resource'
                         });
