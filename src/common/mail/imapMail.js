@@ -1,15 +1,17 @@
 'use strict';
 
+var PORTS = require('../../../test/ports.conf.js');
+
 function getMail(email, password, host) {
     var xhttp = new XMLHttpRequest();
-    var url = 'http://' + window.location.host.split(':')[0] + ':5454/imap/lastemails?username=' +
+    var url = 'http://' + window.location.host.split(':')[0] + ':' + PORTS.EXPRESS + '/imap/lastemails?username=' +
         email + '&password=' + password + '&host=' + host + '&emailsToRead=20&hash='+Date.now();
 
     return new Promise(function(resolve, reject){
         xhttp.onreadystatechange = function() {
             if (xhttp.readyState === 4 && xhttp.status === 200) {
                 resolve(JSON.parse(xhttp.responseText));
-            } 
+            }
         };
 
         xhttp.open('GET', url, true);
