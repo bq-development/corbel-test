@@ -37,7 +37,7 @@ describe('In RESOURCES module', function() {
             });
         };
 
-        it('should make an entire flow for a file in RESTOR in octet-stream sending a binary array', function(done) {
+        it.only('should make an entire flow for a file in RESTOR in octet-stream sending a binary array', function(done) {
             var fileName = 'RestorFileName' + Date.now();
             var fileContent = 'this Is My binary fileee!!! ññáaäéó' + Date.now();
             var byteContent = [];
