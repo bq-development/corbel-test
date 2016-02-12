@@ -6,3 +6,4 @@ bower_components
 .corbeltest
 .report
 .idea/
+test/spec/private
