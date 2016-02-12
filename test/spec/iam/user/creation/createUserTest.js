@@ -6,9 +6,18 @@ describe('In IAM module', function() {
         var random;
         var emailDomain = '@funkifake.com';
         var user;
+        var domainId = corbelTest.CONFIG.DOMAIN;
+        var domainDefaultScopes;
 
-        before(function() {
-            corbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
+        before(function(done) {
+            corbelDriver = corbelTest.drivers['ADMIN_USER'].clone();      
+            corbelTest.drivers['ROOT_CLIENT'].clone()
+                .iam.domain(domainId)
+                .get()
+                .then(function(domain){
+                    domainDefaultScopes = domain.data.defaultScopes;
+                })
+                .should.notify(done);
         });
 
         beforeEach(function() {
@@ -16,8 +25,7 @@ describe('In IAM module', function() {
             user = {
                 'firstName': 'createUserIam' + random,
                 'email': 'createUserIam.iam.' + random + emailDomain,
-                'username': 'createUserIam.iam.' + random + emailDomain,
-                'scopes': ['iam:user:create', 'resources:music:read_catalog']
+                'username': 'createUserIam.iam.' + random + emailDomain
             };
         });
 
@@ -44,7 +52,6 @@ describe('In IAM module', function() {
         };
 
         it('basic user is created', function(done) {
-
             createUser(user)
             .then(function(id) {
                 userId = id;
@@ -68,6 +75,24 @@ describe('In IAM module', function() {
             })
             .then(function(response) {
                 expect(response).to.have.deep.property('data.username', user.username);
+                expect(response.data.scopes).to.eql(domainDefaultScopes);
+            })
+            .should.notify(done);
+        });
+
+        it('user is created and ignore scopes', function(done) {
+            user.scopes = ['testScope'];
+            createUser(user)
+            .then(function(id) {
+                userId = id;
+                expect(userId).not.to.be.equal(undefined);
+
+                return corbelDriver.iam.user(userId)
+                    .get()
+                    .should.be.eventually.fulfilled;
+            })
+            .then(function(response) {
+                expect(response.data.scopes).to.eql(domainDefaultScopes);
             })
             .should.notify(done);
         });
@@ -94,7 +119,7 @@ describe('In IAM module', function() {
             })
             .then(function(id) {
                 deviceId = id;
-                expect(deviceId).not.to.be.equal(undefined);
+                expect(deviceId).not.to.be.equal(undefined);                
             })
             .should.notify(done);
         });
@@ -147,7 +172,7 @@ describe('In IAM module', function() {
         });
 
         it('basic user is created with differences between email and username', function(done) {
-            user.username = 'differentUsername' +random;
+            user.username = 'differentUsername' + random;
 
             createUser(user)
             .then(function(id) {
