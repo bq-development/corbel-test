@@ -1,5 +1,5 @@
 describe('In IAM module', function() {
-    
+
     describe('while testing create user', function() {
         var corbelDriver;
         var userId;
@@ -101,19 +101,6 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('an error [403] is returned while trying to create an user with invalid scopes entity', function(done) {
-            user.scopes = ['iam:user:xxx', 'resources:music:streaming'];
-
-            corbelDriver.iam.users()
-            .create(user)
-            .should.eventually.be.rejected
-            .then(function(e) {
-                expect(e).to.have.property('status', 403);
-                expect(e).to.have.deep.property('data.error', 'scopes_not_allowed');
-            })
-            .should.notify(done);
-        });
-
         it('an error is returned while trying to create an user with an identity that already exists', function(done) {
             user.identity = {
                     'oauthService': 'silkroad',
@@ -153,7 +140,7 @@ describe('In IAM module', function() {
                   expect(e).to.have.property('status', 400);
                   expect(e).to.have.deep.property('data.error', 'invalid_oauth_service');
             })
-            .should.notify(done); 
+            .should.notify(done);
         });
     });
 });

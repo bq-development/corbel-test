@@ -16,8 +16,7 @@ describe('In IAM module', function() {
             user = {
                 'firstName': 'createUserIam' + random,
                 'email': 'createUserIam.iam.' + random + emailDomain,
-                'username': 'createUserIam.iam.' + random + emailDomain,
-                'scopes': ['iam:user:create', 'resources:music:read_catalog']
+                'username': 'createUserIam.iam.' + random + emailDomain
             };
         });
 
@@ -68,6 +67,23 @@ describe('In IAM module', function() {
             })
             .then(function(response) {
                 expect(response).to.have.deep.property('data.username', user.username);
+            })
+            .should.notify(done);
+        });
+
+        it('user is created and ignore scopes', function(done) {
+            user.scopes = ['testScope'];
+            createUser(user)
+            .then(function(id) {
+                userId = id;
+                expect(userId).not.to.be.equal(undefined);
+
+                return corbelDriver.iam.user(userId)
+                    .get()
+                .should.be.eventually.fulfilled;
+            })
+            .then(function(response) {
+                expect(response).to.have.deep.property('data.scopes.0', 'silkroad-qa:user');
             })
             .should.notify(done);
         });
