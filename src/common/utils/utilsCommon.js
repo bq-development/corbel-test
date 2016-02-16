@@ -88,7 +88,7 @@ function getTokenInfo(driver) {
 }
 
 function removeBreaksFromString(string) {
-    return string.replace(/(\r\n|\n|\r)/gm,'').trim();
+    return string.replace(/(\r\n|\n|\r)/gm, '').trim();
 }
 
 function arrayBufferToBase64( buffer ) {
@@ -101,6 +101,12 @@ function arrayBufferToBase64( buffer ) {
     return window.btoa(binary);
 }
 
+function expectFieldsToBeEquals(fields, object1, object2) {
+    fields.forEach(function(field) {
+        expect(object1[field]).to.be.equals(object2[field]);
+    });
+}
+
 module.exports = {
     waitFor: waitFor,
     retry: retry,
@@ -110,5 +116,6 @@ module.exports = {
     replaceUriForProxyUse: replaceUriForProxyUse,
     getTokenInfo: getTokenInfo,
     removeBreaksFromString: removeBreaksFromString,
-    arrayBufferToBase64: arrayBufferToBase64
+    arrayBufferToBase64: arrayBufferToBase64,
+    expectFieldsToBeEquals: expectFieldsToBeEquals
 };
