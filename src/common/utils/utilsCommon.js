@@ -88,8 +88,15 @@ function getTokenInfo(driver) {
 }
 
 function removeBreaksFromString(string) {
-    return string.replace(/(\r\n|\n|\r)/gm,'').trim();
+    return string.replace(/(\r\n|\n|\r)/gm, '').trim();
 }
+
+function expectFieldsToBeEquals(fields, object1, object2) {
+    fields.forEach(function(field) {
+        expect(object1[field]).to.be.equals(object2[field]);
+    });
+}
+
 
 module.exports = {
     waitFor: waitFor,
@@ -99,5 +106,6 @@ module.exports = {
     joinObjects: joinObjects,
     replaceUriForProxyUse: replaceUriForProxyUse,
     getTokenInfo: getTokenInfo,
-    removeBreaksFromString: removeBreaksFromString
+    removeBreaksFromString: removeBreaksFromString,
+    expectFieldsToBeEquals: expectFieldsToBeEquals
 };
