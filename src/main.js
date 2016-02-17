@@ -9,7 +9,7 @@ var sidebar = new Sidebar(localConfig);
 
 var corbelTest = {};
 
-var initEnvironment = function(config, process, karma, local) {    
+var initEnvironment = function(config, process, karma, local) { 
     if (karma.config.env && karma.config.env !== undefined) {
         return karma.config.env;
     } else if (local.getEnvironment() !== undefined) {
@@ -36,8 +36,8 @@ var setupGrep = function(karma) {
 };
 
 var setupBrowser = function(karma, localServices, environment) {
-    if (window.chrome) {
-        setupGrep(karma);
+    setupGrep(karma);
+    if (window.chrome) {        
         sidebar.setup(localServices, environment);
     }
 };

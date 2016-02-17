@@ -1,5 +1,7 @@
 'use strict';
 
+var $ = require('jquery');
+
 function waitFor (seconds) {
     var promise = new Promise(function(resolve, reject){
         setTimeout(function() {
@@ -78,6 +80,13 @@ function replaceUriForProxyUse(driver, module) {
           .replace('bqws.io/', 'bqws.io/' + module + '/').replace('{{module}}', 'proxy');
 }
 
+function getGrep() { 
+    if (window.chrome) {        
+        return window.location.search.split('grep=')[1];
+    }   
+    return $(parent.document).find('a.btn-debug').attr('href').split('grep=')[1];
+}
+
 
 module.exports = {
     waitFor: waitFor,
@@ -85,5 +94,6 @@ module.exports = {
     retryFail: retryFail,
     consultPlugins: consultPlugins,
     joinObjects: joinObjects,
-    replaceUriForProxyUse: replaceUriForProxyUse
+    replaceUriForProxyUse: replaceUriForProxyUse,
+    getGrep: getGrep
 };
