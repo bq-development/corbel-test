@@ -9,11 +9,11 @@ var sidebar = new Sidebar(localConfig);
 
 var corbelTest = {};
 
-var initEnvironment = function(config, process, karma, local) {
-    if (local.getEnvironment() !== undefined) {
-        return local.getEnvironment();
-    } else if (karma.config.env && karma.config.env !== undefined) {
+var initEnvironment = function(config, process, karma, local) {    
+    if (karma.config.env && karma.config.env !== undefined) {
         return karma.config.env;
+    } else if (local.getEnvironment() !== undefined) {
+        return local.getEnvironment(); 
     } else {
         return process.env.NODE_ENV ? process.env.NODE_ENV : config.ENV;
     }
