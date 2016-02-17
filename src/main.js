@@ -20,11 +20,12 @@ var initEnvironment = function(config, process, karma, local) {
 };
 
 var initLocalServices = function(karma, local) {
-    if (local.getLocalServices() !== undefined) {
+    if (karma.config.localServices && karma.config.localServices !== undefined) {
+        return karma.config.localServices.match(/(^\[(((.)+(,)?)+)\]$)/)[2].split(',');
+    } else if( local.getLocalServices() !== undefined ){
         return local.getLocalServices();
     } else {
-        return (karma.config.localServices) ?
-            karma.config.localServices.match(/(^\[(((.)+(,)?)+)\]$)/)[2].split(',') : [];
+        return [];
     }
 };
 
