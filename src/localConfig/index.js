@@ -46,11 +46,11 @@ LocalConfig.prototype = {
     },
 
     save: function() {
-        window.localStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify(this.db));
+        window.sessionStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify(this.db));
     },
 
     load: function() {
-        return JSON.parse(window.localStorage.getItem(this.LOCAL_STORAGE_KEY));
+        return JSON.parse(window.sessionStorage.getItem(this.LOCAL_STORAGE_KEY));
     }
 };
 
