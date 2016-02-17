@@ -9,11 +9,11 @@ var sidebar = new Sidebar(localConfig);
 
 var corbelTest = {};
 
-var initEnvironment = function(config, process, karma, local) {    
+var initEnvironment = function(config, process, karma, local) {
     if (karma.config.env && karma.config.env !== undefined) {
         return karma.config.env;
     } else if (local.getEnvironment() !== undefined) {
-        return local.getEnvironment(); 
+        return local.getEnvironment();
     } else {
         return process.env.NODE_ENV ? process.env.NODE_ENV : config.ENV;
     }
@@ -28,16 +28,17 @@ var initLocalServices = function(karma, local) {
     }
 };
 
-var setupGrep = function(karma) {
-    if (karma.config.grep) {
+var setupGrep = function(grep) {
+    if (grep) {
         var debugHref = $(parent.document).find('a.btn-debug').attr('href');
-        $(parent.document).find('a.btn-debug').attr('href', debugHref + '?grep=' + karma.config.grep);
+        $(parent.document).find('a.btn-debug').attr('href', debugHref + '?grep=' + grep);
     }
 };
 
 var setupBrowser = function(karma, localServices, environment) {
+    common.grep = karma.config.grep;
     if (window.chrome) {
-        setupGrep(karma);
+        setupGrep(karma.config.grep);
         sidebar.setup(localServices, environment);
     }
 };
