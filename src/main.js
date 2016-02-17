@@ -36,8 +36,8 @@ var setupGrep = function(karma) {
 };
 
 var setupBrowser = function(karma, localServices, environment) {
+    setupGrep(karma);
     if (window.chrome) {
-        setupGrep(karma);
         sidebar.setup(localServices, environment);
     }
 };
