@@ -81,13 +81,17 @@ function loginAsRandomUser() {
 
 }
 
-function loginUser(driver, username, password) {
+function loginUser(driver, username, password, deviceId) {
     var params = {
         claims: {
             'basic_auth.username': username,
             'basic_auth.password': password
         }
     };
+    if (deviceId) {
+      params.claims['device_id'] = deviceId;
+    }
+    
     return driver.iam.token().create(params);
 }
 
