@@ -1,7 +1,7 @@
 'use strict';
 
-function waitFor (seconds) {
-    var promise = new Promise(function(resolve, reject){
+function waitFor(seconds) {
+    var promise = new Promise(function(resolve, reject) {
         setTimeout(function() {
             resolve();
         }, seconds * 1000);
@@ -17,15 +17,15 @@ function retry(retryFunction, maxRetries, retryPeriod, catches) {
             reject(catches);
         } else {
             retryFunction()
-            .then(function(response) {
-                resolve(response);
-            }).catch(function(err) {
-                catches.push(err);
-                setTimeout(function() {
-                    retry(retryFunction, maxRetries - 1, retryPeriod, catches)
-                    .then(resolve).catch(reject);
-                }, retryPeriod * 1000);
-            });
+                .then(function(response) {
+                    resolve(response);
+                }).catch(function(err) {
+                    catches.push(err);
+                    setTimeout(function() {
+                        retry(retryFunction, maxRetries - 1, retryPeriod, catches)
+                            .then(resolve).catch(reject);
+                    }, retryPeriod * 1000);
+                });
         }
     });
 }
@@ -36,14 +36,14 @@ function retryFail(retryFunction, maxRetries, retryPeriod) {
             reject();
         } else {
             retryFunction()
-            .then(function(response) {
-                setTimeout(function() {
-                    retryFail(retryFunction, maxRetries - 1, retryPeriod)
-                    .then(resolve).catch(reject);
-                }, retryPeriod * 1000);
-            }).catch(function(err) {
-                resolve(err);
-            });
+                .then(function(response) {
+                    setTimeout(function() {
+                        retryFail(retryFunction, maxRetries - 1, retryPeriod)
+                            .then(resolve).catch(reject);
+                    }, retryPeriod * 1000);
+                }).catch(function(err) {
+                    resolve(err);
+                });
         }
     });
 }
@@ -59,13 +59,13 @@ function consultPlugins(url) {
 function joinObjects(obj1, obj2) {
     var completeObject = {};
     var args = Array.prototype.slice.call(arguments, 0);
-    args.map(function(obj){
+    args.map(function(obj) {
         var key;
         var keys = Object.keys(obj);
         var n = keys.length;
         while (n--) {
-          key = keys[n];
-          completeObject[key] = obj[key];
+            key = keys[n];
+            completeObject[key] = obj[key];
         }
     });
 
@@ -73,11 +73,19 @@ function joinObjects(obj1, obj2) {
 }
 
 function replaceUriForProxyUse(driver, module) {
-    driver.config.config.urlBase = 
+    driver.config.config.urlBase =
         driver.config.get('urlBase')
-          .replace('bqws.io/', 'bqws.io/' + module + '/').replace('{{module}}', 'proxy');
+        .replace('bqws.io/', 'bqws.io/' + module + '/').replace('{{module}}', 'proxy');
 }
 
+function getTokenInfo(driver) {
+    var token = driver.config.get(corbel.Iam.IAM_TOKEN, {}).accessToken;
+    var info = JSON.parse(atob(token.split('.')[0]));
+    return {
+        token: token,
+        info: info
+    };
+}
 
 module.exports = {
     waitFor: waitFor,
@@ -85,5 +93,6 @@ module.exports = {
     retryFail: retryFail,
     consultPlugins: consultPlugins,
     joinObjects: joinObjects,
-    replaceUriForProxyUse: replaceUriForProxyUse
+    replaceUriForProxyUse: replaceUriForProxyUse,
+    getTokenInfo: getTokenInfo
 };
