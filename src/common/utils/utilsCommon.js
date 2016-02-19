@@ -78,6 +78,15 @@ function replaceUriForProxyUse(driver, module) {
           .replace('bqws.io/', 'bqws.io/' + module + '/').replace('{{module}}', 'proxy');
 }
 
+function arrayBufferToBase64( buffer ) {
+    var binary = '';
+    var bytes = new Uint8Array( buffer );
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode( bytes[ i ] );
+    }
+    return window.btoa(binary);
+}
 
 module.exports = {
     waitFor: waitFor,
@@ -85,5 +94,6 @@ module.exports = {
     retryFail: retryFail,
     consultPlugins: consultPlugins,
     joinObjects: joinObjects,
-    replaceUriForProxyUse: replaceUriForProxyUse
+    replaceUriForProxyUse: replaceUriForProxyUse,
+    arrayBufferToBase64: arrayBufferToBase64
 };
