@@ -2,7 +2,6 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var _ = require('lodash');
 var glob = require('glob');
-
 var ports = require('../test/ports.conf.js');
 
 // Set up the express server
@@ -25,23 +24,30 @@ app.get('/', function(req, res) {
     res.send('Corbel-js express server');
 });
 
-//Corbel opensource services test
-var publicRoutes = [
-  './emails/random.js',
-  './emails/imap.js',
-  './binaries/epubGenerator.js',
-  './requestinfo/requestinfo.js'
-];
+//Find all express file routes, public and private
+var routes = glob.sync('**/*.express.js');
 
-//Only available for non-opensource resources
-var privateRoutes = glob.sync('../test/spec/private/**/*.express.js');
+var publicRegex = '^express(.?)+';
+var privateRegex = '^test(.?)+';
+
+routes = routes.map(function(route) {
+  if(route.match(publicRegex)) {
+    console.log('Public express route found ' + route);
+    route = route.replace(/^express/, '.')
+
+    return route;
+  } else if(route.match(privateRegex)) {
+    console.log('Private express route found ' + route);
+    return '../' + route;
+  }
+});
 
 function addToServer(path){
+  console.log(path + ' added to express.');
   require(path)(app);
 }
 
-_.union(publicRoutes, privateRoutes)
-  .forEach(addToServer);
+routes.forEach(addToServer);
 
 app.listen(process.env.PORT || 3000);
 console.log('server started');
