@@ -27,10 +27,10 @@ app.get('/', function(req, res) {
 
 //Corbel opensource services test
 var publicRoutes = [
-  './emails/random.js',
-  './emails/imap.js',
-  './binaries/epubGenerator.js',
-  './requestinfo/requestinfo.js'
+  './emails/random.express.js',
+  './emails/imap.express.js',
+  './binaries/epubGenerator.express.js',
+  './requestinfo/requestinfo.express.js'
 ];
 
 //Only available for non-opensource resources
