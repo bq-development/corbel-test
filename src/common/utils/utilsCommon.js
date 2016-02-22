@@ -87,6 +87,10 @@ function getTokenInfo(driver) {
     };
 }
 
+function removeBreaksFromString(string) {
+    return string.replace(/(\r\n|\n|\r)/gm,'').trim();
+}
+
 module.exports = {
     waitFor: waitFor,
     retry: retry,
@@ -94,5 +98,6 @@ module.exports = {
     consultPlugins: consultPlugins,
     joinObjects: joinObjects,
     replaceUriForProxyUse: replaceUriForProxyUse,
-    getTokenInfo: getTokenInfo
+    getTokenInfo: getTokenInfo,
+    removeBreaksFromString: removeBreaksFromString
 };
