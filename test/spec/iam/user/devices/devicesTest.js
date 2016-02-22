@@ -71,7 +71,7 @@ describe('In IAM module', function() {
                 .should.be.eventually.fulfilled;
             })
             .then(function(deviceId) {
-                expect(deviceId).to.be.equals(retriveDevice.id);
+                expect(deviceId).to.be.equals(retriveDevice.uid);
                 retriveDevice.name = device.name;
 
                 return corbelDriver.iam.user(user.id)
@@ -80,7 +80,7 @@ describe('In IAM module', function() {
             })
             .then(function(responseDevice) {
                 return corbelDriver.iam.user(user.id)
-                .deleteDevice(responseDevice.data.id)
+                .deleteDevice(responseDevice.data.uid)
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
@@ -134,7 +134,9 @@ describe('In IAM module', function() {
             })
             .then(function(responseDevices) {
                 var auxResponseDevices = responseDevices.data || undefined;
-                expect(auxResponseDevices[0]).to.deep.equal(retriveDevice);
+                ['notificationUri', 'uid', 'name', 'type', 'notificationEnabled', 'domain', 'id'].forEach(function(key) {
+                    expect(retriveDevice[key]).to.be.equals(auxResponseDevices[0][key]);
+                });
 
                 return corbelDriver.iam.user()
                 .deleteMyDevice(auxResponseDevices[0].id)
@@ -151,7 +153,7 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('users can register his devices using user(me) and complete CRUD operations', function(done) {
+        it('users can register his devices using user and complete CRUD operations', function(done) {
             var retriveDevice;
 
             corbelDriver.iam.user('me')
@@ -191,7 +193,9 @@ describe('In IAM module', function() {
             })
             .then(function(responseDevices) {
                 var auxResponseDevices = responseDevices.data || undefined;
-                expect(auxResponseDevices[0]).to.deep.equal(retriveDevice);
+                ['notificationUri', 'uid', 'name', 'type', 'notificationEnabled', 'domain', 'id'].forEach(function(key) {
+                    expect(retriveDevice[key]).to.be.equals(auxResponseDevices[0][key]);
+                });
 
                 return corbelDriver.iam.user('me')
                 .deleteDevice(auxResponseDevices[0].id)
