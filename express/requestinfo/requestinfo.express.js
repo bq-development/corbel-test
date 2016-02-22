@@ -10,11 +10,11 @@ module.exports = function setup(app) {
             ip: req.ip,
             path: req.path,
             port: PORT,
-            host: req.host,
+            host: req.hostname,
             protocol: req.protocol,
             subdomains: req.subdomains,
             headers: req.headers,
-            url: req.protocol + '://' + req.host + ( PORT === 80 || PORT === 443 ? '' : ':' + PORT ) + req.path
+            url: req.protocol + '://' + req.hostname + ( PORT === 80 || PORT === 443 ? '' : ':' + PORT ) + req.path
         });
     });
 };
