@@ -298,7 +298,6 @@ describe('In RESOURCES module', function() {
             });
 
             it('returns elements that satisfy an incomplete chain of search', function(done) {
-                //incomplete chain "resource"
                 var incompleteChain = 'reso';
                 var params = {
                     search: incompleteChain
