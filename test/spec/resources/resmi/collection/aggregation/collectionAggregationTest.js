@@ -314,7 +314,7 @@ describe('In RESOURCES module', function() {
                 .get(params)
                 .should.be.eventually.fulfilled
                 .then(function(response) {
-                    expect(response).to.have.deep.property('data.sum', 0);
+                    expect(response).to.have.deep.property('data.sum', null);
                 })
                 .should.notify(done);
             });
@@ -346,7 +346,7 @@ describe('In RESOURCES module', function() {
                 .get(params)
                 .should.be.eventually.fulfilled
                 .then(function(response) {
-                    expect(response).to.have.deep.property('data.average', 0);
+                    expect(response).to.have.deep.property('data.average', null);
                 })
                 .should.notify(done);
             });
