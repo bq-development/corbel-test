@@ -91,6 +91,16 @@ function removeBreaksFromString(string) {
     return string.replace(/(\r\n|\n|\r)/gm,'').trim();
 }
 
+function arrayBufferToBase64( buffer ) {
+    var binary = '';
+    var bytes = new Uint8Array( buffer );
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode( bytes[ i ] );
+    }
+    return window.btoa(binary);
+}
+
 module.exports = {
     waitFor: waitFor,
     retry: retry,
@@ -99,5 +109,6 @@ module.exports = {
     joinObjects: joinObjects,
     replaceUriForProxyUse: replaceUriForProxyUse,
     getTokenInfo: getTokenInfo,
-    removeBreaksFromString: removeBreaksFromString
+    removeBreaksFromString: removeBreaksFromString,
+    arrayBufferToBase64: arrayBufferToBase64
 };
