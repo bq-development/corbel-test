@@ -3,7 +3,7 @@
 // Generated on 2014-10-22 using
 // generator-karma 0.8.3
 
-module.exports = function(config) {
+module.exports = function (config) {
     'use strict';
 
     var PORTS = require('./ports.conf.js');
@@ -16,7 +16,7 @@ module.exports = function(config) {
         basePath: '../',
 
         // testing framework to use (jasmine/mocha/qunit/...)
-        frameworks: ['mocha', 'chai', 'chai-as-promised', 'sinon'],
+        frameworks: ['mocha', 'chai', 'chai-as-promised', 'chai-things', 'sinon'],
 
         // list of files / patterns to load in the browser
         files: [
@@ -34,9 +34,9 @@ module.exports = function(config) {
             'test/menu/css/onoffswitch.css',
             'test/menu/css/styles.css',
             /*Rem-image's test required*/
-            {pattern:'test/menu/html/menu.html', watched: false, included: false, served: true},
-            {pattern:'test/menu/html/switch.html', watched: false, included: false, served: true},
-            {pattern:'src/common/utils/img/logo.png', watched: false, included: false, served: true}
+            {pattern: 'test/menu/html/menu.html', watched: false, included: false, served: true},
+            {pattern: 'test/menu/html/switch.html', watched: false, included: false, served: true},
+            {pattern: 'src/common/utils/img/logo.png', watched: false, included: false, served: true}
         ],
 
         // list of files / patterns to exclude
@@ -70,13 +70,12 @@ module.exports = function(config) {
         browserNoActivityTimeout: 95000,
 
 
-
         // test results reporter to use
         // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
         reporters: ['tap', 'mocha'],
 
         tapReporter: {
-          outputFile: '.report/report.tap'
+            outputFile: '.report/report.tap'
         },
 
         // level of logging
