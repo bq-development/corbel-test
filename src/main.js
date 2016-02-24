@@ -11,7 +11,7 @@ var ports = require('../test/ports.conf.js');
 var corbelTest = {};
 
 var initEnvironment = function(config, process, karma, local) {
-    if (karma.config.env && karma.config.env !== undefined) {
+    if (karma.config.env) {
         return karma.config.env;
     } else if (local.getEnvironment() !== undefined) {
         return local.getEnvironment();
@@ -21,11 +21,12 @@ var initEnvironment = function(config, process, karma, local) {
 };
 
 var initLocalServices = function(karma, local) {
-    if (local.getLocalServices() !== undefined) {
+    if (karma.config.localServices) {
+        return karma.config.localServices.match(/(^\[(((.)+(,)?)+)\]$)/)[2].split(',');
+    } else if( local.getLocalServices() !== undefined ){
         return local.getLocalServices();
     } else {
-        return (karma.config.localServices) ?
-            karma.config.localServices.match(/(^\[(((.)+(,)?)+)\]$)/)[2].split(',') : [];
+        return [];
     }
 };
 
