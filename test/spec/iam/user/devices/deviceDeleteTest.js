@@ -62,7 +62,6 @@ describe('In IAM module', function() {
                             .should.be.eventually.fulfilled
                             .then(function() {
                                 var tokenInfo = getTokenInfo(corbelDriver);
-                                console.log(tokenInfo.token);
                                 expect(tokenInfo).to.not.have.deep.property('info.deviceId');
                             });
                     }, MAX_RETRY, RETRY_PERIOD);

@@ -1,5 +1,6 @@
 describe('In IAM module', function() {
     var corbelRootDriver;
+    var deviceFields = ['notificationUri', 'uid', 'name', 'type', 'notificationEnabled'];
 
     before(function() {
         corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
@@ -15,7 +16,7 @@ describe('In IAM module', function() {
             name: 'device',
             type: 'Android',
             notificationEnabled: true
-        };  
+        };
 
         beforeEach(function(done) {
             corbelDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
@@ -134,15 +135,12 @@ describe('In IAM module', function() {
                 .should.be.eventually.fulfilled;
             })
             .then(function(responseDevices) {
-                var auxResponseDevices = responseDevices.data || undefined;
-                ['notificationUri', 'uid', 'name', 'type', 'notificationEnabled', 'domain', 'id']
-                .forEach(function(key) {
-                    expect(retriveDevice[key]).to.be.equals(auxResponseDevices[0][key]);
-                });
+                var retriveDevice = responseDevices.data[0];
+                    corbelTest.common.utils.expectFieldsToBeEquals(deviceFields, retriveDevice, device);
 
-                return corbelDriver.iam.user()
-                .deleteMyDevice(auxResponseDevices[0].id)
-                .should.be.eventually.fulfilled;
+                    return corbelDriver.iam.user()
+                        .deleteMyDevice(retriveDevice.id)
+                        .should.be.eventually.fulfilled;
             })
             .then(function() {
                 return corbelDriver.iam.user()
@@ -195,15 +193,12 @@ describe('In IAM module', function() {
                 .should.be.eventually.fulfilled;
             })
             .then(function(responseDevices) {
-                var auxResponseDevices = responseDevices.data || undefined;
-                ['notificationUri', 'uid', 'name', 'type', 'notificationEnabled', 'domain', 'id']
-                .forEach(function(key) {
-                    expect(retriveDevice[key]).to.be.equals(auxResponseDevices[0][key]);
-                });
+                retriveDevice = responseDevices.data[0];
+                    corbelTest.common.utils.expectFieldsToBeEquals(deviceFields, retriveDevice, device);
 
-                return corbelDriver.iam.user('me')
-                .deleteDevice(auxResponseDevices[0].id)
-                .should.be.eventually.fulfilled;
+                    return corbelDriver.iam.user('me')
+                        .deleteDevice(retriveDevice.id)
+                        .should.be.eventually.fulfilled;
             })
             .then(function() {
                 return corbelDriver.iam.user('me')
