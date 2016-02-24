@@ -20,18 +20,35 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        it('an issue with attachment can be added', function(done) {
+        it('an issue with an attachment can be added', function(done) {
             var image = 'Qk2eAAAAAAAAAHoAAABsAAAAAwAAAAMAAAABABgAAAAAACQAAAATCwAAEwsAAAAAAAAAAAAAQkdScwAAAAAAAA'+
                 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAD//wD/AP//'+
                   'AAAAAABmZmYA/wAAAH8AAAAAAP9/AAAA//8AAAA=';
             var ATTACHMENT = {
-                attachmentContent: image,
-                attachmentName: 'pre.tt.y.bmp'
+                content: image,
+                name: 'pre.tt.y.bmp'
             };
             var FEEDBACK_METADATA = {
                 project: 'TES',
                 issueType: 'Bug',
-                summary: 'test summaryWoW',
+                summary: 'test summaryImageAttachment',
+                attachment: ATTACHMENT
+            };
+
+            corbelDriver.resources.collection(FEEDBACK_COLLECTION)
+                .add(FEEDBACK_METADATA)
+                .should.be.eventually.fulfilled.and.notify(done);
+        });
+
+        it('an issue with a text attachment can be added, but the attachment is ignored', function(done) {
+            var ATTACHMENT = {
+                content: 'Test',
+                name: 'pre.tt.y.txt'
+            };
+            var FEEDBACK_METADATA = {
+                project: 'TES',
+                issueType: 'Bug',
+                summary: 'test summaryTextAttachment',
                 attachment: ATTACHMENT
             };
 
