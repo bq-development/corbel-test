@@ -43,6 +43,14 @@ describe('In IAM module', function() {
                 .should.notify(done);
         });
 
+        var expectDeviceCreationAndUpdateTimeNearToDateNow = function(device) {
+            var baseTime = Date.now();
+            var start = baseTime - 1000 * 30;
+            var finish = baseTime + 1000 * 30;
+            expect(device._updatedAt).within(start, finish);
+            expect(device._createdAt).within(start, finish);
+        }
+
         it('users can register his devices using user(me) and the device has _updateAt and _createdAt', function(done) {
             var retriveDevice;
 
@@ -56,9 +64,7 @@ describe('In IAM module', function() {
                 })
                 .then(function(responseDevice) {
                     device = responseDevice.data;
-                    var start = Date.now() - 60;
-                    var finish = start + 60 * 2;
-                    expect(device._updatedAt).within(start, finish);
+                    expectDeviceCreationAndUpdateTimeNearToDateNow(device);
                     expect(device._updatedAt).to.be.equals(device._createdAt);
                 })
                 .should.notify(done);
@@ -77,9 +83,7 @@ describe('In IAM module', function() {
                 })
                 .then(function(responseDevice) {
                     device = responseDevice.data;
-                    var start = Date.now() - 60;
-                    var finish = start + 60 * 2;
-                    expect(device._updatedAt).within(start, finish);
+                    expectDeviceCreationAndUpdateTimeNearToDateNow(device);
                     expect(device._updatedAt).to.be.equals(device._createdAt);
                     firstUpdatedAt = device._updatedAt;
                     firstCreatedAt = device._createdAt;
@@ -94,16 +98,15 @@ describe('In IAM module', function() {
                 })
                 .then(function(responseDevice) {
                     device = responseDevice.data;
-                    var start = Date.now() - 60;
-                    var finish = start + 60 * 2;
-                    expect(device._updatedAt).within(start, finish);
+                    expectDeviceCreationAndUpdateTimeNearToDateNow(device);
                     expect(device._updatedAt).to.be.above(device._createdAt);
                 })
                 .should.notify(done);
         });
 
         it('users can register his device with _updateAt and _createdAt using user(me), ' +
-            'but server ignore user _updateAt and _createAt', function(done) {
+            'but server ignore user _updateAt and _createAt',
+            function(done) {
                 device._updatedAt = 1;
                 device._createdAt = 1;
                 corbelDriver.iam.user('me')
@@ -116,9 +119,7 @@ describe('In IAM module', function() {
                     })
                     .then(function(responseDevice) {
                         device = responseDevice.data;
-                        var start = Date.now() - 60;
-                        var finish = start + 60 * 2;
-                        expect(device._updatedAt).within(start, finish);
+                        expectDeviceCreationAndUpdateTimeNearToDateNow(device);
                         expect(device._updatedAt).to.be.equals(device._createdAt);
                     })
                     .should.notify(done);
