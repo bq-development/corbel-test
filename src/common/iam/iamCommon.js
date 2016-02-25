@@ -10,7 +10,7 @@
  * @param  {extraFields} fields to add to the user object
  * @return {Promise}       A promise that resolves when users are created
  */
-function createUsers(driver, amount, extraFields) {
+function createUsers(driver, amount, extraFields, customUserData) {
     var promises = [];
     var obj = extraFields || {};
 
