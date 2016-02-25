@@ -33,7 +33,7 @@ function createUsers(driver, amount, extraFields) {
     return Promise.all(promises);
 }
 
-function createUser(userData, driver){
+function createUser(userData, driver) {
     return driver.iam.users().create(userData).then(function(userId) {
         userData.id = userId;
         return userData;
@@ -46,7 +46,8 @@ function getDomain(timeStamp, desc, sufix, scopes, publicScopes) {
             (sufix ? ('_' + sufix) : ''),
         description: desc ? desc : 'anyDescription',
         scopes: scopes ? scopes : ['iam:user:create', 'iam:user:read', 'iam:user:delete',
-            'iam:user:me'],
+            'iam:user:me'
+        ],
         publicScopes: publicScopes ? publicScopes : []
     };
 }
@@ -57,8 +58,9 @@ function getClient(timeStamp, domainId, sufix, scopes) {
             (sufix ? ('_' + sufix) : ''),
         signatureAlgorithm: 'HS256',
         domain: domainId ? domainId : 'TestDomain',
-        scopes: scopes ?  scopes : ['iam:user:create', 'iam:user:read', 'iam:user:delete',
-            'iam:user:me']
+        scopes: scopes ? scopes : ['iam:user:create', 'iam:user:read', 'iam:user:delete',
+            'iam:user:me'
+        ]
     };
 }
 
@@ -66,8 +68,12 @@ function getScope(id, audience, rules, parameters) {
     return {
         id: id,
         audience: audience ? audience : 'testAudience',
-        rules: rules ? rules : [{ testRule: 'this is a rule' }],
-        parameters: parameters ? parameters : { a: Date.now() }
+        rules: rules ? rules : [{
+            testRule: 'this is a rule'
+        }],
+        parameters: parameters ? parameters : {
+            a: Date.now()
+        }
     };
 }
 
@@ -79,6 +85,24 @@ function getCompositeScope(id, scopes) {
     };
 }
 
+function createDevices(driver, amount) {
+    var promises = [];
+
+    for (var count = 1; count <= amount; count++) {
+        var random = Date.now() + '-' + count;
+        var deviceData = {
+            type: 'ANDROID',
+            uid: random
+        };
+        promises.push(
+            driver.iam.user()
+            .registerMyDevice(deviceData)
+        );
+    }
+
+    return Promise.all(promises);
+}
+
 
 module.exports = {
     createUsers: createUsers,
@@ -86,5 +110,6 @@ module.exports = {
     getDomain: getDomain,
     getClient: getClient,
     getScope: getScope,
-    getCompositeScope: getCompositeScope
+    getCompositeScope: getCompositeScope,
+    createDevices: createDevices
 };
