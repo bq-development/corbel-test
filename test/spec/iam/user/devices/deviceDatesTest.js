@@ -6,7 +6,7 @@ describe('In IAM module', function() {
         corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
     });
 
-    describe('while testing creation and update dates in devices', function() {
+    describe('while testing firstConnection and lastConnection dates in devices', function() {
         var user;
         var corbelDriver;
         var random;
@@ -43,72 +43,19 @@ describe('In IAM module', function() {
                 .should.notify(done);
         });
 
-        var expectDeviceCreationAndUpdateTimeNearToDateNow = function(device) {
+        var expectDeviceLastConnectionAndFirstConnectionTimeNearToDateNow = function(device) {
             var baseTime = Date.now();
             var start = baseTime - 1000 * 30;
             var finish = baseTime + 1000 * 30;
-            expect(device._updatedAt).within(start, finish);
-            expect(device._createdAt).within(start, finish);
+            expect(device.firstConnection).within(start, finish);
+            expect(device.lastConnection).within(start, finish);
         };
 
-        it('users can register his devices using user(me) and the device has _updateAt and _createdAt', function(done) {
-            var retriveDevice;
-
-            corbelDriver.iam.user('me')
-                .registerDevice(device)
-                .should.be.eventually.fulfilled
-                .then(function(deviceId) {
-                    return corbelDriver.iam.user('me')
-                        .getDevice(deviceId)
-                        .should.be.eventually.fulfilled;
-                })
-                .then(function(responseDevice) {
-                    device = responseDevice.data;
-                    expectDeviceCreationAndUpdateTimeNearToDateNow(device);
-                    expect(device._updatedAt).to.be.equals(device._createdAt);
-                })
-                .should.notify(done);
-        });
-
-        it('users can register his devices using user(me) and when update it, _updateAt change', function(done) {
-            var firstUpdatedAt;
-            var firstCreatedAt;
-            corbelDriver.iam.user('me')
-                .registerDevice(device)
-                .should.be.eventually.fulfilled
-                .then(function(deviceId) {
-                    return corbelDriver.iam.user('me')
-                        .getDevice(deviceId)
-                        .should.be.eventually.fulfilled;
-                })
-                .then(function(responseDevice) {
-                    device = responseDevice.data;
-                    expectDeviceCreationAndUpdateTimeNearToDateNow(device);
-                    expect(device._updatedAt).to.be.equals(device._createdAt);
-                    firstUpdatedAt = device._updatedAt;
-                    firstCreatedAt = device._createdAt;
-                    return corbelDriver.iam.user('me')
-                        .registerDevice(device)
-                        .should.be.eventually.fulfilled;
-                })
-                .then(function(deviceId) {
-                    return corbelDriver.iam.user('me')
-                        .getDevice(deviceId)
-                        .should.be.eventually.fulfilled;
-                })
-                .then(function(responseDevice) {
-                    device = responseDevice.data;
-                    expectDeviceCreationAndUpdateTimeNearToDateNow(device);
-                    expect(device._updatedAt).to.be.above(device._createdAt);
-                })
-                .should.notify(done);
-        });
-
-        it('users can register his device with _updateAt and _createdAt using user(me), ' +
-            'but server ignore user _updateAt and _createAt',
+        it('users can register his devices using user(me) and' +
+            ' the device has firstConnection and lastConnection',
             function(done) {
-                device._updatedAt = 1;
-                device._createdAt = 1;
+                var retriveDevice;
+
                 corbelDriver.iam.user('me')
                     .registerDevice(device)
                     .should.be.eventually.fulfilled
@@ -119,8 +66,64 @@ describe('In IAM module', function() {
                     })
                     .then(function(responseDevice) {
                         device = responseDevice.data;
-                        expectDeviceCreationAndUpdateTimeNearToDateNow(device);
-                        expect(device._updatedAt).to.be.equals(device._createdAt);
+                        expectDeviceLastConnectionAndFirstConnectionTimeNearToDateNow(device);
+                        expect(device.firstConnection).to.be.equals(device.lastConnection);
+                    })
+                    .should.notify(done);
+            });
+
+        it('users can register his devices using user(me)' +
+            ' and when login with it, lastConnection change',
+            function(done) {
+                var deviceId;
+                corbelDriver.iam.user('me')
+                    .registerDevice(device)
+                    .should.be.eventually.fulfilled
+                    .then(function(id) {
+                        deviceId = id;
+                        return corbelDriver.iam.user('me')
+                            .getDevice(deviceId)
+                            .should.be.eventually.fulfilled;
+                    })
+                    .then(function(responseDevice) {
+                        device = responseDevice.data;
+                        expectDeviceLastConnectionAndFirstConnectionTimeNearToDateNow(device);
+                        expect(device._updatedAt).to.be.equals(device.firstFirstConnection);
+                        return corbelTest.common.clients.loginUser(corbelDriver,
+                                user.username, user.password, device.uid)
+                            .should.be.eventually.fulfilled;
+                    })
+                    .then(function() {
+                        return corbelDriver.iam.user('me')
+                            .getDevice(deviceId)
+                            .should.be.eventually.fulfilled;
+                    })
+                    .then(function(responseDevice) {
+                        device = responseDevice.data;
+                        expectDeviceLastConnectionAndFirstConnectionTimeNearToDateNow(device);
+                        expect(device.lastConnection).to.be.above(device.firstConnection);
+                    })
+                    .should.notify(done);
+            });
+
+        it('users can register his device with lastConnection and' +
+            ' firstConnection using user(me),' +
+            ' but server ignore user these fields',
+            function(done) {
+                device.firstConnection = 1;
+                device.lastConnection = 1;
+                corbelDriver.iam.user('me')
+                    .registerDevice(device)
+                    .should.be.eventually.fulfilled
+                    .then(function(deviceId) {
+                        return corbelDriver.iam.user('me')
+                            .getDevice(deviceId)
+                            .should.be.eventually.fulfilled;
+                    })
+                    .then(function(responseDevice) {
+                        device = responseDevice.data;
+                        expectDeviceLastConnectionAndFirstConnectionTimeNearToDateNow(device);
+                        expect(device.firstConnection).to.be.equals(device.lastConnection);
                     })
                     .should.notify(done);
             });

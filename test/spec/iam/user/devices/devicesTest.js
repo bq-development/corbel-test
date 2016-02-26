@@ -14,7 +14,7 @@ describe('In IAM module', function() {
             notificationUri: '123',
             uid: '123',
             name: 'device',
-            type: 'Android',
+            type: 'ANDROID',
             notificationEnabled: true
         };
 
