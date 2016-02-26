@@ -11,6 +11,7 @@ describe('In RESOURCES module', function() {
             var TEST_OBJECT;
             var DOMAIN = 'silkroad-qa';
             var ACL_ADMIN_COLLECTION = 'acl:Configuration';
+            var RELATION = 'other';
             var COLLECTION_NAME = 'test:testAcl' + Date.now();
             var adminObjectId = DOMAIN + ':' + COLLECTION_NAME;
             var random;
@@ -107,6 +108,13 @@ describe('In RESOURCES module', function() {
                     }, MAX_RETRY, RETRY_PERIOD)
                     .should.be.eventually.fulfilled;
                 })
+                .then(function(e){
+                    expect(e).to.have.property('status', 401);
+                    expect(e).to.have.deep.property('data.error', 'unauthorized');
+
+                    return corbelDriver.resources.relation(COLLECTION_NAME, resourceId, RELATION)
+                            .get().should.be.eventually.rejected;
+                })
                 .then(function(e) {
                     expect(e).to.have.property('status', 401);
                     expect(e).to.have.deep.property('data.error', 'unauthorized');
@@ -119,7 +127,7 @@ describe('In RESOURCES module', function() {
                         })
                     .should.be.eventually.fulfilled;
                 })
-                .then(function() {
+                .then(function(){
                     return corbelTest.common.utils.retry(function() {
                         return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
                             .get();
@@ -130,6 +138,9 @@ describe('In RESOURCES module', function() {
                     expect(response).to.have.deep.property('data.id', resourceId);
                     expect(response).to.have.deep.property('data.test', 'test' + random);
                     expect(response).to.have.deep.property('data.test2', 'test2' + random);
+
+                    return corbelDriver.resources.relation(COLLECTION_NAME, resourceId, RELATION)
+                            .get().should.be.eventually.fulfilled;
                 })
                 .should.notify(done);
             });
@@ -148,6 +159,13 @@ describe('In RESOURCES module', function() {
                             .get();
                     }, MAX_RETRY, RETRY_PERIOD)
                     .should.be.eventually.fulfilled;
+                })
+                .then(function(e) {
+                    expect(e).to.have.property('status', 401);
+                    expect(e).to.have.deep.property('data.error', 'unauthorized');
+
+                    return corbelDriver.resources.relation(COLLECTION_NAME, resourceId, RELATION)
+                            .get().should.be.eventually.rejected;
                 })
                 .then(function(e) {
                     expect(e).to.have.property('status', 401);
@@ -172,6 +190,9 @@ describe('In RESOURCES module', function() {
                     expect(response).to.have.deep.property('data.id', resourceId);
                     expect(response).to.have.deep.property('data.test', 'test' + random);
                     expect(response).to.have.deep.property('data.test2', 'test2' + random);
+
+                    return corbelDriver.resources.relation(COLLECTION_NAME, resourceId, RELATION)
+                            .get().should.be.eventually.fulfilled;
                 })
                 .should.notify(done);
             });
