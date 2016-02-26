@@ -2,7 +2,7 @@ describe('In RESOURCES module', function() {
 
     describe('In RESMI module, testing relation search, ', function() {
 
-        describe('when conditions are applied to nested fields', function() {
+        describe('when conditions are applied to object type fields', function() {
             var corbelDriver;
             var COLLECTION_A = 'test:searchableCollectionA';
             var COLLECTION_B = 'test:searchableCollectionB';
@@ -15,10 +15,10 @@ describe('In RESOURCES module', function() {
 
             var object1 = {
                 field1: 'Test' + random,
-                nested: {
-                    nestedInt: 1,
-                    nestedString: 'first nested string',
-                    nestedBoolean: true
+                object: {
+                    objectInt: 1, 
+                    objectString: 'first object string',
+                    objectBoolean: true
                 },
                 description: 'And this is the first resource',
                 sortIntegerField: 10
@@ -26,10 +26,10 @@ describe('In RESOURCES module', function() {
             
             var object2 = {
                 field2: 'tEst' + random,
-                nested: {
-                    nestedInt: 2,
-                    nestedString: 'second nested string',
-                    nestedBoolean: false
+                object: {
+                    objectInt: 2,
+                    objectString: 'second object string',
+                    objectBoolean: false
                 },
                 description: 'And this is the second resource',
                 punctuationTest: specialCharacters + random,
@@ -38,10 +38,10 @@ describe('In RESOURCES module', function() {
             
             var object3 = {
                 field3: 'teSt' + random,
-                nested: {
-                    nestedInt: 3,
-                    nestedString: 'third nested string',
-                    nestedBoolean: true
+                object: {
+                    objectInt: 3,
+                    objectString: 'third object string',
+                    objectBoolean: true
                 },
                 description: 'And this is the third resource',
                 punctuationTest: punctText + random,
@@ -81,7 +81,7 @@ describe('In RESOURCES module', function() {
                     search: 'test' + random,
                     query: [{
                         '$gt': {
-                            'nested.nestedInt': 1
+                            'object.objectInt': 1
                         }
                     }],
                     indexFieldsOnly: false
@@ -103,7 +103,7 @@ describe('In RESOURCES module', function() {
                     search: 'test' + random,
                     query: [{
                         '$eq': {
-                            'nested.nestedBoolean': false
+                            'object.objectBoolean': false
                         }
                     }],
                     indexFieldsOnly: false
@@ -126,7 +126,7 @@ describe('In RESOURCES module', function() {
                     search: 'test' + random,
                     query: [{
                         '$eq': {
-                            'nested.nestedString': 'first nested string'
+                            'object.objectString': 'first object string'
                         }
                     }],
                     indexFieldsOnly: false
@@ -148,7 +148,7 @@ describe('In RESOURCES module', function() {
                     search: 'test' + random,
                     query: [{
                         '$in': {
-                            'nested.nestedString': ['first nested string']
+                            'object.objectString': ['first object string']
                         }
                     }],
                     indexFieldsOnly: false
