@@ -1,61 +1,56 @@
-describe('In IAM module', function() {
+describe('In IAM module', function () {
+  describe('while testing get user', function () {
+    var corbelDriver
+    var corbelRootDriver
+    var userId = Date.now()
 
-    describe('while testing get user', function() {
-        var corbelDriver;
-        var corbelRootDriver;
-        var userId = Date.now();
+    before(function () {
+      corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone()
+      corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone()
+    })
 
-        before(function() {
-            corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
-            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
-        });
+    it('an error is returned while trying to get a user with unauthorized driver using "me"', function (done) {
+      corbelRootDriver.iam.user('me')
+        .get()
+        .should.be.eventually.rejected
+        .then(function (e) {
+          expect(e).to.have.property('status', 401)
+          expect(e).to.have.deep.property('data.error', 'unauthorized_token')
+        })
+        .should.notify(done)
+    })
 
-        it('an error is returned while trying to get a user with unauthorized driver using "me"', function(done) {
+    it('an error is returned while trying to get a user with unauthorized driver using id', function (done) {
+      corbelDriver.iam.user(userId)
+        .get()
+        .should.be.eventually.rejected
+        .then(function (e) {
+          expect(e).to.have.property('status', 401)
+          expect(e).to.have.deep.property('data.error', 'unauthorized_token')
+        })
+        .should.notify(done)
+    })
 
-            corbelRootDriver.iam.user('me')
-            .get()
-            .should.be.eventually.rejected
-            .then(function(e) {
-                expect(e).to.have.property('status', 401);
-                expect(e).to.have.deep.property('data.error', 'unauthorized_token');
-            })
-            .should.notify(done);
-        });
+    it('an error is returned while trying to get a nonexistent user', function (done) {
+      corbelRootDriver.iam.user('nonexistent')
+        .get()
+        .should.be.eventually.rejected
+        .then(function (e) {
+          expect(e).to.have.property('status', 404)
+          expect(e).to.have.deep.property('data.error', 'not_found')
+        })
+        .should.notify(done)
+    })
 
-        it('an error is returned while trying to get a user with unauthorized driver using id', function(done) {
-
-            corbelDriver.iam.user(userId)
-            .get()
-            .should.be.eventually.rejected
-            .then(function(e) {
-                expect(e).to.have.property('status', 401);
-                expect(e).to.have.deep.property('data.error', 'unauthorized_token');
-            })
-            .should.notify(done);
-        });
-
-        it('an error is returned while trying to get a nonexistent user', function(done) {
-
-            corbelRootDriver.iam.user('nonexistent')
-            .get()
-            .should.be.eventually.rejected
-            .then(function(e) {
-                expect(e).to.have.property('status', 404);
-                expect(e).to.have.deep.property('data.error', 'not_found');
-            })
-            .should.notify(done);
-        });
-
-        it('an error is returned while trying to get all users with unauthorized driver', function(done) {
-
-            corbelDriver.iam.users()
-            .get()
-            .should.be.eventually.rejected
-            .then(function(e) {
-                expect(e).to.have.property('status', 401);
-                expect(e).to.have.deep.property('data.error', 'unauthorized_token');
-            })
-            .should.notify(done);
-        });
-    });
-});
+    it('an error is returned while trying to get all users with unauthorized driver', function (done) {
+      corbelDriver.iam.users()
+        .get()
+        .should.be.eventually.rejected
+        .then(function (e) {
+          expect(e).to.have.property('status', 401)
+          expect(e).to.have.deep.property('data.error', 'unauthorized_token')
+        })
+        .should.notify(done)
+    })
+  })
+})
