@@ -207,6 +207,15 @@ function addResourcesUsingDataArray(driver, collectionA, idResource, collectionB
         promise = driver.resources.relation(collectionA, idResource, collectionB)
             .add(idsResourcesInB[index], data);
         promises.push(promise);
+        promise.then(relationSuccessHandler.bind(
+            this,
+            createdRelationObject,
+            collectionA,
+            idResource,
+            collectionB,
+            idsResourcesInB[index]
+            )
+        );
     });
 
     return Promise.all(promises);
