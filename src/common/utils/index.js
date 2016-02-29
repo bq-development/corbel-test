@@ -1,3 +1,3 @@
-'use strict';
+'use strict'
 
-module.exports = require('./utilsCommon');
+module.exports = require('./utilsCommon')
