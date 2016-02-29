@@ -18,6 +18,28 @@
   "engines": {
     "node": "~4.2.3"
   },
+  "standard": {
+     "globals": [
+         "describe", 
+         "expect", 
+         "it", 
+         "corbelTest", 
+         "before", 
+         "beforeEach", 
+         "after", 
+         "afterEach", 
+         "corbel",
+         "_",
+         "atob",
+         "Blob",
+         "Image",
+         "FileReader",
+         "sinon",
+         "location",
+         "parent",
+         "XMLHttpRequest"
+     ]
+  },
   "devDependencies": {
     "chai": "^3.0.0",
     "corbel-js": "^0.3.6",
@@ -26,6 +48,7 @@
     "grunt-contrib-jshint": "0.12.0",
     "grunt-express-server": "^0.5.1",
     "grunt-karma": "^0.12.1",
+    "grunt-standard": "^2.0.0",
     "grunt-version-check": "^0.3.2",
     "jquery": "^2.1.4",
     "jshint-stylish": "^2.0.1",
