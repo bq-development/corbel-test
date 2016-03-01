@@ -14,11 +14,11 @@ describe('In NOTIFICATIONS module', function() {
         });
 
         afterEach(function(done) {
-            corbelDriver.notifications.notification(notificationId)
+            corbelDriver.notifications.template(notificationId)
                 .delete()
             .should.be.eventually.fulfilled
             .then(function(){
-                return corbelDriver.notifications.notification(notificationId)
+                return corbelDriver.notifications.template(notificationId)
                     .get()
                 .should.be.eventually.rejected;
             })
@@ -30,13 +30,13 @@ describe('In NOTIFICATIONS module', function() {
         });
 
         it('a notification template can be created and the id is received', function(done) {
-            corbelDriver.notifications.notification()
+            corbelDriver.notifications.template()
                 .create(notificationData)
             .should.be.eventually.fulfilled
             .then(function(id) {
                 notificationId = id;
 
-                return corbelDriver.notifications.notification(notificationId)
+                return corbelDriver.notifications.template(notificationId)
                     .get()
                 .should.be.eventually.fulfilled;
             })
@@ -49,13 +49,13 @@ describe('In NOTIFICATIONS module', function() {
         it('a notification template can be created without title and the id is received', function(done) {
             delete notificationData.title;
 
-            corbelDriver.notifications.notification()
+            corbelDriver.notifications.template()
                 .create(notificationData)
             .should.be.eventually.fulfilled
             .then(function(id) {
                 notificationId = id;
 
-                return corbelDriver.notifications.notification(notificationId)
+                return corbelDriver.notifications.template(notificationId)
                     .get()
                 .should.be.eventually.fulfilled;
             })
@@ -68,13 +68,13 @@ describe('In NOTIFICATIONS module', function() {
         it('a notification template can be created without id and a random id is received', function(done) {
             delete notificationData.id;
 
-            corbelDriver.notifications.notification()
+            corbelDriver.notifications.template()
                 .create(notificationData)
             .should.be.eventually.fulfilled
             .then(function(id) {
                 notificationId = id;
 
-                return corbelDriver.notifications.notification(notificationId)
+                return corbelDriver.notifications.template(notificationId)
                     .get()
                 .should.be.eventually.fulfilled;
             })

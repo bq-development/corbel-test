@@ -11,7 +11,7 @@ describe('In NOTIFICATIONS module', function() {
 
         it('an error is returned while trying to update a notification template without permission', function(done) {
 
-            unauthorizedDriver.notifications.notification('id')
+            unauthorizedDriver.notifications.template('id')
                 .update({})
             .should.be.eventually.rejected
             .then(function(e) {
@@ -23,7 +23,7 @@ describe('In NOTIFICATIONS module', function() {
 
         it('an error is returned while trying to update a non existent notification template', function(done) {
 
-            corbelDriver.notifications.notification('non-existent')
+            corbelDriver.notifications.template('non-existent')
                 .update({})
             .should.be.eventually.rejected
             .then(function(e) {
@@ -48,11 +48,11 @@ describe('In NOTIFICATIONS module', function() {
 
             afterEach(function(done) {
 
-                corbelDriver.notifications.notification(notificationId)
+                corbelDriver.notifications.template(notificationId)
                     .delete()
                 .should.be.eventually.fulfilled
                 .then(function(){
-                    return corbelDriver.notifications.notification(notificationId)
+                    return corbelDriver.notifications.template(notificationId)
                         .get()
                     .should.be.eventually.rejected;
                 })
@@ -65,7 +65,7 @@ describe('In NOTIFICATIONS module', function() {
 
             it('an error [422] is returned if the data is not a json', function(done) {
 
-                corbelDriver.notifications.notification(notificationId)
+                corbelDriver.notifications.template(notificationId)
                     .update('invalid')
                 .should.be.eventually.rejected
                 .then(function(e) {

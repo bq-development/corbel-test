@@ -9,7 +9,7 @@ describe('In NOTIFICATIONS module', function() {
 
         it('an error is returned while trying to delete a notification template without permission', function(done) {
 
-            unauthorizedDriver.notifications.notification('id')
+            unauthorizedDriver.notifications.template('id')
                 .delete()
             .should.be.eventually.rejected
             .then(function(e) {

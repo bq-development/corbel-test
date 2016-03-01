@@ -18,7 +18,7 @@ describe('In NOTIFICATIONS module', function() {
                 title: 'subject'
             };
 
-            unauthorizedDriver.notifications.notification()
+            unauthorizedDriver.notifications.template()
                 .create(notificationData)
             .should.be.eventually.rejected
             .then(function(e) {
@@ -30,7 +30,7 @@ describe('In NOTIFICATIONS module', function() {
 
         it('an error [422] is returned while trying to create an empty template', function(done) {
 
-            corbelDriver.notifications.notification()
+            corbelDriver.notifications.template()
                 .create({})
             .should.be.eventually.rejected
             .then(function(e) {
@@ -48,7 +48,7 @@ describe('In NOTIFICATIONS module', function() {
                 title: 'subject'
             };
 
-            corbelDriver.notifications.notification()
+            corbelDriver.notifications.template()
                 .create(notificationData)
             .should.be.eventually.rejected
             .then(function(e) {
@@ -66,7 +66,7 @@ describe('In NOTIFICATIONS module', function() {
                 title: 'subject'
             };
 
-            corbelDriver.notifications.notification()
+            corbelDriver.notifications.template()
                 .create(notificationData)
             .should.be.eventually.rejected
             .then(function(e) {
@@ -84,7 +84,7 @@ describe('In NOTIFICATIONS module', function() {
                 title: 'subject'
             };
 
-            corbelDriver.notifications.notification()
+            corbelDriver.notifications.template()
                 .create(notificationData)
             .should.be.eventually.rejected
             .then(function(e) {

@@ -18,7 +18,7 @@ describe('In NOTIFICATIONS module', function() {
         });
 
         afterEach(function(done) {
-            corbelDriver.notifications.notification(notificationId)
+            corbelDriver.notifications.template(notificationId)
                 .get()
             .should.be.eventually.rejected
             .then(function(e) {
@@ -29,7 +29,7 @@ describe('In NOTIFICATIONS module', function() {
         });
 
         it('a notification template can be deleted', function(done) {
-            corbelDriver.notifications.notification(notificationId)
+            corbelDriver.notifications.template(notificationId)
                 .delete()
             .should.be.eventually.fulfilled.and.notify(done);
         });
