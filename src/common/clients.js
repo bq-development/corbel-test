@@ -57,9 +57,8 @@ function loginAll() {
     return Promise.all(promises);
 }
 
-function loginAsRandomUser() {
-    var createDriver = arguments[0];
-    var loginDriver = arguments[1] || createDriver;
+function loginAsRandomUser(createDriver, loginDriver) {
+    loginDriver = loginDriver || createDriver;
     var iamUtils = require('./iam');
     var user;
     return iamUtils.createUsers(createDriver, 1).then(function(users) {
@@ -78,7 +77,6 @@ function loginAsRandomUser() {
             user: user
         };
     });
-
 }
 
 function loginUser(driver, username, password, deviceId) {
@@ -91,7 +89,7 @@ function loginUser(driver, username, password, deviceId) {
     if (deviceId) {
       params.claims['device_id'] = deviceId;
     }
-    
+
     return driver.iam.token().create(params);
 }
 
