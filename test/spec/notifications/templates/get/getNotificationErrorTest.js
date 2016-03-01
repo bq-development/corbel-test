@@ -9,7 +9,7 @@ describe('In NOTIFICATIONS module', function () {
     })
 
     it('an error is returned while trying to get a notification template without permission', function (done) {
-      unauthorizedDriver.notifications.notification()
+      unauthorizedDriver.notifications.template()
         .get()
         .should.be.eventually.rejected
         .then(function (e) {
@@ -20,7 +20,7 @@ describe('In NOTIFICATIONS module', function () {
     })
 
     it('an error [404] is returned while trying to get non existent notification template', function (done) {
-      corbelDriver.notifications.notification('non-existent')
+      corbelDriver.notifications.template('non-existent')
         .get()
         .should.be.eventually.rejected
         .then(function (e) {

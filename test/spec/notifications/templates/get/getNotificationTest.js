@@ -21,7 +21,7 @@ describe('In NOTIFICATIONS module', function () {
     })
 
     it('if there are not params, default number of notification templates are received', function (done) {
-      corbelDriver.notifications.notification()
+      corbelDriver.notifications.template()
         .get()
         .should.be.eventually.fulfilled
         .then(function (response) {
@@ -37,7 +37,7 @@ describe('In NOTIFICATIONS module', function () {
         }
       }
 
-      corbelDriver.notifications.notification()
+      corbelDriver.notifications.template()
         .get(params)
         .should.be.eventually.fulfilled
         .then(function (response) {
@@ -54,7 +54,7 @@ describe('In NOTIFICATIONS module', function () {
         }
       }
 
-      corbelDriver.notifications.notification()
+      corbelDriver.notifications.template()
         .get(params)
         .should.be.eventually.fulfilled
         .then(function (response) {
@@ -72,7 +72,7 @@ describe('In NOTIFICATIONS module', function () {
         }]
       }
 
-      corbelDriver.notifications.notification()
+      corbelDriver.notifications.template()
         .get(params)
         .should.be.eventually.fulfilled
         .then(function (response) {
@@ -91,7 +91,7 @@ describe('In NOTIFICATIONS module', function () {
         }]
       }
 
-      corbelDriver.notifications.notification()
+      corbelDriver.notifications.template()
         .get(params)
         .should.be.eventually.fulfilled
         .then(function (response) {

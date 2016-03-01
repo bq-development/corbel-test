@@ -16,7 +16,7 @@ describe('In NOTIFICATIONS module', function () {
       }
 
       corbelDriver.notifications.notification()
-        .sendNotification(notificationData)
+        .send(notificationData)
         .should.be.eventually.rejected
         .then(function (e) {
           expect(e).to.have.property('status', 422)
@@ -35,7 +35,7 @@ describe('In NOTIFICATIONS module', function () {
       }
 
       corbelDriver.notifications.notification()
-        .sendNotification(notificationData)
+        .send(notificationData)
         .should.be.eventually.rejected
         .then(function (e) {
           expect(e).to.have.property('status', 422)
@@ -46,7 +46,7 @@ describe('In NOTIFICATIONS module', function () {
 
     it('an error [422] is returned when trying to send an empty notification', function (done) {
       corbelDriver.notifications.notification()
-        .sendNotification({})
+        .send({})
         .should.be.eventually.rejected
         .then(function (e) {
           expect(e).to.have.property('status', 422)

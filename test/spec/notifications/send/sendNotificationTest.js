@@ -49,7 +49,7 @@ describe('In NOTIFICATIONS module', function () {
       }
 
       corbelDriver.notifications.notification()
-        .sendNotification(notificationData)
+        .send(notificationData)
         .should.be.eventually.fulfilled
         .then(function () {
           return corbelTest.common.utils.retry(function () {
@@ -89,7 +89,7 @@ describe('In NOTIFICATIONS module', function () {
       }
 
       corbelDriver.notifications.notification()
-        .sendNotification(notificationData)
+        .send(notificationData)
         .should.be.eventually.fulfilled
         .then(function () {
           return corbelTest.common.utils.retry(function () {
@@ -125,7 +125,7 @@ describe('In NOTIFICATIONS module', function () {
       }
 
       corbelDriver.notifications.notification()
-        .sendNotification(notificationData)
+        .send(notificationData)
         .should.be.eventually.fulfilled
         .then(function () {
           return corbelTest.common.utils.retry(function () {
@@ -165,7 +165,7 @@ describe('In NOTIFICATIONS module', function () {
       }
 
       corbelDriver.notifications.notification()
-        .sendNotification(notificationData)
+        .send(notificationData)
         .should.be.eventually.fulfilled
         .then(function () {
           return corbelTest.common.utils.retry(function () {
@@ -205,7 +205,7 @@ describe('In NOTIFICATIONS module', function () {
       }
 
       corbelDriver.notifications.notification()
-        .sendNotification(notificationData)
+        .send(notificationData)
         .should.be.eventually.fulfilled
         .then(function () {
           return corbelTest.common.utils.retry(function () {

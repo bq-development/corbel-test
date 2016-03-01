@@ -17,11 +17,11 @@ describe('In NOTIFICATIONS module', function () {
     })
 
     afterEach(function (done) {
-      corbelDriver.notifications.notification(notificationId)
+      corbelDriver.notifications.template(notificationId)
         .delete()
         .should.be.eventually.fulfilled
         .then(function () {
-          return corbelDriver.notifications.notification(notificationId)
+          return corbelDriver.notifications.template(notificationId)
             .get()
             .should.be.eventually.rejected
         })
@@ -33,11 +33,11 @@ describe('In NOTIFICATIONS module', function () {
     })
 
     it('the type field in notification templates can be updated', function (done) {
-      corbelDriver.notifications.notification(notificationId)
+      corbelDriver.notifications.template(notificationId)
         .update({type: 'sms'})
         .should.be.eventually.fulfilled
         .then(function () {
-          return corbelDriver.notifications.notification(notificationId)
+          return corbelDriver.notifications.template(notificationId)
             .get()
             .should.be.eventually.fulfilled
         })
@@ -52,11 +52,11 @@ describe('In NOTIFICATIONS module', function () {
     })
 
     it('the text field in notification templates can be updated', function (done) {
-      corbelDriver.notifications.notification(notificationId)
+      corbelDriver.notifications.template(notificationId)
         .update({text: 'updated text'})
         .should.be.eventually.fulfilled
         .then(function () {
-          return corbelDriver.notifications.notification(notificationId)
+          return corbelDriver.notifications.template(notificationId)
             .get()
             .should.be.eventually.fulfilled
         })
@@ -71,11 +71,11 @@ describe('In NOTIFICATIONS module', function () {
     })
 
     it('the sender field in notification templates can be updated', function (done) {
-      corbelDriver.notifications.notification(notificationId)
+      corbelDriver.notifications.template(notificationId)
         .update({sender: 'you'})
         .should.be.eventually.fulfilled
         .then(function () {
-          return corbelDriver.notifications.notification(notificationId)
+          return corbelDriver.notifications.template(notificationId)
             .get()
             .should.be.eventually.fulfilled
         })
@@ -92,11 +92,11 @@ describe('In NOTIFICATIONS module', function () {
     it('the id field in notification templates can not be updated', function (done) {
       var random = Date.now()
 
-      corbelDriver.notifications.notification(notificationId)
+      corbelDriver.notifications.template(notificationId)
         .update({id: random})
         .should.be.eventually.fulfilled
         .then(function () {
-          return corbelDriver.notifications.notification(notificationId)
+          return corbelDriver.notifications.template(notificationId)
             .get()
             .should.be.eventually.fulfilled
         })
@@ -111,11 +111,11 @@ describe('In NOTIFICATIONS module', function () {
     })
 
     it('the title field in notification templates can be updated', function (done) {
-      corbelDriver.notifications.notification(notificationId)
+      corbelDriver.notifications.template(notificationId)
         .update({title: 'updated title'})
         .should.be.eventually.fulfilled
         .then(function () {
-          return corbelDriver.notifications.notification(notificationId)
+          return corbelDriver.notifications.template(notificationId)
             .get()
             .should.be.eventually.fulfilled
         })
@@ -130,11 +130,11 @@ describe('In NOTIFICATIONS module', function () {
     })
 
     it('if the title field in notification templates is set to null, it is not updated', function (done) {
-      corbelDriver.notifications.notification(notificationId)
+      corbelDriver.notifications.template(notificationId)
         .update({title: null})
         .should.be.eventually.fulfilled
         .then(function () {
-          return corbelDriver.notifications.notification(notificationId)
+          return corbelDriver.notifications.template(notificationId)
             .get()
             .should.be.eventually.fulfilled
         })
@@ -149,11 +149,11 @@ describe('In NOTIFICATIONS module', function () {
     })
 
     it('if the text field in notification templates is set to null, it is not updated', function (done) {
-      corbelDriver.notifications.notification(notificationId)
+      corbelDriver.notifications.template(notificationId)
         .update({text: null})
         .should.be.eventually.fulfilled
         .then(function () {
-          return corbelDriver.notifications.notification(notificationId)
+          return corbelDriver.notifications.template(notificationId)
             .get()
             .should.be.eventually.fulfilled
         })
@@ -168,11 +168,11 @@ describe('In NOTIFICATIONS module', function () {
     })
 
     it('if the sender field in notification templates is set to null, it is not updated', function (done) {
-      corbelDriver.notifications.notification(notificationId)
+      corbelDriver.notifications.template(notificationId)
         .update({sender: null})
         .should.be.eventually.fulfilled
         .then(function () {
-          return corbelDriver.notifications.notification(notificationId)
+          return corbelDriver.notifications.template(notificationId)
             .get()
             .should.be.eventually.fulfilled
         })
@@ -187,11 +187,11 @@ describe('In NOTIFICATIONS module', function () {
     })
 
     it('if the type field in notification templates is set to null, it is not updated', function (done) {
-      corbelDriver.notifications.notification(notificationId)
+      corbelDriver.notifications.template(notificationId)
         .update({type: null})
         .should.be.eventually.fulfilled
         .then(function () {
-          return corbelDriver.notifications.notification(notificationId)
+          return corbelDriver.notifications.template(notificationId)
             .get()
             .should.be.eventually.fulfilled
         })
@@ -206,11 +206,11 @@ describe('In NOTIFICATIONS module', function () {
     })
 
     it('if the id field in notification templates is set to null, it is not updated', function (done) {
-      corbelDriver.notifications.notification(notificationId)
+      corbelDriver.notifications.template(notificationId)
         .update({id: null})
         .should.be.eventually.fulfilled
         .then(function () {
-          return corbelDriver.notifications.notification(notificationId)
+          return corbelDriver.notifications.template(notificationId)
             .get()
             .should.be.eventually.fulfilled
         })
@@ -232,11 +232,11 @@ describe('In NOTIFICATIONS module', function () {
         title: 'updated tittle'
       }
 
-      corbelDriver.notifications.notification(notificationId)
+      corbelDriver.notifications.template(notificationId)
         .update(updatedNotification)
         .should.be.eventually.fulfilled
         .then(function () {
-          return corbelDriver.notifications.notification(notificationId)
+          return corbelDriver.notifications.template(notificationId)
             .get()
             .should.be.eventually.fulfilled
         })

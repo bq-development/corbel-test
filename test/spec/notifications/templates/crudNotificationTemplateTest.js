@@ -1,5 +1,5 @@
 describe('In NOTIFICATIONS module', function () {
-  describe('when testing crud operations', function () {
+  describe('when testing crud operations for notifications template', function () {
     var corbelDriver
     var notificationId
     var notificationData = {
@@ -15,37 +15,37 @@ describe('In NOTIFICATIONS module', function () {
     })
 
     it('a notification template can be created, updated and deleted', function (done) {
-      corbelDriver.notifications.notification()
+      corbelDriver.notifications.template()
         .create(notificationData)
         .should.be.eventually.fulfilled
         .then(function (id) {
           notificationId = id
 
-          return corbelDriver.notifications.notification(notificationId)
+          return corbelDriver.notifications.template(notificationId)
             .get()
             .should.be.eventually.fulfilled
         })
         .then(function (response) {
           expect(response).to.have.property('data').and.to.contain(notificationData)
 
-          return corbelDriver.notifications.notification(notificationId)
+          return corbelDriver.notifications.template(notificationId)
             .update({type: 'sms'})
             .should.be.eventually.fulfilled
         })
         .then(function () {
-          return corbelDriver.notifications.notification(notificationId)
+          return corbelDriver.notifications.template(notificationId)
             .get()
             .should.be.eventually.fulfilled
         })
         .then(function (response) {
           expect(response).to.have.deep.property('data.type', 'sms')
 
-          return corbelDriver.notifications.notification(notificationId)
+          return corbelDriver.notifications.template(notificationId)
             .delete()
             .should.be.eventually.fulfilled
         })
         .then(function () {
-          return corbelDriver.notifications.notification(notificationId)
+          return corbelDriver.notifications.template(notificationId)
             .get()
             .should.be.eventually.rejected
         })
