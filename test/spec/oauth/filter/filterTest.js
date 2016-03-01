@@ -1,61 +1,63 @@
 describe('In OAUTH module', function () {
-  var corbelDriver
-  var oauthCommon
 
-  before(function () {
-    corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone()
-    oauthCommon = corbelTest.common.oauth
-  })
+    var corbelDriver;
+    var oauthCommon;
 
-  describe('with a filter that not allows a user with "failedFilterTestUser" username to log in,', function () {
-    var timeStamp = Date.now()
-    var password = 'passwordTest'
+    before(function () {
+        corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
+        oauthCommon = corbelTest.common.oauth;
+    });
 
-    var userGoodTest = {
-      'username': 'goodUserFilterTest' + timeStamp,
-      'password': password,
-      'email': 'goodUserFilterTest' + timeStamp + '@funkifake.com'
-    }
+    describe('with a filter that not allows a user with "failedFilterTestUser" username to log in,', function () {
 
-    var userFailTest = {
-      'username': 'failedFilterTestUser' + timeStamp,
-      'password': password,
-      'email': 'failedFilterTestUser' + timeStamp + '@funkifake.com'
-    }
+        var timeStamp = Date.now();
+        var password = 'passwordTest';
 
-    before(function (done) {
-      corbelDriver.oauth
-        .user(oauthCommon.getClientParams(), corbelDriver.config.config.iamToken.accessToken)
-        .create(userGoodTest)
-        .should.be.eventually.fulfilled
-        .then(function () {
-          return corbelDriver.oauth
-            .user(oauthCommon.getClientParams(), corbelDriver.config.config.iamToken.accessToken)
-            .create(userFailTest)
-            .should.be.eventually.fulfilled
-        })
-        .should.notify(done)
-    })
+        var userGoodTest = {
+            'username': 'goodUserFilterTest' + timeStamp,
+            'password': password,
+            'email': 'goodUserFilterTest' + timeStamp + '@funkifake.com'
+        };
 
-    it('a user with this username receive an 401 error', function (done) {
-      var setCookie = false
-      var noRedirect = false
+        var userFailTest = {
+            'username': 'failedFilterTestUser' + timeStamp,
+            'password': password,
+            'email': 'failedFilterTestUser' + timeStamp + '@funkifake.com'
+        };
 
-      corbelDriver.oauth
-        .authorization(oauthCommon.getClientParamsCode())
-        .login(userGoodTest.username, userGoodTest.password, setCookie, noRedirect)
-        .should.be.eventually.fulfilled
-        .then(function () {
-          return corbelDriver.oauth
-            .authorization(oauthCommon.getClientParamsCode())
-            .login(userFailTest.username, userFailTest.password)
-            .should.be.eventually.rejected
-        })
-        .then(function (response) {
-          expect(response).to.have.property('status', 401)
-          expect(response).to.have.deep.property('data.error', 'unauthorized')
-        })
-        .should.notify(done)
-    })
-  })
-})
+        before(function (done) {
+            corbelDriver.oauth
+                .user(oauthCommon.getClientParams(), corbelDriver.config.config.iamToken.accessToken)
+                .create(userGoodTest)
+                .should.be.eventually.fulfilled
+                .then(function () {
+                    return corbelDriver.oauth
+                        .user(oauthCommon.getClientParams(), corbelDriver.config.config.iamToken.accessToken)
+                        .create(userFailTest)
+                        .should.be.eventually.fulfilled;
+                })
+                .should.notify(done);
+        });
+
+        it('a user with this username receive an 401 error', function (done) {
+            var setCookie = false;
+            var noRedirect = false;
+
+            corbelDriver.oauth
+                .authorization(oauthCommon.getClientParamsCode())
+                .login(userGoodTest.username, userGoodTest.password, setCookie, noRedirect)
+                .should.be.eventually.fulfilled
+                .then(function () {
+                    return corbelDriver.oauth
+                        .authorization(oauthCommon.getClientParamsCode())
+                        .login(userFailTest.username, userFailTest.password)
+                        .should.be.eventually.rejected;
+                })
+                .then(function (response) {
+                    expect(response).to.have.property('status', 401);
+                    expect(response).to.have.deep.property('data.error', 'unauthorized');
+                })
+                .should.notify(done);
+        });
+    });
+});

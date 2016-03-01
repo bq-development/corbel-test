@@ -1,339 +1,345 @@
-describe('In RESOURCES module ', function () {
-  describe('In RESMI module ', function () {
-    describe('when performing a GET operation over an aggregation relation ', function () {
-      var corbelDriver
-      var TIMESTAMP = Date.now()
-      var COLLECTION_A = 'test:CorbelJSObjectLinkA' + TIMESTAMP
-      var COLLECTION_B = 'test:CorbelJSObjectLinkB' + TIMESTAMP
-      var amount = 10
-      var idResourceInA
-      var idsResourecesInB
+describe('In RESOURCES module ', function() {
 
-      var calculeSum = function (data) {
-        var calculatedSum = data.reduce(function (sum, data) {
-          return sum + data.intField
-        }, 0)
+    describe('In RESMI module ', function() {
 
-        return calculatedSum
-      }
+        describe('when performing a GET operation over an aggregation relation ', function() {
+            var corbelDriver;
+            var TIMESTAMP = Date.now();
+            var COLLECTION_A = 'test:CorbelJSObjectLinkA' + TIMESTAMP;
+            var COLLECTION_B = 'test:CorbelJSObjectLinkB' + TIMESTAMP;
+            var amount = 10;
+            var idResourceInA;
+            var idsResourecesInB;
 
-      before(function (done) {
-        corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone()
+            var calculeSum = function(data) {
+                var calculatedSum = data.reduce(function(sum, data) {
+                    return sum + data.intField;
+                }, 0);
 
-        corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION_A, 1)
-          .should.be.eventually.fulfilled
-          .then(function (id) {
-            idResourceInA = id[0]
-            return corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION_B, amount)
-              .should.be.eventually.fulfilled
-          })
-          .then(function (ids) {
-            idsResourecesInB = ids
+                return calculatedSum;
+            };
 
-            return corbelTest.common.resources.createRelationFromSingleObjetToMultipleObject(corbelDriver, COLLECTION_A, idResourceInA, COLLECTION_B, idsResourecesInB)
-          })
-          .should.be.eventually.fulfilled.and.notify(done)
-      })
+            before(function(done) {
+                corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
 
-      after(function (done) {
-        corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
-          .should.be.eventually.fulfilled
-          .then(function () {
-            return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-              .delete()
-          }).should.eventually.be.fulfilled.and.notify(done)
-      })
+                corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION_A, 1)
+                .should.be.eventually.fulfilled
+                .then(function(id) {
+                    idResourceInA = id[0];
+                    return corbelTest.common.resources.createdObjectsToQuery(corbelDriver, COLLECTION_B, amount)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function(ids) {
+                    idsResourecesInB = ids;
 
-      it('in the count aggregation case, all resources are returned.', function (done) {
-        var params = {
-          aggregation: {
-            '$count': '*'
-          }
-        }
+                    return corbelTest.common.resources.createRelationFromSingleObjetToMultipleObject
+                        (corbelDriver, COLLECTION_A, idResourceInA, COLLECTION_B, idsResourecesInB);
+                })
+                .should.be.eventually.fulfilled.and.notify(done);
+            });
 
-        corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-          .get(null, params)
-          .should.be.eventually.fulfilled
-          .then(function (response) {
-            expect(response).to.have.deep.property('data.count', amount)
-          })
-          .should.notify(done)
-      })
+            after(function(done) {
+                corbelTest.common.resources.cleanResourcesQuery(corbelDriver)
+                .should.be.eventually.fulfilled
+                .then(function() {
+                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                        .delete();
+                }).
+                should.eventually.be.fulfilled.and.notify(done);
+            });
 
-      it('in the count aggregation case, matching elements are returned.', function (done) {
-        var params = {
-          aggregation: {
-            '$count': 'stringField'
-          }
-        }
+            it('in the count aggregation case, all resources are returned.', function(done) {
+                var params = {
+                    aggregation: {
+                        '$count': '*'
+                    }
+                };
 
-        corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-          .get(null, params)
-          .should.be.eventually.fulfilled
-          .then(function (response) {
-            expect(response).to.have.deep.property('data.count', amount)
-          })
-          .should.notify(done)
-      })
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null, params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.count', amount);
+                })
+                .should.notify(done);
+            });
 
-      it('in histogram aggregation case, the number of occurrences of each value in a field are returned',
-        function (done) {
-          var params = {
-            aggregation: {
-              '$histogram': 'distinctField'
-            }
-          }
 
-          corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-            .get(null, params)
-            .should.be.eventually.fulfilled
-            .then(function (response) {
-              expect(response).to.have.deep.property('data.length', 2)
-              response.data.map(function (resource) {
-                expect(resource).to.have.deep.property('values.distinctField')
-                expect(resource).to.have.property('count', amount / 2)
-              })
-            })
-            .should.notify(done)
-        })
+            it('in the count aggregation case, matching elements are returned.', function(done) {
+                var params = {
+                    aggregation: {
+                        '$count': 'stringField'
+                    }
+                };
 
-      it('in histogram aggregation case, if the field does not exists, the count is the number of resources',
-        function (done) {
-          var params = {
-            aggregation: {
-              '$histogram': 'nonExist'
-            }
-          }
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null, params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.count', amount);
+                })
+                .should.notify(done);
+            });
 
-          corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-            .get(null, params)
-            .should.be.eventually.fulfilled
-            .then(function (response) {
-              expect(response).to.have.deep.property('data.length', 1)
-              response.data.map(function (resource) {
-                expect(resource).not.to.have.property('id')
-                expect(resource).to.have.property('count', amount)
-              })
-            })
-            .should.notify(done)
-        })
+            it('in histogram aggregation case, the number of occurrences of each value in a field are returned',
+                    function(done) {
+                var params = {
+                    aggregation: {
+                        '$histogram': 'distinctField'
+                    }
+                };
 
-      it('in histogram aggregation case, the number of occurrences in a field that match the query are returned',
-        function (done) {
-          var params = {
-            aggregation: {
-              '$histogram': 'intField'
-            },
-            query: [{
-              '$lt': {
-                intField: 1000
-              }
-            }]
-          }
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null, params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', 2);
+                    response.data.map(function(resource){
+                        expect(resource).to.have.deep.property('values.distinctField');
+                        expect(resource).to.have.property('count', amount/2);
+                    });
+                })
+                .should.notify(done);
+            });
 
-          corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-            .get(null, params)
-            .should.be.eventually.fulfilled
-            .then(function (response) {
-              expect(response).to.have.property('data').and.to.be.an('array')
-              response.data.map(function (resource) {
-                expect(resource).to.have.deep.property('values.intField').and.to.be.below(1000)
-                expect(resource).to.have.property('count')
-              })
-            })
-            .should.notify(done)
-        })
+            it('in histogram aggregation case, if the field does not exists, the count is the number of resources',
+                    function(done) {
+                var params = {
+                    aggregation: {
+                        '$histogram': 'nonExist'
+                    }
+                };
 
-      it('in histogram aggregation case, the number of occurrences that match the pagination are returned',
-        function (done) {
-          var params = {
-            aggregation: {
-              '$histogram': 'stringField'
-            },
-            pagination: {
-              pageSize: 5
-            }
-          }
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null, params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', 1);
+                    response.data.map(function(resource){
+                        expect(resource).not.to.have.property('id');
+                        expect(resource).to.have.property('count', amount);
+                    });
+                })
+                .should.notify(done);
+            });
 
-          corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-            .get(null, params)
-            .should.be.eventually.fulfilled
-            .then(function (response) {
-              expect(response).to.have.deep.property('data.length', 5)
-              response.data.map(function (resource) {
-                expect(resource).to.have.deep.property('values.stringField').and.to.contain('stringContent')
-                expect(resource).to.have.property('count')
-              })
-            })
-            .should.notify(done)
-        })
+            it('in histogram aggregation case, the number of occurrences in a field that match the query are returned',
+                    function(done) {
+                var params = {
+                    aggregation: {
+                        '$histogram': 'intField'
+                    },
+                    query: [{
+                        '$lt': {
+                            intField: 1000
+                        }
+                    }]
+                };
 
-      it('with average aggregation, expected average value is returned.', function (done) {
-        var params = {
-          aggregation: {
-            '$avg': 'intField'
-          }
-        }
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null, params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.property('data').and.to.be.an('array');
+                    response.data.map(function(resource){
+                        expect(resource).to.have.deep.property('values.intField').and.to.be.below(1000);
+                        expect(resource).to.have.property('count');
+                    });
+                })
+                .should.notify(done);
+            });
 
-        var totalSum
+            it('in histogram aggregation case, the number of occurrences that match the pagination are returned',
+                    function(done) {
+                var params = {
+                    aggregation: {
+                        '$histogram': 'stringField'
+                    },
+                    pagination: {
+                        pageSize: 5
+                    }
+                };
 
-        corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-          .get()
-          .should.be.eventually.fulfilled
-          .then(function (response) {
-            totalSum = calculeSum(response.data)
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null, params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', 5);
+                    response.data.map(function(resource){
+                        expect(resource).to.have.deep.property('values.stringField').and.to.contain('stringContent');
+                        expect(resource).to.have.property('count');
+                    });
+                })
+                .should.notify(done);
+            });
 
-            return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-              .get(null, params)
-              .should.be.eventually.fulfilled
-          })
-          .then(function (response) {
-            expect(response).to.have.deep.property('data.average')
-              .to.be.closeTo(totalSum / amount, 0.000000000001)
-          })
-          .should.notify(done)
-      })
+            it('with average aggregation, expected average value is returned.', function(done) {
+                var params = {
+                    aggregation: {
+                        '$avg': 'intField'
+                    }
+                };
 
-      it('with sum aggregation, expected sum value is returned.', function (done) {
-        var params = {
-          aggregation: {
-            '$sum': 'intField'
-          }
-        }
+                var totalSum;
 
-        var totalSum
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get()
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    totalSum = calculeSum(response.data);
 
-        corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-          .get()
-          .should.be.eventually.fulfilled
-          .then(function (response) {
-            totalSum = calculeSum(response.data)
+                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                    .get(null, params)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.average')
+                        .to.be.closeTo(totalSum / amount, 0.000000000001);
+                })
+                .should.notify(done);
+            });
 
-            return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-              .get(null, params)
-              .should.be.eventually.fulfilled
-          })
-          .then(function (response) {
-            expect(response).to.have.deep.property('data.sum').to.be.closeTo(totalSum, 0.000000000001)
-          })
-          .should.notify(done)
-      })
+            it('with sum aggregation, expected sum value is returned.', function(done) {
+                var params = {
+                    aggregation: {
+                        '$sum': 'intField'
+                    }
+                };
 
-      it('in the sum aggregation case, if the field does not exist, null sum is returned', function (done) {
-        var params = {
-          aggregation: {
-            '$sum': 'failField'
-          }
-        }
+                var totalSum;
 
-        corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-          .get()
-          .should.be.eventually.fulfilled
-          .then(function () {
-            return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-              .get(null, params)
-              .should.be.eventually.fulfilled
-          })
-          .then(function (response) {
-            expect(response).to.have.deep.property('data.sum', null)
-          })
-          .should.notify(done)
-      })
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get()
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    totalSum = calculeSum(response.data);
 
-      it('in the min aggregation case, expected match element is returned.', function (done) {
-        var params = {
-          aggregation: {
-            '$min': 'intCount'
-          }
-        }
+                    return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                    .get(null, params)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.sum').to.be.closeTo(totalSum, 0.000000000001);
+                })
+                .should.notify(done);
+            });
 
-        corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-          .get(null, params)
-          .should.be.eventually.fulfilled
-          .then(function (response) {
-            expect(response).to.have.deep.property('data.min', 0)
-          })
-          .should.notify(done)
-      })
+            it('in the sum aggregation case, if the field does not exist, null sum is returned', function(done) {
 
-      it('in the max aggregation case, expected match element is returned.', function (done) {
-        var params = {
-          aggregation: {
-            '$max': 'intCount'
-          }
-        }
+                var params = {
+                    aggregation: {
+                        '$sum': 'failField'
+                    }
+                };
 
-        corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-          .get(null, params)
-          .should.be.eventually.fulfilled
-          .then(function (response) {
-            expect(response).to.have.deep.property('data.max', 900)
-          })
-          .should.notify(done)
-      })
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                    .get()
+                    .should.be.eventually.fulfilled
+                    .then(function() {
+                        return corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                            .get(null, params)
+                            .should.be.eventually.fulfilled;
+                    })
+                    .then(function(response) {
+                        expect(response).to.have.deep.property('data.sum', null);
+                    })
+                    .should.notify(done);
+            });
 
-      it('with max aggregation over a query, expected match element is returned.', function (done) {
-        var params = {
-          aggregation: {
-            '$max': 'intCount'
-          },
-          query: [{
-            '$lte': {
-              intCount: 900
-            }
-          }]
-        }
+            it('in the min aggregation case, expected match element is returned.', function(done) {
+                var params = {
+                    aggregation: {
+                        '$min': 'intCount'
+                    }
+                };
 
-        corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-          .get(null, params)
-          .should.be.eventually.fulfilled
-          .then(function (response) {
-            expect(response).to.have.deep.property('data.max', 900)
-          })
-          .should.notify(done)
-      })
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null, params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.min', 0);
+                })
+                .should.notify(done);
+            });
 
-      it('with min aggregation over a query, expected match element is returned.', function (done) {
-        var params = {
-          aggregation: {
-            '$min': 'intCount'
-          },
-          query: [{
-            '$gte': {
-              intCount: 900
-            }
-          }]
-        }
+            it('in the max aggregation case, expected match element is returned.', function(done) {
+                var params = {
+                    aggregation: {
+                        '$max': 'intCount'
+                    }
+                };
 
-        corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-          .get(null, params)
-          .should.be.eventually.fulfilled
-          .then(function (response) {
-            expect(response).to.have.deep.property('data.min', 900)
-          })
-          .should.notify(done)
-      })
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null, params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.max', 900);
+                })
+                .should.notify(done);
+            });
 
-      it('expected amount of resources are returned using aggregation & query parameters.', function (done) {
-        var params = {
-          aggregation: {
-            '$count': '*'
-          },
-          query: [{
-            '$lt': {
-              intCount: 800
-            }
-          }]
-        }
+            it('with max aggregation over a query, expected match element is returned.', function(done) {
+                var params = {
+                    aggregation: {
+                        '$max': 'intCount'
+                    },
+                    query: [{
+                        '$lte': {
+                            intCount: 900
+                        }
+                    }]
+                };
 
-        corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
-          .get(null, params)
-          .should.be.eventually.fulfilled
-          .then(function (response) {
-            expect(response).to.have.deep.property('data.count', 8)
-          })
-          .should.notify(done)
-      })
-    })
-  })
-})
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null, params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.max', 900);
+                })
+                .should.notify(done);
+            });
+
+            it('with min aggregation over a query, expected match element is returned.', function(done) {
+                var params = {
+                    aggregation: {
+                        '$min': 'intCount'
+                    },
+                    query: [{
+                        '$gte': {
+                            intCount: 900
+                        }
+                    }]
+                };
+
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null, params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.min', 900);
+                })
+                .should.notify(done);
+            });
+
+            it('expected amount of resources are returned using aggregation & query parameters.', function(done) {
+                var params = {
+                    aggregation: {
+                        '$count': '*'
+                    },
+                    query: [{
+                        '$lt': {
+                            intCount: 800
+                        }
+                    }]
+                };
+
+                corbelDriver.resources.relation(COLLECTION_A, idResourceInA, COLLECTION_B)
+                .get(null, params)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.count', 8);
+                })
+                .should.notify(done);
+            });
+        });
+    });
+});

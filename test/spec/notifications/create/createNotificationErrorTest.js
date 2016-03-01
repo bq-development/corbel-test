@@ -1,95 +1,97 @@
-describe('In NOTIFICATIONS module', function () {
-  describe('when testing creation', function () {
-    var corbelDriver
-    var unauthorizedDriver
+describe('In NOTIFICATIONS module', function() {
 
-    before(function () {
-      corbelDriver = corbelTest.drivers['ADMIN_USER'].clone()
-      unauthorizedDriver = corbelTest.drivers['DEFAULT_USER'].clone()
-    })
+    describe('when testing creation', function() {
+        var corbelDriver;
+        var unauthorizedDriver;
 
-    it('an error is returned while trying to create a notification template without permission', function (done) {
-      var notificationData = {
-        id: 'mail_notification_' + Date.now(),
-        type: 'mail',
-        sender: 'me',
-        text: 'text',
-        title: 'subject'
-      }
+        before(function() {
+            corbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
+            unauthorizedDriver = corbelTest.drivers['DEFAULT_USER'].clone();
+        });
 
-      unauthorizedDriver.notifications.notification()
-        .create(notificationData)
-        .should.be.eventually.rejected
-        .then(function (e) {
-          expect(e).to.have.property('status', 401)
-          expect(e).to.have.deep.property('data.error', 'unauthorized_token')
-        })
-        .should.notify(done)
-    })
+        it('an error is returned while trying to create a notification template without permission', function(done) {
+            var notificationData = {
+                id: 'mail_notification_' + Date.now(),
+                type: 'mail',
+                sender: 'me',
+                text: 'text',
+                title: 'subject'
+            };
 
-    it('an error [422] is returned while trying to create an empty template', function (done) {
-      corbelDriver.notifications.notification()
-        .create({})
-        .should.be.eventually.rejected
-        .then(function (e) {
-          expect(e).to.have.property('status', 422)
-          expect(e).to.have.deep.property('data.error', 'invalid_entity')
-        })
-        .should.notify(done)
-    })
+            unauthorizedDriver.notifications.notification()
+                .create(notificationData)
+            .should.be.eventually.rejected
+            .then(function(e) {
+                expect(e).to.have.property('status', 401);
+                expect(e).to.have.deep.property('data.error', 'unauthorized_token');
+            })
+            .should.notify(done);
+        });
 
-    it('an error [422] is returned while trying to create a template without sender', function (done) {
-      var notificationData = {
-        id: 'mail_notification_' + Date.now(),
-        type: 'mail',
-        text: 'text',
-        title: 'subject'
-      }
+        it('an error [422] is returned while trying to create an empty template', function(done) {
 
-      corbelDriver.notifications.notification()
-        .create(notificationData)
-        .should.be.eventually.rejected
-        .then(function (e) {
-          expect(e).to.have.property('status', 422)
-          expect(e).to.have.deep.property('data.error', 'invalid_entity')
-        })
-        .should.notify(done)
-    })
+            corbelDriver.notifications.notification()
+                .create({})
+            .should.be.eventually.rejected
+            .then(function(e) {
+                expect(e).to.have.property('status', 422);
+                expect(e).to.have.deep.property('data.error', 'invalid_entity');
+            })
+            .should.notify(done);
+        });
 
-    it('an error [422] is returned while trying to create a template without type', function (done) {
-      var notificationData = {
-        id: 'mail_notification_' + Date.now(),
-        sender: 'me',
-        text: 'text',
-        title: 'subject'
-      }
+        it('an error [422] is returned while trying to create a template without sender', function(done) {
+            var notificationData = {
+                id: 'mail_notification_' + Date.now(),
+                type: 'mail',
+                text: 'text',
+                title: 'subject'
+            };
 
-      corbelDriver.notifications.notification()
-        .create(notificationData)
-        .should.be.eventually.rejected
-        .then(function (e) {
-          expect(e).to.have.property('status', 422)
-          expect(e).to.have.deep.property('data.error', 'invalid_entity')
-        })
-        .should.notify(done)
-    })
+            corbelDriver.notifications.notification()
+                .create(notificationData)
+            .should.be.eventually.rejected
+            .then(function(e) {
+                expect(e).to.have.property('status', 422);
+                expect(e).to.have.deep.property('data.error', 'invalid_entity');
+            })
+            .should.notify(done);
+        });
 
-    it('an error [422] is returned while trying to create a template without text', function (done) {
-      var notificationData = {
-        id: 'mail_notification_' + Date.now(),
-        sender: 'me',
-        type: 'mail',
-        title: 'subject'
-      }
+        it('an error [422] is returned while trying to create a template without type', function(done) {
+            var notificationData = {
+                id: 'mail_notification_' + Date.now(),
+                sender: 'me',
+                text: 'text',
+                title: 'subject'
+            };
 
-      corbelDriver.notifications.notification()
-        .create(notificationData)
-        .should.be.eventually.rejected
-        .then(function (e) {
-          expect(e).to.have.property('status', 422)
-          expect(e).to.have.deep.property('data.error', 'invalid_entity')
-        })
-        .should.notify(done)
-    })
-  })
-})
+            corbelDriver.notifications.notification()
+                .create(notificationData)
+            .should.be.eventually.rejected
+            .then(function(e) {
+                expect(e).to.have.property('status', 422);
+                expect(e).to.have.deep.property('data.error', 'invalid_entity');
+            })
+            .should.notify(done);
+        });
+
+        it('an error [422] is returned while trying to create a template without text', function(done) {
+            var notificationData = {
+                id: 'mail_notification_' + Date.now(),
+                sender: 'me',
+                type: 'mail',
+                title: 'subject'
+            };
+
+            corbelDriver.notifications.notification()
+                .create(notificationData)
+            .should.be.eventually.rejected
+            .then(function(e) {
+                expect(e).to.have.property('status', 422);
+                expect(e).to.have.deep.property('data.error', 'invalid_entity');
+            })
+            .should.notify(done);
+        });
+    });
+});

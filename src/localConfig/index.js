@@ -1,56 +1,57 @@
-var _ = require('lodash')
+var _ = require('lodash');
 
-var LocalConfig = function Local () {
-  this.LOCAL_STORAGE_KEY = 'config'
-  this.db = this.load() || {}
-}
+var LocalConfig = function Local() {
+    this.LOCAL_STORAGE_KEY = 'config';
+    this.db = this.load() || {};
+};
 
 LocalConfig.prototype = {
-  setOriginalURL: function (url) {
-    this.db.URL_BASE_ORIGINAL = url
-    this.save()
-  },
 
-  getOriginalUrl: function () {
-    return this.db.URL_BASE_ORIGINAL
-  },
+    setOriginalURL: function(url) {
+        this.db.URL_BASE_ORIGINAL = url;
+        this.save();
+    },
 
-  setEnvironment: function (env) {
-    this.db.ENV = env
-    this.save()
-  },
+    getOriginalUrl: function() {
+        return this.db.URL_BASE_ORIGINAL;
+    },
 
-  getEnvironment: function () {
-    return this.db.ENV
-  },
+    setEnvironment: function(env) {
+        this.db.ENV = env;
+        this.save();
+    },
 
-  setLocalServices: function (services) {
-    this.db.localServices = services
-    this.save()
-  },
+    getEnvironment: function() {
+        return this.db.ENV;
+    },
 
-  getLocalServices: function () {
-    return this.db.localServices
-  },
+    setLocalServices: function(services) {
+        this.db.localServices = services;
+        this.save();
+    },
 
-  removeLocalService: function (service) {
-    this.db.localServices = _.without(this.db.localServices, service)
-    this.save()
-  },
+    getLocalServices: function() {
+        return this.db.localServices;
+    },
 
-  addLocalService: function (service) {
-    this.db.localServices = this.db.localServices || []
-    this.db.localServices.push(service)
-    this.save()
-  },
+    removeLocalService: function(service) {
+        this.db.localServices = _.without(this.db.localServices, service);
+        this.save();
+    },
 
-  save: function () {
-    window.localStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify(this.db))
-  },
+    addLocalService: function(service) {
+        this.db.localServices = this.db.localServices || [];
+        this.db.localServices.push(service);
+        this.save();
+    },
 
-  load: function () {
-    return JSON.parse(window.localStorage.getItem(this.LOCAL_STORAGE_KEY))
-  }
-}
+    save: function() {
+        window.localStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify(this.db));
+    },
 
-exports.LocalConfig = new LocalConfig()
+    load: function() {
+        return JSON.parse(window.localStorage.getItem(this.LOCAL_STORAGE_KEY));
+    }
+};
+
+exports.LocalConfig = new LocalConfig();

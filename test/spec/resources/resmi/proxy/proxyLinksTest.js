@@ -1,44 +1,45 @@
-describe('In RESOURCES module ', function () {
-  describe('In RESMI module, testing proxyLinks ', function () {
-    var corbelDriver
-    var urlBaseBackup
-    var COLLECTION_NAME = 'test:CorbelJSProxyTest'
-    var TEST_OBJECT = {
-      a: 1
-    }
+describe('In RESOURCES module ', function() {
 
-    before(function () {
-      corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone()
-      urlBaseBackup = corbelDriver.config.config.urlBase.replace('{{module}}', 'resources')
-      corbelDriver.config.config.urlBase =
-        corbelDriver.config.get('urlBase').replace('bqws.io/', 'bqws.io/resources/')
-          .replace('{{module}}', 'proxy')
-    })
+    describe('In RESMI module, testing proxyLinks ', function() {
+        var corbelDriver;
+        var urlBaseBackup;
+        var COLLECTION_NAME = 'test:CorbelJSProxyTest';
+        var TEST_OBJECT = {
+            a: 1
+        };
 
-    after(function () {
-      corbelDriver.config.config.urlBase = urlBaseBackup
-    })
+        before(function() {
+            corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
+            urlBaseBackup = corbelDriver.config.config.urlBase.replace('{{module}}', 'resources');
+            corbelDriver.config.config.urlBase =
+                corbelDriver.config.get('urlBase').replace('bqws.io/', 'bqws.io/resources/')
+                .replace('{{module}}', 'proxy');
+        });
 
-    it(' when creates a resource, location includes full path', function (done) {
-      var objectId
-      var requestDomain = 'silkroad-qa/'
+        after(function() {
+            corbelDriver.config.config.urlBase = urlBaseBackup;
+        });
 
-      corbelDriver.resources.collection(COLLECTION_NAME)
-        .add(TEST_OBJECT)
-        .should.be.eventually.fulfilled
-        .then(function (id) {
-          objectId = id
+        it(' when creates a resource, location includes full path', function(done) {
+            var objectId;
+            var requestDomain = 'silkroad-qa/';
 
-          return corbelDriver.resources.resource(COLLECTION_NAME, objectId)
-            .get()
+            corbelDriver.resources.collection(COLLECTION_NAME)
+            .add(TEST_OBJECT)
             .should.be.eventually.fulfilled
-        })
-        .then(function (content) {
-          expect(content.data.links[0].href)
-            .to.be.equal(corbelDriver.config.config.urlBase +
-            requestDomain + 'resource/' + COLLECTION_NAME + '/' + objectId)
-        })
-        .should.be.eventually.fulfilled.notify(done)
-    })
-  })
-})
+            .then(function(id) {
+                objectId = id;
+
+                return corbelDriver.resources.resource(COLLECTION_NAME, objectId)
+                .get()
+                .should.be.eventually.fulfilled;
+            })
+            .then(function(content) {
+                expect(content.data.links[0].href)
+                    .to.be.equal(corbelDriver.config.config.urlBase +
+                        requestDomain + 'resource/' + COLLECTION_NAME + '/' + objectId);
+            })
+            .should.be.eventually.fulfilled.notify(done);
+        });
+    });
+});
