@@ -1,6 +1,6 @@
 describe('In NOTIFICATIONS module', function() {
 
-    describe('when testing creation', function() {
+    describe('when testing template creation', function() {
         var corbelDriver;
         var unauthorizedDriver;
 

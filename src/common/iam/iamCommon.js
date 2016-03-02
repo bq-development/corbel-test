@@ -79,6 +79,41 @@ function getCompositeScope(id, scopes) {
     };
 }
 
+function createDomainAndClient(driver, domain, clientName, scopes, publicScopes) {
+    var domainCreatedId;
+    
+    var currentDomain = {
+        id: domain,
+        description: 'anyDescription',
+        scopes: scopes ? scopes : [],
+        publicScopes: publicScopes ? publicScopes : []
+    };
+
+    return driver.iam.domain().create(currentDomain)
+    .then(function(id) {
+        domainCreatedId = id;
+        var currentClient = {
+            name: clientName,
+            signatureAlgorithm: 'HS256',
+            domain: domain,
+            scopes: scopes ?  scopes : []
+        };
+
+        return driver.iam.client(domainCreatedId).create(currentClient);    
+    })
+    .then(function(clientId) {
+        return driver.iam.client(domainCreatedId, clientId).get();
+    })
+    .then(function(responseClient) {
+        var clientInfo = {
+            key: responseClient.data.key,
+            id: responseClient.data.id
+        };
+
+        return clientInfo;
+    });
+}
+
 
 module.exports = {
     createUsers: createUsers,
@@ -86,5 +121,6 @@ module.exports = {
     getDomain: getDomain,
     getClient: getClient,
     getScope: getScope,
-    getCompositeScope: getCompositeScope
+    getCompositeScope: getCompositeScope,
+    createDomainAndClient: createDomainAndClient
 };

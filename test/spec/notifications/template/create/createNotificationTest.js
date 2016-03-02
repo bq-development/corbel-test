@@ -17,15 +17,6 @@ describe('In NOTIFICATIONS module', function() {
             corbelDriver.notifications.template(notificationId)
                 .delete()
             .should.be.eventually.fulfilled
-            .then(function(){
-                return corbelDriver.notifications.template(notificationId)
-                    .get()
-                .should.be.eventually.rejected;
-            })
-            .then(function(e) {
-                expect(e).to.have.property('status', 404);
-                expect(e).to.have.deep.property('data.error', 'not_found');
-            })
             .should.notify(done);
         });
 
