@@ -26,7 +26,6 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        
 
         it('the logged user sessions are deleted using "me"', function(done) {
             var tokenPreCloseSessions = corbelDriver.config.config.iamToken.accessToken;
