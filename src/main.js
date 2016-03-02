@@ -60,6 +60,10 @@ corbelTest.CONFIG.COMMON.urlBase = config.COMMON.urlBase.replace('{{ENV}}', envi
 saveLocalConfig(environment, localServices);
 setupBrowser(karma, localServices, environment);
 
+corbelTest.getCorbel = function() {
+    return corbel;
+};
+
 corbelTest.getCustomDriver = function(driverData) {
     var driverConfig = corbelTest.getConfig(undefined, driverData);
     var driver = corbel.getDriver(driverConfig);
