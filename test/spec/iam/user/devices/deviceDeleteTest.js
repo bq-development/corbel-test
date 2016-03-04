@@ -22,15 +22,15 @@ describe('In IAM module', function() {
                         .should.be.eventually.fulfilled;
                 })
                 .then(function() {
+                    var deviceId= Date.now();
                     var device = {
                         notificationUri: Date.now(),
-                        uid: Date.now(),
                         name: 'device',
                         type: 'Android',
                         notificationEnabled: true
                     };
                     return corbelDriver.iam.user()
-                        .registerMyDevice(device)
+                        .registerMyDevice(deviceId, device)
                         .should.be.eventually.fulfilled;
                 })
                 .then(function(deviceIdResponse) {
