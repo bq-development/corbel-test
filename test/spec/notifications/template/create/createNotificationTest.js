@@ -2,19 +2,20 @@ describe('In NOTIFICATIONS module', function() {
 
     describe('when testing creation', function() {
         var corbelDriver;
-        var notificationId;
         var notificationData;
+        var nameData;
 
         before(function() {
             corbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
         });
 
         beforeEach(function() {
-            notificationData  = corbelTest.common.notifications.getRandomNotification();
+            nameData = 'notificationName-' + Date.now();
+            notificationData  = corbelTest.common.notifications.getNotification(nameData);
         });
 
         afterEach(function(done) {
-            corbelDriver.notifications.template(notificationId)
+            corbelDriver.notifications.template(nameData)
                 .delete()
             .should.be.eventually.fulfilled
             .should.notify(done);
@@ -24,10 +25,8 @@ describe('In NOTIFICATIONS module', function() {
             corbelDriver.notifications.template()
                 .create(notificationData)
             .should.be.eventually.fulfilled
-            .then(function(id) {
-                notificationId = id;
-
-                return corbelDriver.notifications.template(notificationId)
+            .then(function() {
+                return corbelDriver.notifications.template(nameData)
                     .get()
                 .should.be.eventually.fulfilled;
             })
@@ -37,39 +36,20 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('a notification template can be created without title and the id is received', function(done) {
+       it('a notification template can be created without title and the id is received', function(done) {
             delete notificationData.title;
 
             corbelDriver.notifications.template()
                 .create(notificationData)
             .should.be.eventually.fulfilled
-            .then(function(id) {
-                notificationId = id;
+            .then(function() {
 
-                return corbelDriver.notifications.template(notificationId)
+                return corbelDriver.notifications.template(nameData)
                     .get()
                 .should.be.eventually.fulfilled;
             })
             .then(function(response) {
-                expect(response).to.have.property('data').and.to.contain(notificationData);
-            })
-            .should.notify(done);
-        });
-
-        it('a notification template can be created without id and a random id is received', function(done) {
-            delete notificationData.id;
-
-            corbelDriver.notifications.template()
-                .create(notificationData)
-            .should.be.eventually.fulfilled
-            .then(function(id) {
-                notificationId = id;
-
-                return corbelDriver.notifications.template(notificationId)
-                    .get()
-                .should.be.eventually.fulfilled;
-            })
-            .then(function(response) {
+                delete notificationData.title;
                 expect(response).to.have.property('data').and.to.contain(notificationData);
             })
             .should.notify(done);

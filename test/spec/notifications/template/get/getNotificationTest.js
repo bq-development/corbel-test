@@ -64,25 +64,6 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('only notification templates that match the query are received', function(done) {
-            var params = {
-                query: [{
-                    '$eq': {
-                        id: notificationList[0]
-                    }
-                }]
-            };
-
-            corbelDriver.notifications.template()
-                .get(params)
-            .should.be.eventually.fulfilled
-            .then(function(response){
-                expect(response).to.have.deep.property('data.length', 1);
-                expect(response).to.have.deep.property('data[0].id', notificationList[0]);
-            })
-            .should.notify(done);
-        });
-
         it('no notification templates are received if the query is not matched', function(done) {
             var params = {
                 query: [{
