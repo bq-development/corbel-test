@@ -11,7 +11,8 @@ describe('In NOTIFICATIONS module', function() {
 
         it('an error is returned while trying to create a notification template without permission', function(done) {
             var notificationData = {
-                id: 'mail_notification_' + Date.now(),
+                name: 'mail_notification_' + Date.now(),
+                domain: 'silkroad-qa',
                 type: 'mail',
                 sender: 'me',
                 text: 'text',
@@ -42,7 +43,8 @@ describe('In NOTIFICATIONS module', function() {
 
         it('an error [422] is returned while trying to create a template without sender', function(done) {
             var notificationData = {
-                id: 'mail_notification_' + Date.now(),
+                name: 'mail_notification_' + Date.now(),
+                domain: 'silkroad-qa',
                 type: 'mail',
                 text: 'text',
                 title: 'subject'
@@ -60,7 +62,8 @@ describe('In NOTIFICATIONS module', function() {
 
         it('an error [422] is returned while trying to create a template without type', function(done) {
             var notificationData = {
-                id: 'mail_notification_' + Date.now(),
+                name: 'mail_notification_' + Date.now(),
+                domain: 'silkroad-qa',
                 sender: 'me',
                 text: 'text',
                 title: 'subject'
@@ -78,7 +81,8 @@ describe('In NOTIFICATIONS module', function() {
 
         it('an error [422] is returned while trying to create a template without text', function(done) {
             var notificationData = {
-                id: 'mail_notification_' + Date.now(),
+                name: 'mail_notification_' + Date.now(),
+                domain: 'silkroad-qa',
                 sender: 'me',
                 type: 'mail',
                 title: 'subject'
