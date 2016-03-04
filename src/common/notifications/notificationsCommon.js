@@ -4,23 +4,40 @@
 //@endexclude
 
 function createMultipleNotifications (driver, amount) {
+    var baseName = 'notificationName-' + Date.now() + '-';
     var promises = [];
+    var createdCount = 0;
     for (var count = 1; count < amount; count++) {
-        var promise = createNotification(driver, count)
-            .should.be.eventually.fulfilled;
+        var promise = createNotification(driver, baseName + count)
+            .should.be.eventually.fulfilled
+            .then(function() {
+                createdCount ++;
+                return baseName + createdCount;
+            });
+
         promises.push(promise);
     }
     return Promise.all(promises);
 }
 
-function createNotification(driver, number) {
-    return driver.notifications.template().create(getRandomNotification(number));
+function createNotification(driver, nameData) {
+    return driver.notifications.template().create(getNotification(nameData));
 }
 
-function getRandomNotification(number) {
-    number = number || 0;
+function getNotification(nameData) {
     return {
-        id: 'mail_notification_' + number + '_' + Date.now(),
+        name: nameData,
+        domain: 'silkroad-qa',
+        type: 'mail',
+        sender: 'me',
+        text: 'text',
+        title: 'subject'
+    };
+}
+
+function getNotificationResponse(nameData) {
+    return {
+        id: nameData,
         type: 'mail',
         sender: 'me',
         text: 'text',
@@ -52,6 +69,7 @@ function deleteNotificationsList(driver, notificationList) {
 module.exports = {
     createMultipleNotifications: createMultipleNotifications,
     createNotification: createNotification,
-    getRandomNotification: getRandomNotification,
-    deleteNotificationsList: deleteNotificationsList
+    getNotification: getNotification,
+    deleteNotificationsList: deleteNotificationsList,
+    getNotificationResponse: getNotificationResponse
 };

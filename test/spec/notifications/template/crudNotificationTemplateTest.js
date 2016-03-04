@@ -2,9 +2,18 @@ describe('In NOTIFICATIONS module', function() {
 
     describe('when testing crud operations for templates', function() {
         var corbelDriver;
-        var notificationId;
+        var nameData = 'mail_notification_' + Date.now();
         var notificationData = {
-            id: 'mail_notification_' + Date.now(),
+            name: nameData,
+            domain: 'silkroad-qa',
+            type: 'mail',
+            sender: 'me',
+            text: 'text',
+            title: 'subject'
+        };
+
+        var notificationDataResponse = {
+            id: nameData,
             type: 'mail',
             sender: 'me',
             text: 'text',
@@ -19,34 +28,32 @@ describe('In NOTIFICATIONS module', function() {
             corbelDriver.notifications.template()
                 .create(notificationData)
             .should.be.eventually.fulfilled
-            .then(function(id) {
-                notificationId = id;
-
-                return corbelDriver.notifications.template(notificationId)
+            .then(function() {
+                return corbelDriver.notifications.template(nameData)
                     .get()
                 .should.be.eventually.fulfilled;
             })
             .then(function(response) {
-                expect(response).to.have.property('data').and.to.contain(notificationData);
+                expect(response).to.have.property('data').and.to.contain(notificationDataResponse);
 
-                return corbelDriver.notifications.template(notificationId)
+                return corbelDriver.notifications.template(nameData)
                     .update({type: 'sms'})
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return corbelDriver.notifications.template(notificationId)
+                return corbelDriver.notifications.template(nameData)
                     .get()
                 .should.be.eventually.fulfilled;
             })
             .then(function(response) {
                 expect(response).to.have.deep.property('data.type', 'sms');
 
-                return corbelDriver.notifications.template(notificationId)
+                return corbelDriver.notifications.template(nameData)
                     .delete()
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return corbelDriver.notifications.template(notificationId)
+                return corbelDriver.notifications.template(nameData)
                     .get()
                 .should.be.eventually.rejected;
             })

@@ -68,7 +68,7 @@ describe('In NOTIFICATIONS module', function() {
             var params = {
                 query: [{
                     '$eq': {
-                        id: notificationList[0]
+                        name: notificationList[0]
                     }
                 }]
             };

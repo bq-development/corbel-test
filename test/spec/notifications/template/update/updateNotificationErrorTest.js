@@ -34,21 +34,20 @@ describe('In NOTIFICATIONS module', function() {
         });
 
         describe('with wrong data', function() {
-            var notificationId;
+            var nameData;
 
-            beforeEach(function(done) {
+            before(function(done) {
 
-                corbelTest.common.notifications.createNotification(corbelDriver)
+                nameData = 'notificationName-' + Date.now();
+
+                corbelTest.common.notifications.createNotification(corbelDriver, nameData)
                 .should.be.eventually.fulfilled
-                .then(function(id) {
-                    notificationId = id;
-                })
                 .should.notify(done);
             });
 
-            afterEach(function(done) {
+            after(function(done) {
 
-                corbelDriver.notifications.template(notificationId)
+                corbelDriver.notifications.template(nameData)
                     .delete()
                 .should.be.eventually.fulfilled
                 .should.notify(done);
@@ -56,7 +55,7 @@ describe('In NOTIFICATIONS module', function() {
 
             it('an error [422] is returned if the data is not a json', function(done) {
 
-                corbelDriver.notifications.template(notificationId)
+                corbelDriver.notifications.template(nameData)
                     .update('invalid')
                 .should.be.eventually.rejected
                 .then(function(e) {
