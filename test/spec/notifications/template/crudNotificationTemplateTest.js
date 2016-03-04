@@ -1,6 +1,6 @@
 describe('In NOTIFICATIONS module', function() {
 
-    describe('when testing crud operations', function() {
+    describe('when testing crud operations for templates', function() {
         var corbelDriver;
         var notificationId;
         var notificationData = {
