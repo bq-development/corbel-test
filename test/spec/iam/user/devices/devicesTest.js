@@ -10,9 +10,9 @@ describe('In IAM module', function() {
         var user;
         var corbelDriver;
         var random;
+        var deviceId= '123';
         var device = {
             notificationUri: '123',
-            uid: '123',
             name: 'device',
             type: 'ANDROID',
             notificationEnabled: true
@@ -52,7 +52,7 @@ describe('In IAM module', function() {
             var retriveDevice;
 
             corbelDriver.iam.user(user.id)
-            .registerDevice(device)
+            .registerDevice(deviceId, device)
             .should.be.eventually.fulfilled
             .then(function() {
                 return corbelDriver.iam.user(user.id)
@@ -64,15 +64,13 @@ describe('In IAM module', function() {
                 ['notificationUri', 'uid', 'name', 'type', 'notificationEnabled'].forEach(function(key) {
                     expect(retriveDevice[key]).to.be.equals(device[key]);
                 });
-                expect(retriveDevice.userId).to.be.equals(user.id);
                 device.name = 'My black device';
 
                 return corbelDriver.iam.user(user.id)
-                .registerDevice(device)
+                .registerDevice(deviceId, device)
                 .should.be.eventually.fulfilled;
             })
-            .then(function(deviceId) {
-                expect(deviceId).to.be.equals(retriveDevice.uid);
+            .then(function() {
                 retriveDevice.name = device.name;
 
                 return corbelDriver.iam.user(user.id)
@@ -81,7 +79,7 @@ describe('In IAM module', function() {
             })
             .then(function(responseDevice) {
                 return corbelDriver.iam.user(user.id)
-                .deleteDevice(responseDevice.data.uid)
+                .deleteDevice(deviceId)
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
@@ -105,7 +103,7 @@ describe('In IAM module', function() {
                 expect(devices).to.have.deep.property('data.length', 0);
 
                 return corbelDriver.iam.user()
-                .registerMyDevice(device)
+                .registerMyDevice(deviceId, device)
                 .should.be.eventually.fulfilled;
             })
             .then(function(deviceId) {
@@ -115,15 +113,14 @@ describe('In IAM module', function() {
             })
             .then(function(responseDevice) {
                 retriveDevice = responseDevice.data;
-                ['notificationUri', 'uid', 'name', 'type', 'notificationEnabled']
+                ['notificationUri', 'name', 'type', 'notificationEnabled']
                 .forEach(function(key) {
                     expect(retriveDevice[key]).to.be.equals(device[key]);
                 });
-                expect(retriveDevice.userId).to.be.equals(user.id);
                 device.name = 'My black device';
 
                 return corbelDriver.iam.user()
-                .registerMyDevice(device)
+                .registerMyDevice(deviceId, device)
                 .should.be.eventually.fulfilled;
             })
             .then(function(deviceId) {
@@ -163,10 +160,10 @@ describe('In IAM module', function() {
                 expect(devices).to.have.deep.property('data.length', 0);
 
                 return corbelDriver.iam.user('me')
-                .registerDevice(device)
+                .registerDevice(deviceId, device)
                 .should.be.eventually.fulfilled;
             })
-            .then(function(deviceId) {
+            .then(function() {
                 return corbelDriver.iam.user('me')
                 .getDevice(deviceId)
                 .should.be.eventually.fulfilled;
@@ -181,11 +178,10 @@ describe('In IAM module', function() {
                 device.name = 'My black device';
 
                 return corbelDriver.iam.user('me')
-                .registerDevice(device)
+                .registerDevice(deviceId, device)
                 .should.be.eventually.fulfilled;
             })
-            .then(function(deviceId) {
-                expect(deviceId).to.be.equals(retriveDevice.id);
+            .then(function() {
                 retriveDevice.name = device.name;
 
                 return corbelDriver.iam.user('me')

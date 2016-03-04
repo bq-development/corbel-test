@@ -60,22 +60,20 @@ describe('In IAM module', function() {
         });
 
         it('basic user and his devices are deleted', function(done) {
-            var deviceId;
+            var deviceId = '123';
 
             var device = {
                 notificationUri: '123',
-                uid: '123',
                 name: 'My device',
                 type: 'Android',
                 notificationEnabled: true
             };
 
             corbelDriver.iam.user(user.id)
-            .registerDevice(device)
+            .registerDevice(deviceId, device)
             .should.be.eventually.fulfilled
             .then(function(id) {
-                deviceId = id;
-                
+                expect(id).to.be.equals(deviceId);
                 return corbelDriver.iam.user(user.id)
                 .delete()
                 .should.be.eventually.fulfilled;
@@ -94,22 +92,21 @@ describe('In IAM module', function() {
         });
 
         it('basic user and his devices are deleted using "me"', function(done) {
-            var deviceId;
+            var deviceId = '123';
 
             var device = {
                 notificationUri: '123',
-                uid: '123',
                 name: 'My device',
                 type: 'Android',
                 notificationEnabled: true
             };
 
             corbelDriver.iam.user(user.id)
-            .registerDevice(device)
+            .registerDevice(deviceId, device)
             .should.be.eventually.fulfilled
             .then(function(id) {
                 deviceId = id;
-                
+
                 return corbelTest.common.clients.loginUser
                     (corbelDriver, user.username, user.password)
                 .should.be.eventually.fulfilled;
