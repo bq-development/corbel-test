@@ -14,9 +14,9 @@ describe('In IAM module', function() {
             'username': 'user.get.',
             'password': 'pass'
         };
+        var deviceId = '123';
         var device = {
             notificationUri: '123',
-            uid: '123',
             name: 'device',
             type: 'Android',
             notificationEnabled: true
@@ -63,7 +63,7 @@ describe('In IAM module', function() {
 
         it('fails with 401 when request register user devices', function(done) {
             corbelDriver.iam.user(userId)
-            .registerDevice(device)
+            .registerDevice(deviceId, device)
             .should.eventually.be.rejected
             .then(function(e) {
                 expect(e).to.have.property('status', 401);

@@ -1,6 +1,6 @@
 describe('In IAM module', function() {
     var corbelRootDriver;
-    var deviceFields = ['notificationUri', 'uid', 'name', 'type', 'notificationEnabled'];
+    var deviceFields = ['notificationUri', 'name', 'type', 'notificationEnabled'];
 
     before(function() {
         corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
@@ -10,6 +10,7 @@ describe('In IAM module', function() {
         var user;
         var corbelDriver;
         var random;
+        var deviceId;
         var device;
 
         before(function(done) {
@@ -27,9 +28,9 @@ describe('In IAM module', function() {
         });
 
         beforeEach(function() {
+            deviceId = Date.now();
             device = {
                 notificationUri: Date.now(),
-                uid: Date.now(),
                 name: 'device',
                 type: 'Android',
                 notificationEnabled: true
@@ -57,9 +58,9 @@ describe('In IAM module', function() {
                 var retriveDevice;
 
                 corbelDriver.iam.user('me')
-                    .registerDevice(device)
+                    .registerDevice(deviceId, device)
                     .should.be.eventually.fulfilled
-                    .then(function(deviceId) {
+                    .then(function() {
                         return corbelDriver.iam.user('me')
                             .getDevice(deviceId)
                             .should.be.eventually.fulfilled;
@@ -75,12 +76,10 @@ describe('In IAM module', function() {
         it('users can register his devices using user(me)' +
             ' and when login with it, lastConnection change',
             function(done) {
-                var deviceId;
                 corbelDriver.iam.user('me')
-                    .registerDevice(device)
+                    .registerDevice(deviceId, device)
                     .should.be.eventually.fulfilled
                     .then(function(id) {
-                        deviceId = id;
                         return corbelDriver.iam.user('me')
                             .getDevice(deviceId)
                             .should.be.eventually.fulfilled;
@@ -88,9 +87,9 @@ describe('In IAM module', function() {
                     .then(function(responseDevice) {
                         device = responseDevice.data;
                         expectDeviceLastConnectionAndFirstConnectionTimeNearToDateNow(device);
-                        expect(device._updatedAt).to.be.equals(device.firstFirstConnection);
+                        expect(device.lastConnection).to.be.equals(device.firstConnection);
                         return corbelTest.common.clients.loginUser(corbelDriver,
-                                user.username, user.password, device.uid)
+                                user.username, user.password, deviceId)
                             .should.be.eventually.fulfilled;
                     })
                     .then(function() {
@@ -113,7 +112,7 @@ describe('In IAM module', function() {
                 device.firstConnection = 1;
                 device.lastConnection = 1;
                 corbelDriver.iam.user('me')
-                    .registerDevice(device)
+                    .registerDevice(deviceId, device)
                     .should.be.eventually.fulfilled
                     .then(function(deviceId) {
                         return corbelDriver.iam.user('me')

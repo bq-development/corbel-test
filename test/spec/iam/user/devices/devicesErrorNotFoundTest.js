@@ -8,14 +8,7 @@ describe('In IAM module', function() {
     describe('while testing not found errors in devices', function() {
         var corbelDriver;
         var user;
-        var device = {
-            notificationUri: '123',
-            uid: '123',
-            name: 'device',
-            type: 'Android',
-            notificationEnabled: true
-        };
-
+        
         beforeEach(function(done) {
             corbelDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
 

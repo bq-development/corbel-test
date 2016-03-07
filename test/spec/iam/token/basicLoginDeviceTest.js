@@ -19,10 +19,9 @@ describe('In IAM module', function() {
     it('when request to create a new user and login with basic ' +
         'and specific device id successes returning user',
         function(done) {
-
+            var deviceId = '123';
             var device = {
                 notificationUri: '123',
-                uid: '123',
                 name: 'device',
                 type: 'Android',
                 notificationEnabled: true
@@ -54,7 +53,7 @@ describe('In IAM module', function() {
                     userId = id;
 
                     return corbelDriverAdmin.iam.user(userId)
-                        .registerDevice(device)
+                        .registerDevice(deviceId, device)
                         .should.be.eventually.fulfilled;
                 })
                 .then(function() {

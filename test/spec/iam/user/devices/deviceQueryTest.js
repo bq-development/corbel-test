@@ -27,7 +27,6 @@ describe('In IAM module', function() {
                 })
                 .then(function(devices) {
                     expect(devices).to.have.deep.property('data.length', TOTAL_DEVICE_AMOUNT);
-                    expect(devices.data).to.all.have.property('userId', user.id);
                     retriveDevices = devices.data;
                 })
                 .should.notify(done);
@@ -56,7 +55,6 @@ describe('In IAM module', function() {
                 .should.be.eventually.fulfilled
                 .then(function(devices) {
                     expect(devices).to.have.deep.property('data.length', 3);
-                    expect(devices.data).to.all.have.property('userId', user.id);
                     devices.data.reduce(function(deviceA, deviceB) {
                       expect(deviceA.firstConnection).to.be.at.most(deviceB.firstConnection);
                       return deviceB;

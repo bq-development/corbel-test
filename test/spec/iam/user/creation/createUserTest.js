@@ -10,7 +10,7 @@ describe('In IAM module', function() {
         var domainDefaultScopes;
 
         before(function(done) {
-            corbelDriver = corbelTest.drivers['ADMIN_USER'].clone();      
+            corbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
             corbelTest.drivers['ROOT_CLIENT'].clone()
                 .iam.domain(domainId)
                 .get()
@@ -98,11 +98,10 @@ describe('In IAM module', function() {
         });
 
         it('basic user is created and a device is added', function(done) {
-            var deviceId;
+            var deviceId = '123';
 
             var device = {
                 notificationUri: '123',
-                uid: '123',
                 name: 'My device',
                 type: 'Android',
                 notificationEnabled: true
@@ -114,22 +113,20 @@ describe('In IAM module', function() {
                 expect(userId).not.to.be.equal(undefined);
 
                 return corbelDriver.iam.user(userId)
-                .registerDevice(device)
+                .registerDevice(deviceId, device)
                 .should.eventually.be.fulfilled;
             })
             .then(function(id) {
-                deviceId = id;
-                expect(deviceId).not.to.be.equal(undefined);                
+                expect(deviceId).to.be.equal(id);
             })
             .should.notify(done);
         });
 
         it('basic user is created and operations over a device are made', function(done) {
-            var deviceId;
+            var deviceId = '123';
 
             var device = {
                 notificationUri: '123',
-                uid: '123',
                 name: 'My device',
                 type: 'Android',
                 notificationEnabled: true
@@ -141,12 +138,11 @@ describe('In IAM module', function() {
                 expect(userId).not.to.be.equal(undefined);
 
                 return corbelDriver.iam.user(userId)
-                .registerDevice(device)
+                .registerDevice(deviceId, device)
                 .should.eventually.be.fulfilled;
             })
             .then(function(id) {
-                deviceId = id;
-                expect(deviceId).not.to.be.equal(undefined);
+                expect(deviceId).to.be.equal(id);
 
                 return corbelDriver.iam.user(userId)
                 .getDevice(deviceId)

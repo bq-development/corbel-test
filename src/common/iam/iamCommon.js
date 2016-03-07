@@ -92,12 +92,11 @@ function createDevices(driver, amount) {
         var random = Date.now() + '-' + count;
         var deviceData = {
             type: 'ANDROID',
-            uid: random
         };
 
         promises.push(
             driver.iam.user()
-            .registerMyDevice(deviceData)
+            .registerMyDevice(random, deviceData)
         );
     }
 
@@ -106,7 +105,7 @@ function createDevices(driver, amount) {
 
 function createDomainAndClient(driver, domain, clientName, scopes, publicScopes) {
     var domainCreatedId;
-    
+
     var currentDomain = {
         id: domain,
         description: 'anyDescription',
@@ -124,7 +123,7 @@ function createDomainAndClient(driver, domain, clientName, scopes, publicScopes)
             scopes: scopes ?  scopes : []
         };
 
-        return driver.iam.client(domainCreatedId).create(currentClient);    
+        return driver.iam.client(domainCreatedId).create(currentClient);
     })
     .then(function(clientId) {
         return driver.iam.client(domainCreatedId, clientId).get();
