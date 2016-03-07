@@ -54,8 +54,9 @@ corbelTest.CONFIG = _.cloneDeep(config);
 
 var karma = window.__karma__;
 var environment = initEnvironment(config, process, karma, localConfig);
+var urlEnvironment = environment==='prod' ? '' : '-'+environment;
 var localServices = initLocalServices(karma, localConfig);
-corbelTest.CONFIG.COMMON.urlBase = config.COMMON.urlBase.replace('{{ENV}}', environment);
+corbelTest.CONFIG.COMMON.urlBase = config.COMMON.urlBase.replace('{{ENV}}', urlEnvironment);
 
 saveLocalConfig(environment, localServices);
 setupBrowser(karma, localServices, environment);

@@ -30,7 +30,8 @@ Sidebar.prototype = {
 
 	    $('body').prepend('<div id="menu">PREPEND</div>');
 	    $('#menu').load('base/test/menu/html/menu.html', function() {
-	        $('select[name=remote] option[data-suffix=-' + environment + ']').prop('selected', true);
+	        $('select[name=remote] option[value=' + environment + ']').prop('selected', true);
+	        // $('select[name=remote] option[data-suffix=-' + environment + ']').prop('selected', true);
 	        $(document).on('change', 'select[name=remote]', that.menuRemoteChanged);
 	    });
 
