@@ -40,7 +40,7 @@ function getClientParamsCodeIAM(driver) {
         clientId: corbelTest.CONFIG.OAUTH_DEFAULT.clientId,
         responseType: 'code',
         redirectUri: getURI(driver, 'iam') +
-        'oauth/token?grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=' + getIamJWT()
+            'oauth/token?grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=' + getIamJWT()
     };
 }
 
@@ -64,7 +64,7 @@ function getToken(driver, username, password) {
         .authorization(getClientParamsCode())
         .login(username, password, false, false)
         .should.be.eventually.fulfilled
-        .then(function (response) {
+        .then(function(response) {
             return driver.oauth.token(getClientParamsToken())
                 .get(response.data.query.code)
                 .should.be.eventually.fulfilled;
@@ -86,10 +86,11 @@ function lowLevelPostAuthorizationRequest(driver, clientParams, username, passwo
 }
 
 function lowLevelGetAuthorizationRequest(driver, clientParams) {
+    var params = {};
+    params.customQueryParams = trasformParams(clientParams);
     return corbel.request.send({
-        url: getURI(driver, 'oauth') + 'oauth/authorize',
+        url: getURI(driver, 'oauth') + 'oauth/authorize?' + corbel.utils.serializeParams(params),
         contentType: corbel.Oauth._URL_ENCODED,
-        data: trasformParams(clientParams),
         method: corbel.request.method.GET,
         dataType: 'text'
     });
@@ -121,7 +122,7 @@ function trasformParams(clientParams) {
 
 function waitFor(seconds) {
     var deferred = Promise.defer();
-    setTimeout(function () {
+    setTimeout(function() {
         deferred.resolve();
     }, seconds * 1000);
     return deferred.promise;
@@ -131,7 +132,7 @@ function deleteOauthUser(corbelDriver, username, password) {
     return corbelDriver.oauth
         .authorization(getClientParams)
         .signout()
-        .then(function () {
+        .then(function() {
             corbelDriver.oauth
                 .user(getClientParams())
                 .delete('me');
@@ -149,7 +150,7 @@ function getOauthUserTestParams() {
 }
 
 function toUnderscore(string) {
-    return string.replace(/([A-Z])/g, function (cad) {
+    return string.replace(/([A-Z])/g, function(cad) {
         return '_' + cad.toLowerCase();
     });
 }
