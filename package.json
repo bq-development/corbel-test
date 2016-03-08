@@ -46,7 +46,8 @@
     "promise-polyfill": "^2.1.4",
     "q": "^1.4.1",
     "sinon": "^1.15.4",
-    "time-grunt": "^1.2.1"
+    "time-grunt": "^1.2.1",
+    "sjcl": "^1.0.3"
   },
   "dependencies": {
     "body-parser": "^1.14.2",
