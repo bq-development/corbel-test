@@ -6,13 +6,15 @@ describe('In RESOURCES module', function() {
             var MAX_RETRY = 28;
             var RETRY_PERIOD = 3;
             var corbelDriver;
-            var bquizCorbelDriver;
             var questionTemplateId;
             var email;
             var emailAuthorization;
             var orderIdentifier;
             var clientUrl = 'bquiz-client.com.s3-website-eu-west-1.amazonaws.com';
             var bquizDriverValues;
+            var bquizCorbelDriver;
+            var satDriverValues;
+            var satCorbelDriver;
 
             var TEST_QUESTION = {
                 description: 'This is the {{test}}',
@@ -23,8 +25,11 @@ describe('In RESOURCES module', function() {
             before(function(done) {
                 bquizDriverValues = corbelTest.CONFIG.clientCredentials.bquiz.CLIENT;
                 bquizDriverValues.domain = corbelTest.CONFIG.clientCredentials.bquiz.DOMAIN;
-
                 bquizCorbelDriver = corbelTest.getCustomDriver(bquizDriverValues);
+
+                satDriverValues = corbelTest.CONFIG.clientCredentials.sat.CLIENT;
+                satDriverValues.domain = corbelTest.CONFIG.clientCredentials.sat.DOMAIN;
+                satCorbelDriver = corbelTest.getCustomDriver(satDriverValues);
                 
                 corbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
 
@@ -66,7 +71,7 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            it('in Spanish', function(done) {
+            it('bquiz in Spanish', function(done) {
                 var TEST_SURVEY = {
                     email: email,
                     delay: 'P0D',
@@ -127,7 +132,68 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            it('in French', function(done) {
+            it('sat in Spanish', function(done) {
+                var TEST_SURVEY = {
+                    email: email,
+                    delay: 'P0D',
+                    questionsRequest: [
+                        {
+                            id: questionTemplateId,
+                            metadata: {
+                                'test': 'test question'
+                            }
+                        },
+                        {
+                            id: questionTemplateId,
+                            metadata: {
+                                'test': 'test2 question'
+                            }
+                        }
+                    ],
+                    language: 'es-ES',
+                    orderId : orderIdentifier,
+                    username : 'Batman'
+                };
+
+                satCorbelDriver.resources.collection('bquiz:Survey')
+                    .add(TEST_SURVEY)
+                .should.be.eventually.fulfilled
+                .then(function() {
+                    return satCorbelDriver.resources.resource('bquiz:Contact', email)
+                        .get()
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.contact', true);
+                    expect(response).to.have.deep.property('data.id', email);
+
+                    return corbelTest.common.utils.retry(function() {
+                        return corbelTest.common.mail.random.checkMail(emailAuthorization)
+                            .then(function(response) {
+                                if (response.emailList.list.length === 0) {
+                                    return Promise.reject();
+                                } else {
+                                    return response;
+                                }
+                            });
+                    }, MAX_RETRY, RETRY_PERIOD)
+                .should.be.eventually.fulfilled;
+                })
+                .then(function(response) {
+                    emailAuthorization = response.cookies.PHPSESSID;
+                    var emailId = response.emailList.list[0].mail_id; //jshint ignore:line
+
+                    return corbelTest.common.mail.random.getMail(emailAuthorization, emailId)
+                    .should.be.eventually.fulfilled;
+                })
+                .then(function(mail) {
+                    expect(mail).to.have.deep.property('mail_subject').and.to.contain('Queremos saber tu');
+                    expect(mail).to.have.deep.property('mail_body').and.to.contain(clientUrl);
+                })
+                .should.notify(done);
+            });
+
+            it('bquiz in French', function(done) {
                 var TEST_SURVEY = {
                     email: email,
                     delay: 'P0D',
@@ -189,7 +255,7 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            it('in Portuguese', function(done) {
+            it('bquiz in Portuguese', function(done) {
                 var TEST_SURVEY = {
                     email: email,
                     delay: 'P0D',
