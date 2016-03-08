@@ -7,7 +7,7 @@ var localConfig = require('./localConfig').LocalConfig;
 var Sidebar = require('./sidebar').Sidebar;
 var sidebar = new Sidebar(localConfig);
 var ports = require('../test/ports.conf.js');
-
+var queryString = require('query-string');
 var corbelTest = {};
 
 var initEnvironment = function(config, process, karma, local) {
@@ -32,8 +32,9 @@ var initLocalServices = function(karma, local) {
 
 var setupGrep = function(grep) {
     if (grep) {
-        var debugHref = $(parent.document).find('a.btn-debug').attr('href');
-        $(parent.document).find('a.btn-debug').attr('href', debugHref + '?grep=' + grep);
+        var parsed = queryString.parse(location.search);
+        parsed.grep = grep;
+        location.search = queryString.stringify(parsed);
     }
 };
 
@@ -54,11 +55,20 @@ corbelTest.CONFIG = _.cloneDeep(config);
 
 var karma = window.__karma__;
 var environment = initEnvironment(config, process, karma, localConfig);
+var urlEnvironment = environment==='prod' ? '' : '-'+environment;
 var localServices = initLocalServices(karma, localConfig);
-corbelTest.CONFIG.COMMON.urlBase = config.COMMON.urlBase.replace('{{ENV}}', environment);
+corbelTest.CONFIG.ENV = environment;
+corbelTest.CONFIG.COMMON.urlBase = config.COMMON.urlBase.replace('{{ENV}}', urlEnvironment);
 
 saveLocalConfig(environment, localServices);
 setupBrowser(karma, localServices, environment);
+
+$(document).on('environment:changed',function(evt, data){
+    if(data && data.environment==='prod'){
+        setupGrep('SANITY');
+    }
+
+});
 
 corbelTest.getCustomDriver = function(driverData) {
     var driverConfig = corbelTest.getConfig(undefined, driverData);

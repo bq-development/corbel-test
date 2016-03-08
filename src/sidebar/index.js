@@ -11,7 +11,13 @@ Sidebar.prototype = {
 	menuRemoteChanged: function(evt) {
 	    var environment = evt.target.value;
 	    that.localConfig.setEnvironment(environment);
-	    location.reload();
+        //Grep's query string changes, so does the page reloads
+    	if(environment!=='prod'){
+		    location.reload();
+    	}
+        $(document).trigger('environment:changed', { 
+        	environment: environment
+        });
 	},
 
 	menuPropertyChanged: function(evt) {
@@ -30,7 +36,7 @@ Sidebar.prototype = {
 
 	    $('body').prepend('<div id="menu">PREPEND</div>');
 	    $('#menu').load('base/test/menu/html/menu.html', function() {
-	        $('select[name=remote] option[data-suffix=-' + environment + ']').prop('selected', true);
+	        $('select[name=remote] option[value=' + environment + ']').prop('selected', true);
 	        $(document).on('change', 'select[name=remote]', that.menuRemoteChanged);
 	    });
 

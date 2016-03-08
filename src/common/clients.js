@@ -43,17 +43,19 @@ function login(clientName) {
 
 /**
  * Login with all `*_CLIENT` + `*_USER` defined in `.corbeltest`
+ * Production cases should be logged at every case due to secyurity reasons.
  * @return {Promise} A promise that resolves when all different clients/users are logged
  */
 function loginAll() {
     var promises = [];
 
-    Object.keys(corbelTest.CONFIG).forEach(function(clientName) {
-        if (clientName.indexOf('_CLIENT') !== -1 || clientName.indexOf('_USER') !== -1) {
-            promises.push(login(clientName));
-        }
-    });
-
+    if(corbelTest.localConfig.getEnvironment()!=='prod'){
+        Object.keys(corbelTest.CONFIG).forEach(function(clientName) {
+            if (clientName.indexOf('_CLIENT') !== -1 || clientName.indexOf('_USER') !== -1) {
+                promises.push(login(clientName));
+            }
+        });
+    }
     return Promise.all(promises);
 }
 
