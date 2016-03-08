@@ -3,7 +3,7 @@ describe('In ASSETS module', function() {
 
         var user;
         var assetId;
-        var clientCorbelDriver, userCorbelDriver;
+        var clientCorbelDriver;
         var testUserData = {
             id: 'fooid',
             username: 'foopurchases@foo.com',
@@ -12,40 +12,39 @@ describe('In ASSETS module', function() {
             remember: false
         };
 
-        beforeEach(function() {
-            clientCorbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
-            userCorbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
-        });
-
         var expire = function() {
             return Date.now() + 100000;
         };
 
         var createAssetForUser = function(driver, asset) {
-            return userCorbelDriver.assets.asset().create(asset)
+            return driver.assets.asset().create(asset)
             .should.be.eventually.fulfilled;
         };
 
-        var createAssetForUserAndLoginUser = function(driver, asset) {
-            return corbelTest.common.iam.createUsers(clientCorbelDriver, 1)
+        var createAssetForUserAndLoginUser = function(clientDriver, asset) {
+            return corbelTest.common.iam.createUsers(clientDriver, 1)
             .should.be.eventually.fulfilled
             .then(function(response) {
                 user = response[0];
                 asset.userId = user.id;
-                return createAssetForUser(driver, asset)
+                return createAssetForUser(clientDriver, asset)
                 .should.be.eventually.fulfilled;
             })
             .then(function(id) {
                 assetId = id;
-                return corbelTest.common.clients.loginUser( clientCorbelDriver, user.username, user.password)
+                return corbelTest.common.clients.loginUser( clientDriver, user.username, user.password)
                 .should.be.eventually.fulfilled;
             });
         };
 
         describe('when setting wrong custom parameters', function() {
 
+            before(function() {
+                clientCorbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
+            });
+
             it('asset is not created when incomplete scope data is defined', function(done) {
-                userCorbelDriver.assets.asset().create({
+                clientCorbelDriver.assets.asset().create({
                     userId: testUserData.id,
                     name: 'customAssetWithoutParams',
                     productId: 'customAssetWithoutParams',
@@ -62,7 +61,7 @@ describe('In ASSETS module', function() {
             });
 
             it('asset is not created when wrong user scope data is defined', function(done) {
-                userCorbelDriver.assets.asset().create({
+                clientCorbelDriver.assets.asset().create({
                     userId: testUserData.id,
                     name: 'customAssetWithWrongParams',
                     productId: 'customAssetWithWrongParams',
@@ -79,7 +78,7 @@ describe('In ASSETS module', function() {
             });
 
             it('asset is not created when custom scope data is correct but the user one', function(done) {
-                userCorbelDriver.assets.asset().create({
+                clientCorbelDriver.assets.asset().create({
                     userId: testUserData.id,
                     name: 'customAssetWithCorrectlyAndWrongsParams',
                     productId: 'customAssetWithCorrectlyAndWrongsParams',
@@ -108,7 +107,9 @@ describe('In ASSETS module', function() {
             };
 
             before(function(done) {
-                createAssetForUserAndLoginUser( userCorbelDriver, asset)
+                clientCorbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
+
+                createAssetForUserAndLoginUser(clientCorbelDriver, asset)
                 .should.notify(done);
             });
 
@@ -118,7 +119,26 @@ describe('In ASSETS module', function() {
             });
 
             it('token upgrade works correctly', function(done) {
-                userCorbelDriver.assets.asset().access()
+                var sessionToken = clientCorbelDriver.config.config.iamToken.accessToken;
+                var session;
+
+                clientCorbelDriver.iam.user().getMySession()
+                .should.be.eventually.fulfilled
+                .then(function(response){
+                    session = response.data;
+                    expect(response).to.have.deep.property('data.token', sessionToken);
+
+                    return clientCorbelDriver.assets.asset().access();
+                })
+                .should.be.eventually.fulfilled
+                .then(function(response){
+                    return clientCorbelDriver.iam.user().getMySession();
+                })
+                .should.be.eventually.fulfilled
+                .then(function(response){
+                    expect(response).to.have.deep.property('data.token', sessionToken);
+                    expect(response).to.have.deep.property('data.scopes.length').to.be.above(session.scopes.length);
+                })
                 .should.be.eventually.fulfilled.and.notify(done);
             });
         });
@@ -128,6 +148,8 @@ describe('In ASSETS module', function() {
             var user;
 
             before(function(done) {
+                clientCorbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
+
                 corbelTest.common.iam.createUsers(clientCorbelDriver, 1)
                 .should.be.eventually.fulfilled
                 .then(function(response) {
@@ -140,10 +162,10 @@ describe('In ASSETS module', function() {
                         scopes: ['custom:test;type=Custom;customId=2']
                     };
                     asset.userId = user.id;
-                    return createAssetForUser(userCorbelDriver, asset);
+                    return createAssetForUser(clientCorbelDriver, asset);
                 })
                 .then(function () {
-                    return createAssetForUserAndLoginUser(userCorbelDriver, {
+                    return createAssetForUserAndLoginUser(clientCorbelDriver, {
                         userId: user.id,
                         name: 'customAssetWithCorrectlyParams2',
                         productId: 'customAssetWithCorrectlyParams2',
@@ -156,12 +178,31 @@ describe('In ASSETS module', function() {
             });
 
             after(function(done){
-                clientCorbelDriver.iam.user(user.id).delete()
+                clientCorbelDriver.iam.user(user.id).delete()   
                 .should.be.eventually.fulfilled.and.notify(done);
             });
 
             it('token upgrade works correctly', function(done) {
-                userCorbelDriver.assets.asset().access()
+                var sessionToken = clientCorbelDriver.config.config.iamToken.accessToken;
+                var session;
+
+                clientCorbelDriver.iam.user().getMySession()
+                .should.be.eventually.fulfilled
+                .then(function(response){
+                    session = response.data;
+                    expect(response).to.have.deep.property('data.token', sessionToken);
+
+                    return clientCorbelDriver.assets.asset().access();
+                })
+                .should.be.eventually.fulfilled
+                .then(function(response){
+                    return clientCorbelDriver.iam.user().getMySession();
+                })
+                .should.be.eventually.fulfilled
+                .then(function(response){
+                    expect(response).to.have.deep.property('data.token', sessionToken);
+                    expect(response).to.have.deep.property('data.scopes.length').to.be.above(session.scopes.length);
+                })
                 .should.be.eventually.fulfilled.and.notify(done);
             });
         });
