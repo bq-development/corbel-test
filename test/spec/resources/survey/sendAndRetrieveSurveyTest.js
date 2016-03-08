@@ -6,11 +6,13 @@ describe('In RESOURCES module', function() {
             var MAX_RETRY = 28;
             var RETRY_PERIOD = 3;
             var corbelDriver;
+            var bquizCorbelDriver;
             var questionTemplateId;
             var email;
             var emailAuthorization;
             var orderIdentifier;
             var clientUrl = 'bquiz-client.com.s3-website-eu-west-1.amazonaws.com';
+            var bquizDriverValues;
 
             var TEST_QUESTION = {
                 description: 'This is the {{test}}',
@@ -19,6 +21,11 @@ describe('In RESOURCES module', function() {
             };
 
             before(function(done) {
+                bquizDriverValues = corbelTest.CONFIG.clientCredentials.bquiz.CLIENT;
+                bquizDriverValues.domain = corbelTest.CONFIG.clientCredentials.bquiz.DOMAIN;
+
+                bquizCorbelDriver = corbelTest.getCustomDriver(bquizDriverValues);
+                
                 corbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
 
                 corbelDriver.resources.collection('bquiz:Question')
@@ -82,11 +89,11 @@ describe('In RESOURCES module', function() {
                     username : 'Batman'
                 };
 
-                corbelDriver.resources.collection('bquiz:Survey')
+                bquizCorbelDriver.resources.collection('bquiz:Survey')
                     .add(TEST_SURVEY)
                 .should.be.eventually.fulfilled
                 .then(function() {
-                    return corbelDriver.resources.resource('bquiz:Contact', email)
+                    return bquizCorbelDriver.resources.resource('bquiz:Contact', email)
                         .get()
                     .should.be.eventually.fulfilled;
                 })
@@ -143,11 +150,11 @@ describe('In RESOURCES module', function() {
                     username : 'Vincent'
                 };
 
-                corbelDriver.resources.collection('bquiz:Survey')
+                bquizCorbelDriver.resources.collection('bquiz:Survey')
                     .add(TEST_SURVEY)
                 .should.be.eventually.fulfilled
                 .then(function() {
-                    return corbelDriver.resources.resource('bquiz:Contact', email)
+                    return bquizCorbelDriver.resources.resource('bquiz:Contact', email)
                         .get()
                     .should.be.eventually.fulfilled;
                 })
@@ -176,7 +183,7 @@ describe('In RESOURCES module', function() {
                 })
                 .then(function(mail) {
                     expect(mail).to.have.deep.property('mail_subject')
-                        .and.to.contain('votre avis compte !');
+                        .and.to.contain('votre avis compte');
                     expect(mail).to.have.deep.property('mail_body').and.to.contain(clientUrl);
                 })
                 .should.notify(done);
@@ -205,11 +212,11 @@ describe('In RESOURCES module', function() {
                     username : 'Bruno'
                 };
 
-                corbelDriver.resources.collection('bquiz:Survey')
+                bquizCorbelDriver.resources.collection('bquiz:Survey')
                     .add(TEST_SURVEY)
                 .should.be.eventually.fulfilled
                 .then(function() {
-                    return corbelDriver.resources.resource('bquiz:Contact', email)
+                    return bquizCorbelDriver.resources.resource('bquiz:Contact', email)
                         .get()
                     .should.be.eventually.fulfilled;
                 })
