@@ -1,15 +1,48 @@
 var PORTS = require('../../../test/ports.conf.js');
 
-function getIamJWT() {
+function getOauthClientId(client) {
+    if (client!==undefined && client.oauthClientId){
+        return client.oauthClientId;
+    } else {
+        return corbelTest.CONFIG.OAUTH_DEFAULT.clientId;
+    }   
+}
+
+function getClientId(client) {
+    if (client!==undefined && client.clientId){
+        return client.clientId;
+    } else {
+        return corbelTest.CONFIG.OAUTH_DEFAULT.clientId;
+    }   
+}
+
+function getClientSecret(client){
+    if (client!==undefined && client.clientSecret){
+        return client.clientSecret;
+    } else {
+        return corbelTest.CONFIG.OAUTH_DEFAULT.clientSecret;
+    }   
+}
+
+function getOauthClientSecret(client) {
+    if (client!==undefined && client.oauthClientSecret){
+        return client.oauthSecret;
+    } else {
+        return corbelTest.CONFIG.OAUTH_DEFAULT.secret;
+    }   
+}
+
+function getIamJWT(client) {
     return corbel.jwt.generate({
-            iss: corbelTest.CONFIG.DEFAULT_CLIENT.clientId,
-            scope: 'iam:user:me',
+            iss: getClientId(client),
+            // scope: 'iam:user:me',
+            version: '1.0.0',
             aud: 'http://iam.bqws.io',
             exp: Math.round((new Date().getTime() / 1000)) + 3500,
             'oauth.service': 'silkroad'
         },
 
-        corbelTest.CONFIG.DEFAULT_CLIENT.clientSecret,
+        getClientSecret(client),
         corbelTest.CONFIG.OAUTH_DEFAULT.jwtAlgorithm);
 }
 
@@ -20,9 +53,9 @@ function getClientParams() {
     };
 }
 
-function getClientParamsCode() {
+function getClientParamsCode(client) {
     return {
-        clientId: corbelTest.CONFIG.OAUTH_DEFAULT.clientId,
+        clientId: getOauthClientId(client),
         responseType: 'code',
         redirectUri: 'http://' + window.location.host.split(':')[0] + ':' + PORTS.EXPRESS + '/requestinfo'
     };
@@ -35,12 +68,12 @@ function getAuthorizationClientParamsToken() {
     };
 }
 
-function getClientParamsCodeIAM(driver) {
+function getClientParamsCodeIAM(driver, client) {
     return {
-        clientId: corbelTest.CONFIG.OAUTH_DEFAULT.clientId,
+        clientId: getOauthClientId(client),
         responseType: 'code',
         redirectUri: getURI(driver, 'iam') +
-            'oauth/token?grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=' + getIamJWT()
+        'oauth/token?grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=' + getIamJWT(client)
     };
 }
 
