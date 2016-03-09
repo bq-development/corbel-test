@@ -17,6 +17,8 @@ describe('In RESOURCES module', function() {
 
             var TEST_OBJECT_TEXT = '<xml>My project!</xml>';
 
+            var acConfigurationId;
+
             before(function(done){
                 corbelRootDriver = corbelTest.drivers['ADMIN_USER'].clone();
                 corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
@@ -58,7 +60,7 @@ describe('In RESOURCES module', function() {
                 })
                 .then(function() {
                     return corbelTest.common.resources.unsetManagedCollection(
-                        corbelRootDriver, DOMAIN, COLLECTION)
+                        corbelRootDriver, DOMAIN, COLLECTION, acConfigurationId)
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(){
@@ -82,7 +84,8 @@ describe('In RESOURCES module', function() {
                         corbelRootDriver, DOMAIN, COLLECTION)
                     .should.be.eventually.fulfilled;
                 })
-                .then(function(){
+                .then(function(id){
+                    acConfigurationId = id;
                     return corbelDriver.resources.collection(COLLECTION)
                         .add(TEST_OBJECT)
                     .should.be.eventually.fulfilled;

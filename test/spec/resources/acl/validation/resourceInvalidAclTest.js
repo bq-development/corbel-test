@@ -12,6 +12,7 @@ describe('In RESOURCES module', function() {
             var random;
             var usersId;
             var TEST_OBJECT;
+            var aclConfigurationId;
 
             before(function(done) {
                 corbelRootDriver = corbelTest.drivers['ADMIN_USER'].clone();
@@ -26,7 +27,8 @@ describe('In RESOURCES module', function() {
                 corbelTest.common.resources.setManagedCollection(
                     corbelRootDriver, DOMAIN, COLLECTION_NAME)
                 .should.be.eventually.fulfilled
-                .then(function(){
+                .then(function(id){
+                    aclConfigurationId = id;
                     return corbelTest.common.iam.createUsers(corbelAdminDriver, 1)
                     .should.be.eventually.fulfilled;
                 })
@@ -52,7 +54,7 @@ describe('In RESOURCES module', function() {
             after(function(done) {
 
                 corbelTest.common.resources.unsetManagedCollection(
-                    corbelRootDriver, DOMAIN, COLLECTION_NAME)
+                    corbelRootDriver, DOMAIN, COLLECTION_NAME, aclConfigurationId)
                 .should.be.eventually.fulfilled
                 .then(function(){
                     return corbelAdminDriver.resources.resource(COLLECTION_NAME, resourceId)

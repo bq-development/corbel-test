@@ -116,7 +116,7 @@ function getProperty(obj, prop) {
 }
 
 function createRelationFromSingleObjetToMultipleObject(driver, collectionA, idResourceInA, collectionB,
- idResourceInB, extraField) {
+    idResourceInB, extraField) {
     var promises = [];
 
     idResourceInB.forEach(function(idB, count) {
@@ -136,7 +136,7 @@ function createRelationFromSingleObjetToMultipleObject(driver, collectionA, idRe
             distinctField3: count % 5
         };
 
-        if(extraField){
+        if (extraField) {
             jsonRelationData.extra = extraField;
         }
 
@@ -223,132 +223,136 @@ function addResourcesUsingDataArray(driver, collectionA, idResource, collectionB
 
 function getRelation(driver, collectionA, idResource, collectionB, params) {
     return driver.resources.relation(collectionA, idResource, collectionB)
-    .get(null, params)
-    .should.be.eventually.fulfilled;
+        .get(null, params)
+        .should.be.eventually.fulfilled;
 }
 
 function setManagedCollection(adminDriver, domain, collection) {
-    var collectionName = domain + ':' + collection;
+    var collectionName = collection;
     var TEST_OBJECT = {
         id: 'testObjectId' + Date.now(),
-        _acl: {},
-        test: 'test' + Date.now()
+        test: 'test' + Date.now(),
+        _acl: {}
     };
     var userDriver = corbelTest.drivers['DEFAULT_USER'].clone();
     var user;
+    var collectionAclId;
 
     return corbelTest.common.iam.createUsers(adminDriver, 1)
-    .should.be.eventually.fulfilled
-    .then(function(createdUsers) {
-        user = createdUsers[0];
+        .should.be.eventually.fulfilled
+        .then(function(createdUsers) {
+            user = createdUsers[0];
 
-        return corbelTest.common.clients
-        .loginUser(userDriver, user.username, user.password)
-        .should.be.eventually.fulfilled;
-    })
-    .then(function() {
-        return adminDriver.resources.resource(collection, TEST_OBJECT.id)
-            .update(TEST_OBJECT)
-        .should.be.eventually.fulfilled;
-    })
-    .then(function() {
-        return adminDriver.iam.user('me').get()
-        .should.be.eventually.fulfilled;
-    })
-    .then(function(response) {
-        return adminDriver.resources.collection(ACL_ADMIN_COLLECTION)
-        .add({
-            id: collectionName,
-            users: [response.data.id],
-            groups: []
+            return corbelTest.common.clients
+                .loginUser(userDriver, user.username, user.password)
+                .should.be.eventually.fulfilled;
         })
-        .should.be.eventually.fulfilled;
-    })
-    .then(function() {
-        return corbelTest.common.utils.retryFail(function() {
-            return userDriver.resources.resource(collection, TEST_OBJECT.id)
-            .update(TEST_OBJECT);
-        }, MAX_RETRY, RETRY_PERIOD)
-        .should.be.eventually.fulfilled;
-    })
-    .then(function(e) {
-        expect(e).to.have.property('status', 401);
-        expect(e).to.have.deep.property('data.error', 'unauthorized');
+        .then(function() {
+            return adminDriver.resources.resource(collection, TEST_OBJECT.id)
+                .update(TEST_OBJECT)
+                .should.be.eventually.fulfilled;
+        })
+        .then(function() {
+            return adminDriver.iam.user('me').get()
+                .should.be.eventually.fulfilled;
+        })
+        .then(function(response) {
 
-        return adminDriver.resources.resource(collection, TEST_OBJECT.id)
-        .delete()
-        .should.be.eventually.fulfilled;
-    })
-    .then(function() {
-        return adminDriver.resources.resource(ACL_ADMIN_COLLECTION, collectionName)
-        .update({
-            id: collectionName,
-            users: [],
-            groups: []
+            return adminDriver.resources.collection(ACL_ADMIN_COLLECTION).
+            add({
+                    collectionName: collectionName,
+                    users: [response.data.id],
+                    groups: []
+                })
+                .should.be.eventually.fulfilled;
         })
-        .should.be.eventually.fulfilled;
-    });
+        .then(function(id) {
+            collectionAclId = id;
+            return corbelTest.common.utils.retryFail(function() {
+                    return userDriver.resources.resource(collection, TEST_OBJECT.id)
+                        .update(TEST_OBJECT);
+                }, MAX_RETRY, RETRY_PERIOD)
+                .should.be.eventually.fulfilled;
+        })
+        .then(function(e) {
+            expect(e).to.have.property('status', 401);
+            expect(e).to.have.deep.property('data.error', 'unauthorized');
+
+            return adminDriver.resources.resource(collection, TEST_OBJECT.id)
+                .delete()
+                .should.be.eventually.fulfilled;
+        })
+        .then(function() {
+            return adminDriver.resources.resource(ACL_ADMIN_COLLECTION, collectionAclId)
+                .update({
+                    users: []
+                })
+                .should.be.eventually.fulfilled;
+        })
+        .then(function(){
+            return collectionAclId;
+        });
 }
 
-function unsetManagedCollection(adminDriver, domain, collection) {
-    var collectionName = domain + ':' + collection;
+function unsetManagedCollection(adminDriver, domain, collection, aclConfigurationId) {
+    var collectionName = collection;
     var TEST_OBJECT = {
         id: 'testObjectId' + Date.now(),
-        _acl: {},
-        test: 'test' + Date.now()
+        test: 'test' + Date.now(),
+        _acl: {}
     };
     var userDriver = corbelTest.drivers['DEFAULT_USER'].clone();
     var user;
 
     return corbelTest.common.iam.createUsers(adminDriver, 1)
-    .should.be.eventually.fulfilled
-    .then(function(createdUsers) {
-        user = createdUsers[0];
+        .should.be.eventually.fulfilled
+        .then(function(createdUsers) {
+            user = createdUsers[0];
 
-        return corbelTest.common.clients
-        .loginUser(userDriver, user.username, user.password)
-        .should.be.eventually.fulfilled;
-    })
-    .then(function() {
-        return adminDriver.iam.user('me').get()
-        .should.be.eventually.fulfilled;
-    })
-    .then(function(response) {
-        return adminDriver.resources.resource(ACL_ADMIN_COLLECTION, collectionName)
-        .update({
-            id: collectionName,
-            users: [response.data.id],
-            groups: []
+            return corbelTest.common.clients
+                .loginUser(userDriver, user.username, user.password)
+                .should.be.eventually.fulfilled;
         })
-        .should.be.eventually.fulfilled;
-    })
-    .then(function() {
-        return adminDriver.resources.resource(collection, TEST_OBJECT.id)
-        .update(TEST_OBJECT)
-        .should.be.eventually.fulfilled;
-    })
-    .then(function() {
-        return adminDriver.resources.resource(ACL_ADMIN_COLLECTION, collectionName)
-        .delete()
-        .should.be.eventually.fulfilled;
-    })
-    .then(function() {
-        return corbelTest.common.utils.retry(function() {
-            return userDriver.resources.resource(collection, TEST_OBJECT.id)
-            .update(TEST_OBJECT);
-        }, MAX_RETRY, RETRY_PERIOD)
-        .should.be.eventually.fulfilled;
-    })
-    .then(function() {
-        return adminDriver.resources.resource(collection, TEST_OBJECT.id)
-        .delete()
-        .should.be.eventually.fulfilled;
-    })
-    .then(function() {
-        return adminDriver.iam.user(user.id)
-        .delete()
-        .should.be.eventually.fulfilled;
-    });
+        .then(function() {
+            return adminDriver.iam.user('me').get()
+                .should.be.eventually.fulfilled;
+        })
+        .then(function(response) {
+            return adminDriver.resources.resource(ACL_ADMIN_COLLECTION, aclConfigurationId)
+                .update({
+                    collectionName: collectionName,
+                    users: [response.data.id],
+                    groups: []
+                })
+                .should.be.eventually.fulfilled;
+        })
+        .then(function() {
+            return adminDriver.resources.resource(collection, TEST_OBJECT.id)
+                .update(TEST_OBJECT)
+                .should.be.eventually.fulfilled;
+        })
+        .then(function() {
+            return adminDriver.resources.resource(ACL_ADMIN_COLLECTION, aclConfigurationId)
+                .delete()
+                .should.be.eventually.fulfilled;
+        })
+        .then(function() {
+            return corbelTest.common.utils.retry(function() {
+                    return userDriver.resources.resource(collection, TEST_OBJECT.id)
+                        .update(TEST_OBJECT);
+                }, MAX_RETRY, RETRY_PERIOD)
+                .should.be.eventually.fulfilled;
+        })
+        .then(function() {
+            return adminDriver.resources.resource(collection, TEST_OBJECT.id)
+                .delete()
+                .should.be.eventually.fulfilled;
+        })
+        .then(function() {
+            return adminDriver.iam.user(user.id)
+                .delete()
+                .should.be.eventually.fulfilled;
+        });
 }
 
 
