@@ -13,7 +13,8 @@ describe('In OAUTH module', function () {
         });
 
         it('allows do login with POST and obtains an IAM access token', function (done) {
-            var authorize = corbelDriver.oauth.authorization(oauthCommon.getClientParamsCodeIAM(corbelDriver));
+            var authorize = corbelDriver.oauth.authorization(oauthCommon.getClientParamsCodeIAM(
+                    corbelDriver,corbelDriver.config.getConfig()));
             var setCookie = false;
             var noRedirect = false;
 
