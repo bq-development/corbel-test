@@ -12,9 +12,8 @@ describe('In OAUTH module', function () {
     describe('testing signout', function () {
 
         it('when I do login, oauth remember me, but if I do signout oauth send me login form', function (done) {
-            corbelDriver.oauth
-                .authorization(oauthCommon.getClientParamsAuthorizationToken())
-                .login(oauthUserTest.username, oauthUserTest.password)
+                corbelDriver.oauth.authorization(oauthCommon.getClientParamsAuthorizationToken())
+                    .login(oauthUserTest.username, oauthUserTest.password)
                 .should.be.eventually.fulfilled
                 .then(function (response) {
                     expect(response).have.property('access_token');
