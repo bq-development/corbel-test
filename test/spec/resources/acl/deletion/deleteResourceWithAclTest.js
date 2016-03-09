@@ -12,13 +12,17 @@ describe('In RESOURCES module', function() {
             var random;
             var usersId;
             var TEST_OBJECT;
+            var aclConfigurationId;
 
             before(function(done){
                 corbelRootDriver = corbelTest.drivers['ADMIN_USER'].clone();
                 
                 corbelTest.common.resources.setManagedCollection(
                     corbelRootDriver, DOMAIN, COLLECTION_NAME)
-                .should.be.eventually.fulfilled.and.notify(done);
+                .should.be.eventually.fulfilled
+                .then(function(id){
+                    aclConfigurationId = id;
+                }).should.notify(done);
             });
 
             beforeEach(function(done) {
@@ -56,7 +60,7 @@ describe('In RESOURCES module', function() {
             after(function(done) {
 
                 corbelTest.common.resources.unsetManagedCollection(
-                    corbelRootDriver, DOMAIN, COLLECTION_NAME)
+                    corbelRootDriver, DOMAIN, COLLECTION_NAME, aclConfigurationId)
                 .should.be.eventually.fulfilled.and.notify(done);
             });
 

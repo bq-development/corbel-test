@@ -13,13 +13,13 @@ describe('In RESOURCES module', function() {
             var ACL_ADMIN_COLLECTION = 'acl:Configuration';
             var RELATION = 'other';
             var COLLECTION_NAME = 'test:testAcl' + Date.now();
-            var adminObjectId = DOMAIN + ':' + COLLECTION_NAME;
             var random;
             var user;
             var adminUser;
             var usersId = [];
             var groupId;
             var resourceId;
+            var managedCollectionId;
 
             before(function(done) {
                 corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
@@ -75,7 +75,7 @@ describe('In RESOURCES module', function() {
                     .delete()
                 .should.be.eventually.fulfilled
                 .then(function() {
-                    return corbelRootDriver.resources.resource(ACL_ADMIN_COLLECTION, adminObjectId)
+                    return corbelRootDriver.resources.resource(ACL_ADMIN_COLLECTION, managedCollectionId)
                         .delete()
                     .should.be.eventually.fulfilled;
                 })
@@ -96,12 +96,14 @@ describe('In RESOURCES module', function() {
             it('a collection is established as acl and user permissions are applied', function(done) {
                 corbelRootDriver.resources.collection(ACL_ADMIN_COLLECTION)
                     .add({
-                        id: adminObjectId,
+                        collectionName: COLLECTION_NAME,
                         users: [adminUser.id],
-                        groups: []
+                        groups: [],
+                        defaultPermission: 'NONE'
                     })
                 .should.be.eventually.fulfilled
-                .then(function(){
+                .then(function(id){
+                    managedCollectionId = id;
                     return corbelTest.common.utils.retryFail(function() {
                         return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
                             .get();
@@ -119,11 +121,9 @@ describe('In RESOURCES module', function() {
                     expect(e).to.have.property('status', 401);
                     expect(e).to.have.deep.property('data.error', 'unauthorized');
 
-                    return corbelRootDriver.resources.resource(ACL_ADMIN_COLLECTION, adminObjectId)
+                    return corbelRootDriver.resources.resource(ACL_ADMIN_COLLECTION, managedCollectionId)
                         .update({
-                            id: adminObjectId,
-                            users: [adminUser.id, user.id],
-                            groups: []
+                            users: [adminUser.id, user.id]
                         })
                     .should.be.eventually.fulfilled;
                 })
@@ -147,13 +147,15 @@ describe('In RESOURCES module', function() {
 
             it('a collection is established as acl and group permissions are applied', function(done) {
                 corbelRootDriver.resources.collection(ACL_ADMIN_COLLECTION)
-                    .add({
-                        id: adminObjectId,
+                    .add({  
+                        collectionName: COLLECTION_NAME,
                         users: [adminUser.id],
-                        groups: []
+                        groups: [],
+                        defaultPermission: 'NONE'
                     })
                 .should.be.eventually.fulfilled
-                .then(function(){
+                .then(function(id){
+                    managedCollectionId = id;
                     return corbelTest.common.utils.retryFail(function() {
                         return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
                             .get();
@@ -171,10 +173,8 @@ describe('In RESOURCES module', function() {
                     expect(e).to.have.property('status', 401);
                     expect(e).to.have.deep.property('data.error', 'unauthorized');
 
-                    return corbelRootDriver.resources.resource(ACL_ADMIN_COLLECTION, adminObjectId)
+                    return corbelRootDriver.resources.resource(ACL_ADMIN_COLLECTION, managedCollectionId)
                         .update({
-                            id: adminObjectId,
-                            users: [adminUser.id],
                             groups: [groupId]
                         })
                     .should.be.eventually.fulfilled;
@@ -196,6 +196,10 @@ describe('In RESOURCES module', function() {
                 })
                 .should.notify(done);
             });
+
+             it('a collection is established as acl and group permissions are applied', function(done) {
+                
+             });
         });
     });
 });

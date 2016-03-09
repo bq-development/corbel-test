@@ -7,6 +7,7 @@ describe('In RESOURCES module', function() {
             var DOMAIN = 'silkroad-qa';
             var COLLECTION_NAME = 'test:testAcl_' + Date.now();
             var user, resourceId, random;
+            var aclConfigurationId;
 
             before(function(done) {
                 corbelRootDriver = corbelTest.drivers['ADMIN_USER'].clone();
@@ -26,12 +27,15 @@ describe('In RESOURCES module', function() {
                         corbelRootDriver, DOMAIN, COLLECTION_NAME)
                     .should.be.eventually.fulfilled;
                 })
+                .then(function(id) {
+                    aclConfigurationId = id;
+                })
                 .should.notify(done);
             });
 
             after(function(done) {
                 return corbelTest.common.resources.unsetManagedCollection(
-                    corbelRootDriver, DOMAIN, COLLECTION_NAME)
+                    corbelRootDriver, DOMAIN, COLLECTION_NAME, aclConfigurationId)
                 .should.be.eventually.fulfilled
                 .then(function() {
                     return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
