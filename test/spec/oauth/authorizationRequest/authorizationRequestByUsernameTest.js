@@ -17,7 +17,8 @@ describe('In OAUTH module', function () {
             var noRedirect = false;
 
             corbelDriver.oauth
-                .authorization(oauthCommon.getClientParamsCodeIAM(corbelDriver))
+                .authorization(oauthCommon.getClientParamsCodeIAM(
+                    corbelDriver,corbelDriver.config.getConfig()))
                 .login(oauthUserTest.username, oauthUserTest.password, setCookie, noRedirect)
                 .should.be.eventually.fulfilled
                 .then(function (response) {
