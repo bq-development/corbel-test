@@ -6,8 +6,8 @@ describe('In RESOURCES module', function() {
 
             var userId, user;
             var ACL_ADMIN_COLLECTION = 'acl:Configuration';
-            var COLLECTION_NAME_1 = 'test:testAcl' + Date.now();
-            var COLLECTION_NAME_2 = 'test:testAcl' + Date.now();
+            var COLLECTION_NAME_1 = 'test:testAcl-1' + Date.now();
+            var COLLECTION_NAME_2 = 'test:testAcl-2' + Date.now();
             var managedCollectionId1, managedCollectionId2;
             var corbelRootDriver, corbelDriver;
             var random;
@@ -79,19 +79,20 @@ describe('In RESOURCES module', function() {
             });
 
             it('admin can get all the collection managed of his domain', function(done) {
-                var params = {
-                    sort: {
-                        '_createdAt': 'asc'
-                    }
-                };
-                corbelRootDriver.resources.collection(ACL_ADMIN_COLLECTION).get(params)
+                corbelRootDriver.resources.collection(ACL_ADMIN_COLLECTION).get()
                     .should.be.eventually.fulfilled
                     .then(function(response) {
-                        expect(response.data.length).to.be.at.least(2);
-                        expect(response.data[0].collectionName).to.be.equal(COLLECTION_NAME_1);
-                        expect(response.data[1].collectionName).to.be.equal(COLLECTION_NAME_2);
+                        expect(containElement(response.data, COLLECTION_NAME_1)).to.be.equal(true);
+                        expect(containElement(response.data, COLLECTION_NAME_2)).to.be.equal(true);
                     }).should.notify(done);
             });
+
         });
     });
+
+    function containElement(list, element) {
+        return list.some(function(listElement) {
+            return listElement.collectionName === element;
+        });
+    }
 });
