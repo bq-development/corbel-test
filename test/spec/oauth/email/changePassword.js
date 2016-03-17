@@ -1,8 +1,8 @@
 describe('In OAUTH module', function () {
 
     describe('when the user changes his password', function () {
-        var MAX_RETRY = 10;
-        var RETRY_PERIOD = 2;
+        var MAX_RETRY = 5;
+        var RETRY_PERIOD = 25;
 
         var corbelDriver;
         var oauthCommonUtils;
@@ -38,36 +38,40 @@ describe('In OAUTH module', function () {
             var username = oauthUserTest.username;
             var password = oauthUserTest.password;
 
-            oauthCommonUtils
+            corbelTest.common.utils.waitFor(15)
+            .should.be.eventually.fulfilled
+            .then(function() {
+                return oauthCommonUtils
                 .getToken(corbelDriver, username, password)
-                .should.be.eventually.fulfilled
-                .then(function (response) {
-                    var token = response.data['access_token'];
-                    expect(token).to.match(oauthCommonUtils.getTokenValidation());
+                .should.be.eventually.fulfilled;
+            })
+            .then(function (response) {
+                var token = response.data['access_token'];
+                expect(token).to.match(oauthCommonUtils.getTokenValidation());
 
-                    return corbelDriver.oauth
-                        .user(oauthCommonUtils.getClientParams(), token)
-                        .update('me', {password: password + password})
-                        .should.be.eventually.fulfilled;
-                })
-                .then(function () {
-                    return corbelTest.common.utils.retry(function () {
-                        return corbelTest.common.mail.random.checkMail(userEmailData.cookies.PHPSESSID)
-                            .then(function (response) {
-                                if (response.emailList.list.length <= 1) {
-                                    return Promise.reject();
-                                } else {
-                                    return response;
-                                }
-                            });
-                    }, MAX_RETRY, RETRY_PERIOD)
-                        .should.be.eventually.fulfilled;
-                })
-                .then(function (response) {
-                    console.log(response.emailList.list);
-                    response.emailList.list.should.contain.an.thing.with.property('mail_subject','New password');
-                })
-                .should.notify(done);
+                return corbelDriver.oauth
+                    .user(oauthCommonUtils.getClientParams(), token)
+                    .update('me', {password: password + password})
+                    .should.be.eventually.fulfilled;
+            })    
+            .then(function () {
+                return corbelTest.common.utils.retry(function () {
+                    return corbelTest.common.mail.random.checkMail(userEmailData.cookies.PHPSESSID)
+                        .then(function (response) {
+                            if (response.emailList.list.length <= 1) {
+                                return Promise.reject();
+                            } else {
+                                return response;
+                            }
+                        });
+                }, MAX_RETRY, RETRY_PERIOD)
+                .should.be.eventually.fulfilled;
+            })
+            .then(function (response) {
+                console.log(response.emailList.list);
+                response.emailList.list.should.contain.an.thing.with.property('mail_subject','New password');
+            })
+            .should.notify(done);
         });
     });
 });

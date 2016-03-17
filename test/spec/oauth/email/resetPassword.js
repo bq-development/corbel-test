@@ -1,23 +1,22 @@
-describe('In OAUTH module', function () {
+describe('In OAUTH module', function() {
 
 
-    describe('common reset password tests', function () {
-
-        var MAX_RETRY = 10;
-        var RETRY_PERIOD = 2;
+    describe('common reset password tests', function() {
+        var MAX_RETRY = 5;
+        var RETRY_PERIOD = 25;
 
         var corbelDriver;
         var oauthCommonUtils;
         var userTestParams;
 
-        before(function () {
+        before(function() {
             corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
             oauthCommonUtils = corbelTest.common.oauth;
             userTestParams = oauthCommonUtils.getOauthUserTestParams();
         });
 
 
-        it('reset password of an nonexistent user never fails', function (done) {
+        it('reset password of an nonexistent user never fails', function(done) {
             var clientParams = {
                 clientId: userTestParams.clientId,
                 clientSecret: userTestParams.clientSecret
@@ -33,7 +32,7 @@ describe('In OAUTH module', function () {
 
 
         it('email allows reset user account password with client sending once time token to change it ',
-            function (done) {
+            function(done) {
 
                 var userEmailData;
                 var oneTimeToken;
@@ -43,10 +42,15 @@ describe('In OAUTH module', function () {
                     password: 'randomPassword' + Date.now()
                 };
 
-                corbelTest.common.mail
-                    .random.getRandomMail()
+
+                corbelTest.common.utils.waitFor(15)
                     .should.be.eventually.fulfilled
-                    .then(function (response) {
+                    .then(function() {
+                        return corbelTest.common.mail
+                            .random.getRandomMail()
+                            .should.be.eventually.fulfilled;
+                    })
+                    .then(function(response) {
                         userEmailData = response;
                         oauthUserTest.email = userEmailData.emailData['email_addr'];
 
@@ -55,31 +59,31 @@ describe('In OAUTH module', function () {
                             .create(oauthUserTest)
                             .should.be.eventually.fulfilled;
                     })
-                    .then(function () {
+                    .then(function() {
                         return corbelDriver.oauth
                             .user(clientParams)
                             .sendResetPasswordEmail(oauthUserTest.email)
                             .should.be.eventually.fulfilled;
                     })
-                    .then(function () {
-                        return corbelTest.common.utils.retry(function () {
-                            return corbelTest.common.mail.random.checkMail(userEmailData.cookies.PHPSESSID)
-                                .then(function (response) {
-                                    if (response.emailList.list.length <=1) {
-                                        return Promise.reject();
-                                    } else {
-                                        return response;
-                                    }
-                                });
-                        }, MAX_RETRY, RETRY_PERIOD)
+                    .then(function() {
+                        return corbelTest.common.utils.retry(function() {
+                                return corbelTest.common.mail.random.checkMail(userEmailData.cookies.PHPSESSID)
+                                    .then(function(response) {
+                                        if (response.emailList.list.length <= 1) {
+                                            return Promise.reject();
+                                        } else {
+                                            return response;
+                                        }
+                                    });
+                            }, MAX_RETRY, RETRY_PERIOD)
                             .should.be.eventually.fulfilled;
                     })
-                    .then(function (response) {
+                    .then(function(response) {
                         response.emailList.list.should.contain.an.thing.with
                             .property('mail_subject', 'Reset your account password');
 
                         var resetPasswordMail = {};
-                        response.emailList.list.forEach(function (email) {
+                        response.emailList.list.forEach(function(email) {
                             if (email['mail_subject'].toLowerCase() === 'reset your account password') {
                                 resetPasswordMail = email;
                             }
@@ -89,24 +93,26 @@ describe('In OAUTH module', function () {
                             .getMail(response.cookies.PHPSESSID, resetPasswordMail['mail_id'])
                             .should.be.eventually.fulfilled;
                     })
-                    .then(function (response) {
+                    .then(function(response) {
                         oneTimeToken = response['mail_body'].split('token=')[1];
 
                         return corbelDriver.oauth
                             .user(oauthCommonUtils.getClientParams(), oneTimeToken)
-                            .update('me', {password: oauthUserTest.password + oauthUserTest.password})
+                            .update('me', {
+                                password: oauthUserTest.password + oauthUserTest.password
+                            })
                             .should.be.eventually.fulfilled;
                     })
-                    .then(function () {
+                    .then(function() {
                         return corbelDriver.oauth
                             .user(oauthCommonUtils.getClientParams(), oneTimeToken)
                             .update('me', {
                                 password: oauthUserTest.password + oauthUserTest.password +
-                                oauthUserTest.password
+                                    oauthUserTest.password
                             })
                             .should.be.eventually.rejected;
                     })
-                    .then(function () {
+                    .then(function() {
                         return oauthCommonUtils
                             .getToken(corbelDriver, oauthUserTest.username, oauthUserTest.password +
                                 oauthUserTest.password)
