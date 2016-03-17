@@ -13,7 +13,7 @@ describe('In RESOURCES module', function() {
             var idResource = random + '1';
             var MAX_RETRY = 30;
             var RETRY_PERIOD = 1;
-            var punctText = 'La sombra. Celín. Tropiquillos. Theros.';
+            var punctText = 'La sombra. Celín. Tropiquillos. Theros';
             var specialCharacters = 'äâêíìéè';
 
             var object1 = {
