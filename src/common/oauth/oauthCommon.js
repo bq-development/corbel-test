@@ -120,14 +120,6 @@ function trasformParams(clientParams) {
     return clientParams;
 }
 
-function waitFor(seconds) {
-    var deferred = Promise.defer();
-    setTimeout(function() {
-        deferred.resolve();
-    }, seconds * 1000);
-    return deferred.promise;
-}
-
 function deleteOauthUser(corbelDriver, username, password) {
     return corbelDriver.oauth
         .authorization(getClientParams)
