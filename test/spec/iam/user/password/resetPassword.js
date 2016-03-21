@@ -44,7 +44,7 @@ describe('In IAM module', function() {
             corbelTest.common.mail.maildrop.getRandomMail()
             .should.be.eventually.fulfilled
             .then(function(response){
-                user.email = response; // jshint ignore:line
+                user.email = response;
                 emailAddress = response;
 
                 var claims = {
@@ -131,7 +131,7 @@ describe('In IAM module', function() {
             corbelTest.common.mail.maildrop.getRandomMail()
             .should.be.eventually.fulfilled
             .then(function(response){
-                user.email = response; // jshint ignore:line
+                user.email = response;
                 emailAddress = response;
 
                 return corbelRootDriver.iam.user(user.id)
