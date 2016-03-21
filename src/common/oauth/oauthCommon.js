@@ -178,7 +178,6 @@ module.exports = {
     lowLevelPostAuthorizationRequest: lowLevelPostAuthorizationRequest,
     lowLevelGetAuthorizationRequest: lowLevelGetAuthorizationRequest,
     lowLevelOauthToken: lowLevelOauthToken,
-    waitFor: waitFor,
     deleteOauthUser: deleteOauthUser,
     getOauthUserTestParams: getOauthUserTestParams,
     getTokenValidation: getTokenValidation,
