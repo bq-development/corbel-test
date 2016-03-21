@@ -8,3 +8,4 @@ bower_components
 .idea/
 test/spec/private
 corbel-test.iml
+corbel-test-conf
