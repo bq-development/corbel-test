@@ -72,10 +72,10 @@ function joinObjects(obj1, obj2) {
     return completeObject;
 }
 
-function replaceUriForProxyUse(driver, module) {
+function replaceUriForProxyUse(driver) {
     driver.config.config.urlBase =
-        driver.config.get('urlBase')
-        .replace('bqws.io/', 'bqws.io/' + module + '/').replace('{{module}}', 'proxy');
+        driver.config.get('urlBase').replace('{{module}}', 'proxy')
+        .replace('bqws.io/', 'bqws.io/{{module}}/');
 }
 
 function getTokenInfo(driver) {
