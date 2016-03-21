@@ -61,6 +61,7 @@
     "lodash": "^3.10.1",
     "mailparser": "0.5.3",
     "query-string": "^3.0.1",
-    "request": "^2.65.0"
+    "request": "^2.65.0",
+    "mailparser": "^0.5.3"
   }
 }

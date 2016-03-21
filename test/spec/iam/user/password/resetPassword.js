@@ -2,6 +2,8 @@
 describe('In IAM module', function() {
 
     describe('while trying reset your password', function() {
+        var popEmail = corbelTest.common.mail.maildrop.popEmail;
+
         var corbelDriver;
         var corbelRootDriver;
         var user;
@@ -21,7 +23,6 @@ describe('In IAM module', function() {
         });
 
         afterEach(function(done) {
-
             corbelRootDriver.iam.user(user.id)
             .delete()
             .should.be.eventually.fulfilled.and.notify(done);
@@ -33,18 +34,18 @@ describe('In IAM module', function() {
             .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        it('when resetPassword is used, a token that allows update the user is received', function(done) {
-            var emailAuthorization;
+        it('when resetPassword is used, a token that allows update the user is received [mail]', function(done) {
+            var emailAddress;
             var oneTimeToken;
             var corbelResetDriver;
             var comingClaim;
             var userId;
 
-            corbelTest.common.mail.random.getRandomMail()
+            corbelTest.common.mail.maildrop.getRandomMail()
             .should.be.eventually.fulfilled
             .then(function(response){
-                user.email = response.emailData.email_addr; // jshint ignore:line
-                emailAuthorization = response.cookies.PHPSESSID;
+                user.email = response; // jshint ignore:line
+                emailAddress = response;
 
                 var claims = {
                   'type': 'TOKEN',
@@ -65,34 +66,18 @@ describe('In IAM module', function() {
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return corbelTest.common.utils.retry(function() {
-                        return corbelTest.common.mail.random.checkMail(emailAuthorization)
-                            .then(function(response) {
-                                if (response.emailList.list.length === 0) {
-                                    return Promise.reject();
-                                } else {
-                                    return response;
-                                }
-                            });
-                    }, MAX_RETRY, RETRY_PERIOD)
-                .should.be.eventually.fulfilled;
-            })
-            .then(function(response) {
-                emailAuthorization = response.cookies.PHPSESSID;
-                var emailId = response.emailList.list[0].mail_id; //jshint ignore:line
-
-                return corbelTest.common.mail.random.getMail(emailAuthorization, emailId)
+                return popEmail(emailAddress)
                 .should.be.eventually.fulfilled;
             })
             .then(function(mail) {
-                expect(mail).to.have.property('mail_body')
+                expect(mail).to.have.property('body')
                     .and.to.contain('Click on the link to reset your password');
-                expect(mail).to.have.property('mail_body')
+                expect(mail).to.have.property('body')
                     .and.to.contain(comingClaim);
-                oneTimeToken = corbelTest.common.mail.random.getCodeFromMail(mail);
+                oneTimeToken = corbelTest.common.mail.maildrop.getCodeFromMail(mail);
 
                 corbelResetDriver = corbelTest.getCustomDriver({
-                    iamToken: { 
+                    iamToken: {
                         accessToken: ''
                     },
                     domain: corbelTest.CONFIG.DOMAIN
@@ -110,7 +95,7 @@ describe('In IAM module', function() {
                 expect(e).to.have.deep.property('data.error', 'invalid_token');
 
                 corbelResetDriver = corbelTest.getCustomDriver({
-                    iamToken: { 
+                    iamToken: {
                         accessToken: oneTimeToken
                     },
                     domain: corbelTest.CONFIG.DOMAIN
@@ -138,16 +123,16 @@ describe('In IAM module', function() {
             .should.notify(done);
         });
 
-        it('when resetPassword is used, a token is received but only can be used one time', function(done) {
-            var emailAuthorization;
+        it('when resetPassword is used, a token is received but only can be used one time  [mail]', function(done) {
+            var emailAddress;
             var oneTimeToken;
             var corbelResetDriver;
 
-            corbelTest.common.mail.random.getRandomMail()
+            corbelTest.common.mail.maildrop.getRandomMail()
             .should.be.eventually.fulfilled
             .then(function(response){
-                user.email = response.emailData.email_addr; // jshint ignore:line
-                emailAuthorization = response.cookies.PHPSESSID;
+                user.email = response; // jshint ignore:line
+                emailAddress = response;
 
                 return corbelRootDriver.iam.user(user.id)
                 .update({email: user.email})
@@ -159,32 +144,16 @@ describe('In IAM module', function() {
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return corbelTest.common.utils.retry(function() {
-                        return corbelTest.common.mail.random.checkMail(emailAuthorization)
-                            .then(function(response) {
-                                if (response.emailList.list.length === 0) {
-                                    return Promise.reject();
-                                } else {
-                                    return response;
-                                }
-                            });
-                    }, MAX_RETRY, RETRY_PERIOD)
-                .should.be.eventually.fulfilled;
-            })
-            .then(function(response) {
-                emailAuthorization = response.cookies.PHPSESSID;
-                var emailId = response.emailList.list[0].mail_id; //jshint ignore:line
-
-                return corbelTest.common.mail.random.getMail(emailAuthorization, emailId)
+                return popEmail(emailAddress)
                 .should.be.eventually.fulfilled;
             })
             .then(function(mail) {
-                expect(mail).to.have.property('mail_body')
+                expect(mail).to.have.property('body')
                     .and.to.contain('Click on the link to reset your password');
-                oneTimeToken = corbelTest.common.mail.random.getCodeFromMail(mail);
+                oneTimeToken = corbelTest.common.mail.maildrop.getCodeFromMail(mail);
 
                 corbelResetDriver = corbelTest.getCustomDriver({
-                    iamToken: { 
+                    iamToken: {
                         accessToken: oneTimeToken
                     },
                     domain: corbelTest.CONFIG.DOMAIN

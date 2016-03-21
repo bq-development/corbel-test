@@ -1,9 +1,9 @@
-describe('In OAUTH module', function () {
+describe('In OAUTH module', function() {
 
-    describe('notifications tests', function () {
+    describe('notifications tests', function() {
+        var popEmail = corbelTest.common.mail.maildrop.popEmail;
+        var getCodeFromMail = corbelTest.common.mail.maildrop.getCodeFromMail;
 
-        var MAX_RETRY = 10;
-        var RETRY_PERIOD = 1;
 
         var corbelDriver;
         var oauthCommonUtils;
@@ -12,25 +12,25 @@ describe('In OAUTH module', function () {
         var oauthUserTest;
         var userEmailData;
 
-        before(function () {
+        before(function() {
             corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
             oauthCommonUtils = corbelTest.common.oauth;
             userTestParams = oauthCommonUtils.getOauthUserTestParams();
             clientParams = oauthCommonUtils.getClientParams();
         });
 
-        beforeEach(function (done) {
+        beforeEach(function(done) {
             oauthUserTest = {
                 username: 'randomUser' + Date.now(),
                 password: 'randomPassword' + Date.now()
             };
 
             return corbelTest.common.mail
-                .random.getRandomMail()
+                .maildrop.getRandomMail()
                 .should.be.eventually.fulfilled
-                .then(function (response) {
+                .then(function(response) {
                     userEmailData = response;
-                    oauthUserTest.email = userEmailData.emailData['email_addr'];
+                    oauthUserTest.email = userEmailData;
 
                     return corbelDriver.oauth
                         .user(clientParams)
@@ -40,136 +40,70 @@ describe('In OAUTH module', function () {
                 .should.notify(done);
         });
 
-        it('email allows validate user account and has two endpoint that validate user account with email code',
-            function (done) {
+        it('email allows validate user account and has two endpoint that validate user account with email code [mail]',
+            function(done) {
                 var username = oauthUserTest.username;
                 var password = oauthUserTest.password;
-                var email = oauthUserTest.email;
+                var emailAddress = oauthUserTest.email;
 
-                corbelTest.common.utils.retry(function () {
-                        return corbelTest.common.mail.random
-                            .checkMail(userEmailData.cookies.PHPSESSID)
-                            .then(function (response) {
-                                if (response.emailList.list.length !== 1) {
-                                    return Promise.reject();
-                                } else {
-                                    return response;
-                                }
-                            });
-                    }, MAX_RETRY, RETRY_PERIOD)
+                popEmail(emailAddress)
                     .should.be.eventually.fulfilled
-                    .then(function (response) {
-                        response.emailList.list.should.contain.an.thing.with
-                            .property('mail_subject', 'Validate your account email');
-
-                        var resetPasswordMail = {};
-                        response.emailList.list.forEach(function (email) {
-                            if (email['mail_subject'].toLowerCase() === 'validate your account email') {
-                                resetPasswordMail = email;
-                            }
-                        });
-                        return corbelTest.common.mail.random
-                            .getMail(response.cookies.PHPSESSID, resetPasswordMail['mail_id'])
-                            .should.be.eventually.fulfilled;
-                    })
-                    .then(function (response) {
-                        var code = response['mail_body'].split('token=')[1];
+                    .then(function(email) {
+                        expect(email).to.have.property('subject', 'Validate your account email');
+                        var code = getCodeFromMail(email);
 
                         return corbelDriver.oauth
                             .user(clientParams, code)
                             .emailConfirmation('me')
                             .should.be.eventually.fulfilled;
                     })
-                    .then(function () {
+                    .then(function() {
                         return oauthCommonUtils
                             .getToken(corbelDriver, username, password, true)
                             .should.be.eventually.fulfilled;
                     })
-                    .then(function (response) {
+                    .then(function(response) {
                         expect(response.data['access_token']).to.match(oauthCommonUtils.getTokenValidation());
                     })
                     .should.notify(done);
             });
 
-        it('email allows validate user account and has two endpoint that resend validation email',
-            function (done) {
+        it('email allows validate user account and has two endpoint that resend validation email [mail]',
+            function(done) {
                 var username = oauthUserTest.username;
                 var password = oauthUserTest.password;
-                var email = oauthUserTest.email;
+                var emailAddress = oauthUserTest.email;
 
-                corbelTest.common.utils.retry(function () {
-                        return corbelTest.common.mail.random
-                            .checkMail(userEmailData.cookies.PHPSESSID)
-                            .then(function (response) {
-                                if (response.emailList.list.length !== 1) {
-                                    return Promise.reject();
-                                } else {
-                                    return response;
-                                }
-                            });
-                    }, MAX_RETRY, RETRY_PERIOD)
+                popEmail(emailAddress)
                     .should.be.eventually.fulfilled
-                    .then(function (response) {
-                        response.emailList.list.should.contain.an.thing.with
-                            .property('mail_subject', 'Validate your account email');
-
-                        var resetPasswordMail = {};
-                        response.emailList.list.forEach(function (email) {
-                            if (email['mail_subject'].toLowerCase() === 'validate your account email') {
-                                resetPasswordMail = email;
-                            }
-                        });
-
-                        return corbelTest.common.mail.random
-                            .getMail(response.cookies.PHPSESSID, resetPasswordMail['mail_id'])
-                            .should.be.eventually.fulfilled;
-                    })
-                    .then(function (response) {
-                        var code = response['mail_body'].split('token=')[1];
+                    .then(function(email) {
+                        expect(email).to.have.property('subject', 'Validate your account email');
+                        var code = getCodeFromMail(email);
 
                         return corbelDriver.oauth
                             .user(clientParams, code)
                             .sendValidateEmail('me')
                             .should.be.eventually.fulfilled;
                     })
-                    .then(function () {
-                        return corbelTest.common.utils.retry(function () {
-                            return corbelTest.common.mail.random
-                                .checkMail(userEmailData.cookies.PHPSESSID)
-                                .then(function (response) {
-                                    if (response.emailList.list.length <= 1) {
-                                        return Promise.reject();
-                                    } else {
-                                        return response;
-                                    }
-                                });
-                        }, MAX_RETRY, RETRY_PERIOD)
+                    .then(function() {
+                        return popEmail(emailAddress)
                             .should.be.eventually.fulfilled;
                     })
-                    .then(function (response) {
-                        response.emailList.list.should.contain.an.thing.with
-                            .property('mail_subject', 'Validate your account email');
-
-                        var resetPasswordMail = response.emailList.list[0];
-
-                        return corbelTest.common.mail.random
-                            .getMail(response.cookies.PHPSESSID, resetPasswordMail['mail_id'])
-                            .should.be.eventually.fulfilled;
-                    })
-                    .then(function (response) {
-                        var code = response['mail_body'].split('token=')[1];
+                    .then(function(email) {
+                        expect(email).to.have.property('subject', 'Validate your account email');
+                        var code = getCodeFromMail(email);
 
                         return corbelDriver.oauth
                             .user(clientParams, code)
                             .emailConfirmation('me')
                             .should.be.eventually.fulfilled;
                     })
-                    .then(function () {
+                    .then(function() {
                         return oauthCommonUtils
                             .getToken(corbelDriver, username, password, true)
                             .should.be.eventually.fulfilled;
                     })
-                    .then(function (response) {
+                    .then(function(response) {
                         expect(response.data['access_token']).to.match(oauthCommonUtils.getTokenValidation());
                     })
                     .should.notify(done);

@@ -1,16 +1,15 @@
-describe('In OAUTH module', function () {
+describe('In OAUTH module', function() {
 
-    describe('when the user changes his password', function () {
-        var MAX_RETRY = 10;
-        var RETRY_PERIOD = 2;
+    describe('when the user changes his password', function() {
+        var popEmail = corbelTest.common.mail.maildrop.popEmail;
 
         var corbelDriver;
         var oauthCommonUtils;
         var oauthUserTest;
         var clientParams;
-        var userEmailData;
+        var userEmail;
 
-        before(function (done) {
+        before(function(done) {
             corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
             oauthCommonUtils = corbelTest.common.oauth;
             clientParams = oauthCommonUtils.getClientParams();
@@ -20,52 +19,51 @@ describe('In OAUTH module', function () {
             };
 
             return corbelTest.common.mail
-                .random.getRandomMail()
+                .maildrop.getRandomMail()
                 .should.be.eventually.fulfilled
-                .then(function (response) {
-                    userEmailData = response;
-                    oauthUserTest.email = userEmailData.emailData['email_addr'];
+                .then(function(response) {
+                    userEmail = response;
+                    oauthUserTest.email = response;
 
                     return corbelDriver.oauth
                         .user(clientParams)
                         .create(oauthUserTest)
                         .should.be.eventually.fulfilled;
                 })
+                .then(function() {
+                    return popEmail(userEmail)
+                        .should.be.eventually.fulfilled;
+                })
+                .then(function(mail) {
+                   expect(mail).to.have.property('subject', 'Validate your account email');
+                })
                 .should.notify(done);
         });
 
-        it('should receive a change password notification email', function (done) {
+        it('should receive a change password notification email [mail]', function(done) {
             var username = oauthUserTest.username;
             var password = oauthUserTest.password;
 
             oauthCommonUtils
                 .getToken(corbelDriver, username, password)
                 .should.be.eventually.fulfilled
-                .then(function (response) {
+                .then(function(response) {
                     var token = response.data['access_token'];
                     expect(token).to.match(oauthCommonUtils.getTokenValidation());
 
                     return corbelDriver.oauth
                         .user(oauthCommonUtils.getClientParams(), token)
-                        .update('me', {password: password + password})
+                        .update('me', {
+                            password: password + password
+                        })
                         .should.be.eventually.fulfilled;
                 })
-                .then(function () {
-                    return corbelTest.common.utils.retry(function () {
-                        return corbelTest.common.mail.random.checkMail(userEmailData.cookies.PHPSESSID)
-                            .then(function (response) {
-                                if (response.emailList.list.length <= 1) {
-                                    return Promise.reject();
-                                } else {
-                                    return response;
-                                }
-                            });
-                    }, MAX_RETRY, RETRY_PERIOD)
+                .then(function() {
+                    return popEmail(userEmail)
                         .should.be.eventually.fulfilled;
                 })
-                .then(function (response) {
-                    console.log(response.emailList.list);
-                    response.emailList.list.should.contain.an.thing.with.property('mail_subject','New password');
+                .then(function(mail) {
+                   expect(mail).to.have.property('subject', 'New password');
                 })
                 .should.notify(done);
         });

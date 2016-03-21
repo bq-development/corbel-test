@@ -6,7 +6,7 @@ describe('In NOTIFICATIONS module', function() {
         var notificationId;
         var notificationDomainData;
         var notificationTemplateData;
-        var notificationData; 
+        var notificationData;
         var domainIdCreated;
         var emailRecipient;
         var emailAuthorization;
@@ -16,12 +16,12 @@ describe('In NOTIFICATIONS module', function() {
 
 
         before(function(done) {
-            var clientScopes = ['notifications:admin']; 
+            var clientScopes = ['notifications:admin'];
             var domainId = 'domain-fullFlowTest-' + Date.now();
             domainIdCreated = 'silkroad-qa:' + domainId;
             var clientName = 'client-crudDomainTest-' + Date.now();
             corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
-            
+
             notificationDomainData = {};
             notificationDomainData['properties'] = {
                 title: 'title-' + domainIdCreated
@@ -46,12 +46,11 @@ describe('In NOTIFICATIONS module', function() {
                 });
 
 
-                return corbelTest.common.mail.random.getRandomMail()
+                return corbelTest.common.mail.maildrop.getRandomMail()
                     .should.be.eventually.fulfilled;
             })
             .then(function(response){
-                emailRecipient = response.emailData.email_addr; // jshint ignore:line
-                emailAuthorization = response.cookies.PHPSESSID;
+                emailRecipient = response;
 
                 notificationData = {
                     notificationId: 'tempKey',
@@ -63,7 +62,7 @@ describe('In NOTIFICATIONS module', function() {
             .should.notify(done);
         });
 
-        it('it works correctly', function(done) {
+        it('it works correctly [mail]', function(done) {
             testDriver.notifications.domain().create(notificationDomainData)
             .should.be.eventually.fulfilled
             .then(function() {
@@ -80,9 +79,9 @@ describe('In NOTIFICATIONS module', function() {
             })
             .then(function() {
                 return corbelTest.common.utils.retry(function() {
-                        return corbelTest.common.mail.random.checkMail(emailAuthorization)
+                        return corbelTest.common.mail.maildrop.checkMail(emailRecipient)
                             .then(function(response) {
-                                if (response.emailList.list.length === 0) {
+                                if (response.length === 0) {
                                     return Promise.reject();
                                 } else {
                                     return response;
@@ -92,18 +91,15 @@ describe('In NOTIFICATIONS module', function() {
                 .should.be.eventually.fulfilled;
             })
             .then(function(response) {
-                emailAuthorization = response.cookies.PHPSESSID;
-                var emailId = response.emailList.list[0].mail_id; //jshint ignore:line
-
-                return corbelTest.common.mail.random.getMail(emailAuthorization, emailId)
+                return corbelTest.common.mail.maildrop.getMail(emailRecipient, response[0].id)
                 .should.be.eventually.fulfilled;
             })
             .then(function(mail) {
-                expect(mail).to.have.property('mail_subject', 'title-' + domainIdCreated);
-                expect(mail).to.have.property('mail_body', 'text');
+                expect(mail).to.have.property('subject', 'title-' + domainIdCreated);
+                expect(mail.body).to.contain('text');
             })
             .should.notify(done);
         });
-            
+
     });
 });
