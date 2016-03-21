@@ -1,6 +1,6 @@
 /* global $, q*/
 describe('In RESOURCES module', function() {
-    describe('In RESTOR module, while using REM-IMAGEs plugin', function() {
+    describe('while using REM-IMAGEs plugin', function() {
 
         var corbelDriver;
         var FOLDER_NAME = 'test:Restor';

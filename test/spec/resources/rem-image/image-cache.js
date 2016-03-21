@@ -1,5 +1,5 @@
 describe('In RESOURCES module', function() {
-	describe('In RESTOR module, while using REM-IMAGEs plugin', function() {
+	describe('while using REM-IMAGEs plugin', function() {
         describe('When retrieving a cached image', function() {
             var IMAGE_OPS = 'resizeHeight=100';
             var CACHE_FOLDER = 'image:ImageCache';
