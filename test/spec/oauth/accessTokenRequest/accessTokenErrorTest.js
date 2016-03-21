@@ -184,7 +184,7 @@ describe('In OAUTH module', function () {
         });
 
         it('an error [401] is returned when request an access token and the code is expired', function (done) {
-            oauthCommon.waitFor(31)
+            corbelTest.common.utils.waitFor(31)
                 .should.be.eventually.fulfilled
                 .then(function () {
                     return corbelDriver.oauth
