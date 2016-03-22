@@ -2,9 +2,7 @@ describe('In ASSETS module', function() {
     describe('when getting an asset', function() {
 
         describe('while using an admin user', function() {
-
             var corbelDriver;
-            var DEFAUL_PAGE_SIZE = 10;
 
             before(function(){
                 corbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
@@ -122,51 +120,6 @@ describe('In ASSETS module', function() {
                 .should.notify(done);
             });
 
-            it('filtered assets are retrieved when queryParams filters by scope', function(done) {
-                corbelDriver.assets.asset().getAll({
-                    query: [{
-                        '$in': {
-                            'scopes': ['assets:asset']
-                        }
-                    }]
-                })
-                .should.be.eventually.fulfilled
-                .then(function(response) {
-                    response.data.forEach(function(object) {
-                        var found = false;
-                        found = (object.scopes === 'assets:test') || found;
-                    });
-                })
-                .should.notify(done);
-            });
-
-            it('assets are retrieved sorted upwardly', function(done) {
-                corbelDriver.assets.asset().getAll({
-                    sort: {
-                        'name': 'asc'
-                    }
-                })
-                .should.be.eventually.fulfilled
-                .then(function(response) {
-                    expect(corbelTest.common.resources.checkSortingAsc(response.data, 'name')).
-                    to.be.equal(true);
-                })
-                .should.notify(done);
-            });
-
-            it('assets are retrieved sorted downwardly', function(done) {
-                corbelDriver.assets.asset().getAll({
-                    sort: {
-                        'name': 'desc'
-                    }
-                })
-                .should.be.eventually.fulfilled
-                .then(function(response) {
-                    expect(corbelTest.common.resources.checkSortingDesc(response.data, 'name')).
-                    to.be.equal(true);
-                })
-                .should.notify(done);
-            });
         });
     });
 });

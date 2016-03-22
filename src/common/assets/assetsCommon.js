@@ -5,7 +5,7 @@
 
 
 function getExpire() {
-    return Math.round((new Date().getTime() / 1000)) + 7203500;
+    return Math.round((new Date().getTime())) + 7203500;
 }
 
 function getAsset(scopes) {
@@ -15,13 +15,11 @@ function getAsset(scopes) {
         productId: String(Date.now()),
         expire: getExpire(),
         active: true,
-        scopes: scopes || ['assets:asset', 'resources:music:edit_playlist']
+        scopes: scopes || ['assets:test']
     };
 }
 
 function createMultipleAssets(driver, count, userId) {
-
-    var promises = [];
     var createAsset = function(customId, userId) {
         return {
             userId: userId,
@@ -33,17 +31,18 @@ function createMultipleAssets(driver, count, userId) {
         };
     };
 
+    var promises = [];
     for (var i = 0; i <= count; i++) {
         var asset = createAsset(i, userId);
-        var promise = driver.assets.asset().create(asset);
-        promises.push(promise);
+        promises.push(driver.assets.asset().create(asset));
     }
+
     return Promise.all(promises);
 }
 
 
 module.exports = {
-    getExpire : getExpire,
-    getAsset : getAsset,
-    createMultipleAssets : createMultipleAssets
+    getExpire: getExpire,
+    getAsset: getAsset,
+    createMultipleAssets: createMultipleAssets
 };

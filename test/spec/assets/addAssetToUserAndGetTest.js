@@ -1,6 +1,6 @@
 describe('In ASSETS module,', function() {
     describe('when add new asset to a user,', function() {
-        var loginUser = corbelTest.common.clients.loginUser;
+        var loginAsRandomUser = corbelTest.common.clients.loginAsRandomUser;
         var adminCorbelDriver;
         var corbelDriver;
         var user;
@@ -10,7 +10,7 @@ describe('In ASSETS module,', function() {
         beforeEach(function(done) {
             adminCorbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
-            corbelTest.common.clients.loginAsRandomUser(corbelDriver)
+            loginAsRandomUser(corbelDriver)
                 .should.be.eventually.fulfilled
                 .then(function(data) {
                     user = data.user;
