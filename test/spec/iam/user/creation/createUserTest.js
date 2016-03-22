@@ -12,7 +12,7 @@ describe('In IAM module', function() {
         before(function(done) {
             corbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
             corbelTest.drivers['ROOT_CLIENT'].clone()
-                .iam.domain(domainId)
+                .domain(domainId).iam.domain()
                 .get()
                 .then(function(domain){
                     domainDefaultScopes = domain.data.defaultScopes;

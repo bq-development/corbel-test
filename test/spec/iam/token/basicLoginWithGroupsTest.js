@@ -64,13 +64,13 @@ describe('In IAM module, when a user which belongs to a group is created and log
             .should.be.eventually.fulfilled
             .then(function(id) {
                 domain.id = id;
-                return corbelRootDriver.iam.client(domain.id)
+                return corbelRootDriver.domain(domain.id).iam.client()
                     .create(client)
                     .should.be.eventually.fulfilled;
             })
             .then(function(id) {
                 client.id = id;
-                return corbelRootDriver.iam.client(domain.id, client.id)
+                return corbelRootDriver.domain(domain.id).iam.client(client.id)
                     .get()
                     .should.be.eventually.fulfilled;
             })
@@ -114,12 +114,12 @@ describe('In IAM module, when a user which belongs to a group is created and log
                     .should.eventually.be.fulfilled;
             })
             .then(function() {
-                return corbelRootDriver.iam.client(domain.id, client.id)
+                return corbelRootDriver.domain(domain.id).iam.client(client.id)
                     .remove()
                     .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return corbelRootDriver.iam.domain(domain.id)
+                return corbelRootDriver.domain(domain.id).iam.domain()
                     .remove()
                     .should.be.eventually.fulfilled;
             })
@@ -188,13 +188,13 @@ describe('In IAM module, when a user which belongs to a group is created and log
             })
             .then(function(userWithGroups) {
                 expect(userWithGroups).to.have.deep.property('data.groups').and.to.contain(group.id);
-                return corbelRootDriver.iam.client(domain.id)
+                return corbelRootDriver.domain(domain.id).iam.client()
                     .create(clientGroup)
                     .should.be.eventually.fulfilled;
             })
             .then(function(id) {
                 clientGroup.id = id;
-                return corbelRootDriver.iam.client(domain.id, clientGroup.id)
+                return corbelRootDriver.domain(domain.id).iam.client(clientGroup.id)
                     .get()
                     .should.be.eventually.fulfilled;
             })

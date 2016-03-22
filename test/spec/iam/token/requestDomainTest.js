@@ -99,7 +99,7 @@ describe('In IAM module when requests an access token', function() {
     describe('with not allowed request domain ', function() {
 
         var domain = {
-            id: 'newDpmain_' + Date.now(),
+            id: 'newDomain_' + Date.now(),
             description: 'domain access token',
             scopes: ['iam:user:create', 'iam:user:delete', 'iam:user:me'],
             defaultScopes: ['iam:user:me']
@@ -118,8 +118,8 @@ describe('In IAM module when requests an access token', function() {
         });
 
         after(function(done) {
-            driverRootClient.iam
-                .domain(domainId)
+            driverRootClient.domain(domainId).iam
+                .domain()
                 .remove()
                 .should.be.eventually.fulfilled
                 .should.notify(done);
@@ -157,7 +157,7 @@ describe('In IAM module when requests an access token', function() {
     describe('with allowed client domain ', function() {
 
         var domain = {
-            id: 'newDpmain_' + Date.now(),
+            id: 'newDomain_' + Date.now(),
             description: 'domain access token',
             scopes: ['iam:user:me', 'iam:user:create', 'iam:user:delete'],
             defaultScopes: ['iam:user:me']
@@ -177,14 +177,14 @@ describe('In IAM module when requests an access token', function() {
             .create(domain)
                 .then(function(id) {
                     domainId = id;
-                    return driverRootClient.iam.client(domainId)
+                    return driverRootClient.domain(domainId).iam.client()
                         .create(client)
                         .should.be.eventually.fulfilled;
                 })
                 .then(function(id) {
                     clientId = id;
 
-                    return driverRootClient.iam.client(domainId, clientId)
+                    return driverRootClient.domain(domainId).iam.client(clientId)
                         .get()
                         .should.be.eventually.fulfilled;
                 })
@@ -196,15 +196,15 @@ describe('In IAM module when requests an access token', function() {
 
         after(function(done) {
 
-            driverRootClient.iam
-                .domain(domainId)
+            driverRootClient.domain(domainId).iam
+                .domain()
                 .remove()
                 .should.be.eventually.fulfilled.and.notify(done);
 
         });
 
-        it('and some not allowed scopes for request_domain parameter, \
-    it fails returning error UNAUTHORIZED(401)', function(done) {
+        it('and some not allowed scopes for request_domain parameter,' +
+            ' it fails returning error UNAUTHORIZED(401)', function(done) {
             var claims = {
                 'iss': clientId,
                 'request_domain': domainId,
@@ -277,14 +277,12 @@ describe('In IAM module when requests an access token', function() {
                 .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        it.skip('and the client is not authorized in the request_domain parameter' +
-            'it fails returning error UNAUTHORIZED(401)',
+        it('and the client is not authorized in the request_domain parameter' +
+            ' it fails returning error UNAUTHORIZED(401)',
             function(done) {
-
-                var clientDomainSilkroadQA = claimDefault.clientId;
                 var claims = {
                     'scope': '',
-                    'iss': clientDomainSilkroadQA,
+                    'iss': '1234',
                     'request_domain': domainId,
                     'aud': aud,
                     'version': version

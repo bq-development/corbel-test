@@ -56,11 +56,11 @@ describe('In RESOURCES module, while using public resources', function() {
             })
             .then(function(id) {
                 domainId = id;
-                return corbelRootDriver.iam.client(domainId).create(client)
+                return corbelRootDriver.domain(domainId).iam.client().create(client)
                 .should.be.eventually.fulfilled;
             })
             .then(function(clientId) {
-                return corbelRootDriver.iam.client(domainId, clientId).get()
+                return corbelRootDriver.domain(domainId).iam.client(clientId).get()
                 .should.be.eventually.fulfilled;
             })
             .then(function(response) {

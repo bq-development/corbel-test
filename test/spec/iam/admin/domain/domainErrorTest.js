@@ -27,20 +27,17 @@ describe('In IAM module', function() {
                 scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete', 'iam:user:me'],
                 publicScopes: []
             };
-
             corbelDriver.iam.domain()
             .create(expectedDomain)
             .should.be.eventually.fulfilled
             .then(function(id) {
                 expect(id).to.be.equal(corbelTest.CONFIG.DOMAIN  + ':' + expectedDomain.id);
-
-                return corbelDriver.iam.domain(id)
+                return corbelDriver.domain(id).iam.domain()
                 .get()
                 .should.be.eventually.fulfilled;
             })
             .then(function(domain) {
                 expect(domain).to.have.deep.property('data.id', corbelTest.CONFIG.DOMAIN  + ':' + expectedDomain.id);
-
                 return corbelDriver.iam.domain()
                 .create(expectedDomain)
                 .should.be.eventually.rejected;
@@ -59,7 +56,6 @@ describe('In IAM module', function() {
                 scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete', 'iam:user:me'],
                 publicScopes: []
             };
-
             corbelDriver.iam.domain()
             .create(expectedDomain)
             .should.be.eventually.rejected
@@ -77,7 +73,6 @@ describe('In IAM module', function() {
                 scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete', 'iam:user:me'],
                 publicScopes: []
             };
-
             corbelDefaultDriver.iam.domain()
             .create(expectedDomain)
             .should.be.eventually.rejected
@@ -95,40 +90,36 @@ describe('In IAM module', function() {
                 scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete', 'iam:user:me'],
                 publicScopes: []
             };
-            var updateDomainId = 'anyDomain:test';
+            var updateDomainId = corbelTest.CONFIG.DOMAIN  + ':' + 'anyDomain:test';
             var domainId;
-
             corbelDriver.iam.domain()
             .create(expectedDomain)
             .should.be.eventually.fulfilled
             .then(function(id) {
                 domainId = id;
                 expect(domainId).to.be.equals(corbelTest.CONFIG.DOMAIN  + ':' + expectedDomain.id);
-
-                return corbelDriver.iam.domain(domainId)
-                .update({domainId:updateDomainId})
+                return corbelDriver.domain(domainId).iam.domain()
+                .update({id:updateDomainId})
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return corbelDriver.iam.domain(updateDomainId)
+                return corbelDriver.domain(updateDomainId).iam.domain()
                 .get()
                 .should.be.eventually.rejected;
             })
             .then(function(e) {
                 expect(e).to.have.property('status', 404);
                 expect(e).to.have.deep.property('data.error', 'not_found');
-
-                return corbelDriver.iam.domain(domainId)
+                return corbelDriver.domain(domainId).iam.domain()
                 .remove()
                 .should.be.eventually.fulfilled;
             })
             .should.be.eventually.fulfilled.and.notify(done);
         });
 
-        it('an error 401 is returned while trying to get a domain which does not exist', function(done) {
-            var id = Date.now();
-
-            corbelDriver.iam.domain(id)
+        it('an error 404 is returned while trying to get a domain which does not exist', function(done) {
+            var id = corbelTest.CONFIG.DOMAIN  + ':' + Date.now();
+            corbelDriver.domain(id).iam.domain()
             .get()
             .should.be.eventually.rejected
             .then(function(e) {
@@ -139,9 +130,7 @@ describe('In IAM module', function() {
         });
 
         it('an error 401 is returned while trying to get a domain without authorization', function(done) {
-            var id = Date.now();
-
-            corbelDefaultDriver.iam.domain(id)
+            corbelDefaultDriver.domain(Date.now()).iam.domain()
             .get()
             .should.be.eventually.rejected
             .then(function(e) {
@@ -160,7 +149,6 @@ describe('In IAM module', function() {
                     }
                 }]
             };
-
             corbelDriver.iam.domain()
             .getAll(params)
             .should.be.eventually.rejected
@@ -172,15 +160,13 @@ describe('In IAM module', function() {
         });
 
         it('an error 401 is returned while trying to update a domain without authorization', function(done) {
-            var id = Date.now();
             var expectedDomain = {
                 id: 'TestDomain_' + Date.now(),
                 description: 'anyDescription',
                 scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete', 'iam:user:me'],
                 publicScopes: []
             };
-
-            corbelDefaultDriver.iam.domain(id)
+            corbelDefaultDriver.domain(Date.now()).iam.domain()
             .update(expectedDomain)
             .should.be.eventually.rejected
             .then(function(e) {
@@ -191,9 +177,7 @@ describe('In IAM module', function() {
         });
 
         it('an error 422 is returned while trying to update a domain with malformed entity', function(done) {
-            var id = Date.now();
-
-            corbelDriver.iam.domain(id)
+            corbelDriver.iam.domain()
             .update('asdf')
             .should.be.eventually.rejected
             .then(function(e) {
@@ -204,9 +188,7 @@ describe('In IAM module', function() {
         });
 
         it('an error 401 is returned while trying to delete a domain without authorization', function(done) {
-            var id = Date.now();
-
-            corbelDefaultDriver.iam.domain(id)
+            corbelDefaultDriver.domain(Date.now()).iam.domain()
             .remove()
             .should.be.eventually.rejected
             .then(function(e) {

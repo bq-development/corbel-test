@@ -52,12 +52,11 @@ function getDomain(timeStamp, desc, sufix, scopes, publicScopes) {
     };
 }
 
-function getClient(timeStamp, domainId, sufix, scopes) {
+function getClient(timeStamp, sufix, scopes) {
     return {
         name: 'testClient_' + (timeStamp ? timeStamp : Date.now()) +
             (sufix ? ('_' + sufix) : ''),
         signatureAlgorithm: 'HS256',
-        domain: domainId ? domainId : 'TestDomain',
         scopes: scopes ? scopes : ['iam:user:create', 'iam:user:read', 'iam:user:delete',
             'iam:user:me'
         ]
@@ -123,10 +122,10 @@ function createDomainAndClient(driver, domain, clientName, scopes, publicScopes)
             scopes: scopes ?  scopes : []
         };
 
-        return driver.iam.client(domainCreatedId).create(currentClient);
+        return driver.domain(domainCreatedId).iam.client().create(currentClient);
     })
     .then(function(clientId) {
-        return driver.iam.client(domainCreatedId, clientId).get();
+        return driver.domain(domainCreatedId).iam.client(clientId).get();
     })
     .then(function(responseClient) {
         var clientInfo = {

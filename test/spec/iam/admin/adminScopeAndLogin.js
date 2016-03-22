@@ -65,46 +65,37 @@ describe('In IAM module', function() {
                             .should.be.eventually.fulfilled;
                     }).then(function(id) {
                         domain.id = id;
-
-                        return corbelRootDriver.iam.client(domain.id)
+                        return corbelRootDriver.domain(domain.id).iam.client()
                             .create(client)
                             .should.be.eventually.fulfilled;
                     }).then(function(id) {
                         client.id = id;
-
-                        return corbelRootDriver.iam.client(domain.id, client.id)
+                        return corbelRootDriver.domain(domain.id).iam.client(client.id)
                             .get()
                             .should.be.eventually.fulfilled;
                     }).then(function(response) {
                         client = response.data;
-
                         corbelDefaultDriver = corbelTest.getCustomDriver({
                             'clientId': client.id,
                             'clientSecret': client.key,
                             'scopes': client.scopes.join(' ')
                         });
-
                         return corbelDefaultDriver.iam.token().create();
                     }).then(function(response) {
-
                         return corbelDefaultDriver.iam.users()
                             .create(userData)
                             .should.be.eventually.fulfilled;
                     }).then(function(id) {
                         userData.id = id;
-
                         return corbelTest.common.clients
                             .loginUser(corbelDefaultDriver, userData.username, userData.password)
                             .should.be.eventually.fulfilled;
-
                     }).then(function() {
                         return corbelDefaultDriver.iam.user(userData.id)
                             .get()
                             .should.eventually.be.rejected;
                     }).then(function() {
                         compositeScope.scopes = [testScope.id];
-
-                        // This is the same as update
                         return corbelRootDriver.iam.scope()
                             .create(compositeScope)
                             .should.be.eventually.fulfilled;
@@ -122,7 +113,6 @@ describe('In IAM module', function() {
                             .should.be.eventually.fulfilled;
                     }).then(function() {
                         testScope.audience = 'badAudience';
-
                         return corbelRootDriver.iam.scope()
                             .create(testScope)
                             .should.be.eventually.fulfilled;
@@ -130,7 +120,6 @@ describe('In IAM module', function() {
                         return corbelDefaultDriver.iam.user('me')
                             .disconnect()
                             .should.be.eventually.fulfilled;
-
                     }).then(function() {
                         return corbelTest.common.clients
                             .loginUser(corbelDefaultDriver, userData.username, userData.password)

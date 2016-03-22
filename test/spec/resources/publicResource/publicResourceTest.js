@@ -60,11 +60,11 @@ describe('In RESOURCES module, while using public resources', function() {
                 scopes: ['silkroad-qa:resources']
             };
 
-            corbelRootDriver.iam.client(domainId)
+            corbelRootDriver.domain(domainId).iam.client()
                 .create(client)
                 .should.be.eventually.fulfilled
                 .then(function(clientId) {
-                    return corbelRootDriver.iam.client(domainId, clientId)
+                    return corbelRootDriver.domain(domainId).iam.client(clientId)
                         .get()
                         .should.be.eventually.fulfilled;
                 })

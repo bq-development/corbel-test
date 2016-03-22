@@ -9,17 +9,13 @@ describe('In IAM module', function() {
 
         var createDomains = function(amount, timeStamp, desc) {
             var promises = [];
-
             for (var count = 1; count <= amount; count++) {
                 var domain = corbelTest.common.iam.getDomain(timeStamp, desc, count);
-
                 var promise = CorbelDriver.iam.domain()
                 .create(domain)
                 .should.be.eventually.fulfilled;
-
                 promises.push(promise);
             }
-
             return Promise.all(promises);
         };
 
@@ -30,19 +26,17 @@ describe('In IAM module', function() {
                 scopes: ['iam:user:create', 'iam:user:read', 'iam:user:delete', 'iam:user:me'],
                 publicScopes: []
             };
-
             CorbelDriver.iam.domain()
             .create(expectedDomain)
             .should.be.eventually.fulfilled
             .then(function(id) {
-                expect(id).to.be.equals('silkroad-qa:' + expectedDomain.id);
-
-                return CorbelDriver.iam.domain(id)
+                expect(id).to.be.equals(corbelTest.CONFIG.DOMAIN  + ':' + expectedDomain.id);
+                return CorbelDriver.domain(id).iam.domain()
                 .get()
                 .should.be.eventually.fulfilled;
             })
             .then(function(domain) {
-                expectedDomain.id = 'silkroad-qa:' + expectedDomain.id;
+                expectedDomain.id = corbelTest.CONFIG.DOMAIN  + ':' + expectedDomain.id;
                 expect(domain).to.have.deep.property('data.id', expectedDomain.id);
                 expect(domain).to.have.deep.property('data.description', expectedDomain.description);
                 domain.data.scopes.forEach(function(scope){
@@ -60,7 +54,6 @@ describe('In IAM module', function() {
                 publicScopes: []
             };
             var newDescription = 'salerjiioejjsadroaeho';
-
             CorbelDriver.iam.domain()
             .create(expectedDomain)
             .should.be.eventually.fulfilled
@@ -68,14 +61,13 @@ describe('In IAM module', function() {
                 var newDomain = {
                     description: newDescription
                 };
-                expectedDomain.id = 'silkroad-qa:'+expectedDomain.id;
-
-                return CorbelDriver.iam.domain(id)
+                expectedDomain.id = corbelTest.CONFIG.DOMAIN  + ':' + expectedDomain.id;
+                return CorbelDriver.domain(id).iam.domain()
                 .update(newDomain)
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return CorbelDriver.iam.domain(expectedDomain.id)
+                return CorbelDriver.domain(expectedDomain.id).iam.domain()
                 .get()
                 .should.be.eventually.fulfilled;
             })
@@ -98,14 +90,13 @@ describe('In IAM module', function() {
             .create(expectedDomain)
             .should.be.eventually.fulfilled
             .then(function(id) {
-                expect(id).to.be.equals('silkroad-qa:' + expectedDomain.id);
-
-                return CorbelDriver.iam.domain(id)
+                expect(id).to.be.equals(corbelTest.CONFIG.DOMAIN  + ':' + expectedDomain.id);
+                return CorbelDriver.domain(id).iam.domain()
                 .get()
                 .should.be.eventually.fulfilled;
             })
             .then(function(domain) {
-                expectedDomain.id = 'silkroad-qa:' + expectedDomain.id;
+                expectedDomain.id = corbelTest.CONFIG.DOMAIN  + ':' + expectedDomain.id;
                 expect(domain).to.have.deep.property('data.id', expectedDomain.id);
                 expect(domain).to.have.deep.property('data.description', expectedDomain.description);
                 domain.data.scopes.forEach(function(scope){
@@ -113,12 +104,12 @@ describe('In IAM module', function() {
                 });
             })
             .then(function(){
-              return CorbelDriver.iam.domain(expectedDomain.id)
+              return CorbelDriver.domain(expectedDomain.id).iam.domain()
               .remove()
               .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return CorbelDriver.iam.domain(expectedDomain.id)
+                return CorbelDriver.domain(expectedDomain.id).iam.domain()
                 .get()
                 .should.be.eventually.rejected;
             })

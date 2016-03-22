@@ -30,12 +30,12 @@ describe('In IAM module, with a domain', function() {
             .should.be.eventually.fulfilled
             .then(function(id) {
                 domain.id = id;
-                return corbelDriverRoot.iam.client(domain.id)
+                return corbelDriverRoot.domain(domain.id).iam.client()
                     .create(client)
                     .should.be.eventually.fulfilled;
             }).then(function(id) {
                 client.id = id;
-                return corbelDriverRoot.iam.client(domain.id, client.id)
+                return corbelDriverRoot.domain(domain.id).iam.client(client.id)
                     .get()
                     .should.be.eventually.fulfilled;
             }).then(function(response) {
@@ -69,12 +69,12 @@ describe('In IAM module, with a domain', function() {
             .should.be.eventually.fulfilled
             .then(function() {
 
-                return corbelDriverRoot.iam.client(domain.id, client.id)
+                return corbelDriverRoot.domain(domain.id).iam.client(client.id)
                     .remove()
                     .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return corbelDriverRoot.iam.domain(domain.id)
+                return corbelDriverRoot.domain(domain.id).iam.domain()
                     .remove()
                     .should.be.eventually.fulfilled;
             })
@@ -82,7 +82,7 @@ describe('In IAM module, with a domain', function() {
     });
 
     it('without basic authentication capability, user basic is logged successfully', function(done) {
-        corbelDriverRoot.iam.domain(domain.id)
+        corbelDriverRoot.domain(domain.id).iam.domain()
             .update({
                 capabilities: {}
             })
@@ -97,7 +97,7 @@ describe('In IAM module, with a domain', function() {
 
     it('with basic authentication capability enabled, user basic is logged successfully', function(done) {
 
-        corbelDriverRoot.iam.domain(domain.id)
+        corbelDriverRoot.domain(domain.id).iam.domain()
             .update({
                 capabilities: {
                     basic: true
@@ -115,7 +115,7 @@ describe('In IAM module, with a domain', function() {
 
     it('with basic authentication capability disabled, user basic login is not allowed', function(done) {
 
-        corbelDriverRoot.iam.domain(domain.id)
+        corbelDriverRoot.domain(domain.id).iam.domain()
             .update({
                 capabilities: {
                     basic: false
