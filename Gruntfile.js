@@ -58,7 +58,7 @@ module.exports = function(grunt) {
         browserify: {
             dist: {
                 files: {
-                    '.tmp/bundle.js': ['src/main.js', 'test/spec/private/utils/main.js', 
+                    '.tmp/bundle.js': ['src/main.js', 'test/spec/private/utils/main.js',
                         'test/spec/private/utils/ec/common.js']
                 }
             }
@@ -143,6 +143,12 @@ module.exports = function(grunt) {
             '/config.js', 'module.exports = ' + JSON.stringify(finalConfig, null, 2));
     });
 
+    grunt.registerTask('ci-common', '', [
+        'config',
+        'browserify',
+        'express:dev'
+    ]);
+
     grunt.registerTask('common', '', [
         'versioncheck',
         'clean',
@@ -164,6 +170,11 @@ module.exports = function(grunt) {
         grunt.log.error('>>> ATENTION: grunt server:test is deprecated, please use grunt serve:test');
         grunt.task.run(['serve:test']);
     });
+
+    grunt.registerTask('ci-test', [
+        'ci-common',
+        'karma:unit'
+    ]);
 
     grunt.registerTask('test', [
         'common',
