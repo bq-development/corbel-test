@@ -63,5 +63,23 @@ describe('In IAM module', function() {
                 .should.notify(done);
         });
 
+        it('can query with not equals', function(done) {
+            var params = {
+              query: [{
+                  '$ne': {
+                      type: retriveDevices[0].type
+                  }
+              }]
+            };
+
+            corbelDriver.iam.user()
+                .getMyDevices(params)
+                .should.be.eventually.fulfilled
+                .then(function(devices) {
+                    expect(devices).to.have.deep.property('data.length', 0);
+                })
+                .should.notify(done);
+        });
+
     });
 });

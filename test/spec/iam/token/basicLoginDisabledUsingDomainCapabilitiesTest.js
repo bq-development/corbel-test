@@ -1,5 +1,4 @@
-describe('In IAM module, with a domain', function() {
-
+describe('In IAM module, with a domain, basic authentication capability can be configured', function() {
     var corbelDefaultDriver;
     var corbelDriverRoot;
     var domain = {
@@ -63,12 +62,10 @@ describe('In IAM module, with a domain', function() {
     });
 
     after(function(done) {
-
         corbelDefaultDriver.iam.user(userData.id)
             .delete()
             .should.be.eventually.fulfilled
             .then(function() {
-
                 return corbelDriverRoot.domain(domain.id).iam.client(client.id)
                     .remove()
                     .should.be.eventually.fulfilled;
@@ -81,7 +78,7 @@ describe('In IAM module, with a domain', function() {
             .should.notify(done);
     });
 
-    it('without basic authentication capability, user basic is logged successfully', function(done) {
+    it('with default configuration, user basic is logged successfully', function(done) {
         corbelDriverRoot.domain(domain.id).iam.domain()
             .update({
                 capabilities: {}
@@ -95,8 +92,7 @@ describe('In IAM module, with a domain', function() {
             .should.notify(done);
     });
 
-    it('with basic authentication capability enabled, user basic is logged successfully', function(done) {
-
+    it('with enabled configuration, user basic is logged successfully', function(done) {
         corbelDriverRoot.domain(domain.id).iam.domain()
             .update({
                 capabilities: {
@@ -105,7 +101,6 @@ describe('In IAM module, with a domain', function() {
             })
             .should.be.eventually.fulfilled
             .then(function() {
-
                 return corbelTest.common.clients
                     .loginUser(corbelDefaultDriver, userData.username, userData.password)
                     .should.be.eventually.fulfilled;
@@ -113,8 +108,7 @@ describe('In IAM module, with a domain', function() {
             .should.notify(done);
     });
 
-    it('with basic authentication capability disabled, user basic login is not allowed', function(done) {
-
+    it('with disabled configuration, user basic login is not allowed', function(done) {
         corbelDriverRoot.domain(domain.id).iam.domain()
             .update({
                 capabilities: {

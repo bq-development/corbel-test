@@ -20,12 +20,6 @@ describe('In IAM module', function() {
         'and specific device id successes returning user',
         function(done) {
             var deviceId = '123';
-            var device = {
-                notificationUri: '123',
-                name: 'device',
-                type: 'Android',
-                notificationEnabled: true
-            };
 
             var random = Date.now();
 
@@ -51,28 +45,16 @@ describe('In IAM module', function() {
                 .should.be.eventually.fulfilled
                 .then(function(id) {
                     userId = id;
-
-                    return corbelDriverAdmin.iam.user(userId)
-                        .registerDevice(deviceId, device)
-                        .should.be.eventually.fulfilled;
-                })
-                .then(function() {
-                    return corbelDriverAdmin.iam.user(userId)
-                        .getDevices()
-                        .should.be.eventually.fulfilled;
-                })
-                .then(function(responseDevice) {
-                    device = responseDevice.data[0];
-
                     return corbelTest.common.clients.loginUser(corbelDriver, user.email, user.password,
-                            device.deviceId)
+                            deviceId)
                         .should.be.eventually.fulfilled;
                 })
                 .then(function(response) {
+
                     var accessToken = response.data.accessToken;
                     expect(response.data.accessToken).to.match(tokenValidation);
                     var tokenContent = JSON.parse(window.atob(accessToken.split('.')[0]));
-                    expect(tokenContent.deviceId).to.be.equal(device.deviceId);
+                    expect(tokenContent.deviceId).to.be.equal(deviceId);
                 })
                 .should.notify(done);
         });
