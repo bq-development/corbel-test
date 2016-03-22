@@ -24,15 +24,19 @@ describe('In RESOURCES module', function() {
             var image = 'Qk2eAAAAAAAAAHoAAABsAAAAAwAAAAMAAAABABgAAAAAACQAAAATCwAAEwsAAAAAAAAAAAAAQkdScwAAAAAAAA'+
                 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAD//wD/AP//'+
                   'AAAAAABmZmYA/wAAAH8AAAAAAP9/AAAA//8AAAA=';
-            var ATTACHMENT = {
+            var ATTACHMENT1 = {
                 content: image,
-                name: 'pre.tt.y.bmp'
+                name: 'pre.tt.y1.bmp'
+            };
+            var ATTACHMENT2 = {
+                content: image,
+                name: 'pre.tt.y2.bmp'
             };
             var FEEDBACK_METADATA = {
                 project: 'TES',
                 issueType: 'Bug',
                 summary: 'test summaryImageAttachment',
-                attachment: ATTACHMENT
+                attachments: [ATTACHMENT1, ATTACHMENT2]
             };
 
             corbelDriver.resources.collection(FEEDBACK_COLLECTION)
