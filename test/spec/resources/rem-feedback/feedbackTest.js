@@ -54,7 +54,7 @@ describe('In RESOURCES module', function() {
                 project: 'TES',
                 issueType: 'Bug',
                 summary: 'test summaryTextAttachment',
-                attachment: ATTACHMENT
+                attachments: [ATTACHMENT]
             };
 
             corbelDriver.resources.collection(FEEDBACK_COLLECTION)
@@ -73,7 +73,7 @@ describe('In RESOURCES module', function() {
                 project: 'TES',
                 issueType: 'Bug',
                 summary: 'test summaryVideoAttachment',
-                attachment: ATTACHMENT
+                attachments: [ATTACHMENT]
             };
 
             corbelDriver.resources.collection(FEEDBACK_COLLECTION)
