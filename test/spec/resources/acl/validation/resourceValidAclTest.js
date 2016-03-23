@@ -407,7 +407,7 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            it.skip('an ACL resource can be updated with empty data and the admin persists', function(done) {
+            it('an ACL resource can be updated with empty data and the admin persists', function(done) {
                 var ACL = {};
                 ACL['user:' + adminUser.id] =  {
                     permission : 'ADMIN'
@@ -439,12 +439,12 @@ describe('In RESOURCES module', function() {
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(response) {
-                    expect(response).to.have.deep.property('data._acl.user:' + adminUser.id,'ADMIN');
+                    expect(response).to.have.deep.property('data._acl.user:' + adminUser.id + '.permission','ADMIN');
                 })
                 .should.notify(done);
             });
 
-            it.skip('a resource can be updated without admin user in the ACL and the admin persists', function(done) {
+            it('a resource can be updated without admin user in the ACL and the admin persists', function(done) {
                 var ACL = {};
                 ACL['user:' + user.id] = {
                     permission : 'ADMIN'
@@ -459,13 +459,13 @@ describe('In RESOURCES module', function() {
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(response) {
-                    expect(response).to.have.deep.property('data._acl.user:' + adminUser.id, 'ADMIN');
+                    expect(response).to.have.deep.property('data._acl.user:' + adminUser.id + '.permission','ADMIN');
                     expect(response).to.have.deep.property('data._acl.user:' + user.id + '.permission','ADMIN');
                 })
                 .should.notify(done);
             });
 
-            it.skip('the admin update is ignored when trying to assign him WRITE permissions', function(done) {
+            it('the admin update is ignored when trying to assign him WRITE permissions', function(done) {
                 var ACL = {};
                 ACL['user:' + adminUser.id] = {
                     permission : 'WRITE'
@@ -479,17 +479,16 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled
                 .then(function(){
                     return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
-                        .get()
-                    .should.be.eventually.fulfilled;
+                        .get().should.be.eventually.fulfilled;
                 })
                 .then(function(response) {
-                    expect(response).to.have.deep.property('data._acl.user:' + adminUser.id, 'ADMIN');
+                    expect(response).to.have.deep.property('data._acl.user:' + adminUser.id + '.permission','ADMIN');
                     expect(response).to.have.deep.property('data._acl.user:' + user.id + '.permission','ADMIN');
                 })
                 .should.notify(done);
             });
 
-            it.skip('the admin update is ignored when trying to assign him READ permissions', function(done) {
+            it('the admin update is ignored when trying to assign him READ permissions', function(done) {
                 var ACL = {};
                 ACL['user:' + adminUser.id] = {
                     permission : 'READ'
@@ -503,17 +502,16 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled
                 .then(function(){
                     return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
-                        .get()
-                    .should.be.eventually.fulfilled;
+                        .get().should.be.eventually.fulfilled;
                 })
                 .then(function(response) {
-                    expect(response).to.have.deep.property('data._acl.user:' + adminUser.id, 'ADMIN');
+                    expect(response).to.have.deep.property('data._acl.user:' + adminUser.id + '.permission','ADMIN');
                     expect(response).to.have.deep.property('data._acl.user:' + user.id + '.permission','ADMIN');
                 })
                 .should.notify(done);
             });
 
-            it.skip('an ACL resource can be updated for all users with READ permission', function(done) {
+            it('an ACL resource can be updated for all users with READ permission', function(done) {
                 var ACL = {};
                 ACL.ALL = {
                     permission : 'READ'
@@ -524,17 +522,15 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled
                 .then(function(){
                     return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
-                        .get()
-                    .should.be.eventually.fulfilled;
+                        .get().should.be.eventually.fulfilled;
                 })
                 .then(function(response) {
-                    expect(response).not.to.have.deep.property('data._acl.user:' + adminUser.id + '.permission');
                     expect(response).to.have.deep.property('data._acl.ALL.permission','READ');
                 })
                 .should.notify(done);
             });
 
-            it.skip('an ACL resource can be updated for all users with WRITE permission', function(done) {
+            it('an ACL resource can be updated for all users with WRITE permission', function(done) {
                 var ACL = {};
                 ACL.ALL = {
                     permission : 'WRITE'
@@ -545,17 +541,19 @@ describe('In RESOURCES module', function() {
                 .should.be.eventually.fulfilled
                 .then(function(){
                     return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
-                        .get()
-                    .should.be.eventually.fulfilled;
+                        .update({}).should.be.eventually.fulfilled;
+                })
+                .then(function(){
+                    return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
+                        .get().should.be.eventually.fulfilled;
                 })
                 .then(function(response) {
-                    expect(response).not.to.have.deep.property('data._acl.user:' + adminUser.id + '.permission');
                     expect(response).to.have.deep.property('data._acl.ALL.permission','WRITE');
                 })
                 .should.notify(done);
             });
 
-            it.skip('an ACL resource can be updated for a group with READ permission without stablish an admin',
+            it('an ACL resource can be updated for a group with READ permission',
                     function(done) {
                 var ACL = {};
                 ACL['group:' + groupId] = {
@@ -571,13 +569,12 @@ describe('In RESOURCES module', function() {
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(response) {
-                    expect(response).not.to.have.deep.property('data._acl.user:' + adminUser.id + '.permission');
                     expect(response).to.have.deep.property('data._acl.group:' + groupId + '.permission','READ');
                 })
                 .should.notify(done);
             });
 
-            it.skip('an ACL resource can be updated for a group with WRITE permission without stablish an admin',
+            it('an ACL resource can be updated for a group with WRITE permission',
                     function(done) {
                 var ACL = {};
                 ACL['group:' + groupId] = {
@@ -593,13 +590,12 @@ describe('In RESOURCES module', function() {
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(response) {
-                    expect(response).not.to.have.deep.property('data._acl.user:' + adminUser.id + '.permission');
                     expect(response).to.have.deep.property('data._acl.group:' + groupId + '.permission','WRITE');
                 })
                 .should.notify(done);
             });
 
-            it.skip('an ACL resource can be updated for a group with ADMIN permission without stablish an admin',
+            it('an ACL resource can be updated for a group with ADMIN permission',
                     function(done) {
                 var ACL = {};
                 ACL['group:' + groupId] = {
@@ -615,7 +611,6 @@ describe('In RESOURCES module', function() {
                     .should.be.eventually.fulfilled;
                 })
                 .then(function(response) {
-                    expect(response).not.to.have.deep.property('data._acl.user:' + adminUser.id + '.permission');
                     expect(response).to.have.deep.property('data._acl.group:' + groupId + '.permission','ADMIN');
                 })
                 .should.notify(done);
