@@ -1,231 +1,201 @@
 /*jshint multistr: true */
 describe('In RESOURCES module', function() {
-    describe('while using REM-IMAGEs plugin', function() {
+    describe('while using REM-IMAGEs plugin when using blob type images', function() {
 
         var corbelDriver;
+        var dataImage;
         var FOLDER_NAME = 'test:Restor';
-        var canvasContainer;
-        var domId;
-
-        function dataURItoBlob(dataURI) {
-            // convert base64 to raw binary data held in a string
-            var byteString = atob(dataURI.split(',')[1]);
-
-            // separate out the mime component
-            var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-
-            // write the bytes of the string to an ArrayBuffer
-            var arrayBuffer = new ArrayBuffer(byteString.length);
-            var _ia = new Uint8Array(arrayBuffer);
-
-            for (var i = 0; i < byteString.length; i++) {
-                _ia[i] = byteString.charCodeAt(i);
-            }
-
-            var blob = new Blob([_ia], {
-                type: mimeString
-            });
-
-            return blob;
-        }
+        var FILENAME;
+        var ORIGINAL_IMAGE_WIDTH = 626;
+        var ORIGINAL_IMAGE_HEIGTH = 626;
 
         function removeDom() {
             document.getElementById('test-image').remove();    
+        }
+
+        function getImageAsBlob(imageUrl) {
+            var xhttp = new XMLHttpRequest();
+            var promise = new Promise(function(resolve, reject){
+
+                xhttp.onreadystatechange = function() {
+                    if (xhttp.readyState === 4 && xhttp.status === 200) {
+                        resolve(xhttp.response);
+                    }
+                };
+
+                xhttp.open('GET', imageUrl, true);
+                xhttp.setRequestHeader('Content-Type', 'image/png');
+                xhttp.responseType = 'blob';
+                xhttp.send();
+            });
+
+            return promise;
         }
 
         before(function() {
             corbelDriver = corbelTest.drivers['ADMIN_CLIENT'].clone();
         });
 
-        describe('when using blob type images', function() {
+        beforeEach(function(done) {
+            getImageAsBlob('http://' + window.location.host.split(':')[0] + ':' +
+                corbelTest.ports.KARMA + '/base/src/common/utils/img/logo.png')
+            .then(function(blob) {
+                FILENAME = 'RestorFileName' + Date.now();
+                dataImage = blob;
 
-            if (window.chrome) { // will be fixed in phantom 2.0
+                return corbelDriver.resources.resource(FOLDER_NAME, FILENAME).update(
+                    dataImage, {
+                        dataType: 'image/png',
+                    }
+                )
+                .should.be.eventually.fulfilled;
+            })                 
+            .should.notify(done);
+        });
 
-                var dataImage;
-                var originalImageWidth, originalImageHeigth;
-                var FILENAME;
+        afterEach(function(done) {
+            corbelDriver.resources.resource(FOLDER_NAME, FILENAME).delete({
+                dataType: 'image/png'
+            })
+            .should.be.eventually.fulfilled
+            .then(function() {
+                return corbelDriver.resources.resource(FOLDER_NAME, FILENAME).get({
+                    dataType: 'image/png'
+                })
+            .should.be.eventually.rejected;
+            })
+            .then(function(e) {
+                expect(e).to.have.property('status', 404);
+                expect(e).to.have.deep.property('data.error', 'not_found');
+            })
+            .should.notify(done);
+        });
 
-                before(function(done) {
+        
+        it('image does not surpasses original image size when resize operation is required', function(done) {
+            var operationQuery = 'resizeWidth=' + (ORIGINAL_IMAGE_WIDTH + 1);
 
-                    canvasContainer = document.getElementById('mocha');
-                    canvasContainer.insertAdjacentHTML(
-                        'beforeend',
-                        '<canvas id="myCanvas" width="626" height="626"></canvas>');
-                    var canvas = document.getElementById('myCanvas');
-                    var context = canvas.getContext('2d');
-                    var imageObj = new Image();
+            corbelDriver.resources.resource(FOLDER_NAME, FILENAME).get({
+                dataType: 'image/png',
+                customQueryParams: {
+                    'image:operations': operationQuery
+                },
+                responseType: 'blob'
+            })
+            .should.be.eventually.fulfilled
+            .then(function(resource) {
+                return corbelTest.common.utils.retry(function() {
+                    var reader = new FileReader();
+                    reader.readAsDataURL(resource.data);
+                    
+                    return new Promise(function(resolve, reject) {
+                        reader.onloadend = function() {
+                            var img = document.createElement('img');   
+                            img.id = 'test-image';
+                            img.src = reader.result;
+                            document.body.appendChild(img); 
+                            var image = document.getElementById('test-image');
 
-                    imageObj.onload = function() {
-                        context.drawImage(imageObj, 0, 0);
-                        dataImage = dataURItoBlob(canvas.toDataURL());
-                        originalImageWidth = this.width;
-                        originalImageHeigth = this.height;
-                        done();
-                    };
-
-                    imageObj.src = 'base/src/common/utils/img/logo.png';
-
-                });
-
-                beforeEach(function() {
-                    FILENAME = 'RestorFileName' + Date.now();
-
-                    return corbelDriver.resources.resource(FOLDER_NAME, FILENAME).update(
-                            dataImage, {
-                                dataType: 'image/png',
+                            if(image.clientWidth === ORIGINAL_IMAGE_WIDTH) {
+                                resolve();
                             }
-                        )
-                        .should.be.eventually.fulfilled;
-                });
-
-                afterEach(function(done) {
-                    corbelDriver.resources.resource(FOLDER_NAME, FILENAME).delete({
-                            dataType: 'image/png'
-                        })
-                        .should.be.eventually.fulfilled
-                        .then(function() {
-                            return corbelDriver.resources.resource(FOLDER_NAME, FILENAME).get({
-                                    dataType: 'image/png'
-                                })
-                                .should.be.eventually.rejected;
-                        })
-                        .then(function(e) {
-                            expect(e).to.have.property('status', 404);
-                            expect(e).to.have.deep.property('data.error', 'not_found');
-                        })
-                        .should.notify(done);
-                });
-
-                after(function() {
-                    document.getElementById('myCanvas').remove();
-                });
-
-                it('Image does not surpasses original image size when resize operation is required', function(done) {
-                    var operationQuery = 'resizeWidth=' + (originalImageWidth + 1);
-
-                    corbelDriver.resources.resource(FOLDER_NAME, FILENAME).get({
-                            dataType: 'image/png',
-                            customQueryParams: {
-                                'image:operations': operationQuery
-                            },
-                            responseType: 'blob'
-                        })
-                        .should.be.eventually.fulfilled
-                        .then(function(resource) {
-                            return corbelTest.common.utils.retry(function() {
-                                var reader = new FileReader();
-                                reader.readAsDataURL(resource.data);
-                                return new Promise(function(resolve, reject) {
-                                    reader.onloadend = function() {
-                                        var container = document.getElementById('mocha');
-                                        container.insertAdjacentHTML(
-                                            'beforeend',
-                                            '<img id="test-image" src="' + reader.result + '" />');
-                                        var image = document.getElementById('test-image');
-                                        if(image.clientWidth === originalImageWidth) {
-                                            resolve();
-                                        }
-                                        else{
-                                            reject();
-                                        }
-                                        removeDom();
-
-                                    };
-                                }).should.be.eventually.fulfilled;
-                            }, 18, 5).should.be.eventually.fulfilled;
-
-                        })
-                        .should.notify(done);
-                });
+                            else{
+                                reject();
+                            }
+                            removeDom();
+                        };
+                    })
+                    .should.be.eventually.fulfilled;
+                }, 18, 5)
+                .should.be.eventually.fulfilled;
+            })
+            .should.notify(done);
+        });
 
 
-                it('Image is returned with one image:operation correctly applied', function(done) {
-                    var operationHeight = 100;
-                    var operationQuery = 'resizeHeight=' + operationHeight;
+        it('image is returned with one image:operation correctly applied', function(done) {
+            var operationHeight = 100;
+            var operationQuery = 'resizeHeight=' + operationHeight;
 
-                    corbelDriver.resources.resource(FOLDER_NAME, FILENAME).get({
-                            dataType: 'image/png',
-                            customQueryParams: {
-                                'image:operations': operationQuery
-                            },
-                            responseType: 'blob'
-                        })
-                        .should.be.eventually.fulfilled
-                        .then(function(resource) {
-                            return corbelTest.common.utils.retry(function() {
-                                var expectedWidth = ((originalImageWidth * operationHeight) / originalImageHeigth);
-                                var reader = new FileReader();
-                                reader.readAsDataURL(resource.data);
-                                return new Promise(function(resolve, reject) {
-                                    reader.onloadend = function() {
-                                        var container = document.getElementById('mocha');
-                                        container.insertAdjacentHTML(
-                                            'beforeend',
-                                            '<img id="test-image" src="' + reader.result + '" />');
-                                        var image = document.getElementById('test-image');
-                                        if(image.clientHeight === operationHeight &&
-                                            image.clientWidth === expectedWidth) {
-                                            resolve();
-                                        }
-                                        else {
-                                            reject();
-                                        }
-                                        removeDom();            
-                                    };
-                                    
-                                }).should.be.eventually.fulfilled;
-                            }, 18, 5).should.be.eventually.fulfilled;
-                        })
-                        .should.notify(done);
-                });
+            corbelDriver.resources.resource(FOLDER_NAME, FILENAME).get({
+                dataType: 'image/png',
+                customQueryParams: {
+                    'image:operations': operationQuery
+                },
+                responseType: 'blob'
+            })
+            .should.be.eventually.fulfilled
+            .then(function(resource) {
+                return corbelTest.common.utils.retry(function() {
+                    var expectedWidth = ((ORIGINAL_IMAGE_WIDTH * operationHeight) / ORIGINAL_IMAGE_HEIGTH);
+                    var reader = new FileReader();
+                    reader.readAsDataURL(resource.data);
+                    
+                    return new Promise(function(resolve, reject) {
+                        reader.onloadend = function() {
+                            var img = document.createElement('img');   
+                            img.id = 'test-image';
+                            img.src = reader.result;
+                            document.body.appendChild(img); 
+                            var image = document.getElementById('test-image');
 
-                it('Image is returned with several image:operation correctly applied', function(done) {
-                    var resizeWidthValue = 240;
-                    var resizeHeightValue = 190;
-                    var operationQuery =
-                        'resizeAndFill=(240,FF00FF);cropFromCenter=(' +
-                        resizeWidthValue + ',' + resizeHeightValue + ')';
+                            if(image.clientHeight === operationHeight && image.clientWidth === expectedWidth) {
+                                resolve();
+                            }
+                            else {
+                                reject();
+                            }
+                            
+                            removeDom();            
+                        };     
+                    })
+                    .should.be.eventually.fulfilled;
+                }, 18, 5)
+                .should.be.eventually.fulfilled;
+            })
+            .should.notify(done);
+        });
 
-                    corbelDriver.resources.resource(FOLDER_NAME, FILENAME).get({
-                            dataType: 'image/png',
-                            customQueryParams: {
-                                'image:operations': operationQuery
-                            },
-                            responseType: 'blob'
-                        })
-                        .should.be.eventually.fulfilled
-                        .then(function(resource) {
-                            return corbelTest.common.utils.retry(function() {
-                                var reader = new FileReader();
-                                reader.readAsDataURL(resource.data);
-                                return new Promise(function(resolve, reject) {
-                                    reader.onloadend = function() {
-                                        var container = document.getElementById('mocha');
-                                        container.insertAdjacentHTML(
-                                            'beforeend',
-                                            '<img id="test-image" src="' + reader.result + '" />');
-                                        var image = document.getElementById('test-image');
-                                        if(image.clientHeight === resizeHeightValue && 
-                                            image.clientWidth === resizeWidthValue) {
-                                            resolve();
-                                        }
-                                        else {
-                                            reject();
-                                        }
-                                        removeDom();  
-                                        
-                                    };
-                                    
-                                }).should.be.eventually.fulfilled;
-                            }, 18, 5).should.be.eventually.fulfilled;
-                        })
-                        .should.notify(done);
-                });
-            } else {
-                it.skip('there is a problem executing these test with phantom ' +
-                    '< 2.0.0, please update this when 2.0.0 releases',
-                    function() {});
-            }
+        it('image is returned with several image:operation correctly applied', function(done) {
+            var resizeWidthValue = 240;
+            var resizeHeightValue = 190;
+            var operationQuery = 'resizeAndFill=(240,FF00FF);cropFromCenter=(' +
+                resizeWidthValue + ',' + resizeHeightValue + ')';
+
+            corbelDriver.resources.resource(FOLDER_NAME, FILENAME).get({
+                dataType: 'image/png',
+                customQueryParams: {
+                    'image:operations': operationQuery
+                },
+                responseType: 'blob'
+            })
+            .should.be.eventually.fulfilled
+            .then(function(resource) {
+                return corbelTest.common.utils.retry(function() {
+                    var reader = new FileReader();
+                    reader.readAsDataURL(resource.data);
+                    return new Promise(function(resolve, reject) {
+                        reader.onloadend = function() {
+                            var img = document.createElement('img');   
+                            img.id = 'test-image';
+                            img.src = reader.result;
+                            document.body.appendChild(img); 
+                            var image = document.getElementById('test-image');
+
+                            if(image.clientHeight === resizeHeightValue && image.clientWidth === resizeWidthValue) {
+                                resolve();
+                            }
+                            else {
+                                reject();
+                            }
+                            removeDom();     
+                        };    
+                    })
+                    .should.be.eventually.fulfilled;
+                }, 18, 5)
+                .should.be.eventually.fulfilled;
+            })
+            .should.notify(done);
         });
     });
 });
