@@ -31,6 +31,7 @@
     "jshint-stylish": "^2.0.1",
     "karma": "^0.13.9",
     "karma-chai-plugins": "^0.6.0",
+    "karma-html-reporter": "^0.2.7",
     "karma-mocha": "^0.2.1",
     "karma-mocha-reporter": "^1.0.2",
     "karma-phantomjs-launcher": "^1.0.0",
@@ -41,13 +42,13 @@
     "karma-tap-reporter": "0.0.6",
     "load-grunt-tasks": "^3.4.0",
     "mocha": "=2.3.4",
-    "phantomjs-prebuilt": "^2.1.1",
     "phantomjs-polyfill": "0.0.1",
+    "phantomjs-prebuilt": "^2.1.1",
     "promise-polyfill": "^2.1.4",
     "q": "^1.4.1",
     "sinon": "^1.15.4",
-    "time-grunt": "^1.2.1",
-    "sjcl": "^1.0.3"
+    "sjcl": "^1.0.3",
+    "time-grunt": "^1.2.1"
   },
   "dependencies": {
     "body-parser": "^1.14.2",
@@ -57,11 +58,11 @@
     "express": "^4.13.3",
     "glob": "^6.0.4",
     "grunt-browserify": "^4.0.0",
+    "grunt-parallel": "^0.4.1",
     "imap": "0.8.16",
     "lodash": "^3.10.1",
-    "mailparser": "0.5.3",
+    "mailparser": "^0.5.3",
     "query-string": "^3.0.1",
-    "request": "^2.65.0",
-    "mailparser": "^0.5.3"
+    "request": "^2.65.0"
   }
 }
