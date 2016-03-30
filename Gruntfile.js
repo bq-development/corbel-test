@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
     // Load grunt tasks automatically
     require('load-grunt-tasks')(grunt);
@@ -18,6 +18,32 @@ module.exports = function(grunt) {
 
     // Define the configuration for all the tasks
     grunt.initConfig({
+
+        parallel: {
+            test: {
+                options: {
+                    grunt: true,
+                    stream: true
+                },
+                tasks: [
+                    'karma:iam',
+                    'karma:assets',
+                    'karma:engine',
+                    'karma:evci',
+                    'karma:notifications',
+                    'karma:oauth',
+                    'karma:corbeljs',
+                    'karma:resources',
+                    'karma:scheduler',
+                    'karma:webfs',
+                    'karma:ingestion',
+                    'karma:bqpon',
+                    'karma:ec',
+                    'karma:eventbus',
+                    'karma:rules'
+                ]
+            }
+        },
 
         // Project settings
         yeoman: CONFIG,
@@ -92,6 +118,261 @@ module.exports = function(grunt) {
                         reporter: 'html'
                     }
                 }
+            },
+            iam: {
+                singleRun: true,
+                htmlReporter: {
+                    reportName: 'report-summary-iam'
+                },
+                browsers: ['PhantomJS'],
+                client: {
+                    mocha: {
+                        timeout: 120000
+                    }
+                },
+                options: {
+                    client: {
+                        args: ['--grep=In IAM module']
+                    }
+                }
+            },
+            assets: {
+                singleRun: true,
+                browsers: ['PhantomJS'],
+                htmlReporter: {
+                    reportName: 'report-summary-assets'
+                },
+                client: {
+                    mocha: {
+                        timeout: 120000
+                    }
+                },
+                options: {
+                    client: {
+                        args: ['--grep=In ASSETS module']
+                    }
+                }
+            },
+            engine: {
+                singleRun: true,
+                browsers: ['PhantomJS'],
+                htmlReporter: {
+                    reportName: 'report-summary-engine'
+                },
+                client: {
+                    mocha: {
+                        timeout: 120000
+                    }
+                },
+                options: {
+                    client: {
+                        args: ['--grep=In ENGINE silkroad modules']
+                    }
+                }
+            },
+            evci: {
+                singleRun: true,
+                browsers: ['PhantomJS'],
+                htmlReporter: {
+                    reportName: 'report-summary-evci'
+                },
+                client: {
+                    mocha: {
+                        timeout: 120000
+                    }
+                },
+                options: {
+                    client: {
+                        args: ['--grep=In EVCI module']
+                    }
+                }
+            },
+            notifications: {
+                singleRun: true,
+                browsers: ['PhantomJS'],
+                htmlReporter: {
+                    reportName: 'report-summary-notifications'
+                },
+                client: {
+                    mocha: {
+                        timeout: 120000
+                    }
+                },
+                options: {
+                    client: {
+                        args: ['--grep=In NOTIFICATIONS module']
+                    }
+                }
+            },
+            oauth: {
+                singleRun: true,
+                browsers: ['PhantomJS'],
+                htmlReporter: {
+                    reportName: 'report-summary-oauth'
+                },
+                client: {
+                    mocha: {
+                        timeout: 120000
+                    }
+                },
+                options: {
+                    client: {
+                        args: ['--grep=In OAUTH module']
+                    }
+                }
+            },
+            corbeljs: {
+                singleRun: true,
+                browsers: ['PhantomJS'],
+                htmlReporter: {
+                    reportName: 'report-summary-corbeljs'
+                },
+                client: {
+                    mocha: {
+                        timeout: 120000
+                    }
+                },
+                options: {
+                    client: {
+                        args: ['--grep=In CORBELJS module']
+                    }
+                }
+            },
+            resources: {
+                singleRun: true,
+                browsers: ['PhantomJS'],
+                htmlReporter: {
+                    reportName: 'report-summary-resources'
+                },
+                client: {
+                    mocha: {
+                        timeout: 120000
+                    }
+                },
+                options: {
+                    client: {
+                        args: ['--grep=In RESOURCES module']
+                    }
+                }
+            },
+            scheduler: {
+                singleRun: true,
+                htmlReporter: {
+                    reportName: 'report-summary-scheduler'
+                },
+                browsers: ['PhantomJS'],
+                client: {
+                    mocha: {
+                        timeout: 120000
+                    }
+                },
+                options: {
+                    client: {
+                        args: ['--grep=In SCHEDULER module']
+                    }
+                }
+            },
+            webfs: {
+                singleRun: true,
+                browsers: ['PhantomJS'],
+                htmlReporter: {
+                    reportName: 'report-summary-webfs'
+                },
+                client: {
+                    mocha: {
+                        timeout: 120000
+                    }
+                },
+                options: {
+                    client: {
+                        args: ['--grep=In WEBFS module']
+                    }
+                }
+            },
+            ingestion: {
+                singleRun: true,
+                browsers: ['PhantomJS'],
+                htmlReporter: {
+                    reportName: 'report-summary-ingestion'
+                },
+                client: {
+                    mocha: {
+                        timeout: 120000
+                    }
+                },
+                options: {
+                    client: {
+                        args: ['--grep=In INGESTION module']
+                    }
+                }
+            },
+            bqpon: {
+                singleRun: true,
+                browsers: ['PhantomJS'],
+                htmlReporter: {
+                    reportName: 'report-summary-bqpon'
+                },
+                client: {
+                    mocha: {
+                        timeout: 120000
+                    }
+                },
+                options: {
+                    client: {
+                        args: ['--grep=In BQPON module']
+                    }
+                }
+            },
+            ec: {
+                singleRun: true,
+                browsers: ['PhantomJS'],
+                htmlReporter: {
+                    reportName: 'report-summary-ec'
+                },
+                client: {
+                    mocha: {
+                        timeout: 120000
+                    }
+                },
+                options: {
+                    client: {
+                        args: ['--grep=In EC module']
+                    }
+                }
+            },
+            eventbus: {
+                singleRun: true,
+                browsers: ['PhantomJS'],
+                htmlReporter: {
+                    reportName: 'report-summary-eventbus'
+                },
+                client: {
+                    mocha: {
+                        timeout: 120000
+                    }
+                },
+                options: {
+                    client: {
+                        args: ['--grep=In EVENTBUS module']
+                    }
+                }
+            },
+            rules: {
+                singleRun: true,
+                browsers: ['PhantomJS'],
+                htmlReporter: {
+                    reportName: 'report-summary-rules'
+                },
+                client: {
+                    mocha: {
+                        timeout: 120000
+                    }
+                },
+                options: {
+                    client: {
+                        args: ['--grep=In RULES module']
+                    }
+                }
             }
         },
         express: {
@@ -116,7 +397,7 @@ module.exports = function(grunt) {
             server: {
                 options: {
                     req: 'http://localhost:' + PORTS.KARMA,
-                    fail: function() {
+                    fail: function () {
                         console.error('the server had not start');
                     },
                     timeout: 20 * 1000,
@@ -124,17 +405,16 @@ module.exports = function(grunt) {
                     interval: 200,
                     print: false
                 }
-            },
+            }
         },
         open: {
             test: {
                 path: 'http://localhost:' + PORTS.KARMA + '/debug.html'
             }
-        },
-
+        }
     });
 
-    grunt.registerTask('config', '', function() {
+    grunt.registerTask('config', '', function () {
         var defaultConfig = grunt.file.readJSON('.corbeltest.default');
         var config = grunt.file.exists('.corbeltest') ? grunt.file.readJSON('.corbeltest') : {};
         var finalConfig = {};
@@ -165,8 +445,9 @@ module.exports = function(grunt) {
         'open:test',
         'watch'
     ]);
+
     // deprecated
-    grunt.registerTask('server:test', function() {
+    grunt.registerTask('server:test', function () {
         grunt.log.error('>>> ATENTION: grunt server:test is deprecated, please use grunt serve:test');
         grunt.task.run(['serve:test']);
     });
@@ -179,6 +460,13 @@ module.exports = function(grunt) {
     grunt.registerTask('test', [
         'common',
         'karma:unit'
+    ]);
+
+    grunt.loadNpmTasks('grunt-parallel');
+
+    grunt.registerTask('parallel:tests', [
+        'common',
+        'parallel:test'
     ]);
 
     grunt.registerTask('default', ['test']);
