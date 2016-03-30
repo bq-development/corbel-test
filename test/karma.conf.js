@@ -63,7 +63,7 @@ module.exports = function (config) {
 
         // Continuous Integration mode
         // if true, it capture browsers, run tests and exit
-        singleRun: false,
+        singleRun: true,
 
         colors: true,
 
@@ -72,15 +72,30 @@ module.exports = function (config) {
 
         // test results reporter to use
         // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-        reporters: ['tap', 'mocha'],
+        reporters: ['tap', 'mocha', 'html'],
 
         tapReporter: {
-            outputFile: '.report/report.tap'
+            outputFile: '.report/report.tap',
+            disableStdout: true
+        },
+
+        // the default configuration
+        htmlReporter: {
+            outputDir: '.report',
+            templatePath: null, // set if you moved jasmine_template.html
+            focusOnFailures: true, // reports show failures on start
+            namedFiles: true, // name files instead of creating sub-directories
+            pageTitle: null, // page title for reports; browser info by default
+            urlFriendlyName: false, // simply replaces spaces with _ for files/dirs
+            reportName: 'report-summary-filename', // report summary filename; browser info by default
+            // experimental
+            preserveDescribeNesting: false, // folded suites stay folded
+            foldAll: false, // reports start folded (only with preserveDescribeNesting)
         },
 
         // level of logging
         // possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG
-        logLevel: config.LOG_INFO,
+        logLevel: config.LOG_DISABLE,
 
         // Uncomment the following lines if you are using grunt's server to run the tests
         // proxies: {
