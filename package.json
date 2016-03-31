@@ -58,6 +58,7 @@
     "express": "^4.13.3",
     "glob": "^6.0.4",
     "grunt-browserify": "^4.0.0",
+    "grunt-continue": "^0.1.0",
     "grunt-parallel": "^0.4.1",
     "imap": "0.8.16",
     "lodash": "^3.10.1",

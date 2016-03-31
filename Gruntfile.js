@@ -518,10 +518,13 @@ module.exports = function (grunt) {
     ]);
 
     grunt.loadNpmTasks('grunt-parallel');
+    grunt.loadNpmTasks('grunt-continue');
 
     grunt.registerTask('parallel:tests', [
         'common',
-        'parallel:test'
+        'continue:on',
+        'parallel:test',
+        'continue:off'
     ]);
 
     grunt.registerTask('default', ['test']);
