@@ -37,7 +37,6 @@ module.exports = function (grunt) {
                     'karma:scheduler',
                     'karma:webfs',
                     'karma:ingestion',
-                    'karma:bqpon',
                     'karma:ec',
                     'karma:eventbus',
                     'karma:rules'
