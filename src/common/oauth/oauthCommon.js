@@ -1,11 +1,11 @@
-var PORTS = require('../../../test/ports.conf.js');
+var express = require('../express/express.js');
 
 function getOauthClientId(oauthClient) {
     if (oauthClient!==undefined && oauthClient!==null && oauthClient.clientId){
         return oauthClient.clientId;
     } else {
         return corbelTest.CONFIG.DEV_CREDENTIALS.DEFAULT_CLIENT_OAUTH.clientId;
-    }   
+    }
 }
 
 function getOauthClientSecret(oauthClient) {
@@ -13,7 +13,7 @@ function getOauthClientSecret(oauthClient) {
         return oauthClient.secret;
     } else {
         return corbelTest.CONFIG.DEV_CREDENTIALS.DEFAULT_CLIENT_OAUTH.secret;
-    }   
+    }
 }
 
 function getClientId(client) {
@@ -21,7 +21,7 @@ function getClientId(client) {
         return client.clientId;
     } else {
         return corbelTest.CONFIG.DEV_CREDENTIALS.DEFAULT_CLIENT_OAUTH.clientId;
-    }   
+    }
 }
 
 function getClientSecret(client){
@@ -29,7 +29,7 @@ function getClientSecret(client){
         return client.clientSecret;
     } else {
         return corbelTest.CONFIG.DEV_CREDENTIALS.DEFAULT_CLIENT_OAUTH.clientSecret;
-    }   
+    }
 }
 
 function getIamJWT(client) {
@@ -56,7 +56,7 @@ function getClientParamsCode(client) {
     return {
         clientId: getOauthClientId(client),
         responseType: 'code',
-        redirectUri: 'http://' + window.location.host.split(':')[0] + ':' + PORTS.EXPRESS + '/requestinfo'
+        redirectUri: express.getUrl() + '/requestinfo'
     };
 }
 
@@ -188,7 +188,7 @@ function getURI(driver, serv) {
 }
 
 function getRequestInfoEndpoint() {
-    return 'http://localhost: ' + PORTS.EXPRESS;
+    return express.getUrl();
 }
 
 function getOauthAdminUserParams() {
