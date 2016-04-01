@@ -38,7 +38,7 @@ describe('In RESOURCES module', function() {
 
         beforeEach(function(done) {
             getImageAsBlob('http://' + window.location.host.split(':')[0] + ':' +
-                corbelTest.ports.KARMA + '/base/src/common/utils/img/logo.png')
+                corbelTest.CONFIG.KARMA + '/base/src/common/utils/img/logo.png')
             .then(function(blob) {
                 FILENAME = 'RestorFileName' + Date.now();
                 dataImage = blob;

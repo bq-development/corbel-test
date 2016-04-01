@@ -48,7 +48,8 @@
     "q": "^1.4.1",
     "sinon": "^1.15.4",
     "sjcl": "^1.0.3",
-    "time-grunt": "^1.2.1"
+    "time-grunt": "^1.2.1",
+    "random-port": "^0.1.0"
   },
   "dependencies": {
     "body-parser": "^1.14.2",
