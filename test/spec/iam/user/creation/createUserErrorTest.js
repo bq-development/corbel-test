@@ -23,9 +23,13 @@ describe('In IAM module', function() {
         });
 
         afterEach(function(done) {
-            corbelDriver.iam.user(userId)
-            .delete()
-            .should.eventually.be.fulfilled.and.notify(done);
+            if(userId) {
+                return corbelDriver.iam.user(userId)
+                .delete()
+                .should.eventually.be.fulfilled.and.notify(done);  
+            } else {
+                done();
+            }
         });
 
         it('an error is returned while trying to create an user with an email that already exists', function(done) {
