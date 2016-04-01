@@ -71,7 +71,7 @@ describe('In ENGINE silkroad modules ', function() {
 
             it('(resmi) with resource', function(done) {
                 var etag;
-                var url = corbelTest.getCurrentEndpoint('resources') + 
+                var url = corbelTest.getCurrentEndpoint('resources') +
                 'silkroad-qa-prod/resource/' + COLLECTION_NAME + '/' + resourceId;
                 callUrl(url, null, 'application/json', corbelDriver.config.config.iamToken.accessToken).
                 should.be.eventually.fulfilled.
@@ -171,8 +171,7 @@ describe('In ENGINE silkroad modules ', function() {
                 }
             };
 
-            xhttp.open('GET', 'http://' + window.location.host.split(':')[0] + ':' +
-                corbelTest.ports.EXPRESS +
+            xhttp.open('GET', corbelTest.common.express.express.getUrl() +
                 '/httpRequest?url=' + url + etag + accept + token, true);
             xhttp.send();
         });

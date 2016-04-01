@@ -8,6 +8,7 @@ module.exports = function (grunt) {
     // Time how long tasks take. Can help when optimizing build times
     require('time-grunt')(grunt);
 
+    var randomPort = require('random-port');
     var _ = require('lodash');
     var PKG = require('./package.json');
     var PORTS = require('./test/ports.conf.js');
@@ -430,18 +431,6 @@ module.exports = function (grunt) {
                 }
             }
         },
-        express: {
-            options: {
-                // Override defaults here
-                background: true,
-                port: PORTS.EXPRESS
-            },
-            dev: {
-                options: {
-                    script: 'express/server.js'
-                }
-            }
-        },
 
         versioncheck: {
             options: {
@@ -469,16 +458,37 @@ module.exports = function (grunt) {
         }
     });
 
+    grunt.registerTask('express:random:port', function () {
+        var done = this.async();
+        randomPort({from: 20000, range: 10000}, function(port) {
+          console.log('Express port ' + port);
+          grunt.config.set('express', {
+              options: {
+                  background: true,
+                  port: port
+              },
+              dev: {
+                  options: {
+                      script: 'express/server.js'
+                  }
+              }
+          });
+          done();
+        });
+    });
+
     grunt.registerTask('config', '', function () {
         var defaultConfig = grunt.file.readJSON('.corbeltest.default');
         var config = grunt.file.exists('.corbeltest') ? grunt.file.readJSON('.corbeltest') : {};
         var finalConfig = {};
         _.extend(finalConfig, defaultConfig, config);
+        finalConfig.EXPRESS = grunt.config('express.options.port');
         grunt.file.write(CONFIG.tmp +
             '/config.js', 'module.exports = ' + JSON.stringify(finalConfig, null, 2));
     });
 
     grunt.registerTask('ci-common', '', [
+        'express:random:port',
         'config',
         'browserify',
         'express:dev'
@@ -488,6 +498,7 @@ module.exports = function (grunt) {
         'versioncheck',
         'clean',
         'jshint',
+        'express:random:port',
         'config',
         'browserify',
         'express:dev'

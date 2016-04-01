@@ -1,4 +1,3 @@
 module.exports = {
-    KARMA: 9080,
-    EXPRESS: 5454
+    KARMA: 9080
 };

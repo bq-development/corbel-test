@@ -3,7 +3,7 @@
 /*globals corbel */
 //@endexclude
 
-var PORTS = require('../../../test/ports.conf.js');
+var express = require('../express/express.js');
 
 
 /* The response of this method is an object with a random email data and cookies
@@ -11,7 +11,7 @@ var PORTS = require('../../../test/ports.conf.js');
  */
 function getRandomMail() {
     var xhttp = new XMLHttpRequest();
-    var url = 'http://localhost:' + PORTS.EXPRESS + '/random/randomemail';
+    var url = express.getUrl() + '/random/randomemail';
 
     return new Promise(function (resolve, reject) {
         xhttp.onreadystatechange = function () {
@@ -28,7 +28,7 @@ function getRandomMail() {
 /* userEmail must be the data before @ */
 function setMail(token, userEmail) {
     var xhttp = new XMLHttpRequest();
-    var url = 'http://localhost:' + PORTS.EXPRESS + '/random/setemail?token=' + token + '&userEmail=' + userEmail;
+    var url = express.getUrl() + '/random/setemail?token=' + token + '&userEmail=' + userEmail;
 
     return new Promise(function (resolve, reject) {
         xhttp.onreadystatechange = function () {
@@ -56,7 +56,7 @@ function setMail(token, userEmail) {
  */
 function checkMail(token) {
     var xhttp = new XMLHttpRequest();
-    var url = 'http://localhost:' + PORTS.EXPRESS + '/random/checkemail?token=' + token;
+    var url = express.getUrl() + '/random/checkemail?token=' + token;
 
     return new Promise(function (resolve, reject) {
         xhttp.onreadystatechange = function () {
@@ -81,7 +81,7 @@ function checkMail(token) {
  */
 function getMail(token, emailId) {
     var xhttp = new XMLHttpRequest();
-    var url = 'http://localhost:' + PORTS.EXPRESS + '/random/getemail?token=' + token + '&emailId=' + emailId;
+    var url = express.getUrl() + '/random/getemail?token=' + token + '&emailId=' + emailId;
 
     return new Promise(function (resolve, reject) {
         xhttp.onreadystatechange = function () {
