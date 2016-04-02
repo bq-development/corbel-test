@@ -66,7 +66,6 @@ $(document).on('environment:changed',function(evt, data){
     if(data && data.environment==='prod'){
         setupGrep('SANITY');
     }
-
 });
 
 corbelTest.getCustomDriver = function(driverData) {
