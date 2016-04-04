@@ -79,7 +79,7 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: getFiles(config),
-        
+
         // list of files / patterns to exclude
         exclude: [
             'express/server.js',
@@ -113,25 +113,11 @@ module.exports = function (config) {
 
         // test results reporter to use
         // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-        reporters: ['tap', 'mocha', 'html'],
+        reporters: ['tap', 'mocha'],
 
         tapReporter: {
             outputFile: '.report/report.tap',
             disableStdout: true
-        },
-
-        // the default configuration
-        htmlReporter: {
-            outputDir: '.report',
-            templatePath: null, // set if you moved jasmine_template.html
-            focusOnFailures: true, // reports show failures on start
-            namedFiles: true, // name files instead of creating sub-directories
-            pageTitle: null, // page title for reports; browser info by default
-            urlFriendlyName: false, // simply replaces spaces with _ for files/dirs
-            reportName: 'report-summary-filename', // report summary filename; browser info by default
-            // experimental
-            preserveDescribeNesting: false, // folded suites stay folded
-            foldAll: false, // reports start folded (only with preserveDescribeNesting)
         },
 
         // level of logging

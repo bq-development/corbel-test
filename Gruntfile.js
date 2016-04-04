@@ -1,7 +1,9 @@
 'use strict';
 
+var DEFAULT_CONCURRENT = 10;
+
 function getKarmaConf(grunt) {
-    var CONCURRENT = grunt.option('concurrent') || 10;
+    var concurrent = grunt.option('concurrent') || DEFAULT_CONCURRENT;
     var content = {
         options: {
             configFile: 'test/karma.conf.js',
@@ -32,12 +34,12 @@ function getKarmaConf(grunt) {
         }
     };
 
-    for (var i = 0; i < CONCURRENT; i++) {
+    for (var i = 0; i < concurrent; i++) {
         content['part' + i] = {
             singleRun: true,
             browsers: ['PhantomJS'],
             tapReporter: {
-                    outputFile: '.report/report-' + i,
+                    outputFile: '.report/report-' + i + '.tap',
                     disableStdout: true
             },
             client: {
@@ -49,7 +51,7 @@ function getKarmaConf(grunt) {
                 client: {
                     args: [{
                         index: i,
-                        total: CONCURRENT,
+                        total: concurrent,
                         parallel: true
                     }]
                 }
@@ -60,10 +62,10 @@ function getKarmaConf(grunt) {
 }
 
 function getParallelConf(grunt) {
-    var CONCURRENT = grunt.option('concurrent') || 10;
+    var concurrent = grunt.option('concurrent') || DEFAULT_CONCURRENT;
     var tasks = [];
 
-    for (var i = 0; i < CONCURRENT; i++) {
+    for (var i = 0; i < concurrent; i++) {
         tasks.push('karma:part' + i);
     }
 
