@@ -1,9 +1,7 @@
 'use strict';
 
-var CONCURRENT = 10;
-
 function getKarmaConf(grunt) {
-    CONCURRENT = grunt.option('concurrent') || CONCURRENT;
+    var CONCURRENT = grunt.option('concurrent') || 10;
     var content = {
         options: {
             configFile: 'test/karma.conf.js',
@@ -61,7 +59,8 @@ function getKarmaConf(grunt) {
     return content;
 }
 
-function getParallelConf() {
+function getParallelConf(grunt) {
+    var CONCURRENT = grunt.option('concurrent') || 10;
     var tasks = [];
 
     for (var i = 0; i < CONCURRENT; i++) {
@@ -171,7 +170,7 @@ module.exports = function(grunt) {
                 path: 'http://localhost:' + PORTS.KARMA + '/debug.html'
             }
         },
-        parallel: getParallelConf(),
+        parallel: getParallelConf(grunt),
         karma: getKarmaConf(grunt)
     });
 
