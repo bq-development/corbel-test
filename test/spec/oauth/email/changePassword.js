@@ -1,13 +1,15 @@
 describe('In OAUTH module', function() {
 
     describe('when the user changes his password', function() {
-        var popEmail = corbelTest.common.mail.maildrop.popEmail;
-
         var corbelDriver;
         var oauthCommonUtils;
         var oauthUserTest;
         var clientParams;
         var userEmail;
+        var userMail = corbelTest.CONFIG.COMMON.MAIL.email;
+        var passwordMail = corbelTest.CONFIG.COMMON.MAIL.password;
+        var newPassword;
+        var MAX_RETRY = 3;
 
         before(function(done) {
             corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
@@ -18,20 +20,21 @@ describe('In OAUTH module', function() {
                 password: 'randomPassword' + Date.now()
             };
 
-            return corbelTest.common.mail
-                .maildrop.getRandomMail()
-                .should.be.eventually.fulfilled
-                .then(function(response) {
-                    userEmail = response;
-                    oauthUserTest.email = response;
+            userEmail = corbelTest.common.mail.imap.getRandomMail();
+            oauthUserTest.email = userEmail;
 
-                    return corbelDriver.oauth
-                        .user(clientParams)
-                        .create(oauthUserTest)
-                        .should.be.eventually.fulfilled;
-                })
+            return corbelDriver.oauth
+                .user(clientParams)
+                .create(oauthUserTest)
+                .should.be.eventually.fulfilled
                 .then(function() {
-                    return popEmail(userEmail)
+                    var queries = [
+                        corbelTest.common.mail.imap.buildQuery('contain', 'delivered', oauthUserTest.email),
+                        corbelTest.common.mail.imap.buildQuery('contain', 'subject', 'Validate your account email')
+                    ];
+
+                    return corbelTest.common.mail.imap
+                        .getMailWithQuery(userMail, passwordMail, 'imap.gmail.com', queries, MAX_RETRY)
                         .should.be.eventually.fulfilled;
                 })
                 .then(function(mail) {
@@ -40,12 +43,27 @@ describe('In OAUTH module', function() {
                 .should.notify(done);
         });
 
+        after(function(done){
+            oauthCommonUtils
+                .getToken(corbelDriver, oauthUserTest.username, newPassword)
+                .should.be.eventually.fulfilled
+                .then(function(response) {
+                    var token = response.data['access_token'];
+                    return corbelDriver.oauth
+                        .user(clientParams, token)
+                        .delete('me')
+                        .should.be.eventually.be.fulfilled;
+                })
+                .should.notify(done);
+        });
+
         it('should receive a change password notification email [mail]', function(done) {
             var username = oauthUserTest.username;
-            var password = oauthUserTest.password;
+            var pass = oauthUserTest.password;
+            newPassword = pass + pass;
 
             oauthCommonUtils
-                .getToken(corbelDriver, username, password)
+                .getToken(corbelDriver, username, pass)
                 .should.be.eventually.fulfilled
                 .then(function(response) {
                     var token = response.data['access_token'];
@@ -54,12 +72,18 @@ describe('In OAUTH module', function() {
                     return corbelDriver.oauth
                         .user(oauthCommonUtils.getClientParams(), token)
                         .update('me', {
-                            password: password + password
+                            password: newPassword
                         })
                         .should.be.eventually.fulfilled;
                 })
                 .then(function() {
-                    return popEmail(userEmail)
+                    var queries = [
+                        corbelTest.common.mail.imap.buildQuery('contain', 'delivered', oauthUserTest.email),
+                        corbelTest.common.mail.imap.buildQuery('contain', 'subject', 'New password')
+                    ];
+
+                    return corbelTest.common.mail.imap
+                        .getMailWithQuery(userMail, passwordMail, 'imap.gmail.com', queries)
                         .should.be.eventually.fulfilled;
                 })
                 .then(function(mail) {

@@ -8,18 +8,18 @@ describe('In NOTIFICATIONS module', function() {
         var notificationTemplateData;
         var notificationData;
         var domainIdCreated;
-        var emailRecipient;
-        var emailAuthorization;
-
-        var MAX_RETRY = 28;
-        var RETRY_PERIOD = 3;
-
+        var timestamp;
+        var userMail = corbelTest.CONFIG.COMMON.MAIL.email;
+        var passwordMail = corbelTest.CONFIG.COMMON.MAIL.password;
+        var email;
+        var MAX_RETRY = 3;
 
         before(function(done) {
+            timestamp = Date.now();
             var clientScopes = ['notifications:admin'];
-            var domainId = 'domain-fullFlowTest-' + Date.now();
+            var domainId = 'domain-fullFlowTest-' + timestamp;
             domainIdCreated = 'silkroad-qa:' + domainId;
-            var clientName = 'client-crudDomainTest-' + Date.now();
+            var clientName = 'client-crudDomainTest-' + timestamp;
             corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
 
             notificationDomainData = {};
@@ -45,16 +45,11 @@ describe('In NOTIFICATIONS module', function() {
                     'scopes': clientScopes.join(' ')
                 });
 
-
-                return corbelTest.common.mail.maildrop.getRandomMail()
-                    .should.be.eventually.fulfilled;
-            })
-            .then(function(response){
-                emailRecipient = response;
+                email = corbelTest.common.mail.imap.getRandomMail();
 
                 notificationData = {
                     notificationId: 'tempKey',
-                    recipient: emailRecipient,
+                    recipient: email,
                     properties: {
                     }
                 };
@@ -70,7 +65,7 @@ describe('In NOTIFICATIONS module', function() {
                 .create(notificationTemplateData)
                 .should.be.eventually.fulfilled;
             })
-            .then(function(response) {
+            .then(function() {
                 var corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
 
                 return testDriver.notifications.notification()
@@ -78,25 +73,19 @@ describe('In NOTIFICATIONS module', function() {
                 .should.be.eventually.fulfilled;
             })
             .then(function() {
-                return corbelTest.common.utils.retry(function() {
-                        return corbelTest.common.mail.maildrop.checkMail(emailRecipient)
-                            .then(function(response) {
-                                if (response.length === 0) {
-                                    return Promise.reject();
-                                } else {
-                                    return response;
-                                }
-                            });
-                    }, MAX_RETRY, RETRY_PERIOD)
-                .should.be.eventually.fulfilled;
-            })
-            .then(function(response) {
-                return corbelTest.common.mail.maildrop.getMail(emailRecipient, response[0].id)
-                .should.be.eventually.fulfilled;
+
+                 var queries = [
+                    corbelTest.common.mail.imap.buildQuery('contain', 'delivered', email),
+                    corbelTest.common.mail.imap.buildQuery('contain', 'subject', 'title-' + domainIdCreated)
+                ];
+
+                return corbelTest.common.mail.imap
+                    .getMailWithQuery(userMail, passwordMail, 'imap.gmail.com', queries, MAX_RETRY)
+                    .should.be.eventually.fulfilled;
             })
             .then(function(mail) {
                 expect(mail).to.have.property('subject', 'title-' + domainIdCreated);
-                expect(mail.body).to.contain('text');
+                expect(mail).to.have.property('text');
             })
             .should.notify(done);
         });

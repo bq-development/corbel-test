@@ -118,9 +118,15 @@ function getCodeFromMail(email) {
     return code;
 }
 
+function getRandomMail(){
+    var str = corbelTest.CONFIG.COMMON.MAIL.email.split('@');
+    return str[0]+'+'+Date.now()+'@'+str[1];
+}
+
 module.exports = {
     getMail: getMail,
     buildQuery: buildQuery,
     getMailWithQuery: getMailWithQuery,
-    getCodeFromMail: getCodeFromMail
+    getCodeFromMail: getCodeFromMail,
+    getRandomMail: getRandomMail
 };
