@@ -3,6 +3,7 @@
 var CONCURRENT = 10;
 
 function getKarmaConf(grunt) {
+    CONCURRENT = grunt.option('concurrent') || CONCURRENT;
     var content = {
         options: {
             configFile: 'test/karma.conf.js',
@@ -37,8 +38,9 @@ function getKarmaConf(grunt) {
         content['part' + i] = {
             singleRun: true,
             browsers: ['PhantomJS'],
-            htmlReporter: {
-                reportName: 'report-' + i
+            tapReporter: {
+                    outputFile: '.report/report-' + i,
+                    disableStdout: true
             },
             client: {
                 mocha: {

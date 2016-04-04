@@ -79,26 +79,7 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: getFiles(config),
-        files2: [
-            // PhantomJS Promise polifyll
-            // http://stackoverflow.com/questions/29391111/karma-phantomjs-and-es6-promises
-            'node_modules/phantomjs-polyfill/bind-polyfill.js',
-            'node_modules/promise-polyfill/Promise.js',
-            'node_modules/q/q.js',
-            'node_modules/corbel-js/dist/corbel.js',
-            'node_modules/lodash/index.js',
-            '.tmp/bundle.js',
-            'test/beforeAll.js',
-            'test/**/*.js',
-            'test/menu/css/collapse.css',
-            'test/menu/css/onoffswitch.css',
-            'test/menu/css/styles.css',
-            /*Rem-image's test required*/
-            {pattern: 'test/menu/html/menu.html', watched: false, included: false, served: true},
-            {pattern: 'test/menu/html/switch.html', watched: false, included: false, served: true},
-            {pattern: 'src/common/utils/img/logo.png', watched: false, included: false, served: true}
-        ],
-
+        
         // list of files / patterns to exclude
         exclude: [
             'express/server.js',
