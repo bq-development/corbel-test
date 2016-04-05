@@ -27,7 +27,7 @@ describe('In WEBFS module', function() {
                 true).should.be.eventually.fulfilled
             .then(function() {
                 return corbel.request.send({
-                        url: corbelDriver.config.getCurrentEndpoint('webfs') + 'index.html',
+                        url: corbelDriver.config.getCurrentEndpoint('webfs') + 'silkroad-qa/path/index.html',
                         withCredentials: true
                     })
                     .should.be.eventually.fulfilled;
