@@ -24,7 +24,7 @@ function getFiles(config) {
   if (config.client && config.client.args[0] && config.client.args[0].parallel) {
     var taskIndex = config.client.args[0].index;
     var totalTasks = config.client.args[0].total;
-    var totalByTask = Math.ceil(totalSpecFiles / totalTasks);
+    var totalByTask = Math.trunc(totalSpecFiles / totalTasks);
     start = taskIndex * totalByTask;
     end = start + totalByTask;
     if (taskIndex+1 === totalTasks) {
