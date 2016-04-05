@@ -8,5 +8,6 @@ module.exports = {
     clients : require('./clients'),
     assets : require('./assets'),
     notifications : require('./notifications'),
-    oauth : require('./oauth')
+    oauth : require('./oauth'),
+    express: require('./express')
 };

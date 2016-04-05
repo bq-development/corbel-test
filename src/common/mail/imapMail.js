@@ -1,10 +1,10 @@
 'use strict';
 
-var PORTS = require('../../../test/ports.conf.js');
+var express = require('../express/express.js');
 
 function getMail(email, password, host) {
     var xhttp = new XMLHttpRequest();
-    var url = 'http://' + window.location.host.split(':')[0] + ':' + PORTS.EXPRESS + '/imap/lastemails?username=' +
+    var url = express.getUrl() + '/imap/lastemails?username=' +
         email + '&password=' + password + '&host=' + host + '&emailsToRead=20&hash='+Date.now();
 
     return new Promise(function(resolve, reject){

@@ -3,9 +3,10 @@
 /*globals corbel */
 //@endexclude
 
+var express = require('../express/express.js');
+
 var MailParser = require('mailparser').MailParser;
 
-var PORTS = require('../../../test/ports.conf.js');
 var MAX_RETRY = 40;
 var RETRY_PERIOD = 2;
 
@@ -19,7 +20,7 @@ function checkMail(email) {
     var xhttp = new XMLHttpRequest();
     var username = email.replace('@maildrop.cc', '');
 
-    var url = 'http://localhost:' + PORTS.EXPRESS + '/maildrop/checkemail?user=' + username;
+    var url = express.getUrl() + '/maildrop/checkemail?user=' + username;
 
     return new Promise(function(resolve, reject) {
         xhttp.onreadystatechange = function() {
@@ -36,8 +37,7 @@ function checkMail(email) {
 function getMail(email, emailId) {
     var xhttp = new XMLHttpRequest();
     var username = email.replace('@maildrop.cc', '');
-    var url = 'http://localhost:' + PORTS.EXPRESS +
-        '/maildrop/getemail?user=' + username + '&emailId=' + emailId;
+    var url = express.getUrl() + '/maildrop/getemail?user=' + username + '&emailId=' + emailId;
 
     return new Promise(function(resolve, reject) {
         xhttp.onreadystatechange = function() {
@@ -61,8 +61,7 @@ function getMail(email, emailId) {
 function delMail(email, emailId) {
     var xhttp = new XMLHttpRequest();
     var username = email.replace('@maildrop.cc', '');
-    var url = 'http://localhost:' + PORTS.EXPRESS +
-        '/maildrop/delemail?user=' + username + '&emailId=' + emailId;
+    var url = express.getUrl() + '/maildrop/delemail?user=' + username + '&emailId=' + emailId;
 
     return new Promise(function(resolve, reject) {
         xhttp.onreadystatechange = function() {

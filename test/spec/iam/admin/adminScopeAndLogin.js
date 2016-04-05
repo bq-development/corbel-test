@@ -11,14 +11,14 @@ describe('In IAM module', function() {
         it('when create a composite scope with simple scope, and update them, logged user have new scopes',
             function(done) {
                 var compositeScope = {
-                    id: 'TestCompositeScope',
+                    id: 'TestCompositeScope_' + Date.now(),
                     type: 'composite_scope',
                     audience: 'empty',
                     rules: [{}]
                 };
 
                 var testScope = {
-                    id: 'TestSimpleScope',
+                    id: 'TestSimpleScope_' + Date.now(),
                     audience: 'http://iam.bqws.io',
                     rules: [{
                         mediaTypes: [

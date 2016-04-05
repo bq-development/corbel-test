@@ -10,7 +10,7 @@ describe('In RESOURCES module', function() {
         var ORIGINAL_IMAGE_HEIGTH = 626;
 
         function removeDom() {
-            document.getElementById('test-image').remove();    
+            document.getElementById('test-image').remove();
         }
 
         function getImageAsBlob(imageUrl) {
@@ -37,8 +37,7 @@ describe('In RESOURCES module', function() {
         });
 
         beforeEach(function(done) {
-            getImageAsBlob('http://' + window.location.host.split(':')[0] + ':' +
-                corbelTest.ports.KARMA + '/base/src/common/utils/img/logo.png')
+            getImageAsBlob('http://' + window.location.host + '/base/src/common/utils/img/logo.png')
             .then(function(blob) {
                 FILENAME = 'RestorFileName' + Date.now();
                 dataImage = blob;
@@ -49,7 +48,7 @@ describe('In RESOURCES module', function() {
                     }
                 )
                 .should.be.eventually.fulfilled;
-            })                 
+            })
             .should.notify(done);
         });
 
@@ -71,7 +70,7 @@ describe('In RESOURCES module', function() {
             .should.notify(done);
         });
 
-        
+
         it('image does not surpasses original image size when resize operation is required', function(done) {
             var operationQuery = 'resizeWidth=' + (ORIGINAL_IMAGE_WIDTH + 1);
 
@@ -87,13 +86,13 @@ describe('In RESOURCES module', function() {
                 return corbelTest.common.utils.retry(function() {
                     var reader = new FileReader();
                     reader.readAsDataURL(resource.data);
-                    
+
                     return new Promise(function(resolve, reject) {
                         reader.onloadend = function() {
-                            var img = document.createElement('img');   
+                            var img = document.createElement('img');
                             img.id = 'test-image';
                             img.src = reader.result;
-                            document.body.appendChild(img); 
+                            document.body.appendChild(img);
                             var image = document.getElementById('test-image');
 
                             if(image.clientWidth === ORIGINAL_IMAGE_WIDTH) {
@@ -130,13 +129,13 @@ describe('In RESOURCES module', function() {
                     var expectedWidth = ((ORIGINAL_IMAGE_WIDTH * operationHeight) / ORIGINAL_IMAGE_HEIGTH);
                     var reader = new FileReader();
                     reader.readAsDataURL(resource.data);
-                    
+
                     return new Promise(function(resolve, reject) {
                         reader.onloadend = function() {
-                            var img = document.createElement('img');   
+                            var img = document.createElement('img');
                             img.id = 'test-image';
                             img.src = reader.result;
-                            document.body.appendChild(img); 
+                            document.body.appendChild(img);
                             var image = document.getElementById('test-image');
 
                             if(image.clientHeight === operationHeight && image.clientWidth === expectedWidth) {
@@ -145,9 +144,9 @@ describe('In RESOURCES module', function() {
                             else {
                                 reject();
                             }
-                            
-                            removeDom();            
-                        };     
+
+                            removeDom();
+                        };
                     })
                     .should.be.eventually.fulfilled;
                 }, 18, 5)
@@ -176,10 +175,10 @@ describe('In RESOURCES module', function() {
                     reader.readAsDataURL(resource.data);
                     return new Promise(function(resolve, reject) {
                         reader.onloadend = function() {
-                            var img = document.createElement('img');   
+                            var img = document.createElement('img');
                             img.id = 'test-image';
                             img.src = reader.result;
-                            document.body.appendChild(img); 
+                            document.body.appendChild(img);
                             var image = document.getElementById('test-image');
 
                             if(image.clientHeight === resizeHeightValue && image.clientWidth === resizeWidthValue) {
@@ -188,8 +187,8 @@ describe('In RESOURCES module', function() {
                             else {
                                 reject();
                             }
-                            removeDom();     
-                        };    
+                            removeDom();
+                        };
                     })
                     .should.be.eventually.fulfilled;
                 }, 18, 5)

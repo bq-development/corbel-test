@@ -3,6 +3,65 @@
 // Generated on 2014-10-22 using
 // generator-karma 0.8.3
 
+var fs = require('fs');
+var path = require('path');
+
+function fileList(dir) {
+  return fs.readdirSync(dir).reduce(function(list, file) {
+    var name = path.join(dir, file);
+    var isDir = fs.statSync(name).isDirectory();
+    return list.concat(isDir ? fileList(name) : [name]);
+  }, []);
+}
+
+function getFiles(config) {
+  var start;
+  var end;
+
+  var specFiles = fileList('test/spec').filter(function(filename) { return filename.endsWith('js');});
+  var totalSpecFiles = specFiles.length;
+
+  if (config.client && config.client.args[0] && config.client.args[0].parallel) {
+    var taskIndex = config.client.args[0].index;
+    var totalTasks = config.client.args[0].total;
+    var totalByTask = Math.trunc(totalSpecFiles / totalTasks);
+    start = taskIndex * totalByTask;
+    end = start + totalByTask;
+    if (taskIndex+1 === totalTasks) {
+      end = totalSpecFiles;
+    }
+  } else {
+    start = 0;
+    end = totalSpecFiles;
+  }
+
+  var files = [
+    // PhantomJS Promise polifyll
+    // http://stackoverflow.com/questions/29391111/karma-phantomjs-and-es6-promises
+    'node_modules/phantomjs-polyfill/bind-polyfill.js',
+    'node_modules/promise-polyfill/Promise.js',
+    'node_modules/q/q.js',
+    'node_modules/corbel-js/dist/corbel.js',
+    'node_modules/lodash/index.js',
+    '.tmp/bundle.js',
+    'test/beforeAll.js',
+    'test/ports.conf.js',
+    'test/karma.conf.js',
+    'test/menu/css/collapse.css',
+    'test/menu/css/onoffswitch.css',
+    'test/menu/css/styles.css',
+    {pattern: 'test/menu/html/menu.html', watched: false, included: false, served: true},
+    {pattern: 'test/menu/html/switch.html', watched: false, included: false, served: true},
+    {pattern: 'src/common/utils/img/logo.png', watched: false, included: false, served: true}
+  ];
+
+  for (var i=start; i<end; i++) {
+    files.push(specFiles[i]);
+  }
+
+  return files;
+}
+
 module.exports = function (config) {
     'use strict';
 
@@ -19,25 +78,7 @@ module.exports = function (config) {
         frameworks: ['mocha', 'chai', 'chai-as-promised', 'chai-things', 'sinon'],
 
         // list of files / patterns to load in the browser
-        files: [
-            // PhantomJS Promise polifyll
-            // http://stackoverflow.com/questions/29391111/karma-phantomjs-and-es6-promises
-            'node_modules/phantomjs-polyfill/bind-polyfill.js',
-            'node_modules/promise-polyfill/Promise.js',
-            'node_modules/q/q.js',
-            'node_modules/corbel-js/dist/corbel.js',
-            'node_modules/lodash/index.js',
-            '.tmp/bundle.js',
-            'test/beforeAll.js',
-            'test/**/*.js',
-            'test/menu/css/collapse.css',
-            'test/menu/css/onoffswitch.css',
-            'test/menu/css/styles.css',
-            /*Rem-image's test required*/
-            {pattern: 'test/menu/html/menu.html', watched: false, included: false, served: true},
-            {pattern: 'test/menu/html/switch.html', watched: false, included: false, served: true},
-            {pattern: 'src/common/utils/img/logo.png', watched: false, included: false, served: true}
-        ],
+        files: getFiles(config),
 
         // list of files / patterns to exclude
         exclude: [
@@ -63,7 +104,7 @@ module.exports = function (config) {
 
         // Continuous Integration mode
         // if true, it capture browsers, run tests and exit
-        singleRun: false,
+        singleRun: true,
 
         colors: true,
 
@@ -75,12 +116,13 @@ module.exports = function (config) {
         reporters: ['tap', 'mocha'],
 
         tapReporter: {
-            outputFile: '.report/report.tap'
+            outputFile: '.report/report.tap',
+            disableStdout: true
         },
 
         // level of logging
         // possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG
-        logLevel: config.LOG_INFO,
+        logLevel: config.LOG_DISABLE,
 
         // Uncomment the following lines if you are using grunt's server to run the tests
         // proxies: {

@@ -6,7 +6,6 @@ var $ = require('jquery');
 var localConfig = require('./localConfig').LocalConfig;
 var Sidebar = require('./sidebar').Sidebar;
 var sidebar = new Sidebar(localConfig);
-var ports = require('../test/ports.conf.js');
 var queryString = require('query-string');
 var corbelTest = {};
 
@@ -67,7 +66,6 @@ $(document).on('environment:changed',function(evt, data){
     if(data && data.environment==='prod'){
         setupGrep('SANITY');
     }
-
 });
 
 corbelTest.getCustomDriver = function(driverData) {
@@ -101,7 +99,6 @@ corbelTest.localConfig = localConfig;
 corbelTest.common = common;
 corbelTest.fixtures = fixtures;
 corbelTest.drivers = common.clients.drivers;
-corbelTest.ports = ports;
 
 window.corbelTest = corbelTest;
 

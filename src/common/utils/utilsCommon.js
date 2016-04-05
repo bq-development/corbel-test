@@ -12,21 +12,22 @@ function waitFor(seconds) {
 function retry(retryFunction, maxRetries, retryPeriod, catches) {
     return new Promise(function(resolve, reject) {
         catches = catches || [];
+        retryFunction()
+            .then(function(response) {
+                resolve(response);
+            })
+            .catch(function(err) {
+                catches.push(err);
 
-        if (maxRetries < 1) {
-            reject(catches);
-        } else {
-            retryFunction()
-                .then(function(response) {
-                    resolve(response);
-                }).catch(function(err) {
-                    catches.push(err);
+                if (maxRetries > 1) {
                     setTimeout(function() {
                         retry(retryFunction, maxRetries - 1, retryPeriod, catches)
                             .then(resolve).catch(reject);
                     }, retryPeriod * 1000);
-                });
-        }
+                } else {
+                    reject(catches);
+                }
+            });
     });
 }
 
@@ -91,12 +92,12 @@ function removeBreaksFromString(string) {
     return string.replace(/(\r\n|\n|\r)/gm, '').trim();
 }
 
-function arrayBufferToBase64( buffer ) {
+function arrayBufferToBase64(buffer) {
     var binary = '';
-    var bytes = new Uint8Array( buffer );
+    var bytes = new Uint8Array(buffer);
     var len = bytes.byteLength;
     for (var i = 0; i < len; i++) {
-        binary += String.fromCharCode( bytes[ i ] );
+        binary += String.fromCharCode(bytes[i]);
     }
     return window.btoa(binary);
 }
