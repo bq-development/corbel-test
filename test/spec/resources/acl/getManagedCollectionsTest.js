@@ -4,40 +4,15 @@ describe('In RESOURCES module', function() {
 
         describe('with acl collections management', function() {
 
-            var userId, user;
             var ACL_ADMIN_COLLECTION = 'acl:Configuration';
             var COLLECTION_NAME_1 = 'test:testAcl-1' + Date.now();
             var COLLECTION_NAME_2 = 'test:testAcl-2' + Date.now();
             var managedCollectionId1, managedCollectionId2;
-            var corbelRootDriver, corbelDriver;
+            var corbelRootDriver;
             var random;
 
             before(function(done) {
-                corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
-                corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
-                random = Date.now();
-
-                corbelTest.common.iam.createUsers(corbelDriver, 1)
-                    .should.be.eventually.fulfilled
-                    .then(function(createdUser) {
-                        user = createdUser[0];
-                        userId = user.id;
-
-                        return corbelTest.common.clients.loginUser(corbelDriver, user.username, user.password)
-                            .should.be.eventually.fulfilled;
-                    })
-                    .should.notify(done);
-            });
-
-
-            after(function(done) {
-                return corbelRootDriver.iam.user(userId)
-                    .delete()
-                    .should.be.eventually.fulfilled
-                    .and.notify(done);
-            });
-
-            beforeEach(function(done) {
+              corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
                 var TEST_OBJECT = {
                     _acl: {},
                     test: 'test' + random,
@@ -68,7 +43,7 @@ describe('In RESOURCES module', function() {
                     .should.notify(done);
             });
 
-            afterEach(function(done) {
+            after(function(done) {
                 corbelRootDriver.resources.resource(ACL_ADMIN_COLLECTION, managedCollectionId1)
                     .delete()
                     .should.be.eventually.fulfilled.then(function() {
