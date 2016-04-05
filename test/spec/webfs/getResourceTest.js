@@ -2,11 +2,10 @@ describe('In WEBFS module', function() {
     var corbelDriver;
 
     beforeEach(function() {
-        corbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
-        corbelTest.common.utils.replaceUriForProxyUse(corbelDriver);
+        corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
     });
 
-    it('a resource can be retrieved with the same content-type as especified through webfs', function(done) {
+    it('a resource can be retrieved with the same content-type as specified through webfs', function(done) {
         corbelDriver.webfs.webfs('index.html').get({
                 Accept: 'text/html'
             })
@@ -18,7 +17,6 @@ describe('In WEBFS module', function() {
     });
 
     it('a resource can be retrieved using the cookie', function(done) {
-        var corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
         corbelTest.common.utils.replaceUriForProxyUse(corbelDriver);
         corbelDriver.iam.token().create({
                     claims: {
