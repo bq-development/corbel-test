@@ -9,8 +9,8 @@ describe('In NOTIFICATIONS module', function() {
         var notificationData;
         var domainIdCreated;
         var timestamp;
-        var userMail = corbelTest.CONFIG.COMMON.MAIL.email;
-        var passwordMail = corbelTest.CONFIG.COMMON.MAIL.password;
+        var userMail = corbelTest.CONFIG.clientCredentials.silkroad.email;
+        var passwordMail = corbelTest.CONFIG.clientCredentials.silkroad.password;
         var email;
         var MAX_RETRY = 3;
 

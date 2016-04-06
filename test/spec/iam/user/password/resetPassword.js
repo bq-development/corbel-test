@@ -8,8 +8,8 @@ describe('In IAM module', function() {
         var user;
         var MAX_RETRY = 28;
         var RETRY_PERIOD = 3;
-        var userMail = corbelTest.CONFIG.COMMON.MAIL.email;
-        var passwordMail = corbelTest.CONFIG.COMMON.MAIL.password;
+        var userMail = corbelTest.CONFIG.clientCredentials.silkroad.email;
+        var passwordMail = corbelTest.CONFIG.clientCredentials.silkroad.password;
         var email;
         var MAX_RETRY_MAIL = 3;
 

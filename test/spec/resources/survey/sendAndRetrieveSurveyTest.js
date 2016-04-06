@@ -14,8 +14,8 @@ describe('In RESOURCES module', function() {
             var satCorbelDriver;
             var timestamp;
             var email;
-            var userMail = corbelTest.CONFIG.COMMON.MAIL.email;
-            var passwordMail = corbelTest.CONFIG.COMMON.MAIL.password;
+            var userMail = corbelTest.CONFIG.clientCredentials.silkroad.email;
+            var passwordMail = corbelTest.CONFIG.clientCredentials.silkroad.password;
             var MAX_RETRY = 3;
 
             var TEST_QUESTION = {

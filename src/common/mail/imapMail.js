@@ -119,7 +119,7 @@ function getCodeFromMail(email) {
 }
 
 function getRandomMail(){
-    var str = corbelTest.CONFIG.COMMON.MAIL.email.split('@');
+    var str = corbelTest.CONFIG.clientCredentials.silkroad.email.split('@');
     return str[0]+'+'+Date.now()+'@'+str[1];
 }
 

@@ -54,8 +54,8 @@ describe('In OAUTH module', function() {
 
             var oneTimeToken;
             clientParams = oauthCommonUtils.getClientParams();
-            var userMail = corbelTest.CONFIG.COMMON.MAIL.email;
-            var passwordMail = corbelTest.CONFIG.COMMON.MAIL.password;
+            var userMail = corbelTest.CONFIG.clientCredentials.silkroad.email;
+            var passwordMail = corbelTest.CONFIG.clientCredentials.silkroad.password;
 
             oauthUserTest.email = corbelTest.common.mail.imap.getRandomMail();
             

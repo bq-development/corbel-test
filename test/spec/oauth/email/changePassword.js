@@ -6,8 +6,8 @@ describe('In OAUTH module', function() {
         var oauthUserTest;
         var clientParams;
         var userEmail;
-        var userMail = corbelTest.CONFIG.COMMON.MAIL.email;
-        var passwordMail = corbelTest.CONFIG.COMMON.MAIL.password;
+        var userMail = corbelTest.CONFIG.clientCredentials.silkroad.email;
+        var passwordMail = corbelTest.CONFIG.clientCredentials.silkroad.password;
         var newPassword;
         var MAX_RETRY = 3;
 
