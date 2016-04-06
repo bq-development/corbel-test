@@ -90,7 +90,9 @@ function _retry(retries, params) {
 }
 
 function getMailWithQuery(email, password, host, queries, retries) {
-    retries = retries || 10;
+    if (!retries && retries !== 0) {
+        retries = 10;
+    }
 
     return getMail(email, password, host)
     .then(function(emails) {

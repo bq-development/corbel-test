@@ -87,12 +87,14 @@ describe('In OAUTH module', function() {
                     corbelTest.common.mail.imap.buildQuery('contain', 'subject', 'Validate your account email')
                 ];
 
+                var code;
+
                 corbelTest.common.mail.imap
                     .getMailWithQuery(userMail, passwordMail, 'imap.gmail.com', queries, MAX_RETRY)
                     .should.be.eventually.fulfilled
                     .then(function(email) {
                         expect(email).to.have.property('subject', 'Validate your account email');
-                        var code = getCodeFromMail(email);
+                        code = getCodeFromMail(email);
 
                         return corbelDriver.oauth
                             .user(clientParams, code)
@@ -100,13 +102,19 @@ describe('In OAUTH module', function() {
                             .should.be.eventually.fulfilled;
                     })
                     .then(function() {
+                        var queries2 = [
+                            corbelTest.common.mail.imap.buildQuery('contain', 'delivered', emailAddress),
+                            corbelTest.common.mail.imap.buildQuery('contain', 'subject', 'Validate your account email'),
+                            corbelTest.common.mail.imap.buildQuery('notContain', 'text', code)
+                        ];
+
                         return corbelTest.common.mail.imap
-                            .getMailWithQuery(userMail, passwordMail, 'imap.gmail.com', queries)
+                            .getMailWithQuery(userMail, passwordMail, 'imap.gmail.com', queries2)
                             .should.be.eventually.fulfilled;
                     })
                     .then(function(email) {
                         expect(email).to.have.property('subject', 'Validate your account email');
-                        var code = getCodeFromMail(email);
+                        code = getCodeFromMail(email);
 
                         return corbelDriver.oauth
                             .user(clientParams, code)
