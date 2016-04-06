@@ -6,7 +6,7 @@ describe('In RESOURCES module', function() {
             var corbelRootDriver;
             var corbelAdminDriver;
             var corbelDriver;
-            var COLLECTION_NAME = 'test:testAcl' + Date.now();
+            var COLLECTION_NAME;
             var DOMAIN = 'silkroad-qa';
             var adminUser;
             var user;
@@ -15,13 +15,14 @@ describe('In RESOURCES module', function() {
             var amount = 5;
             var aclConfigurationId;
 
-            before(function(done) {
+            beforeEach(function(done) {
+                COLLECTION_NAME = 'test:testAcl' + Date.now();
                 corbelRootDriver = corbelTest.drivers['ADMIN_USER'].clone();
                 corbelAdminDriver = corbelTest.drivers['DEFAULT_USER'].clone();
                 corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
                 random = Date.now();
                 usersId = [];
-                
+
                 corbelTest.common.resources.setManagedCollection(
                     corbelRootDriver, DOMAIN, COLLECTION_NAME)
                 .should.be.eventually.fulfilled
@@ -57,7 +58,7 @@ describe('In RESOURCES module', function() {
                 .should.notify(done);
             });
 
-            after(function(done) {
+            afterEach(function(done) {
 
                 corbelTest.common.resources.unsetManagedCollection(
                     corbelRootDriver, DOMAIN, COLLECTION_NAME, aclConfigurationId)
@@ -79,7 +80,6 @@ describe('In RESOURCES module', function() {
             });
 
             it('the resources can be gotten if the user has ADMIN permission', function(done) {
-
                 corbelAdminDriver.resources.collection(COLLECTION_NAME)
                     .get()
                 .should.be.eventually.fulfilled
@@ -109,7 +109,7 @@ describe('In RESOURCES module', function() {
                         permission : 'ADMIN'
                     };
                     ACL['user:' + adminUser.id] = {
-                        permission : 'ADMIN' 
+                        permission : 'ADMIN'
                     };
 
                     return corbelDriver.resources.resource(COLLECTION_NAME, resourceId)
@@ -152,7 +152,7 @@ describe('In RESOURCES module', function() {
                         }
                     }]
                 };
-                
+
                 corbelAdminDriver.resources.collection(COLLECTION_NAME)
                     .get(params)
                 .should.be.eventually.fulfilled
