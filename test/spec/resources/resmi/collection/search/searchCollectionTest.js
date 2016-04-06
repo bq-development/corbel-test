@@ -155,27 +155,26 @@ describe('In RESOURCES module', function() {
                                     if (response.data.length !== 4) {
                                         return Promise.reject();
                                     } else {
-                                        return response;
+                                      response.data.forEach(function(entry) {
+                                          delete entry.links;
+                                          delete entry._createdAt;
+                                          delete entry._updatedAt;
+                                      });
+                                      expect(response).to.have.deep.property('data.length', 4);
+                                      //the first is the second resource cause has the two words
+                                      expect(response).to.have.deep.property('data[0].id', random + ':2');
+                                      expect(response).to.have.property('data').and.to.include(object1);
+                                      expect(response).to.have.property('data').and.to.include(object2);
+                                      expect(response).to.have.property('data').and.to.include(object3);
+                                      expect(response).to.have.property('data').and.to.include(object4);
                                     }
                                 });
                         }, MAX_RETRY, RETRY_PERIOD)
                         .should.be.eventually.fulfilled
-                        .then(function(response) {
+                        .then(function() {
                             params.aggregation = {
                                 '$count': '*'
                             };
-                            response.data.forEach(function(entry) {
-                                delete entry.links;
-                                delete entry._createdAt;
-                                delete entry._updatedAt;
-                            });
-                            expect(response).to.have.deep.property('data.length', 4);
-                            //the first is the second resource cause has the two words
-                            expect(response.data[0]).to.have.deep.property('id', random + ':2');
-                            expect(response).to.have.property('data').and.to.include(object1);
-                            expect(response).to.have.property('data').and.to.include(object2);
-                            expect(response).to.have.property('data').and.to.include(object3);
-                            expect(response).to.have.property('data').and.to.include(object4);
 
                             return corbelDriver.resources.collection(COLLECTION)
                                 .get(params)
