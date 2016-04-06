@@ -121,13 +121,19 @@ describe('In IAM module', function() {
                             .disconnect()
                             .should.be.eventually.fulfilled;
                     }).then(function() {
-                        return corbelTest.common.clients
-                            .loginUser(corbelDefaultDriver, userData.username, userData.password)
+                        var MAX_RETRY = 10;
+                        var RETRY_PERIOD = 1;
+                        return corbelTest.common.utils.retry(function() {
+                                return corbelTest.common.clients
+                                    .loginUser(corbelDefaultDriver, userData.username, userData.password)
+                                    .should.be.eventually.fulfilled
+                                    .then(function() {
+                                        return corbelDefaultDriver.iam.user(userData.id)
+                                            .get()
+                                            .should.eventually.be.rejected;
+                                    });
+                            }, MAX_RETRY, RETRY_PERIOD)
                             .should.be.eventually.fulfilled;
-                    }).then(function() {
-                        return corbelDefaultDriver.iam.user(userData.id)
-                            .get()
-                            .should.eventually.be.rejected;
                     })
                     .should.notify(done);
             });
