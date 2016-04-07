@@ -34,6 +34,7 @@ describe('In IAM module', function() {
             .then(function(response) {
                 expect(response).to.have.deep.property('data.userId', user.id);
                 expect(response).to.have.deep.property('data.token', sessionToken);
+                expect(response).to.have.deep.property('data.scopes');
             })
             .should.notify(done);
         });
