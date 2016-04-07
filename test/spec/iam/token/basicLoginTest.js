@@ -64,6 +64,7 @@ describe('In IAM module', function() {
             .should.be.eventually.fulfilled
             .then(function(response){
                 expect(response).to.have.deep.property('data.accessToken');
+                expect(response).to.have.deep.property('data.scopes').to.contain('iam:user:me');
                 return corbelNewDriver.iam.user('me')
                     .get()
                     .should.be.eventually.fulfilled;
