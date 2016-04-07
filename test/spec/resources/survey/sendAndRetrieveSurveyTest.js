@@ -3,18 +3,20 @@ describe('In RESOURCES module', function() {
     describe('In SURVEY module', function() {
 
         describe('questions can be added and then a response survey is created and sended', function() {
-            var popEmail = corbelTest.common.mail.maildrop.popEmail;
 
             var corbelDriver;
             var questionTemplateId;
-            var email;
-            var emailAuthorization;
             var orderIdentifier;
             var clientUrl = 'bquiz-client.com.s3-website-eu-west-1.amazonaws.com';
             var bquizDriverValues;
             var bquizCorbelDriver;
             var satDriverValues;
             var satCorbelDriver;
+            var timestamp;
+            var email;
+            var userMail = corbelTest.CONFIG.clientCredentials.silkroad.email;
+            var passwordMail = corbelTest.CONFIG.clientCredentials.silkroad.password;
+            var MAX_RETRY = 7;
 
             var TEST_QUESTION = {
                 description: 'This is the {{test}}',
@@ -39,18 +41,13 @@ describe('In RESOURCES module', function() {
                     .then(function(id) {
                         questionTemplateId = id;
                     })
-                    .then(function() {
-                        return corbelTest.common.mail.maildrop.getRandomMail()
-                            .should.be.eventually.fulfilled;
-                    })
-                    .then(function(response) {
-                        email = response;
-                    })
                     .should.notify(done);
             });
 
             beforeEach(function() {
-                orderIdentifier = 'order-' + Date.now();
+                email = corbelTest.common.mail.imap.getRandomMail();
+                orderIdentifier = 'order-' + timestamp;
+                timestamp = Date.now();
             });
 
             afterEach(function(done) {
@@ -87,14 +84,13 @@ describe('In RESOURCES module', function() {
                     }],
                     language: 'es-ES',
                     orderId: orderIdentifier,
-                    username: 'Batman'
+                    username: 'Batman '+timestamp
                 };
-
                 bquizCorbelDriver.resources.collection('bquiz:Survey')
                     .add(TEST_SURVEY)
                     .should.be.eventually.fulfilled
                     .then(function() {
-                        return bquizCorbelDriver.resources.resource('bquiz:Contact', email)
+                        return bquizCorbelDriver.resources.resource('bquiz:Contact', encodeURIComponent(email))
                             .get()
                             .should.be.eventually.fulfilled;
                     })
@@ -102,12 +98,18 @@ describe('In RESOURCES module', function() {
                         expect(response).to.have.deep.property('data.contact', true);
                         expect(response).to.have.deep.property('data.id', email);
 
-                        return popEmail(email)
+                        var queries = [
+                            corbelTest.common.mail.imap.buildQuery('contain', 'delivered', email),
+                            corbelTest.common.mail.imap.buildQuery('contain', 'subject', 'Valora bq.')
+                        ];
+
+                        return corbelTest.common.mail.imap
+                            .getMailWithQuery(userMail, passwordMail, 'imap.gmail.com', queries, MAX_RETRY)
                             .should.be.eventually.fulfilled;
                     })
-                    .then(function(mail) {
+                    .then(function(mail){
                         expect(mail).to.have.deep.property('subject').and.to.contain('Valora bq.');
-                        expect(mail).to.have.deep.property('content').and.to.contain(clientUrl);
+                        expect(mail).to.have.deep.property('text').and.to.contain(clientUrl);
                     })
                     .should.notify(done);
             });
@@ -136,7 +138,7 @@ describe('In RESOURCES module', function() {
                     .add(TEST_SURVEY)
                     .should.be.eventually.fulfilled
                     .then(function() {
-                        return satCorbelDriver.resources.resource('bquiz:Contact', email)
+                        return satCorbelDriver.resources.resource('bquiz:Contact', encodeURIComponent(email))
                             .get()
                             .should.be.eventually.fulfilled;
                     })
@@ -144,12 +146,18 @@ describe('In RESOURCES module', function() {
                         expect(response).to.have.deep.property('data.contact', true);
                         expect(response).to.have.deep.property('data.id', email);
 
-                        return popEmail(email)
+                        var queries = [
+                            corbelTest.common.mail.imap.buildQuery('contain', 'delivered', email),
+                            corbelTest.common.mail.imap.buildQuery('contain', 'subject', 'Queremos saber tu')
+                        ];
+
+                        return corbelTest.common.mail.imap
+                            .getMailWithQuery(userMail, passwordMail, 'imap.gmail.com', queries, MAX_RETRY)
                             .should.be.eventually.fulfilled;
                     })
                     .then(function(mail) {
                         expect(mail).to.have.deep.property('subject').and.to.contain('Queremos saber tu');
-                        expect(mail).to.have.deep.property('content').and.to.contain(clientUrl);
+                        expect(mail).to.have.deep.property('text').and.to.contain(clientUrl);
                     })
                     .should.notify(done);
             });
@@ -171,14 +179,14 @@ describe('In RESOURCES module', function() {
                     }],
                     language: 'fr-FR',
                     orderId: orderIdentifier,
-                    username: 'Vincent'
+                    username: 'Vincent'+timestamp
                 };
 
                 bquizCorbelDriver.resources.collection('bquiz:Survey')
                     .add(TEST_SURVEY)
                     .should.be.eventually.fulfilled
                     .then(function() {
-                        return bquizCorbelDriver.resources.resource('bquiz:Contact', email)
+                        return bquizCorbelDriver.resources.resource('bquiz:Contact', encodeURIComponent(email))
                             .get()
                             .should.be.eventually.fulfilled;
                     })
@@ -186,13 +194,19 @@ describe('In RESOURCES module', function() {
                         expect(response).to.have.deep.property('data.contact', true);
                         expect(response).to.have.deep.property('data.id', email);
 
-                        return popEmail(email)
+                        var queries = [
+                            corbelTest.common.mail.imap.buildQuery('contain', 'delivered', email),
+                            corbelTest.common.mail.imap.buildQuery('contain', 'subject', 'votre avis compte')
+                        ];
+
+                        return corbelTest.common.mail.imap
+                            .getMailWithQuery(userMail, passwordMail, 'imap.gmail.com', queries, MAX_RETRY)
                             .should.be.eventually.fulfilled;
                     })
                     .then(function(mail) {
                         expect(mail).to.have.deep.property('subject')
                             .and.to.contain('votre avis compte');
-                        expect(mail).to.have.deep.property('content').and.to.contain(clientUrl);
+                        expect(mail).to.have.deep.property('text').and.to.contain(clientUrl);
                     })
                     .should.notify(done);
             });
@@ -214,14 +228,14 @@ describe('In RESOURCES module', function() {
                     }],
                     language: 'pt-PT',
                     orderId: orderIdentifier,
-                    username: 'Bruno'
+                    username: 'Bruno'+timestamp
                 };
 
                 bquizCorbelDriver.resources.collection('bquiz:Survey')
                     .add(TEST_SURVEY)
                     .should.be.eventually.fulfilled
                     .then(function() {
-                        return bquizCorbelDriver.resources.resource('bquiz:Contact', email)
+                        return bquizCorbelDriver.resources.resource('bquiz:Contact', encodeURIComponent(email))
                             .get()
                             .should.be.eventually.fulfilled;
                     })
@@ -229,13 +243,19 @@ describe('In RESOURCES module', function() {
                         expect(response).to.have.deep.property('data.contact', true);
                         expect(response).to.have.deep.property('data.id', email);
 
-                        return popEmail(email)
+                        var queries = [
+                            corbelTest.common.mail.imap.buildQuery('contain', 'delivered', email),
+                            corbelTest.common.mail.imap.buildQuery('contain', 'subject', 'Avalie a bq')
+                        ];
+
+                        return corbelTest.common.mail.imap
+                            .getMailWithQuery(userMail, passwordMail, 'imap.gmail.com', queries, MAX_RETRY)
                             .should.be.eventually.fulfilled;
                     })
                     .then(function(mail) {
                         expect(mail).to.have.deep.property('subject')
                             .and.to.contain('Avalie a bq');
-                        expect(mail).to.have.deep.property('content').and.to.contain(clientUrl);
+                        expect(mail).to.have.deep.property('text').and.to.contain(clientUrl);
                     })
                     .should.notify(done);
             });

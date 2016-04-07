@@ -90,7 +90,9 @@ function _retry(retries, params) {
 }
 
 function getMailWithQuery(email, password, host, queries, retries) {
-    retries = retries || 10;
+    if (!retries && retries !== 0) {
+        retries = 10;
+    }
 
     return getMail(email, password, host)
     .then(function(emails) {
@@ -118,9 +120,15 @@ function getCodeFromMail(email) {
     return code;
 }
 
+function getRandomMail(){
+    var str = corbelTest.CONFIG.clientCredentials.silkroad.email.split('@');
+    return str[0]+'+'+Date.now()+'@'+str[1];
+}
+
 module.exports = {
     getMail: getMail,
     buildQuery: buildQuery,
     getMailWithQuery: getMailWithQuery,
-    getCodeFromMail: getCodeFromMail
+    getCodeFromMail: getCodeFromMail,
+    getRandomMail: getRandomMail
 };
