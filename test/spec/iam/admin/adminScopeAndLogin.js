@@ -12,9 +12,7 @@ describe('In IAM module', function() {
             function(done) {
                 var compositeScope = {
                     id: 'TestCompositeScope_' + Date.now(),
-                    type: 'composite_scope',
-                    audience: 'empty',
-                    rules: [{}]
+                    type: 'composite_scope'
                 };
 
                 var testScope = {
@@ -104,14 +102,21 @@ describe('In IAM module', function() {
                             .disconnect()
                             .should.be.eventually.fulfilled;
                     }).then(function() {
-                        return corbelTest.common.clients
-                            .loginUser(corbelDefaultDriver, userData.username, userData.password)
+                        var MAX_RETRY = 30;
+                        var RETRY_PERIOD = 1;
+                        return corbelTest.common.utils.retry(function() {
+                                return corbelTest.common.clients
+                                    .loginUser(corbelDefaultDriver, userData.username, userData.password)
+                                    .should.be.eventually.fulfilled
+                                    .then(function() {
+                                        return corbelDefaultDriver.iam.user(userData.id)
+                                            .get()
+                                            .should.be.eventually.fulfilled;
+                                    });
+                            }, MAX_RETRY, RETRY_PERIOD)
                             .should.be.eventually.fulfilled;
-                    }).then(function() {
-                        return corbelDefaultDriver.iam.user(userData.id)
-                            .get()
-                            .should.be.eventually.fulfilled;
-                    }).then(function() {
+                    })
+                    .then(function() {
                         testScope.audience = 'badAudience';
                         return corbelRootDriver.iam.scope()
                             .create(testScope)
