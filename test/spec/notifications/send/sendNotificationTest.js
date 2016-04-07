@@ -1,7 +1,7 @@
 describe('In NOTIFICATIONS module', function() {
 
     describe('when testing sending', function() {
-        var popEmail = corbelTest.common.mail.maildrop.popEmail;
+        var popEmail = corbelTest.common.mail.mailinterface.popEmail;
         var corbelDriver;
         var title = 'title' + Date.now();
 
@@ -59,17 +59,21 @@ describe('In NOTIFICATIONS module', function() {
             }
         }];
 
-        function sendNotifications(email, notifications) {
+        function sendNotifications(notifications) {
             var promises = notifications.map(function(notification, index) {
-                notification.email = index + email;
-
-                var notificationData = {
-                    notificationId: notification.id,
-                    recipient: notification.email,
-                    properties: notification.properties
-                };
-                return corbelDriver.notifications.notification()
-                    .send(notificationData);
+                return corbelTest.common.mail.mailinterface.getRandomMail()
+                    .should.be.eventually.fulfilled
+                    .then(function(email) {
+                        var notificationData = {
+                            notificationId: notification.id,
+                            recipient: email,
+                            properties: notification.properties
+                        };
+                        notification.email = email;
+                        return corbelDriver.notifications.notification()
+                            .send(notificationData)
+                            .should.be.eventually.fulfilled;
+                    });
             });
 
             return Promise.all(promises);
@@ -77,14 +81,8 @@ describe('In NOTIFICATIONS module', function() {
 
         before(function(done) {
             corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
-
-            corbelTest.common.mail.maildrop.getRandomMail()
+            sendNotifications(notifications)
                 .should.be.eventually.fulfilled
-                .then(function(email) {
-
-                    return sendNotifications(email, notifications)
-                        .should.be.eventually.fulfilled;
-                })
                 .should.notify(done);
         });
 

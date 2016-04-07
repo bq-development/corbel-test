@@ -46,7 +46,7 @@ describe('In NOTIFICATIONS module', function() {
                 });
 
 
-                return corbelTest.common.mail.maildrop.getRandomMail()
+                return corbelTest.common.mail.mailinterface.getRandomMail()
                     .should.be.eventually.fulfilled;
             })
             .then(function(response){
@@ -79,7 +79,7 @@ describe('In NOTIFICATIONS module', function() {
             })
             .then(function() {
                 return corbelTest.common.utils.retry(function() {
-                        return corbelTest.common.mail.maildrop.checkMail(emailRecipient)
+                        return corbelTest.common.mail.mailinterface.checkMail(emailRecipient)
                             .then(function(response) {
                                 if (response.length === 0) {
                                     return Promise.reject();
@@ -91,7 +91,7 @@ describe('In NOTIFICATIONS module', function() {
                 .should.be.eventually.fulfilled;
             })
             .then(function(response) {
-                return corbelTest.common.mail.maildrop.getMail(emailRecipient, response[0].id)
+                return corbelTest.common.mail.mailinterface.getMail(emailRecipient, response[0].id)
                 .should.be.eventually.fulfilled;
             })
             .then(function(mail) {
