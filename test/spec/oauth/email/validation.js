@@ -1,21 +1,18 @@
 describe('In OAUTH module', function() {
 
     describe('notifications tests', function() {
-        var popEmail = corbelTest.common.mail.maildrop.popEmail;
-        var getCodeFromMail = corbelTest.common.mail.maildrop.getCodeFromMail;
-
-
+        var getCodeFromMail = corbelTest.common.mail.imap.getCodeFromMail;
         var corbelDriver;
         var oauthCommonUtils;
         var clientParams;
-        var userTestParams;
         var oauthUserTest;
-        var userEmailData;
+        var userMail = corbelTest.CONFIG.clientCredentials.silkroad.email;
+        var passwordMail = corbelTest.CONFIG.clientCredentials.silkroad.password;
+        var MAX_RETRY = 3;
 
         before(function() {
             corbelDriver = corbelTest.drivers['DEFAULT_USER'].clone();
             oauthCommonUtils = corbelTest.common.oauth;
-            userTestParams = oauthCommonUtils.getOauthUserTestParams();
             clientParams = oauthCommonUtils.getClientParams();
         });
 
@@ -25,17 +22,24 @@ describe('In OAUTH module', function() {
                 password: 'randomPassword' + Date.now()
             };
 
-            return corbelTest.common.mail
-                .maildrop.getRandomMail()
+            oauthUserTest.email = corbelTest.common.mail.imap.getRandomMail();
+
+            corbelDriver.oauth
+                .user(clientParams)
+                .create(oauthUserTest)
+                .should.be.eventually.fulfilled.and.notify(done);
+        });
+
+        afterEach(function(done) {
+            oauthCommonUtils
+                .getToken(corbelDriver, oauthUserTest.username, oauthUserTest.password)
                 .should.be.eventually.fulfilled
                 .then(function(response) {
-                    userEmailData = response;
-                    oauthUserTest.email = userEmailData;
-
+                    var token = response.data['access_token'];
                     return corbelDriver.oauth
-                        .user(clientParams)
-                        .create(oauthUserTest)
-                        .should.be.eventually.fulfilled;
+                        .user(clientParams, token)
+                        .delete('me')
+                        .should.be.eventually.be.fulfilled;
                 })
                 .should.notify(done);
         });
@@ -43,10 +47,15 @@ describe('In OAUTH module', function() {
         it('email allows validate user account and has two endpoint that validate user account with email code [mail]',
             function(done) {
                 var username = oauthUserTest.username;
-                var password = oauthUserTest.password;
+                var passwordOauth = oauthUserTest.password;
                 var emailAddress = oauthUserTest.email;
+                var queries = [
+                    corbelTest.common.mail.imap.buildQuery('contain', 'delivered', emailAddress),
+                    corbelTest.common.mail.imap.buildQuery('contain', 'subject', 'Validate your account email')
+                ];
 
-                popEmail(emailAddress)
+                corbelTest.common.mail.imap
+                    .getMailWithQuery(userMail, passwordMail, 'imap.gmail.com', queries, MAX_RETRY)
                     .should.be.eventually.fulfilled
                     .then(function(email) {
                         expect(email).to.have.property('subject', 'Validate your account email');
@@ -59,7 +68,7 @@ describe('In OAUTH module', function() {
                     })
                     .then(function() {
                         return oauthCommonUtils
-                            .getToken(corbelDriver, username, password, true)
+                            .getToken(corbelDriver, username, passwordOauth, true)
                             .should.be.eventually.fulfilled;
                     })
                     .then(function(response) {
@@ -71,14 +80,21 @@ describe('In OAUTH module', function() {
         it('email allows validate user account and has two endpoint that resend validation email [mail]',
             function(done) {
                 var username = oauthUserTest.username;
-                var password = oauthUserTest.password;
+                var passwordOauth = oauthUserTest.password;
                 var emailAddress = oauthUserTest.email;
+                var queries = [
+                    corbelTest.common.mail.imap.buildQuery('contain', 'delivered', emailAddress),
+                    corbelTest.common.mail.imap.buildQuery('contain', 'subject', 'Validate your account email')
+                ];
 
-                popEmail(emailAddress)
+                var code;
+
+                corbelTest.common.mail.imap
+                    .getMailWithQuery(userMail, passwordMail, 'imap.gmail.com', queries, MAX_RETRY)
                     .should.be.eventually.fulfilled
                     .then(function(email) {
                         expect(email).to.have.property('subject', 'Validate your account email');
-                        var code = getCodeFromMail(email);
+                        code = getCodeFromMail(email);
 
                         return corbelDriver.oauth
                             .user(clientParams, code)
@@ -86,12 +102,19 @@ describe('In OAUTH module', function() {
                             .should.be.eventually.fulfilled;
                     })
                     .then(function() {
-                        return popEmail(emailAddress)
+                        var queries2 = [
+                            corbelTest.common.mail.imap.buildQuery('contain', 'delivered', emailAddress),
+                            corbelTest.common.mail.imap.buildQuery('contain', 'subject', 'Validate your account email'),
+                            corbelTest.common.mail.imap.buildQuery('notContain', 'text', code)
+                        ];
+
+                        return corbelTest.common.mail.imap
+                            .getMailWithQuery(userMail, passwordMail, 'imap.gmail.com', queries2)
                             .should.be.eventually.fulfilled;
                     })
                     .then(function(email) {
                         expect(email).to.have.property('subject', 'Validate your account email');
-                        var code = getCodeFromMail(email);
+                        code = getCodeFromMail(email);
 
                         return corbelDriver.oauth
                             .user(clientParams, code)
@@ -100,7 +123,7 @@ describe('In OAUTH module', function() {
                     })
                     .then(function() {
                         return oauthCommonUtils
-                            .getToken(corbelDriver, username, password, true)
+                            .getToken(corbelDriver, username, passwordOauth, true)
                             .should.be.eventually.fulfilled;
                     })
                     .then(function(response) {

@@ -62,6 +62,7 @@ function readEmailBox(imap, config, res, err, box) {
                     emails.push({
                         from: mail.headers.from || 'default',
                         to: mail.headers.to || 'default',
+                        delivered: mail.headers['delivered-to'] || 'default',
                         subject: mail.headers.subject || 'default',
                         text: mail.html || mail.text || 'default',
                         date: mail.headers.date || 'default'});
