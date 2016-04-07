@@ -50,11 +50,17 @@ describe('In IAM module', function() {
                         .should.be.eventually.fulfilled;
                 })
                 .then(function(response) {
-
                     var accessToken = response.data.accessToken;
                     expect(response.data.accessToken).to.match(tokenValidation);
                     var tokenContent = JSON.parse(window.atob(accessToken.split('.')[0]));
                     expect(tokenContent.deviceId).to.be.equal(deviceId);
+                    return corbelDriver.iam.user('me')
+                        .getDevice(deviceId)
+                        .should.be.eventually.rejected;
+                })
+                .then(function(e) {
+                    expect(e).to.have.property('status', 404);
+                    expect(e).to.have.deep.property('data.error', 'not_found');
                 })
                 .should.notify(done);
         });
