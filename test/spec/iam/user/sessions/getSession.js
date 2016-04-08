@@ -28,12 +28,15 @@ describe('In IAM module', function() {
         it('current session can be retrieved', function(done) {
             var sessionToken = corbelDriver.config.config.iamToken.accessToken;
 
+            var scopesExpected = ['iam:user:me'];
+
             corbelDriver.iam.user()
             .getMySession()
             .should.be.eventually.fulfilled
             .then(function(response) {
                 expect(response).to.have.deep.property('data.userId', user.id);
                 expect(response).to.have.deep.property('data.token', sessionToken);
+                expect(response).to.have.deep.property('data.scopes', scopesExpected);
             })
             .should.notify(done);
         });
