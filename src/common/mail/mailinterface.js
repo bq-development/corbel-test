@@ -3,7 +3,7 @@
 /*globals corbel */
 //@endexclude
 
-var mail = require('./guerrilla.js');
+var mail = require('./imapNotify.js');
 
 function getCodeFromMail(email) {
     var code = email.body.split('token=');
