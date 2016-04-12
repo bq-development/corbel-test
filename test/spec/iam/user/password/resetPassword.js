@@ -2,7 +2,7 @@
 describe('In IAM module', function() {
 
     describe('while trying reset your password', function() {
-        var popEmail = corbelTest.common.mail.maildrop.popEmail;
+        var popEmail = corbelTest.common.mail.mailinterface.popEmail;
 
         var corbelDriver;
         var corbelRootDriver;
@@ -41,7 +41,7 @@ describe('In IAM module', function() {
             var comingClaim;
             var userId;
 
-            corbelTest.common.mail.maildrop.getRandomMail()
+            corbelTest.common.mail.mailinterface.getRandomMail()
             .should.be.eventually.fulfilled
             .then(function(response){
                 user.email = response;
@@ -74,7 +74,7 @@ describe('In IAM module', function() {
                     .and.to.contain('Click on the link to reset your password');
                 expect(mail).to.have.property('body')
                     .and.to.contain(comingClaim);
-                oneTimeToken = corbelTest.common.mail.maildrop.getCodeFromMail(mail);
+                oneTimeToken = corbelTest.common.mail.mailinterface.getCodeFromMail(mail);
 
                 corbelResetDriver = corbelTest.getCustomDriver({
                     iamToken: {
@@ -128,7 +128,7 @@ describe('In IAM module', function() {
             var oneTimeToken;
             var corbelResetDriver;
 
-            corbelTest.common.mail.maildrop.getRandomMail()
+            corbelTest.common.mail.mailinterface.getRandomMail()
             .should.be.eventually.fulfilled
             .then(function(response){
                 user.email = response;
@@ -150,7 +150,7 @@ describe('In IAM module', function() {
             .then(function(mail) {
                 expect(mail).to.have.property('body')
                     .and.to.contain('Click on the link to reset your password');
-                oneTimeToken = corbelTest.common.mail.maildrop.getCodeFromMail(mail);
+                oneTimeToken = corbelTest.common.mail.mailinterface.getCodeFromMail(mail);
 
                 corbelResetDriver = corbelTest.getCustomDriver({
                     iamToken: {

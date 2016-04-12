@@ -5,27 +5,49 @@
 
 var express = require('../express/express.js');
 
-var MailParser = require('mailparser').MailParser;
-
 var MAX_RETRY = 40;
 var RETRY_PERIOD = 2;
 
+var mailsToken = {};
+
+
 function getRandomMail() {
+    var xhttp = new XMLHttpRequest();
+    var url = express.getUrl() + '/random/randomemail';
+
     return new Promise(function(resolve, reject) {
-        resolve('corbel-' + Date.now() + '@maildrop.cc');
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState === 4 && xhttp.status === 200) {
+                var response = JSON.parse(xhttp.responseText);
+                var email = response.emailData['email_addr'];
+                mailsToken[email] = response.emailData['sid_token'];
+                return popEmail(email)
+                    .then(function() {
+                        resolve(email);
+                    });
+            }
+        };
+
+        xhttp.open('GET', url, true);
+        xhttp.send();
     });
 }
 
 function checkMail(email) {
     var xhttp = new XMLHttpRequest();
-    var username = email.replace('@maildrop.cc', '');
 
-    var url = express.getUrl() + '/maildrop/checkemail?user=' + username;
+    var url = express.getUrl() + '/random/checkemail?token=' + mailsToken[email];
 
     return new Promise(function(resolve, reject) {
         xhttp.onreadystatechange = function() {
             if (xhttp.readyState === 4 && xhttp.status === 200) {
-                resolve(JSON.parse(xhttp.responseText));
+                var response = JSON.parse(xhttp.responseText);
+                var mails = response.list;
+                mails = mails.map(function(mail) {
+                  mail.id = mail['mail_id'];
+                  return mail;
+                });
+                resolve(mails);
             }
         };
 
@@ -36,23 +58,19 @@ function checkMail(email) {
 
 function getMail(email, emailId) {
     var xhttp = new XMLHttpRequest();
-    var username = email.replace('@maildrop.cc', '');
-    var url = express.getUrl() + '/maildrop/getemail?user=' + username + '&emailId=' + emailId;
+    var url = express.getUrl() + '/random/getemail?token=' + mailsToken[email] + '&emailId=' + emailId;
 
     return new Promise(function(resolve, reject) {
         xhttp.onreadystatechange = function() {
             if (xhttp.readyState === 4 && xhttp.status === 200) {
                 var mail = JSON.parse(xhttp.responseText);
-                var mailparser = new MailParser();
-                mailparser.on('end', function(mailObject) {
-                    mail.content = mailObject.html;
-                    resolve(mail);
-                });
-                mailparser.write(mail.body);
-                mailparser.end();
+                var response = {};
+                response.content = mail['mail_body'];
+                response.body = mail['mail_body'];
+                response.subject = mail['mail_subject'];
+                resolve(response);
             }
         };
-
         xhttp.open('GET', url, true);
         xhttp.send();
     });
@@ -60,16 +78,14 @@ function getMail(email, emailId) {
 
 function delMail(email, emailId) {
     var xhttp = new XMLHttpRequest();
-    var username = email.replace('@maildrop.cc', '');
-    var url = express.getUrl() + '/maildrop/delemail?user=' + username + '&emailId=' + emailId;
+    var url = express.getUrl() + '/random/delemail?token=' + mailsToken[email] + '&emailId=' + emailId;
 
     return new Promise(function(resolve, reject) {
         xhttp.onreadystatechange = function() {
             if (xhttp.readyState === 4 && xhttp.status === 200) {
-                resolve(JSON.parse(xhttp.responseText));
+                resolve();
             }
         };
-
         xhttp.open('GET', url, true);
         xhttp.send();
     });
@@ -79,7 +95,7 @@ function popEmail(email) {
     var id;
     var emailContent;
     return corbelTest.common.utils.retry(function() {
-            return corbelTest.common.mail.maildrop.checkMail(email)
+            return corbelTest.common.mail.guerrilla.checkMail(email)
                 .then(function(response) {
                     if (response.length === 0) {
                         return Promise.reject();
@@ -101,11 +117,20 @@ function popEmail(email) {
         });
 }
 
+function getCodeFromMail(email) {
+    var code = email.mail_body.split('token='); //jshint ignore:line
 
+    if (code.length > 1) {
+        return code[1];
+    } else {
+        throw new Error('Mail withouth code');
+    }
+}
 
 module.exports = {
     getRandomMail: getRandomMail,
     checkMail: checkMail,
     getMail: getMail,
-    popEmail: popEmail
+    popEmail: popEmail,
+    getCodeFromMail: getCodeFromMail
 };
