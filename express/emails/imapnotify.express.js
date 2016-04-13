@@ -3,7 +3,9 @@ var notify = require('imap-notify');
 
 module.exports = function setup(app) {
     var mails = [];
-    var init = false;
+    var started = false;
+    var starting = false;
+    var waitingResponses = [];
 
     function getConfig(req) {
         return {
@@ -14,11 +16,15 @@ module.exports = function setup(app) {
     }
 
     app.get('/imapNotify/init', function(req, res) {
-        if (init) {
+        if (starting) {
+          waitingResponses.push(res);
+          return;
+        }
+        if (started) {
             res.send({});
             return;
         }
-        init = true;
+        starting = true;
 
         var config = getConfig(req);
         var options = {
@@ -34,7 +40,8 @@ module.exports = function setup(app) {
 
         notifier.on('error', function(err) {
             console.log('imapNotify account express fail: ' + err);
-            init = false;
+            started = false;
+            starting = false;
         });
 
         notifier.on('mail', function(msg) {
@@ -44,11 +51,17 @@ module.exports = function setup(app) {
         notifier.on('success', function() {
             console.log('imapNotify account express connected');
             res.send({});
+            started = true;
+            starting = false;
+            while(waitingResponses.length>0) {
+              waitingResponses.pop().send({});
+            }
         });
 
         notifier.on('close', function() {
             console.log('imapNotify account express closed');
-            init = false;
+            started = false;
+            starting = false;
         });
     })
 
