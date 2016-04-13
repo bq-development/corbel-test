@@ -7,62 +7,78 @@ var fs = require('fs');
 var path = require('path');
 
 function fileList(dir) {
-  return fs.readdirSync(dir).reduce(function(list, file) {
-    var name = path.join(dir, file);
-    var isDir = fs.statSync(name).isDirectory();
-    return list.concat(isDir ? fileList(name) : [name]);
-  }, []);
+    return fs.readdirSync(dir).reduce(function(list, file) {
+        var name = path.join(dir, file);
+        var isDir = fs.statSync(name).isDirectory();
+        return list.concat(isDir ? fileList(name) : [name]);
+    }, []);
 }
 
 function getFiles(config) {
-  var start;
-  var end;
+    var start;
+    var end;
 
-  var specFiles = fileList('test/spec').filter(function(filename) { return filename.endsWith('js');});
-  var totalSpecFiles = specFiles.length;
+    var specFiles = fileList('test/spec').filter(
+        function(filename) {
+            return filename.endsWith('js') &&
+                (!filename.startsWith('test/spec/private') || filename.startsWith('test/spec/private/modules'));
+        });
+    var totalSpecFiles = specFiles.length;
 
-  if (config.client && config.client.args[0] && config.client.args[0].parallel) {
-    var taskIndex = config.client.args[0].index;
-    var totalTasks = config.client.args[0].total;
-    var totalByTask = Math.trunc(totalSpecFiles / totalTasks);
-    start = taskIndex * totalByTask;
-    end = start + totalByTask;
-    if (taskIndex+1 === totalTasks) {
-      end = totalSpecFiles;
+    if (config.client && config.client.args[0] && config.client.args[0].parallel) {
+        var taskIndex = config.client.args[0].index;
+        var totalTasks = config.client.args[0].total;
+        var totalByTask = Math.trunc(totalSpecFiles / totalTasks);
+        start = taskIndex * totalByTask;
+        end = start + totalByTask;
+        if (taskIndex + 1 === totalTasks) {
+            end = totalSpecFiles;
+        }
+    } else {
+        start = 0;
+        end = totalSpecFiles;
     }
-  } else {
-    start = 0;
-    end = totalSpecFiles;
-  }
 
-  var files = [
-    // PhantomJS Promise polifyll
-    // http://stackoverflow.com/questions/29391111/karma-phantomjs-and-es6-promises
-    'node_modules/phantomjs-polyfill/bind-polyfill.js',
-    'node_modules/promise-polyfill/Promise.js',
-    'node_modules/q/q.js',
-    'node_modules/corbel-js/dist/corbel.js',
-    'node_modules/lodash/index.js',
-    '.tmp/bundle.js',
-    'test/beforeAll.js',
-    'test/ports.conf.js',
-    'test/karma.conf.js',
-    'test/menu/css/collapse.css',
-    'test/menu/css/onoffswitch.css',
-    'test/menu/css/styles.css',
-    {pattern: 'test/menu/html/menu.html', watched: false, included: false, served: true},
-    {pattern: 'test/menu/html/switch.html', watched: false, included: false, served: true},
-    {pattern: 'src/common/utils/img/logo.png', watched: false, included: false, served: true}
-  ];
+    var files = [
+        // PhantomJS Promise polifyll
+        // http://stackoverflow.com/questions/29391111/karma-phantomjs-and-es6-promises
+        'node_modules/phantomjs-polyfill/bind-polyfill.js',
+        'node_modules/promise-polyfill/Promise.js',
+        'node_modules/q/q.js',
+        'node_modules/corbel-js/dist/corbel.js',
+        'node_modules/lodash/index.js',
+        '.tmp/bundle.js',
+        'test/beforeAll.js',
+        'test/ports.conf.js',
+        'test/karma.conf.js',
+        'test/menu/css/collapse.css',
+        'test/menu/css/onoffswitch.css',
+        'test/menu/css/styles.css', {
+            pattern: 'test/menu/html/menu.html',
+            watched: false,
+            included: false,
+            served: true
+        }, {
+            pattern: 'test/menu/html/switch.html',
+            watched: false,
+            included: false,
+            served: true
+        }, {
+            pattern: 'src/common/utils/img/logo.png',
+            watched: false,
+            included: false,
+            served: true
+        }
+    ];
 
-  for (var i=start; i<end; i++) {
-    files.push(specFiles[i]);
-  }
+    for (var i = start; i < end; i++) {
+        files.push(specFiles[i]);
+    }
 
-  return files;
+    return files;
 }
 
-module.exports = function (config) {
+module.exports = function(config) {
     'use strict';
 
     var PORTS = require('./ports.conf.js');
