@@ -7,6 +7,9 @@ describe('In RESOURCES module, while using public resources', function() {
     var random;
     var currentResourcesEndpoint;
 
+    var MAX_RETRY = 40;
+    var RETRY_PERIOD = 1;
+
     beforeEach(function(done) {
         var domain;
         random = Date.now();
@@ -101,15 +104,17 @@ describe('In RESOURCES module, while using public resources', function() {
         });
 
         it('that can be consulted without token', function(done) {
-            corbel.request.send({
-                    url: currentResourcesEndpoint + domainId + '/resource/' +
-                        publicResourceTestCollection + '/' + resourceId,
-                    method: corbel.request.method.GET,
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-
-                })
+            corbelTest.common.utils.retry(function() {
+                    return corbel.request.send({
+                            url: currentResourcesEndpoint + domainId + '/resource/' +
+                                publicResourceTestCollection + '/' + resourceId,
+                            method: corbel.request.method.GET,
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        })
+                        .should.be.eventually.fulfilled;
+                }, MAX_RETRY, RETRY_PERIOD)
                 .should.be.eventually.fulfilled
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.id', resourceId);
@@ -118,18 +123,21 @@ describe('In RESOURCES module, while using public resources', function() {
         });
 
         it('that can be update without token', function(done) {
-            corbel.request.send({
-                    url: currentResourcesEndpoint + domainId + '/resource/' +
-                        publicResourceTestCollection + '/' + resourceId,
-                    method: corbel.request.method.PUT,
-                    headers: {
-                        'Accept': 'application/json'
-                    },
-                    data: {
-                        testField: 'testContentUpdated'
-                    }
+            corbelTest.common.utils.retry(function() {
+                    return corbel.request.send({
+                            url: currentResourcesEndpoint + domainId + '/resource/' +
+                                publicResourceTestCollection + '/' + resourceId,
+                            method: corbel.request.method.PUT,
+                            headers: {
+                                'Accept': 'application/json'
+                            },
+                            data: {
+                                testField: 'testContentUpdated'
+                            }
 
-                })
+                        })
+                        .should.be.eventually.fulfilled;
+                }, MAX_RETRY, RETRY_PERIOD)
                 .should.be.eventually.fulfilled
                 .then(function() {
                     return corbel.request.send({
@@ -151,27 +159,30 @@ describe('In RESOURCES module, while using public resources', function() {
         });
 
         it('that can be deleted without token', function(done) {
-            corbel.request.send({
-                    url: currentResourcesEndpoint + domainId + '/resource/' +
-                        publicResourceTestCollection + '/' + resourceId,
-                    method: corbel.request.method.DELETE,
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                })
-                .should.be.eventually.fulfilled
-                .then(function() {
+            corbelTest.common.utils.retry(function() {
                     return corbel.request.send({
                             url: currentResourcesEndpoint + domainId + '/resource/' +
                                 publicResourceTestCollection + '/' + resourceId,
-                            method: corbel.request.method.GET,
+                            method: corbel.request.method.DELETE,
                             headers: {
                                 'Accept': 'application/json'
                             }
-
                         })
-                        .should.be.eventually.rejected;
-                })
+                        .should.be.eventually.fulfilled
+                        .then(function() {
+                            return corbel.request.send({
+                                    url: currentResourcesEndpoint + domainId + '/resource/' +
+                                        publicResourceTestCollection + '/' + resourceId,
+                                    method: corbel.request.method.GET,
+                                    headers: {
+                                        'Accept': 'application/json'
+                                    }
+
+                                })
+                                .should.be.eventually.rejected;
+                        });
+                }, MAX_RETRY, RETRY_PERIOD)
+                .should.be.eventually.fulfilled
                 .then(function(e) {
                     expect(e).to.have.property('status', 404);
                     expect(e).to.have.deep.property('data.error', 'not_found');
@@ -196,31 +207,34 @@ describe('In RESOURCES module, while using public resources', function() {
         });
 
         it('that can be added without token', function(done) {
-            corbel.request.send({
-                    url: currentResourcesEndpoint + domainId + '/resource/' +
-                        publicResourceTestCollection,
-                    method: corbel.request.method.POST,
-                    headers: {
-                        'Accept': 'application/json'
-                    },
-                    data: {
-                        testField: 'testContent'
-                    }
-                })
-                .should.be.eventually.fulfilled
-                .then(function(response) {
-                    var locationSplitBar = response.headers.location.split('/');
-                    resourceId = locationSplitBar[locationSplitBar.length - 1];
+            corbelTest.common.utils.retry(function() {
                     return corbel.request.send({
                             url: currentResourcesEndpoint + domainId + '/resource/' +
-                                publicResourceTestCollection + '/' + resourceId,
-                            method: corbel.request.method.GET,
+                                publicResourceTestCollection,
+                            method: corbel.request.method.POST,
                             headers: {
                                 'Accept': 'application/json'
+                            },
+                            data: {
+                                testField: 'testContent'
                             }
                         })
-                        .should.be.eventually.fulfilled;
-                })
+                        .should.be.eventually.fulfilled
+                        .then(function(response) {
+                            var locationSplitBar = response.headers.location.split('/');
+                            resourceId = locationSplitBar[locationSplitBar.length - 1];
+                            return corbel.request.send({
+                                    url: currentResourcesEndpoint + domainId + '/resource/' +
+                                        publicResourceTestCollection + '/' + resourceId,
+                                    method: corbel.request.method.GET,
+                                    headers: {
+                                        'Accept': 'application/json'
+                                    }
+                                })
+                                .should.be.eventually.fulfilled;
+                        });
+                }, MAX_RETRY, RETRY_PERIOD)
+                .should.be.eventually.fulfilled
                 .then(function(response) {
                     expect(response).to.have.deep.property('data.id', resourceId);
                     expect(response).to.have.deep.property('data.testField', 'testContent');
