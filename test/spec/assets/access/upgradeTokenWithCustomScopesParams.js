@@ -50,6 +50,8 @@ describe('In ASSETS module', function() {
                     .then(function(response) {
                         session = response.data;
                         expect(response).to.have.deep.property('data.token', sessionToken);
+                        expect(response).to.have.deep.property('data.scopes')
+                        .and.not.to.include.members(['custom:test']);
                         return clientCorbelDriver.assets.asset().access()
                             .should.be.eventually.fulfilled;
                     })
@@ -59,7 +61,10 @@ describe('In ASSETS module', function() {
                     })
                     .then(function(response) {
                         expect(response).to.have.deep.property('data.token', sessionToken);
-                        expect(response.data.scopes.length-session.scopes.length).to.be.equals(2);
+                        expect(response).to.have.deep.property('data.scopes')
+                        .and.to.include.members(session.scopes);
+                        expect(response).to.have.deep.property('data.scopes')
+                        .and.to.include.members(['custom:test']);
                     })
                     .should.be.eventually.fulfilled.and.notify(done);
             });
