@@ -6,7 +6,7 @@ describe('In IAM module', function() {
         corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
     });
 
-    describe('while testing firstConnection and lastConnection dates in devices', function() {
+    describe('while testing firstConnection dates in devices', function() {
         var user;
         var corbelDriver;
         var random;
@@ -44,16 +44,27 @@ describe('In IAM module', function() {
                 .should.notify(done);
         });
 
-        var expectDeviceLastConnectionAndFirstConnectionTimeNearToDateNow = function(device) {
+        var expectDeviceLastConnectionTimeNearToDateNow = function(device) {
+            var baseTime = Date.now();
+            var start = baseTime - 1000 * 30;
+            var finish = baseTime + 1000 * 30;
+            expect(device.lastConnection).within(start, finish);
+        };
+
+        var expectDeviceFirstConnectionTimeNearToDateNow = function(device) {
             var baseTime = Date.now();
             var start = baseTime - 1000 * 30;
             var finish = baseTime + 1000 * 30;
             expect(device.firstConnection).within(start, finish);
-            expect(device.lastConnection).within(start, finish);
+        };
+
+        var expectDeviceLastConnectionAndFirstConnectionTimeNearToDateNow = function(device) {
+            expectDeviceLastConnectionTimeNearToDateNow(device);
+            expectDeviceFirstConnectionTimeNearToDateNow(device);
         };
 
         it('users can register his devices using user(me) and' +
-            ' the device has firstConnection and lastConnection',
+            ' the device has firstConnection',
             function(done) {
                 var retriveDevice;
 
@@ -67,8 +78,34 @@ describe('In IAM module', function() {
                     })
                     .then(function(responseDevice) {
                         device = responseDevice.data;
+                        expectDeviceFirstConnectionTimeNearToDateNow(device);
+                        expect(device.lastConnection).to.be.equals(undefined);
+                    })
+                    .should.notify(done);
+            });
+
+
+        it('users can login with device, register it using user(me)' +
+            ' and lastConnection is defined',
+            function(done) {
+                corbelTest.common.clients.loginUser(corbelDriver,
+                        user.username, user.password, deviceId)
+                    .should.be.eventually.fulfilled
+                    .then(function() {
+                        corbelDriver.iam.user('me')
+                            .registerDevice(deviceId, device)
+                            .should.be.eventually.fulfilled;
+                    })
+                    .then(function() {
+
+                        return corbelDriver.iam.user('me')
+                            .getDevice(deviceId)
+                            .should.be.eventually.fulfilled;
+                    })
+                    .then(function(responseDevice) {
+                        device = responseDevice.data;
                         expectDeviceLastConnectionAndFirstConnectionTimeNearToDateNow(device);
-                        expect(device.firstConnection).to.be.equals(device.lastConnection);
+                        expect(device.lastConnection).to.be.equals(device.firstConnection);
                     })
                     .should.notify(done);
             });
@@ -86,8 +123,8 @@ describe('In IAM module', function() {
                     })
                     .then(function(responseDevice) {
                         device = responseDevice.data;
-                        expectDeviceLastConnectionAndFirstConnectionTimeNearToDateNow(device);
-                        expect(device.lastConnection).to.be.equals(device.firstConnection);
+                        expectDeviceFirstConnectionTimeNearToDateNow(device);
+                        expect(device.lastConnection).to.be.equals(undefined);
                         return corbelTest.common.clients.loginUser(corbelDriver,
                                 user.username, user.password, deviceId)
                             .should.be.eventually.fulfilled;
@@ -121,8 +158,8 @@ describe('In IAM module', function() {
                     })
                     .then(function(responseDevice) {
                         device = responseDevice.data;
-                        expectDeviceLastConnectionAndFirstConnectionTimeNearToDateNow(device);
-                        expect(device.firstConnection).to.be.equals(device.lastConnection);
+                        expectDeviceFirstConnectionTimeNearToDateNow(device);
+                        expect(device.lastConnection).to.be.equals(undefined);
                     })
                     .should.notify(done);
             });
