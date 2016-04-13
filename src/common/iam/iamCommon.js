@@ -15,7 +15,8 @@ function createUsers(driver, amount, extraFields) {
     var obj = extraFields || {};
 
     for (var count = 1; count <= amount; count++) {
-        var random = Date.now() + '-' + count;
+        var randomValue = Math.floor((Math.random() * 1000) + 1);
+        var random = Date.now() + '-' + randomValue + '-' + count;
         var userData = {
             'firstName': 'registerUser' + random,
             'lastName': 'registerUser' + random,
