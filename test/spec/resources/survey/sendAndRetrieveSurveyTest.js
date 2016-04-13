@@ -3,7 +3,7 @@ describe('In RESOURCES module', function() {
     describe('In SURVEY module', function() {
 
         describe('questions can be added and then a response survey is created and sended', function() {
-            var popEmail = corbelTest.common.mail.mailinterface.popEmail;
+            var popEmail = corbelTest.common.mail.mailInterface.popEmail;
 
             var corbelDriver;
             var questionTemplateId;
@@ -40,7 +40,7 @@ describe('In RESOURCES module', function() {
                         questionTemplateId = id;
                     })
                     .then(function() {
-                        return corbelTest.common.mail.mailinterface.getRandomMail()
+                        return corbelTest.common.mail.mailInterface.getRandomMail()
                             .should.be.eventually.fulfilled;
                     })
                     .then(function(response) {

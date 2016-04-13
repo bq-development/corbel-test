@@ -1,7 +1,7 @@
 describe('In OAUTH module', function() {
 
     describe('when the user changes his password', function() {
-        var popEmail = corbelTest.common.mail.mailinterface.popEmail;
+        var popEmail = corbelTest.common.mail.mailInterface.popEmail;
 
         var corbelDriver;
         var oauthCommonUtils;
@@ -19,7 +19,7 @@ describe('In OAUTH module', function() {
             };
 
             return corbelTest.common.mail
-                .mailinterface.getRandomMail()
+                .mailInterface.getRandomMail()
                 .should.be.eventually.fulfilled
                 .then(function(response) {
                     userEmail = response;

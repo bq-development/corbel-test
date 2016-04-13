@@ -9,7 +9,12 @@ function getCodeFromMail(email) {
     var code = email.body.split('token=');
 
     if (code.length > 1) {
-        return code[1].trim();
+        code = code[1].trim();
+        var htmlCode = code.indexOf('<');
+        if (htmlCode>0) {
+          code = code.slice(0, htmlCode);
+        }
+        return code;
     } else {
         throw new Error('Mail withouth code');
     }

@@ -2,8 +2,8 @@ describe('In OAUTH module', function() {
 
 
     describe('common reset password tests', function() {
-        var popEmail = corbelTest.common.mail.mailinterface.popEmail;
-        var getCodeFromMail = corbelTest.common.mail.mailinterface.getCodeFromMail;
+        var popEmail = corbelTest.common.mail.mailInterface.popEmail;
+        var getCodeFromMail = corbelTest.common.mail.mailInterface.getCodeFromMail;
 
         var corbelDriver;
         var oauthCommonUtils;
@@ -42,7 +42,7 @@ describe('In OAUTH module', function() {
                 };
 
                 corbelTest.common.mail
-                    .mailinterface.getRandomMail()
+                    .mailInterface.getRandomMail()
                     .should.be.eventually.fulfilled
                     .then(function(response) {
                         oauthUserTest.email = response;

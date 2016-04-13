@@ -1,7 +1,7 @@
 describe('In NOTIFICATIONS module', function() {
 
     describe('when testing sending', function() {
-        var popEmail = corbelTest.common.mail.mailinterface.popEmail;
+        var popEmail = corbelTest.common.mail.mailInterface.popEmail;
         var corbelDriver;
         var title = 'title' + Date.now();
 
@@ -33,7 +33,7 @@ describe('In NOTIFICATIONS module', function() {
             properties: undefined,
             expect: function(mail) {
                 expect(mail).to.have.property('subject', '{{subject}}');
-                expect(mail).to.have.property('content').and.to.contain('{{{content}}}');
+                expect(mail).to.have.property('content').and.to.contain('<html><body></body></html>');
             }
         }, {
             test: 'the notification contains html data and is sended correctly [mail]',
@@ -61,7 +61,7 @@ describe('In NOTIFICATIONS module', function() {
 
         function sendNotifications(notifications) {
             var promises = notifications.map(function(notification, index) {
-                return corbelTest.common.mail.mailinterface.getRandomMail()
+                return corbelTest.common.mail.mailInterface.getRandomMail()
                     .should.be.eventually.fulfilled
                     .then(function(email) {
                         var notificationData = {

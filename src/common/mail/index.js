@@ -4,6 +4,6 @@ module.exports 	= {
 	guerrilla: require('./guerrilla'),
 	maildrop: require('./maildrop'),
 	imapNotify: require('./imapNotify'),
-	mailinterface: require('./mailinterface'),
+	mailInterface: require('./mailInterface'),
 	imap: require('./imapMail')
 };

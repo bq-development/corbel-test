@@ -1,8 +1,8 @@
 describe('In OAUTH module', function() {
 
     describe('notifications tests', function() {
-        var popEmail = corbelTest.common.mail.mailinterface.popEmail;
-        var getCodeFromMail = corbelTest.common.mail.mailinterface.getCodeFromMail;
+        var popEmail = corbelTest.common.mail.mailInterface.popEmail;
+        var getCodeFromMail = corbelTest.common.mail.mailInterface.getCodeFromMail;
 
 
         var corbelDriver;
@@ -26,7 +26,7 @@ describe('In OAUTH module', function() {
             };
 
             return corbelTest.common.mail
-                .mailinterface.getRandomMail()
+                .mailInterface.getRandomMail()
                 .should.be.eventually.fulfilled
                 .then(function(response) {
                     userEmailData = response;
