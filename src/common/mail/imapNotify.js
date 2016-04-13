@@ -86,11 +86,20 @@ function checkMail(email) {
 
 function getMail(email, emailId) {
     var mails = emails[email] || [];
-    var mail = mails.find(function(mail) {
-        return mail.id === emailId;
-    });
+    var promise;
+    var mail;
+    for(var i=0; i<mails.length;i++) {
+      if(mails[i].id === emailId) {
+        mail = mails[i];
+        break;
+      }
+    }
     return new Promise(function(resolve, reject) {
-        resolve(mail);
+        if (mail) {
+          resolve(mail);
+        } else {
+          reject();
+        }
     });
 }
 
