@@ -5,12 +5,12 @@ describe('In ASSETS module', function() {
         var promises;
         var getAsset = corbelTest.common.assets.getAsset;
 
-        before(function() {
+        beforeEach(function() {
             corbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
             createdAssetsIds = [];
         });
 
-        after(function(done) {
+        afterEach(function(done) {
             var promises = createdAssetsIds.map(function(assetId) {
                 return corbelDriver.assets.asset(assetId).delete()
                     .should.be.eventually.fulfilled;
