@@ -18,9 +18,12 @@ describe('In ASSETS module', function() {
                 })
                 .should.be.eventually.fulfilled
                 .then(function(response) {
-                    response.data.every(function(object) {
-                        return object.scopes === 'assets:test';
+                    var everyScopesAreExpected = response.data.every(function(object) {
+                        return object.scopes.some(function(scope) {
+                            return scope === 'assets:asset';
+                        }); 
                     });
+                    expect(everyScopesAreExpected).to.be.equal(true);
                 })
                 .should.notify(done);
             });
