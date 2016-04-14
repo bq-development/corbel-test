@@ -3,19 +3,17 @@ describe('In ASSETS module,', function() {
         var loginAsRandomUser = corbelTest.common.clients.loginAsRandomUser;
         var adminCorbelDriver;
         var corbelDriver;
-        var user;
         var assetId;
         var asset;
 
-        beforeEach(function(done) {
+        before(function(done) {
             adminCorbelDriver = corbelTest.drivers['ADMIN_USER'].clone();
             corbelDriver = corbelTest.drivers['DEFAULT_CLIENT'].clone();
             loginAsRandomUser(corbelDriver)
                 .should.be.eventually.fulfilled
                 .then(function(data) {
-                    user = data.user;
                     asset = {
-                        userId: user.id,
+                        userId: data.user.id,
                         name: 'asset',
                         productId: String(Date.now()),
                         expire: corbelTest.common.assets.getExpire(),
@@ -31,7 +29,7 @@ describe('In ASSETS module,', function() {
                 .should.notify(done);
         });
 
-        afterEach(function(done) {
+        after(function(done) {
             adminCorbelDriver.assets.asset(assetId).delete()
                 .should.be.eventually.fulfilled
                 .then(function() {
