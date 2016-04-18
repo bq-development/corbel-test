@@ -53,7 +53,10 @@ function getKarmaConf(grunt) {
                         index: i,
                         total: concurrent,
                         parallel: true
-                    }]
+                    }],
+                    env: grunt.option('env'),
+                    localServices: grunt.option('local-services'),
+                    grep: grunt.option('grep')
                 }
             }
         };
