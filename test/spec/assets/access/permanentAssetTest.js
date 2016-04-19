@@ -65,5 +65,44 @@ describe('In ASSETS module', function() {
                 })
                 .should.notify(done);
         });
+        
+        it('asset is created and assigned correctly and asset access call is idempotent', function(done) {
+            asset = corbelTest.common.assets.getAsset();
+            asset.expire = null;
+            asset.userId = user.id;
+
+            adminCorbelDriver.assets.asset().create(asset)
+                .should.be.eventually.fulfilled
+                .then(function(id) {
+                    asset.id = id;
+                    return clientCorbelDriver.assets.asset().get()
+                        .should.be.eventually.fulfilled;
+                })
+                .then(function(response) {
+                    expect(response).to.have.deep.property('data.length', 1);
+
+                    return clientCorbelDriver.resources.collection('assets:test').get()
+                        .should.be.eventually.rejected;
+                })
+                .then(function(e) {
+                    expect(e).to.have.property('status', 401);
+                    expect(e).to.have.deep.property('data.error', 'unauthorized_token');
+                    return clientCorbelDriver.assets.asset().access()
+                        .should.be.eventually.fulfilled;
+                })
+                .then(function() {
+                    return clientCorbelDriver.resources.collection('assets:test').get()
+                        .should.be.eventually.fulfilled;
+                })
+               .then(function(e) {
+                    return clientCorbelDriver.assets.asset().access()
+                        .should.be.eventually.fulfilled;
+                })
+                .then(function() {
+                    return clientCorbelDriver.resources.collection('assets:test').get()
+                        .should.be.eventually.fulfilled;
+                })                
+                .should.notify(done);
+        });
     });
 });
