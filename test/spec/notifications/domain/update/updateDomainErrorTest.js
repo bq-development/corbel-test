@@ -24,18 +24,19 @@ describe('In NOTIFICATIONS module', function() {
         it('an error is returned while trying to update a non existent notification template', function(done) {
 
             var testDriver;
-            var clientScopes = ['notifications:admin']; 
+            var clientScopes = ['notifications:admin'];
             var domainId = 'domain-crudDomainTest-' + Date.now();
             var domainIdCreated = 'silkroad-qa:' + domainId;
             var clientName = 'client-crudDomainTest-' + Date.now();
             var corbelRootDriver = corbelTest.drivers['ROOT_CLIENT'].clone();
-            
+
             corbelTest.common.iam.createDomainAndClient(corbelRootDriver, domainId, clientName, clientScopes)
             .then(function(clientInfo) {
                 testDriver = corbelTest.getCustomDriver({
-                    'clientId': clientInfo.id,
-                    'clientSecret': clientInfo.key,
-                    'scopes': clientScopes.join(' ')
+                    clientId: clientInfo.id,
+                    clientSecret: clientInfo.key,
+                    scopes: clientScopes.join(' '),
+                    domain: domainIdCreated
                 });
 
                 return testDriver.notifications.domain()

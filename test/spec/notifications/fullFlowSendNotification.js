@@ -40,9 +40,10 @@ describe('In NOTIFICATIONS module', function() {
             corbelTest.common.iam.createDomainAndClient(corbelRootDriver, domainId, clientName, clientScopes)
             .then(function(clientInfo) {
                 testDriver = corbelTest.getCustomDriver({
-                    'clientId': clientInfo.id,
-                    'clientSecret': clientInfo.key,
-                    'scopes': clientScopes.join(' ')
+                    clientId: clientInfo.id,
+                    clientSecret: clientInfo.key,
+                    scopes: clientScopes.join(' '),
+                    domain: domainIdCreated
                 });
 
 
