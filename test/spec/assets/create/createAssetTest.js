@@ -64,7 +64,14 @@ describe('In ASSETS module', function() {
             'contains submitted data and has identical id',
             function(done) {
                 var asset1 = getAsset();
-                var asset2 = getAsset();
+                var asset2 = {
+                  name : asset1.name,
+                  productId: asset1.productId,
+                  expire: asset1.expire+100,
+                  active: false,
+                  scopes: asset1.scopes,
+                  userId: asset1.userId
+                };
 
                 corbelDriver.assets.asset().create(asset1)
                     .should.be.eventually.fulfilled
@@ -96,8 +103,8 @@ describe('In ASSETS module', function() {
                         expect(response).to.have.deep.property('data.id', asset1.id);
                         expect(response).to.have.deep.property('data.name', asset1.name);
                         expect(response).to.have.deep.property('data.productId', asset1.productId);
-                        expect(response).to.have.deep.property('data.expire', asset1.expire);
-                        expect(response).to.have.deep.property('data.active', asset1.active);
+                        expect(response).to.have.deep.property('data.expire', asset2.expire);
+                        expect(response).to.have.deep.property('data.active', asset2.active);
                     })
                     .should.notify(done);
             });
