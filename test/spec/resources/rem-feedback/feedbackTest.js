@@ -11,7 +11,7 @@ describe('In RESOURCES module', function() {
         it('a basic issue can be added', function(done) {
             var FEEDBACK_METADATA = {
                 project: 'TES',
-                issueType: 'Bug',
+                issueType: 'Soporte',
                 summary: 'test summary'
             };
 
@@ -34,7 +34,7 @@ describe('In RESOURCES module', function() {
             };
             var FEEDBACK_METADATA = {
                 project: 'TES',
-                issueType: 'Bug',
+                issueType: 'Soporte',
                 summary: 'test summaryImageAttachment',
                 attachments: [ATTACHMENT1, ATTACHMENT2]
             };
@@ -52,7 +52,7 @@ describe('In RESOURCES module', function() {
             };
             var FEEDBACK_METADATA = {
                 project: 'TES',
-                issueType: 'Bug',
+                issueType: 'Soporte',
                 summary: 'test summaryTextAttachment',
                 attachments: [ATTACHMENT]
             };
@@ -71,7 +71,7 @@ describe('In RESOURCES module', function() {
             };
             var FEEDBACK_METADATA = {
                 project: 'TES',
-                issueType: 'Bug',
+                issueType: 'Soporte',
                 summary: 'test summaryVideoAttachment',
                 attachments: [ATTACHMENT]
             };
@@ -84,7 +84,7 @@ describe('In RESOURCES module', function() {
         it('an issue with components can be added', function(done) {
             var FEEDBACK_METADATA = {
                 project: 'TES',
-                issueType: 'Bug',
+                issueType: 'Soporte',
                 summary: 'test summary',
                 components: ['composr']
             };
@@ -97,7 +97,7 @@ describe('In RESOURCES module', function() {
         it('an issue with labels can be added', function(done) {
             var FEEDBACK_METADATA = {
                 project: 'TES',
-                issueType: 'Bug',
+                issueType: 'Soporte',
                 summary: 'test summary',
                 labels: ['labelTest']
             };
@@ -110,7 +110,7 @@ describe('In RESOURCES module', function() {
         it('an issue with description can be added', function(done) {
             var FEEDBACK_METADATA = {
                 project: 'TES',
-                issueType: 'Bug',
+                issueType: 'Soporte',
                 summary: 'test summary',
                 description: 'TES description'
             };
@@ -123,7 +123,7 @@ describe('In RESOURCES module', function() {
         it('an issue with description with strange characters can be added', function(done) {
             var FEEDBACK_METADATA = {
                 project: 'TES',
-                issueType: 'Bug',
+                issueType: 'Soporte',
                 summary: 'test summary',
                 description: 'áéíóúññññ\nabcdefg'
             };
@@ -136,7 +136,7 @@ describe('In RESOURCES module', function() {
         it('an issue with components, description and labels can be added', function(done) {
             var FEEDBACK_METADATA = {
                 project: 'TES',
-                issueType: 'Bug',
+                issueType: 'Soporte',
                 summary: 'test summary',
                 components: ['composr'],
                 description: 'test description',
