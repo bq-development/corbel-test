@@ -133,9 +133,16 @@ describe('In ASSETS module', function() {
                     })
                     .then(function(response) {
                         expect(response).to.have.deep.property('data.length', 2);
+                        response.data.should.all.have.property('filterResults');
 
-                        response.data.should.contain.an.thing.with.property('filter', true);
-                        response.data.should.contain.an.thing.with.property('filter', false);
+                        response.data.forEach(function(asset){
+                            if(asset.properties.testProperty) {
+                                expect(asset).to.have.deep.property('filterResults.test-asset-filter', true);
+                            } else {
+                                expect(asset).to.have.deep.property('filterResults.not-existing-filter', false);
+
+                            }
+                        });
                     })
                     .should.notify(done);
             });
