@@ -59,11 +59,11 @@ function loginAll() {
     return Promise.all(promises);
 }
 
-function loginAsRandomUser(createDriver, loginDriver) {
+function loginAsRandomUser(createDriver, loginDriver, creationExtraFields) {
     loginDriver = loginDriver || createDriver;
     var iamUtils = require('./iam');
     var user;
-    return iamUtils.createUsers(createDriver, 1).then(function(users) {
+    return iamUtils.createUsers(createDriver, 1, creationExtraFields).then(function(users) {
         // default client scopes
         user = users[0];
         var params = {
