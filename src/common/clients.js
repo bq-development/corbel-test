@@ -66,13 +66,7 @@ function loginAsRandomUser(createDriver, loginDriver, creationExtraFields) {
     return iamUtils.createUsers(createDriver, 1, creationExtraFields).then(function(users) {
         // default client scopes
         user = users[0];
-        var params = {
-            claims: {
-                'basic_auth.username': user.username,
-                'basic_auth.password': user.password
-            }
-        };
-        return loginDriver.iam.token().create(params);
+        return loginUser(loginDriver, user.username, user.password);
     }).then(function(response) {
         return {
             token: response.data,
@@ -80,6 +74,23 @@ function loginAsRandomUser(createDriver, loginDriver, creationExtraFields) {
         };
     });
 }
+
+var createValidEmailUserAndLogin = function (createDriver, loginDriver) {
+    var userEmail;
+    loginDriver = loginDriver || createDriver;
+
+    return corbelTest.common.mail.mailInterface.getRandomMail()
+        .then(function (email) {
+            userEmail = email;
+            return loginDriver.iam.token().create();
+        })
+        .then(function () {
+            return createDriver.iam.token().create();
+        })
+        .then(function () {
+            return loginAsRandomUser(createDriver, loginDriver, {email: userEmail});
+        });
+};
 
 function loginUser(driver, username, password, deviceId) {
     var params = {
@@ -99,6 +110,7 @@ module.exports = {
     login: login,
     loginAll: loginAll,
     loginAsRandomUser: loginAsRandomUser,
+    createValidEmailUserAndLogin: createValidEmailUserAndLogin,
     loginUser: loginUser,
     drivers: drivers,
     logins: logins,
