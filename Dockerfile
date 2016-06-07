@@ -1,5 +1,5 @@
 
-FROM      ubuntu
+FROM     node:5.11.0
 MAINTAINER Corbel Team <corbel-dev@bq.com>
 
 # Install nodejs & npm
@@ -21,16 +21,7 @@ ADD . /opt/corbel-test
 # Install project dependencies
 RUN npm install
 
-# Install PhantomJs dependencies
-RUN apt-get install -y libfreetype6 libfreetype6-dev libfontconfig1 libfontconfig1-dev
-
-#Install phantom-js
-RUN apt-get install phantomjs
-
-# Force PhantomJs to use the global installed version instead of the one placed in node_modules
-ENV PHANTOMJS_BIN /usr/bin/phantomjs
-
 EXPOSE 9080
 EXPOSE 5454
 
-CMD ["/bin/bash", "-c", "grunt test --env=int"]
+CMD grunt test --env=int
